@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="model">
+      <UniqueIdentifier>{442efa4b-559e-4e7e-b639-1506461483ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Graph">
+      <UniqueIdentifier>{32b48022-6051-42b3-a432-569f0e23bc40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Node">
+      <UniqueIdentifier>{b716af6b-ae6f-42fa-9535-34a69a97881b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Edge">
+      <UniqueIdentifier>{8fc9d2ed-0b48-4021-ac65-a14b8c3c51fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Slot">
+      <UniqueIdentifier>{3fb3c63d-c0c3-4b85-86be-0c734b517236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\BaseEntity">
+      <UniqueIdentifier>{dde3d8e9-a165-4714-a69a-86c14da542e7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bleachuimodel_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="BleachUIModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClCompile Include="BleachUIModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="model\Edge.cpp">
+      <Filter>model\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Graph.cpp">
+      <Filter>model\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="model\BaseEntity.cpp">
+      <Filter>model\BaseEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Slot.cpp">
+      <Filter>model\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Node.cpp">
+      <Filter>model\Node</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="model\Edge.h">
+      <Filter>model\Edge</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Graph.h">
+      <Filter>model\Graph</Filter>
+    </QtMoc>
+    <QtMoc Include="model\BaseEntity.h">
+      <Filter>model\BaseEntity</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Slot.h">
+      <Filter>model\Slot</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Node.h">
+      <Filter>model\Node</Filter>
+    </QtMoc>
+  </ItemGroup>
+</Project>

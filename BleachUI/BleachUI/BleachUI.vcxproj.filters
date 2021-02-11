@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="view">
+      <UniqueIdentifier>{bb55e342-8b93-4b43-bd18-7b133222f7dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\SceneGraph">
+      <UniqueIdentifier>{777e9590-ce08-42ae-afe5-7f527359d813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\SceneGraphWidget">
+      <UniqueIdentifier>{39628f14-187e-420d-92ed-cb39bd49a4a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\Node">
+      <UniqueIdentifier>{8566f5a9-4414-4e24-adfe-775d59cbe64a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainWindow">
+      <UniqueIdentifier>{442dfb8f-7eb4-4907-960f-9ebd261752ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\Slot">
+      <UniqueIdentifier>{39aa06f1-acef-4966-baad-e31b779774c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\Edge">
+      <UniqueIdentifier>{01e77ef7-a748-4b44-82c9-4ebdc14301c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\NodeContentWidget">
+      <UniqueIdentifier>{b1707570-8d32-43cc-bb9f-56089afa0eab}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="BleachUI.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="view\SceneGraph.cpp">
+      <Filter>view\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="view\SceneGraphWidget.cpp">
+      <Filter>view\SceneGraphWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="view\Node.cpp">
+      <Filter>view\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="BleachUI.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="view\Slot.cpp">
+      <Filter>view\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="view\Edge.cpp">
+      <Filter>view\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="view\NodeContentWidget.cpp">
+      <Filter>view\NodeContentWidget</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="view\SceneGraph.h">
+      <Filter>view\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="view\SceneGraphWidget.h">
+      <Filter>view\SceneGraphWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="view\Node.h">
+      <Filter>view\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="view\Colors.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="view\Slot.h">
+      <Filter>view\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="view\Edge.h">
+      <Filter>view\Edge</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="BleachUI.h">
+      <Filter>MainWindow</Filter>
+    </QtMoc>
+    <QtMoc Include="view\NodeContentWidget.h">
+      <Filter>view\NodeContentWidget</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="ui\BleachUI.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="view\NodeContentWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+</Project>

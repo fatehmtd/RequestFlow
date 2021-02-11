@@ -1,0 +1,32 @@
+#pragma once
+#include "../bleachuimodel_global.h"
+#include "BaseEntity.h"
+
+namespace model
+{
+	class InputSlot;
+	class OutputSlot;
+	class Graph;
+
+	class BLEACHUIMODEL_EXPORT Edge : public BaseEntity
+	{
+		Q_OBJECT
+	public:
+		Edge(Graph* parent);
+
+		bool setDestination(InputSlot* slot);
+		bool setOrigin(OutputSlot* slot);
+
+		InputSlot* getDestination() const;
+		OutputSlot* getOrigin() const;
+	protected:
+		InputSlot* _destinationSlot = nullptr;
+		OutputSlot* _originSlot = nullptr;
+
+	signals:
+		void dataReceived();
+
+	protected slots:
+		void onDataReceived();
+	};
+}
