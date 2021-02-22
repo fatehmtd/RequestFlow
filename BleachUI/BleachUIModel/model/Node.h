@@ -12,7 +12,7 @@ namespace model
 	{
 		Q_OBJECT
 	public:
-		Node(Graph* parent);
+		Node(Graph* parent, const QString& name);
 
 		InputSlot* getDestination(const QString& name) const;
 		OutputSlot* getOrigin(const QString& name) const;
@@ -26,8 +26,11 @@ namespace model
 		Graph* getGraph() const;
 
 		virtual void clear() override;
-	protected:
+
+	public slots:
 		virtual void evaluate();
+
+	protected:		
 		virtual void onGraphStart() override;
 		virtual void onGraphStop() override;
 
@@ -35,7 +38,7 @@ namespace model
 
 	signals:
 		void evaluated();
-		void ready();
+		void readyForEvaluation();
 
 	protected slots:
 		void slotDataReceived();

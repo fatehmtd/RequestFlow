@@ -1,11 +1,11 @@
 #include "BleachUI.h"
 #include "./view/SceneGraph.h"
-#include "./view/SceneGraphWidget.h"
 
 BleachUI::BleachUI(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    setMinimumSize(800, 600);
-    setCentralWidget(new SceneGraphWidget(this));
+    setMinimumSize(1024, 768);
+    _sceneGraphWidget = new SceneGraphWidget(this);
+    setCentralWidget(_sceneGraphWidget);
 }

@@ -4,8 +4,9 @@
 #include <QChildEvent>
 #include <QDebug>
 
-model::Node::Node(Graph* parent) : BaseEntity(parent)
+model::Node::Node(Graph* parent, const QString& name) : BaseEntity(parent)
 {
+	setObjectName(name);
 	connect(parent, &Graph::started, this, [this]() 
 		{
 			onGraphStart();
@@ -15,6 +16,9 @@ model::Node::Node(Graph* parent) : BaseEntity(parent)
 		{
 			onGraphStop();
 		});
+
+	//connect(this, &Node::readyForEvaluation, this, &Node::evaluate);
+	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated);
 }
 
 model::InputSlot* model::Node::getDestination(const QString& name) const
@@ -84,9 +88,6 @@ void model::Node::clear()
 
 void model::Node::evaluate()
 {
-	//TODO: put the evaluation logic in here
-	qDebug() << __FUNCTION__ << objectName();
-
 	emit evaluated();
 
 	for (auto slot : getOutputSlots().values())
@@ -102,7 +103,7 @@ void model::Node::onGraphStart()
 	// If the node has no input slots, proceed to evaluation when the graph execution starts
 	if (getInputSlots().size() == 0)
 	{
-		evaluate();
+		emit readyForEvaluation();
 	}
 }
 
@@ -130,9 +131,7 @@ void model::Node::slotDataReceived()
 			// When all the slots receive data, the node becomes ready for evaluation
 			if (_listOfReadySlots.size() == getInputSlots().size())
 			{
-				emit ready();
-
-				evaluate();				
+				emit readyForEvaluation();
 			}
 		}
 	}

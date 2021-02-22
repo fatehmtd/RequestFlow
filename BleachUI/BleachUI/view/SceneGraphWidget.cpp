@@ -1,6 +1,7 @@
 #include "SceneGraphWidget.h"
 #include <QVBoxLayout>
 #include <QDebug>
+#include <QOpenGLWidget>
 
 SceneGraphWidget::SceneGraphWidget(QWidget* parent) : QGraphicsView(parent)
 {
@@ -14,25 +15,39 @@ SceneGraphWidget::~SceneGraphWidget()
 
 void SceneGraphWidget::initUi()
 {
-	setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+	//setFocusPolicy(Qt::FocusPolicy::ClickFocus);
  	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
+	/*
 	setRenderHints(QPainter::RenderHint::Antialiasing | 
 		QPainter::RenderHint::HighQualityAntialiasing | 
 		QPainter::RenderHint::TextAntialiasing |
 		QPainter::RenderHint::SmoothPixmapTransform);
-
+	*/
+	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-
+	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+	
 	_sceneGraph = new view::SceneGraph(this);
 	setScene(_sceneGraph);
 
 	_zoomInFactor = 1.125f;
 	_zoomStep = 1;
-	_zoomLevel = 3;
+	_zoomLevel = 1;
 	_minZoomLevel = 1;
-	_maxZoomLevel = 10;
+	_maxZoomLevel = 1;
+
+	QSurfaceFormat surfaceFormat;
+	surfaceFormat.setSamples(16);
+	surfaceFormat.setRedBufferSize(16);
+	surfaceFormat.setGreenBufferSize(16);
+	surfaceFormat.setBlueBufferSize(16);
+	surfaceFormat.setAlphaBufferSize(16);
+	auto glWidget = new QOpenGLWidget();
+	glWidget->setFormat(surfaceFormat);
+	setViewport(glWidget);
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
@@ -77,7 +92,9 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
 			const float factor = 1.0f / _zoomInFactor;
 			scale(factor, factor);
 		}
-	}	
+	}
+	// TODO: disable zooming whilst hovering over a widget
+	//QGraphicsView::wheelEvent(event);
 }
 
 void SceneGraphWidget::mouseMiddleButtonPressed(QMouseEvent* event)
@@ -97,4 +114,9 @@ void SceneGraphWidget::mouseMiddleButtonReleased(QMouseEvent* event)
 	QGraphicsView::mousePressEvent(&pressEvent);
 
 	setDragMode(QGraphicsView::DragMode::NoDrag);
+}
+
+void SceneGraphWidget::scrollContentsBy(int dx, int dy)
+{
+	QGraphicsView::scrollContentsBy(dx, dy);
 }

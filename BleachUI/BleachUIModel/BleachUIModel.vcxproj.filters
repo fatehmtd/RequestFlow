@@ -41,12 +41,6 @@
     <ClInclude Include="bleachuimodel_global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <QtMoc Include="BleachUIModel.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="BleachUIModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="model\Edge.cpp">

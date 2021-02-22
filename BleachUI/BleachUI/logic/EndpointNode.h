@@ -1,0 +1,54 @@
+#pragma once
+#include "../view/Node.h"
+#include "../view/Slot.h"
+#include "ui_EndpointNodeUi.h"
+#include <QTextEdit>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QUrlQuery>
+#include <QTimer>
+#include <QElapsedTimer>
+
+namespace logic
+{
+    class EndpointNode : public view::Node
+    {
+        Q_OBJECT
+    public:
+        EndpointNode(model::Node* modelNode);
+
+        enum HttpMethod
+        {
+            GET,
+            POST,
+            PUT,
+            PATCH,
+            DEL
+        };
+
+        void setTimeout(unsigned int sec);
+        void setUrl(const QUrl& url);
+        void setMethod(HttpMethod method);
+    private:
+        void setupUi();
+        void sendPayload();
+        void sendGet();
+        void sendPost();
+        void sendDel();
+        void sendPut();
+        void sendPatch();
+
+        void processResponse(QNetworkReply* reply);
+
+    private slots:
+        void replyReceived(QNetworkReply* reply);
+
+    private:
+        Ui::EndpointNodeUiWidget* _ui = nullptr;
+        QNetworkAccessManager* _networkAccessManager = nullptr;
+        model::InputSlot* _input;
+        model::OutputSlot* _output;
+        QTimer _timer;
+        QElapsedTimer _elapsedTimer;
+    };
+}

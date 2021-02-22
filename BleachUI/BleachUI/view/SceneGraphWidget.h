@@ -12,12 +12,14 @@ public:
 protected:
 	void initUi();
 
-	void mousePressEvent(QMouseEvent* event) override;
-	void mouseReleaseEvent(QMouseEvent* event) override;
-	void wheelEvent(QWheelEvent* event) override;
+	virtual void mousePressEvent(QMouseEvent* event) override;
+	virtual void mouseReleaseEvent(QMouseEvent* event) override;
+	virtual void wheelEvent(QWheelEvent* event) override;
 
-	void mouseMiddleButtonPressed(QMouseEvent* event);
-	void mouseMiddleButtonReleased(QMouseEvent* event);
+	virtual void mouseMiddleButtonPressed(QMouseEvent* event);
+	virtual void mouseMiddleButtonReleased(QMouseEvent* event);
+
+	virtual void scrollContentsBy(int dx, int dy) override;
 
 protected:
 	view::SceneGraph* _sceneGraph = nullptr;

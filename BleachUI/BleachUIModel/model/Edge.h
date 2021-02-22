@@ -17,8 +17,8 @@ namespace model
 		bool setDestination(InputSlot* slot);
 		bool setOrigin(OutputSlot* slot);
 
-		InputSlot* getDestination() const;
-		OutputSlot* getOrigin() const;
+		InputSlot* getDestinationSlot() const;
+		OutputSlot* getOriginSlot() const;
 	protected:
 		InputSlot* _destinationSlot = nullptr;
 		OutputSlot* _originSlot = nullptr;

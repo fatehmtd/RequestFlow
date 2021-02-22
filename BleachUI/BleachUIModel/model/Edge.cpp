@@ -35,12 +35,12 @@ bool model::Edge::setOrigin(OutputSlot* slot)
 	return true;
 }
 
-model::InputSlot* model::Edge::getDestination() const
+model::InputSlot* model::Edge::getDestinationSlot() const
 {
 	return _destinationSlot;
 }
 
-model::OutputSlot* model::Edge::getOrigin() const
+model::OutputSlot* model::Edge::getOriginSlot() const
 {
 	return _originSlot;
 }

@@ -46,6 +46,36 @@
     <Filter Include="view\NodeContentWidget">
       <UniqueIdentifier>{b1707570-8d32-43cc-bb9f-56089afa0eab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="logic">
+      <UniqueIdentifier>{2c658a5e-8dfc-4d21-8416-8ae543e9d5fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\PayloadNode">
+      <UniqueIdentifier>{99bf675a-2283-4fc0-9a0a-efdb92960fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\EndpointNode">
+      <UniqueIdentifier>{e9207ecb-e4c3-4921-814c-2b72c068ea62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\Node\ContentWidget">
+      <UniqueIdentifier>{7a3b22a7-4b4f-4100-ab86-2394d7944192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\ConnectionEdge">
+      <UniqueIdentifier>{5b96e1f1-0fea-40e6-8d2f-492c01b3ddbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\ViewerNode">
+      <UniqueIdentifier>{a64593c2-4097-4c4e-8dac-dd84a3c9812e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\ModifierNode">
+      <UniqueIdentifier>{0532c18f-cead-4a5e-abc7-f33017ce4708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\AssertionNode">
+      <UniqueIdentifier>{75eaa480-c862-4b0b-827b-1c43f0f92b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\DelayNode">
+      <UniqueIdentifier>{95f40509-c146-407e-82f7-3c5204bf92e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\RepeaterNode">
+      <UniqueIdentifier>{bd81cdd9-f91c-4998-8939-437dcfdbace1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="BleachUI.qrc">
@@ -77,6 +107,21 @@
     <ClCompile Include="view\NodeContentWidget.cpp">
       <Filter>view\NodeContentWidget</Filter>
     </ClCompile>
+    <ClCompile Include="view\ConnectionEdge.cpp">
+      <Filter>view\ConnectionEdge</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\PayloadNode.cpp">
+      <Filter>logic\PayloadNode</Filter>
+    </ClCompile>
+    <ClCompile Include="view\ContentWidget.cpp">
+      <Filter>view\Node\ContentWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\EndpointNode.cpp">
+      <Filter>logic\EndpointNode</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\ViewerNode.cpp">
+      <Filter>logic\ViewerNode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="view\SceneGraph.h">
@@ -85,17 +130,20 @@
     <ClInclude Include="view\SceneGraphWidget.h">
       <Filter>view\SceneGraphWidget</Filter>
     </ClInclude>
-    <ClInclude Include="view\Node.h">
-      <Filter>view\Node</Filter>
-    </ClInclude>
     <ClInclude Include="view\Colors.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="view\Slot.h">
-      <Filter>view\Slot</Filter>
-    </ClInclude>
     <ClInclude Include="view\Edge.h">
       <Filter>view\Edge</Filter>
+    </ClInclude>
+    <ClInclude Include="view\ConnectionEdge.h">
+      <Filter>view\ConnectionEdge</Filter>
+    </ClInclude>
+    <ClInclude Include="logic\PayloadNode.h">
+      <Filter>logic\PayloadNode</Filter>
+    </ClInclude>
+    <ClInclude Include="logic\ViewerNode.h">
+      <Filter>logic\ViewerNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -105,12 +153,27 @@
     <QtMoc Include="view\NodeContentWidget.h">
       <Filter>view\NodeContentWidget</Filter>
     </QtMoc>
+    <QtMoc Include="view\ContentWidget.h">
+      <Filter>view\Node\ContentWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="view\Node.h">
+      <Filter>view\Node</Filter>
+    </QtMoc>
+    <QtMoc Include="view\Slot.h">
+      <Filter>view\Slot</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\EndpointNode.h">
+      <Filter>logic\EndpointNode</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ui\BleachUI.ui">
       <Filter>Resource Files</Filter>
     </QtUic>
     <QtUic Include="view\NodeContentWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\EndpointNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

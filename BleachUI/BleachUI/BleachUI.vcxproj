@@ -67,13 +67,13 @@
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>5.15.1</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtInstall>5.12.9</QtInstall>
+    <QtModules>core;gui;network;webchannel;websockets;widgets;xml;xmlpatterns</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.1</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtInstall>5.12.9</QtInstall>
+    <QtModules>core;gui;network;webchannel;websockets;widgets;xml;xmlpatterns</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -106,6 +106,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="logic\EndpointNode.cpp" />
+    <ClCompile Include="logic\PayloadNode.cpp" />
+    <ClCompile Include="logic\ViewerNode.cpp" />
+    <ClCompile Include="view\ConnectionEdge.cpp" />
+    <ClCompile Include="view\ContentWidget.cpp" />
     <ClCompile Include="view\Edge.cpp" />
     <ClCompile Include="view\Node.cpp" />
     <ClCompile Include="view\NodeContentWidget.cpp" />
@@ -119,15 +124,21 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="view\NodeContentWidget.h" />
+    <QtMoc Include="logic\EndpointNode.h" />
+    <ClInclude Include="logic\PayloadNode.h" />
+    <ClInclude Include="logic\ViewerNode.h" />
+    <ClInclude Include="view\ConnectionEdge.h" />
+    <QtMoc Include="view\ContentWidget.h" />
     <ClInclude Include="view\Edge.h" />
-    <ClInclude Include="view\Slot.h" />
+    <QtMoc Include="view\Slot.h" />
     <ClInclude Include="view\Colors.h" />
-    <ClInclude Include="view\Node.h" />
+    <QtMoc Include="view\Node.h" />
     <ClInclude Include="view\SceneGraph.h" />
     <ClInclude Include="view\SceneGraphWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ui\BleachUI.ui" />
+    <QtUic Include="ui\EndpointNodeUi.ui" />
     <QtUic Include="view\NodeContentWidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

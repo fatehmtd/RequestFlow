@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_BleachUI.h"
+#include "./view/SceneGraphWidget.h"
 
 class BleachUI : public QMainWindow
 {
@@ -12,4 +13,5 @@ public:
 
 private:
     Ui::BleachUIClass ui;
+    SceneGraphWidget* _sceneGraphWidget = nullptr;
 };
