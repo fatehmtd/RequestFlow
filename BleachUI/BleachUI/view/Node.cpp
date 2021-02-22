@@ -65,8 +65,8 @@ view::Slot* view::Node::getSlot(const QString& name) const
 
 void view::Node::setupUi()
 {
-	_width = 256 + rand() % 32;
-	_height = 128 + rand() % 64;
+	_width = 320;
+	_height = 160;
 	_edgeSize = 5;
 
 	setAcceptHoverEvents(true);
@@ -74,9 +74,14 @@ void view::Node::setupUi()
 	setFlag(GraphicsItemFlag::ItemIsSelectable);
 	setFlag(GraphicsItemFlag::ItemIsMovable);
 
+	QFont font;
+	font.setBold(true);
+	font.setPointSizeF(10);
 	_title = new QGraphicsTextItem(this);
-	_title->setPlainText(QString("Node name").arg(rand() % 100));
+	_title->setFont(font);
+	//_title->setPlainText(QString("Node name").arg(rand() % 100));
 	_title->setDefaultTextColor(Qt::white);
+	_title->setPos(18, 5);
 }
 
 void view::Node::setupContentWidget()
@@ -86,9 +91,11 @@ void view::Node::setupContentWidget()
 	_contentWidget = new ContentWidget(nullptr);
 	proxyWidget->setWidget(_contentWidget);
 
-	int top = 60;
+	int top = 50;
 	int bottom = _height - (top + 20);
 	_contentWidget->setGeometry(_edgeSize, top, _width - 2 * _edgeSize, bottom);
+
+	setSize(_width, _height);
 }
 
 void view::Node::setupUIForModel()
@@ -127,8 +134,22 @@ QString view::Node::getTitle() const
 	return _title->toPlainText();
 }
 
+void view::Node::setSize(int w, int h)
+{
+	prepareGeometryChange();
+	_width = w;
+	_height = h;
+	if (_contentWidget != nullptr)
+	{
+		int top = 50;
+		int bottom = _height - (top + 10);
+		_contentWidget->setGeometry(_edgeSize, top, _width - 2 * _edgeSize, bottom);
+	}
+}
+
 void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
+	painter->beginNativePainting();
 	auto rect = boundingRect();
 	int w = rect.width(), h = rect.height();
 
@@ -157,6 +178,7 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		QBrush backgroundBrush(bgColor);
 		backgroundPath.setFillRule(Qt::FillRule::WindingFill);
 		backgroundPath.addRoundedRect(0, 0, w, 20, _edgeSize, _edgeSize);
+		backgroundPath.addRoundedRect(0, 10, w, 20, 0, 0);
 		painter->setPen(pen);
 		painter->setBrush(backgroundBrush);
 		painter->drawPath(backgroundPath.simplified());
@@ -184,6 +206,8 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		painter->setBrush(Qt::BrushStyle::NoBrush);
 		painter->drawPath(outlinePath.simplified());
 	}
+
+	painter->endNativePainting();
 }
 
 void view::Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)

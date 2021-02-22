@@ -34,6 +34,8 @@ namespace view
 		void setTitle(const QString& txt);
 		QString getTitle() const;
 
+		void setSize(int w, int h);
+
 	protected:
 		enum Handle
 		{

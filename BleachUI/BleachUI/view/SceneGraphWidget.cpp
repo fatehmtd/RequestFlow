@@ -20,12 +20,12 @@ void SceneGraphWidget::initUi()
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
-	/*
+	
 	setRenderHints(QPainter::RenderHint::Antialiasing | 
 		QPainter::RenderHint::HighQualityAntialiasing | 
 		QPainter::RenderHint::TextAntialiasing |
 		QPainter::RenderHint::SmoothPixmapTransform);
-	*/
+	//*/
 	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
@@ -47,7 +47,7 @@ void SceneGraphWidget::initUi()
 	surfaceFormat.setAlphaBufferSize(16);
 	auto glWidget = new QOpenGLWidget();
 	glWidget->setFormat(surfaceFormat);
-	setViewport(glWidget);
+	//setViewport(glWidget);
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)

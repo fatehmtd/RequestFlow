@@ -11,13 +11,16 @@
 
 view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsObject(parent), _slot(slot)
 {
-	_size = 10;
+	_size = 15;
 	setFlag(GraphicsItemFlag::ItemIsSelectable);
 	//setFlag(GraphicsItemFlag::ItemIsMovable);
 	//setAcceptDrops(true);
 	setAcceptHoverEvents(true);
-
+	QFont font;
+	font.setPointSize(11);
+	//font.setBold(true);
 	_title = new QGraphicsTextItem(this);
+	_title->setFont(font);
 	_title->setPlainText(slot->objectName());
 	_title->setDefaultTextColor(Qt::black);
 }
@@ -45,6 +48,7 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	painter->setBrush(brush);
 
 	const float halfSize = _size * 0.5f;
+	float textSpace = 18;
 
 	auto basePos = getBasePosition();
 
@@ -53,7 +57,7 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	float outlineSize = _size * 1.1f;
 	float outlineHalfSize = outlineSize * 0.5f;
 
-	float textX = isInput() ? halfSize : (basePos.x() - (textRect.width() + halfSize));
+	float textX = isInput() ? textSpace : (basePos.x() - (textRect.width() + textSpace));
 	_title->setPos(textX, basePos.y() - textRect.height() * 0.5f);
 
 	path.addEllipse(basePos, halfSize, halfSize);
@@ -93,7 +97,7 @@ QPointF view::Slot::getBasePosition(bool global) const
 
 	const int index = node->getSlotIndex(this);
 	const float x = isInput() ? 0 : node->boundingRect().width();
-	const float y = 35 + index * _title->boundingRect().height();
+	const float y = 45 + index * _title->boundingRect().height();
 
 	auto p = QPointF(x, y);
 

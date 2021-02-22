@@ -124,7 +124,7 @@ void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 void view::SceneGraph::setupUi()
 {
 	_cellSize = 40; // in pixels
-	_blockSize = 5; // in cells
+	_blockSize = 10; // in cells
 	
 	_background = QColor(140, 140, 140);
 	_lightGrid = QColor(120, 120, 120);
@@ -177,8 +177,8 @@ void view::SceneGraph::createSampleScenario()
 	auto grNodeC = new logic::EndpointNode(nodeC);
 
 	grNodeA->setPos(0, 0);
-	grNodeB->setPos(600, 0);
-	grNodeC->setPos(300, 0);
+	grNodeB->setPos(800, 0);
+	grNodeC->setPos(400, 0);
 
 	addItem(grNodeA);
 	addItem(grNodeB);
@@ -236,6 +236,7 @@ void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 		}
 		else
 		{
+			_destinationSlot = nullptr;
 			_connectionEdge->setNoCandidateAvaible();
 		}
 		update();

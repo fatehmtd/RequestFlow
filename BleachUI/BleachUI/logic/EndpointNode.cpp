@@ -32,15 +32,15 @@ void logic::EndpointNode::setupUi()
 	_ui->lineEdit_url->setText("http://localhost:8080/testPost");
 	_ui->comboBox_method->setCurrentIndex(1);
 
-	_height = 400;
-
 	_input = _node->getInputSlots().first();
 	_output = _node->getOutputSlots().first();
 
-	_bgColor = view::colors::chocolateWeb;
+	_bgColor = view::colors::blue;
 	connect(_node, &model::Node::readyForEvaluation, this, [=]() {
 		sendPayload();
 		});
+
+	setSize(300, 400);
 }
 
 void logic::EndpointNode::sendPayload()
