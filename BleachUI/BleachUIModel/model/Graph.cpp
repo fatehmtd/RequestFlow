@@ -16,12 +16,12 @@ model::Graph::~Graph()
 
 QList<model::Node*> model::Graph::getNodes() const
 {
-	return std::move(findChildren<Node*>());
+    return findChildren<Node*>();
 }
 
 QList<model::Edge*> model::Graph::getEdges() const
 {
-	return std::move(findChildren<Edge*>());
+    return findChildren<Edge*>();
 }
 
 int model::Graph::start()
@@ -42,8 +42,19 @@ void model::Graph::onNodeEvaluated()
 	auto node = dynamic_cast<Node*>(sender());
 	if (node != nullptr)
 	{
-		qDebug() << __FUNCTION__ << node;
+		//qDebug() << __FUNCTION__ << node;
 	}
+}
+
+void model::Graph::onNodeException(QString reason)
+{
+	auto node = dynamic_cast<Node*>(sender());
+	if (node != nullptr)
+	{
+		emit exceptionRaised(node, reason);
+	}
+
+	qDebug() << __FUNCTION__ << reason;
 }
 
 int model::Graph::computeExecutionPath()

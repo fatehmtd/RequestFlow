@@ -17,7 +17,7 @@ view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsObject(parent), _sl
 	//setAcceptDrops(true);
 	setAcceptHoverEvents(true);
 	QFont font;
-	font.setPointSize(11);
+	font.setPointSize(12);
 	//font.setBold(true);
 	_title = new QGraphicsTextItem(this);
 	_title->setFont(font);
@@ -39,6 +39,7 @@ QRectF view::Slot::boundingRect() const
 
 void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
+	painter->beginNativePainting();
 	QPainterPath path, outline;
 	QPen pen(colors::purple);
 	QBrush brush(isInput() ? colors::green : colors::red);
@@ -72,6 +73,8 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		painter->setPen(pen);
 		painter->drawPath(outline.simplified());
 	}
+
+	painter->endNativePainting();
 }
 
 void view::Slot::hoverEnterEvent(QGraphicsSceneHoverEvent* event)

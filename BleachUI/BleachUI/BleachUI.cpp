@@ -5,7 +5,7 @@ BleachUI::BleachUI(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    setMinimumSize(1024, 768);
+    setMinimumSize(1280, 800);
     _sceneGraphWidget = new SceneGraphWidget(this);
     setCentralWidget(_sceneGraphWidget);
 }

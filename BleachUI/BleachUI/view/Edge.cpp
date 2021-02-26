@@ -28,12 +28,14 @@ QPainterPath view::Edge::shape() const
 
 void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {	
+	painter->beginNativePainting();
 	auto path = buildPath();
 	setPath(path);
 	QPen pen(isSelected() ? QColor("#22AAAA") : QColor("#222222"), _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
 	painter->setPen(pen);
 	painter->setBrush(Qt::BrushStyle::NoBrush);
 	painter->drawPath(path);
+	painter->endNativePainting();
 }
 
 QPainterPath view::Edge::buildPath() const

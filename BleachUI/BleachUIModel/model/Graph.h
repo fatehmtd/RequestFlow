@@ -34,9 +34,11 @@ namespace model
 		virtual int start();
 		virtual void stop();
 		virtual void onNodeEvaluated();	
+		virtual void onNodeException(QString reason);
 	signals:
 		void started();
 		void stopped();
+		void exceptionRaised(Node* node, QString reason);
 	private:
 		int computeExecutionPath();
 		void clear();

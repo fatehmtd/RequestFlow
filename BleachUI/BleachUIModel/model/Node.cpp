@@ -19,6 +19,7 @@ model::Node::Node(Graph* parent, const QString& name) : BaseEntity(parent)
 
 	//connect(this, &Node::readyForEvaluation, this, &Node::evaluate);
 	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated);
+	connect(this, &Node::exceptionRaised, parent, &Graph::onNodeEvaluated);
 }
 
 model::InputSlot* model::Node::getDestination(const QString& name) const
@@ -96,6 +97,11 @@ void model::Node::evaluate()
 	}	
 }
 
+void model::Node::raiseException(QString reason)
+{
+	emit exceptionRaised(reason);
+}
+
 void model::Node::onGraphStart()
 {
 	clear();
@@ -103,7 +109,7 @@ void model::Node::onGraphStart()
 	// If the node has no input slots, proceed to evaluation when the graph execution starts
 	if (getInputSlots().size() == 0)
 	{
-		emit readyForEvaluation();
+		emit ready();
 	}
 }
 
@@ -131,7 +137,7 @@ void model::Node::slotDataReceived()
 			// When all the slots receive data, the node becomes ready for evaluation
 			if (_listOfReadySlots.size() == getInputSlots().size())
 			{
-				emit readyForEvaluation();
+				emit ready();
 			}
 		}
 	}
