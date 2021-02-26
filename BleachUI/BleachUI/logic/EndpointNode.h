@@ -37,6 +37,7 @@ namespace logic
         void sendDel();
         void sendPut();
         void sendPatch();
+        bool validateHttpStatus(int status) const;
 
         void processResponse(QNetworkReply* reply);
 

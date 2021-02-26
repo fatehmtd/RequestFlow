@@ -36,7 +36,7 @@ void logic::EndpointNode::setupUi()
 	_output = _node->getOutputSlots().first();
 
 	_bgColor = view::colors::blue;
-	connect(_node, &model::Node::readyForEvaluation, this, [=]() {
+	connect(_node, &model::Node::ready, this, [=]() {
 		sendPayload();
 		});
 
@@ -132,6 +132,11 @@ void logic::EndpointNode::sendPatch()
 	auto reply = _networkAccessManager->sendCustomRequest(request, "PATCH", data.toUtf8());
 }
 
+bool logic::EndpointNode::validateHttpStatus(int status) const
+{
+	return status == 200;
+}
+
 void logic::EndpointNode::processResponse(QNetworkReply* reply)
 {
 	QString data(reply->readAll());
@@ -140,10 +145,11 @@ void logic::EndpointNode::processResponse(QNetworkReply* reply)
 	QTextStream out(&fullResponse, QIODevice::WriteOnly);
 	
 	auto msecs = _elapsedTimer.elapsed();
+	auto status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toInt();
 
 	out << _ui->comboBox_method->currentText() << " " << reply->url().toString() << "\n";
 	out << "\n";
-	out << "Status : " << reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toString() << "\n";
+	out << "Status : " << status << "\n";
 	out << "Content-Length : " << reply->header(QNetworkRequest::KnownHeaders::ContentLengthHeader).toString() << "\n";
 	out << "Content-Type : " << reply->header(QNetworkRequest::KnownHeaders::ContentTypeHeader).toString() << "\n";
 	out << "Last-Modified : " << reply->header(QNetworkRequest::KnownHeaders::LastModifiedHeader).toString() << "\n";
@@ -156,11 +162,16 @@ void logic::EndpointNode::processResponse(QNetworkReply* reply)
 	_ui->plainTextEdit_response->setPlainText(fullResponse);
 
 	_output->setData(data);
+
+	if (validateHttpStatus(status))
+		_node->evaluate();
+	else
+		_node->raiseException(QString("Invalid http status %1").arg(status));
 }
 
 void logic::EndpointNode::replyReceived(QNetworkReply* reply)
 {
 	processResponse(reply);
 
-	_node->evaluate();
+	//_node->evaluate();
 }

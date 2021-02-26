@@ -61,8 +61,12 @@ namespace view
 		virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
 		virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
 		virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+		virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
+
+		void doResize(QGraphicsSceneMouseEvent* event);
 	private:
 		int computeGripCorner(const QPointF& cursorPos);
+		void handleResize(const QPointF& pos);
 
 	protected:
 		model::Node* _node = nullptr;
@@ -77,7 +81,10 @@ namespace view
 
 		// resizing
 		QPointF _anchorPoint;
-		bool _resizeMode = false;
+		int _cursorResizeMode = false;
+		bool _resizeEligible = false;
+		bool _isResizing = false;
+		QPointF _topLeftCorner, _bottomRightCorner;
 	};
 }
 

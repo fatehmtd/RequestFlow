@@ -21,33 +21,43 @@ void SceneGraphWidget::initUi()
 	
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
 	
-	setRenderHints(QPainter::RenderHint::Antialiasing | 
-		QPainter::RenderHint::HighQualityAntialiasing | 
+	setRenderHints(
+		QPainter::RenderHint::Antialiasing | 
+		//QPainter::RenderHint::HighQualityAntialiasing | 
 		QPainter::RenderHint::TextAntialiasing |
-		QPainter::RenderHint::SmoothPixmapTransform);
+		QPainter::RenderHint::SmoothPixmapTransform
+	);
 	//*/
-	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
+	//setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+
+	setOptimizationFlags(QGraphicsView::DontClipPainter);
+	setOptimizationFlags(QGraphicsView::DontSavePainterState);
+	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
+	setCacheMode(QGraphicsView::CacheBackground);
 	
 	_sceneGraph = new view::SceneGraph(this);
 	setScene(_sceneGraph);
 
-	_zoomInFactor = 1.125f;
+	_zoomInFactor = 1.25f;
 	_zoomStep = 1;
-	_zoomLevel = 1;
+	_zoomLevel = 5;
 	_minZoomLevel = 1;
-	_maxZoomLevel = 1;
+	_maxZoomLevel = 10;
 
+	/*
 	QSurfaceFormat surfaceFormat;
-	surfaceFormat.setSamples(16);
+	surfaceFormat.setSamples(8);
+	surfaceFormat.setSwapInterval(60);
 	surfaceFormat.setRedBufferSize(16);
 	surfaceFormat.setGreenBufferSize(16);
 	surfaceFormat.setBlueBufferSize(16);
 	surfaceFormat.setAlphaBufferSize(16);
 	auto glWidget = new QOpenGLWidget();
 	glWidget->setFormat(surfaceFormat);
-	//setViewport(glWidget);
+	setViewport(glWidget);
+	//*/
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)

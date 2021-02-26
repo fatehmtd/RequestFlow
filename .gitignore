@@ -35,4 +35,6 @@ BleachUI/BleachUI/x64
 BleachUI/BleachUIModel/x64
 BleachUI/x64
 BleachUI/build-*
+BleachUI/BleachUI.pro
+*.pri
 *.pro
