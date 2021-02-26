@@ -116,9 +116,9 @@ void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 
 void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
-	qDebug() << __FUNCTION__;
+	//qDebug() << __FUNCTION__;
 	QGraphicsScene::contextMenuEvent(event);
-	qDebug() << _graph->start();
+	qDebug() << "Graph start result : " << _graph->start();
 }
 
 void view::SceneGraph::setupUi()
@@ -158,9 +158,9 @@ void view::SceneGraph::createSampleScenario()
 	auto nodeB = new model::Node(_graph, "Result");
 	auto nodeC = new model::Node(_graph, "Endpoint");
 
-	auto slotA = nodeA->addOutputSlot("out", model::Slot::DataType::CUSTOM + 1);
+	auto slotA = nodeA->addOutputSlot("out", model::Slot::DataType::CUSTOM + 0);
 	auto slotB0 = nodeB->addInputSlot("in", model::Slot::DataType::CUSTOM + 1);
-	auto slotC0 = nodeC->addInputSlot("in", model::Slot::DataType::CUSTOM + 1);
+	auto slotC0 = nodeC->addInputSlot("in", model::Slot::DataType::CUSTOM + 0);
 	auto slotC1 = nodeC->addOutputSlot("out", model::Slot::DataType::CUSTOM + 1);
 
 	auto edgeAC = new model::Edge(_graph);
@@ -170,7 +170,6 @@ void view::SceneGraph::createSampleScenario()
 	auto edgeCB = new model::Edge(_graph);
 	edgeCB->setOrigin(slotC1);
 	edgeCB->setDestination(slotB0);
-
 
 	auto grNodeA = new logic::PayloadNode(nodeA);
 	auto grNodeB = new logic::ViewerNode(nodeB);
@@ -194,6 +193,43 @@ void view::SceneGraph::createSampleScenario()
 			addItem(grEdge);
 		}
 	}
+
+	createEndpointNode();
+
+	createViewerNode();
+}
+
+view::Node* view::SceneGraph::createEndpointNode()
+{
+	auto nodeC = new model::Node(_graph, "Endpoint");
+
+	auto slotC0 = nodeC->addInputSlot("in", model::Slot::DataType::CUSTOM + 0);
+	auto slotC1 = nodeC->addOutputSlot("out", model::Slot::DataType::CUSTOM + 1);
+
+	auto grNodeC = new logic::EndpointNode(nodeC);
+	addItem(grNodeC);
+	return grNodeC;
+}
+
+view::Node* view::SceneGraph::createPayloadNode()
+{
+	auto nodeA = new model::Node(_graph, "Payload");
+
+	auto slotA = nodeA->addOutputSlot("out", model::Slot::DataType::CUSTOM + 0);
+	auto grNodeA = new logic::PayloadNode(nodeA);
+	addItem(grNodeA);
+	return grNodeA;
+}
+
+view::Node* view::SceneGraph::createViewerNode()
+{
+	auto nodeB = new model::Node(_graph, "Result");
+
+	auto slotB0 = nodeB->addInputSlot("in", model::Slot::DataType::CUSTOM + 1);
+
+	auto grNodeB = new logic::ViewerNode(nodeB);
+	addItem(grNodeB);
+	return grNodeB;
 }
 
 void view::SceneGraph::mousePressEvent(QGraphicsSceneMouseEvent* event)

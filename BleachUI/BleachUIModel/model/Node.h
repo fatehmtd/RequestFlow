@@ -29,6 +29,7 @@ namespace model
 
 	public slots:
 		virtual void evaluate();
+		void raiseException(QString reason);
 
 	protected:		
 		virtual void onGraphStart() override;
@@ -38,7 +39,8 @@ namespace model
 
 	signals:
 		void evaluated();
-		void readyForEvaluation();
+		void exceptionRaised(QString reason);
+		void ready();
 
 	protected slots:
 		void slotDataReceived();

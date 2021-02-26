@@ -73,6 +73,8 @@ void view::Node::setupUi()
 
 	setFlag(GraphicsItemFlag::ItemIsSelectable);
 	setFlag(GraphicsItemFlag::ItemIsMovable);
+	setFlag(GraphicsItemFlag::ItemSendsGeometryChanges);
+	setCacheMode(CacheMode::DeviceCoordinateCache);
 
 	QFont font;
 	font.setBold(true);
@@ -144,7 +146,11 @@ void view::Node::setSize(int w, int h)
 		int top = 50;
 		int bottom = _height - (top + 10);
 		_contentWidget->setGeometry(_edgeSize, top, _width - 2 * _edgeSize, bottom);
+
+		qDebug() << _contentWidget->minimumSize();
 	}
+
+	_bottomRightCorner = _topLeftCorner + QPointF(w, h);
 }
 
 void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -194,34 +200,72 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		painter->drawPath(outlinePath.simplified());
 	}
 
-	// Outline Hover
-	if (_mouseHover)
-	{
+	// Outline for resizing
+	if (_isResizing)
+	{/*
+		auto p0 = _topLeftCorner - scenePos();
+		auto p1 = _bottomRightCorner - _topLeftCorner;
+
 		QPainterPath outlinePath;
-		float outlineEdgeSize = _edgeSize * 1.5f;
-		float halfEdgeSize = 0.5f * outlineEdgeSize;
-		outlinePath.addRoundedRect(-halfEdgeSize, -halfEdgeSize, w + outlineEdgeSize, h + outlineEdgeSize, outlineEdgeSize, outlineEdgeSize);
-		QPen pen(QColor("#FFFFA637"), _edgeSize * 0.5f, Qt::PenStyle::DashDotDotLine);
+		outlinePath.addRoundedRect(p0.x(), p0.y(), p1.x(), p1.y(), _edgeSize, _edgeSize);
+		QPen pen(QColor("#00FF00"), 5);
 		painter->setPen(pen);
 		painter->setBrush(Qt::BrushStyle::NoBrush);
 		painter->drawPath(outlinePath.simplified());
+		//*/
 	}
+	else
+	{
+		// Outline Hover
+		if (_mouseHover)
+		{
+			QPainterPath outlinePath;
+			float outlineEdgeSize = _edgeSize * 1.2f;
+			float halfEdgeSize = 0.5f * outlineEdgeSize;
+			outlinePath.addRoundedRect(halfEdgeSize, halfEdgeSize, w - halfEdgeSize * 2.0, h - halfEdgeSize * 2.0, _edgeSize, _edgeSize);
+			QPen pen(QColor("#FFFFA637"), _edgeSize * 1.5, Qt::PenStyle::DashDotDotLine);
+			painter->setPen(pen);
+			painter->setBrush(Qt::BrushStyle::NoBrush);
+			painter->drawPath(outlinePath.simplified());
+		}
 
+	}
 	painter->endNativePainting();
 }
 
 void view::Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-	QGraphicsObject::mouseMoveEvent(event);
+	if (_isResizing)
+	{
+		doResize(event);
+	}
+	else
+	{
+		QGraphicsObject::mouseMoveEvent(event);
+	}
 }
 
 void view::Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-	QGraphicsObject::mousePressEvent(event);
+	if (_resizeEligible)
+	{
+		_isResizing = true;
+		_anchorPoint = event->scenePos();
+	}
+	else
+	{
+		QGraphicsObject::mousePressEvent(event);
+	}	
 }
 
 void view::Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
+	if(_isResizing)
+	{
+		_isResizing = false;
+		update();
+	}
+
 	QGraphicsObject::mouseReleaseEvent(event);
 }
 
@@ -229,39 +273,12 @@ void view::Node::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
 	_mouseHover = true;
 	QGraphicsObject::hoverEnterEvent(event);
+	handleResize(event->scenePos());
 }
 
 void view::Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
-	// check if the cursor is on the border and engage resizing
-	/*if (!_resizeMode)
-	{
-		int corner = computeGripCorner(event->scenePos());
-
-		switch (corner)
-		{
-		case Handle::LEFT:
-		case Handle::RIGHT:
-			setCursor(Qt::CursorShape::SizeHorCursor);
-			break;
-		case Handle::TOP:
-		case Handle::BOTTOM:
-			setCursor(Qt::CursorShape::SizeVerCursor);
-			break;
-		case Handle::TOP_LEFT:
-		case Handle::BOTTOM_RIGHT:
-			setCursor(Qt::CursorShape::SizeFDiagCursor);
-			break;
-		case Handle::BOTTOM_LEFT:
-		case Handle::TOP_RIGHT:
-			setCursor(Qt::CursorShape::SizeBDiagCursor);
-			break;
-		default:
-			setCursor(Qt::CursorShape::OpenHandCursor);
-			break;
-		}
-	}
-	*/
+	handleResize(event->scenePos());
 	QGraphicsObject::hoverMoveEvent(event);
 }
 
@@ -269,6 +286,135 @@ void view::Node::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
 	_mouseHover = false;
 	QGraphicsObject::hoverLeaveEvent(event);
+}
+
+QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant& value)
+{
+	switch (change)
+	{
+	case QGraphicsItem::ItemPositionChange:
+	{
+		auto p = value.toPointF();
+		auto delta = p - _topLeftCorner;
+		_topLeftCorner = p;
+		_bottomRightCorner += delta;
+	}
+		break;
+	case QGraphicsItem::ItemMatrixChange:
+		break;
+	case QGraphicsItem::ItemVisibleChange:
+		break;
+	case QGraphicsItem::ItemEnabledChange:
+		break;
+	case QGraphicsItem::ItemSelectedChange:
+		break;
+	case QGraphicsItem::ItemParentChange:
+		break;
+	case QGraphicsItem::ItemChildAddedChange:
+		break;
+	case QGraphicsItem::ItemChildRemovedChange:
+		break;
+	case QGraphicsItem::ItemTransformChange:
+		break;
+	case QGraphicsItem::ItemPositionHasChanged:
+		break;
+	case QGraphicsItem::ItemTransformHasChanged:
+		break;
+	case QGraphicsItem::ItemSceneChange:
+		break;
+	case QGraphicsItem::ItemVisibleHasChanged:
+		break;
+	case QGraphicsItem::ItemEnabledHasChanged:
+		break;
+	case QGraphicsItem::ItemSelectedHasChanged:
+		break;
+	case QGraphicsItem::ItemParentHasChanged:
+		break;
+	case QGraphicsItem::ItemSceneHasChanged:
+		break;
+	case QGraphicsItem::ItemCursorChange:
+		break;
+	case QGraphicsItem::ItemCursorHasChanged:
+		break;
+	case QGraphicsItem::ItemToolTipChange:
+		break;
+	case QGraphicsItem::ItemToolTipHasChanged:
+		break;
+	case QGraphicsItem::ItemFlagsChange:
+		break;
+	case QGraphicsItem::ItemFlagsHaveChanged:
+		break;
+	case QGraphicsItem::ItemZValueChange:
+		break;
+	case QGraphicsItem::ItemZValueHasChanged:
+		break;
+	case QGraphicsItem::ItemOpacityChange:
+		break;
+	case QGraphicsItem::ItemOpacityHasChanged:
+		break;
+	case QGraphicsItem::ItemScenePositionHasChanged:
+		break;
+	case QGraphicsItem::ItemRotationChange:
+		break;
+	case QGraphicsItem::ItemRotationHasChanged:
+		break;
+	case QGraphicsItem::ItemScaleChange:
+		break;
+	case QGraphicsItem::ItemScaleHasChanged:
+		break;
+	case QGraphicsItem::ItemTransformOriginPointChange:
+		break;
+	case QGraphicsItem::ItemTransformOriginPointHasChanged:
+		break;
+	default:
+		break;
+	}
+	return QGraphicsObject::itemChange(change, value);
+}
+
+void view::Node::doResize(QGraphicsSceneMouseEvent* event)
+{
+	auto p = event->scenePos();
+	float x = 0, y = 0, w = _width, h = _height;
+
+	// handle the size change
+	if (_cursorResizeMode & Handle::RIGHT)
+	{
+		_bottomRightCorner.setX(p.x());
+		w = _bottomRightCorner.x() - _topLeftCorner.x();
+	}
+
+	if (_cursorResizeMode & Handle::BOTTOM)
+	{
+		_bottomRightCorner.setY(p.y());
+		h = _bottomRightCorner.y() - _topLeftCorner.y();
+	}
+
+	if (_cursorResizeMode & Handle::LEFT)
+	{
+		_topLeftCorner.setX(p.x());
+		x = _topLeftCorner.x();
+	}
+
+	if (_cursorResizeMode & Handle::TOP)
+	{
+		_topLeftCorner.setY(p.y());
+		y = _topLeftCorner.y();
+	}
+
+	if (x != 0 || y != 0)
+	{
+		setPos(_topLeftCorner);
+		w = _bottomRightCorner.x() - _topLeftCorner.x();
+		h = _bottomRightCorner.y() - _topLeftCorner.y();
+	}
+
+	if (w != _width || h != _height)
+	{
+		setSize(w, h);
+	}
+
+	update();
 }
 
 int view::Node::computeGripCorner(const QPointF& p)
@@ -296,7 +442,35 @@ int view::Node::computeGripCorner(const QPointF& p)
 		corner |= Handle::BOTTOM;
 	}
 
-	qDebug() << relativePos << corner;
-
 	return corner;
+}
+
+void view::Node::handleResize(const QPointF& pos)
+{
+	_cursorResizeMode = computeGripCorner(pos);
+
+	_resizeEligible = _cursorResizeMode != 0;
+
+	switch (_cursorResizeMode)
+	{
+	case Handle::LEFT:
+	case Handle::RIGHT:
+		setCursor(Qt::CursorShape::SizeHorCursor);
+		break;
+	case Handle::TOP:
+	case Handle::BOTTOM:
+		setCursor(Qt::CursorShape::SizeVerCursor);
+		break;
+	case Handle::TOP_LEFT:
+	case Handle::BOTTOM_RIGHT:
+		setCursor(Qt::CursorShape::SizeFDiagCursor);
+		break;
+	case Handle::BOTTOM_LEFT:
+	case Handle::TOP_RIGHT:
+		setCursor(Qt::CursorShape::SizeBDiagCursor);
+		break;
+	default:
+		setCursor(Qt::CursorShape::ArrowCursor);
+		break;
+	}
 }

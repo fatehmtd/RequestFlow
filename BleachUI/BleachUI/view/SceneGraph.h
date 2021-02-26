@@ -38,6 +38,10 @@ namespace view
 
 		void createSampleScenario();
 
+		Node* createEndpointNode();
+		Node* createPayloadNode();
+		Node* createViewerNode();
+
 	protected:
 		model::Graph* _graph = nullptr;
 		QColor _background;
