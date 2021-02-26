@@ -67,12 +67,12 @@
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>5.12.9</QtInstall>
+    <QtInstall>5.15.1</QtInstall>
     <QtModules>core;gui;network;webchannel;websockets;widgets;xml;xmlpatterns</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.12.9</QtInstall>
+    <QtInstall>5.15.1</QtInstall>
     <QtModules>core;gui;network;webchannel;websockets;widgets;xml;xmlpatterns</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>

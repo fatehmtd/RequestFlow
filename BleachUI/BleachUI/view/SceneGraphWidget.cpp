@@ -22,7 +22,7 @@ void SceneGraphWidget::initUi()
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
 	
 	setRenderHints(
-		QPainter::RenderHint::Antialiasing | 
+		//QPainter::RenderHint::Antialiasing | 
 		//QPainter::RenderHint::HighQualityAntialiasing | 
 		QPainter::RenderHint::TextAntialiasing |
 		QPainter::RenderHint::SmoothPixmapTransform
