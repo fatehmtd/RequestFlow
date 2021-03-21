@@ -2,6 +2,9 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QAction>
+#include <functional>
+#include <QMap>
 
 #include <model/Graph.h>
 #include <model/Edge.h>
@@ -19,11 +22,18 @@ namespace view
 	class SceneGraph : public QGraphicsScene
 	{
 	public:
-		SceneGraph(QObject* parent = nullptr);
+		SceneGraph(model::Graph* modelGraph, QObject* parent = nullptr);
 
 		Slot* findbyModel(model::Slot* slot) const;
 		Node* findbyModel(model::Node* node) const;
 		Edge* findbyModel(model::Edge* edge) const;
+
+		model::Graph* getModelGraph() const;
+
+		void registerEdgeAction(QString name, std::function<void(view::Edge*)> func);
+		void registerNodeAction(QString name, std::function<void(view::Node*)> func);
+
+		void clearNodes();
 
 	protected:
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
@@ -34,6 +44,8 @@ namespace view
 		virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
 		virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
+		void bringToFront(QPointF pos) const;
+
 		virtual void setupUi();
 
 		void createSampleScenario();
@@ -41,9 +53,18 @@ namespace view
 		Node* createEndpointNode();
 		Node* createPayloadNode();
 		Node* createViewerNode();
+		Node* createModifierNode();
+		Node* createDelayNode();
+		Node* createScriptNode();
+
+		void deleteNode(Node* node);
+		void deleteEdge(Edge* edge);
+		void cloneNode(Node* node);
+
+		void createEdge();
 
 	protected:
-		model::Graph* _graph = nullptr;
+		model::Graph* _modelGraph = nullptr;
 		QColor _background;
 		QColor _lightGrid, _darkGrid;
 		ushort _cellSize, _blockSize;
@@ -51,5 +72,8 @@ namespace view
 		Slot* _originSlot = nullptr, * _destinationSlot = nullptr;
 		QPointF _cursorPosition;
 		ConnectionEdge* _connectionEdge = nullptr;
+
+		QMap<QString, std::function<void(view::Edge*)>> _edgesActions;
+		QMap<QString, std::function<void(view::Node*)>> _nodesActions;
 	};
 }

@@ -5,51 +5,66 @@
 #include <QPainterPath>
 #include <QPainter>
 #include <QDebug>
+#include "Colors.h"
 
-view::Edge::Edge(Slot* origin, Slot* destination) : _slotDestination(destination), _slotOrigin(origin)
+view::Edge::Edge(SceneGraph* graph, model::Edge* edge) : _edge(edge)
 {
+	_slotOrigin = graph->findbyModel(edge->getDestinationSlot());
+	_slotDestination = graph->findbyModel(edge->getOriginSlot());
+
 	setZValue(-1);
 	setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
 	setAcceptHoverEvents(true);
-	_thickness = 5.0f;
+	_thickness = 10.0f;
 }
 
 view::Edge::~Edge()
 {
-
 }
 
 QPainterPath view::Edge::shape() const
 {
 	QPainterPathStroker stroker;
-	stroker.setWidth(_thickness * 2.0f);
+	stroker.setWidth(_thickness);
 	return stroker.createStroke(buildPath()).simplified();
 }
 
+#include <QStyleOptionGraphicsItem>
+
 void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
-{	
-	painter->beginNativePainting();
+{
+	painter->setClipPath(shape()); 
+	//painter->setClipRect(option->exposedRect);
+
+	auto inPosition = _slotDestination->getBasePosition(true);
+	auto outPosition = _slotOrigin->getBasePosition(true);
+
+	float dx = (outPosition.x() - inPosition.x());
+	//setZValue(dx < 20 ? 1 : -1);
+
 	auto path = buildPath();
 	setPath(path);
-	QPen pen(isSelected() ? QColor("#22AAAA") : QColor("#222222"), _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
+	QPen pen(isSelected() ? colors::orange : (_mouseHovering ? colors::orange : colors::outlineGrey), _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
 	painter->setPen(pen);
 	painter->setBrush(Qt::BrushStyle::NoBrush);
 	painter->drawPath(path);
-	painter->endNativePainting();
 }
 
 QPainterPath view::Edge::buildPath() const
 {
 	auto inPosition = _slotDestination->getBasePosition(true);
 	auto outPosition = _slotOrigin->getBasePosition(true);
-	QPointF ctrlPointA, ctrlPointB;
 
 	float dx = (outPosition.x() - inPosition.x());
 
-	float cltrX = dx < 20.0f ? 250 : 50;
+	float thresh = abs(dx) * 0.5f;
 
-	ctrlPointA = outPosition + QPointF(-cltrX, 0);
-	ctrlPointB = inPosition + QPointF(cltrX, 0);
+	//float cltrX = dx < 20.0f ? 300 : thresh;
+
+	float cltrX = std::min(300.0f, std::max(thresh, 100.0f));
+	 
+	auto ctrlPointA = outPosition + QPointF(-cltrX, 0);
+	auto ctrlPointB = inPosition + QPointF(cltrX, 0);
 
 	QPainterPath path(outPosition);
 

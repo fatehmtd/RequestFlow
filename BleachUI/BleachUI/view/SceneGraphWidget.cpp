@@ -2,6 +2,12 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QOpenGLWidget>
+#include <QScrollBar>
+#include <QGraphicsScene>
+#include <QGraphicsProxyWidget>
+#include <QApplication>
+
+#include <model/Graph.h>
 
 SceneGraphWidget::SceneGraphWidget(QWidget* parent) : QGraphicsView(parent)
 {
@@ -13,49 +19,59 @@ SceneGraphWidget::~SceneGraphWidget()
 
 }
 
+#include <QTimer>
+
 void SceneGraphWidget::initUi()
 {
 	//setFocusPolicy(Qt::FocusPolicy::ClickFocus);
- 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	
+
+	//setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
-	
+	setRenderHint(QPainter::RenderHint::Antialiasing, false);
+	setRenderHint(QPainter::RenderHint::TextAntialiasing, false);
+	setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, false);
+
+	/*
 	setRenderHints(
-		//QPainter::RenderHint::Antialiasing | 
-		//QPainter::RenderHint::HighQualityAntialiasing | 
+		QPainter::RenderHint::Antialiasing |
 		QPainter::RenderHint::TextAntialiasing |
 		QPainter::RenderHint::SmoothPixmapTransform
 	);
 	//*/
-	//setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
+	
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-
+	/*
 	setOptimizationFlags(QGraphicsView::DontClipPainter);
 	setOptimizationFlags(QGraphicsView::DontSavePainterState);
 	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
-	setCacheMode(QGraphicsView::CacheBackground);
-	
-	_sceneGraph = new view::SceneGraph(this);
+	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
+	//*/
+
+	_sceneGraph = new view::SceneGraph(new model::Graph, this);
 	setScene(_sceneGraph);
 
 	_zoomInFactor = 1.25f;
 	_zoomStep = 1;
-	_zoomLevel = 5;
+	_zoomLevel = 4;
 	_minZoomLevel = 1;
 	_maxZoomLevel = 10;
 
 	/*
 	QSurfaceFormat surfaceFormat;
 	surfaceFormat.setSamples(8);
-	surfaceFormat.setSwapInterval(60);
-	surfaceFormat.setRedBufferSize(16);
-	surfaceFormat.setGreenBufferSize(16);
-	surfaceFormat.setBlueBufferSize(16);
-	surfaceFormat.setAlphaBufferSize(16);
+	surfaceFormat.setVersion(4, 2);
+	//surfaceFormat.setProfile(QSurfaceFormat::CompatibilityProfile);
+	//surfaceFormat.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
+	surfaceFormat.setSwapInterval(1);
+
+	QSurfaceFormat::setDefaultFormat(surfaceFormat);
+	//surfaceFormat.setSwapBehavior(QSurfaceFormat::SwapBehavior::SingleBuffer);
+
 	auto glWidget = new QOpenGLWidget();
-	glWidget->setFormat(surfaceFormat);
+	//glWidget->setFormat(surfaceFormat);
 	setViewport(glWidget);
 	//*/
 }
@@ -66,7 +82,7 @@ void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 	{
 		mouseMiddleButtonPressed(event);
 	}
-	else
+	//else
 	{
 		QGraphicsView::mousePressEvent(event);
 	}
@@ -78,13 +94,67 @@ void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
 	{
 		mouseMiddleButtonReleased(event);
 	}
-	else
+	//else
 	{
 		QGraphicsView::mouseReleaseEvent(event);
 	}
 }
 
+void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
+{
+	if (dragMode() == DragMode::ScrollHandDrag)
+	{
+		auto p = (event->pos());
+
+		auto delta = p - _prevPos;
+		_prevPos = p;
+
+		horizontalScrollBar()->setValue(horizontalScrollBar()->value() - delta.x());
+		verticalScrollBar()->setValue(verticalScrollBar()->value() - delta.y());
+	}
+	QGraphicsView::mouseMoveEvent(event);
+}
+
 void SceneGraphWidget::wheelEvent(QWheelEvent* event)
+{
+	// always zoom in/out when ctrl is pressed
+	bool ctrlPressed = Qt::KeyboardModifier::ControlModifier& event->modifiers();
+
+	auto itemUnderCursor = _sceneGraph->itemAt(mapToScene(event->pos()), QTransform());
+
+	if (itemUnderCursor != nullptr && !ctrlPressed)
+	{		
+		auto widget = dynamic_cast<QGraphicsProxyWidget*>(itemUnderCursor);
+
+		if (widget != nullptr)
+		{
+			auto dx = horizontalScrollBar()->value();
+			auto dy = verticalScrollBar()->value();
+
+			QGraphicsView::wheelEvent(event);
+
+			horizontalScrollBar()->setValue(dx);
+			verticalScrollBar()->setValue(dy);
+		}
+	}
+	else
+	{
+		performZoom(event);
+	}
+}
+
+void SceneGraphWidget::mouseMiddleButtonPressed(QMouseEvent* event)
+{
+	_prevPos = (event->pos());
+	setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
+}
+
+void SceneGraphWidget::mouseMiddleButtonReleased(QMouseEvent* event)
+{
+	setDragMode(QGraphicsView::DragMode::NoDrag);
+}
+
+void SceneGraphWidget::performZoom(QWheelEvent* event)
 {
 	if (event->angleDelta().y() > 0)
 	{
@@ -98,35 +168,9 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
 	{
 		if (_zoomLevel < _maxZoomLevel)
 		{
-			_zoomLevel += _zoomStep;			
+			_zoomLevel += _zoomStep;
 			const float factor = 1.0f / _zoomInFactor;
 			scale(factor, factor);
 		}
 	}
-	// TODO: disable zooming whilst hovering over a widget
-	//QGraphicsView::wheelEvent(event);
-}
-
-void SceneGraphWidget::mouseMiddleButtonPressed(QMouseEvent* event)
-{
-	auto releaseEvent = QMouseEvent(QEvent::MouseButtonRelease, event->localPos(), Qt::MouseButton::MiddleButton, Qt::MouseButton::NoButton, Qt::KeyboardModifier::NoModifier);
-	QGraphicsView::mouseReleaseEvent(&releaseEvent);
-
-	setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
-
-	auto pressEvent = QMouseEvent(event->type(), event->localPos(), Qt::MouseButton::LeftButton, event->buttons() | Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier);
-	QGraphicsView::mousePressEvent(&pressEvent);
-}
-
-void SceneGraphWidget::mouseMiddleButtonReleased(QMouseEvent* event)
-{
-	auto pressEvent = QMouseEvent(event->type(), event->localPos(), Qt::MouseButton::LeftButton, event->buttons() & ~Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier);
-	QGraphicsView::mousePressEvent(&pressEvent);
-
-	setDragMode(QGraphicsView::DragMode::NoDrag);
-}
-
-void SceneGraphWidget::scrollContentsBy(int dx, int dy)
-{
-	QGraphicsView::scrollContentsBy(dx, dy);
 }

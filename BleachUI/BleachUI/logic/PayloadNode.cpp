@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QTableWidgetItem>
 
 logic::PayloadNode::PayloadNode(model::Node* modelNode) : view::Node(modelNode)
 {
@@ -12,24 +13,68 @@ logic::PayloadNode::PayloadNode(model::Node* modelNode) : view::Node(modelNode)
 	setTitle("Payload");
 }
 
+void logic::PayloadNode::clearUI()
+{
+
+}
+
 void logic::PayloadNode::setupUi()
 {
+	_bgColor = view::colors::byzantium;
+
+	auto widget = new QWidget();
+	_ui.setupUi(widget);
+
+	_ui.tableWidget_path->setRowCount(50);
+	_ui.tableWidget_query->setRowCount(50);
+
+	// add a dummy path variable
+	_ui.tableWidget_path->setItem(0, 0, new QTableWidgetItem("id"));
+	_ui.tableWidget_path->setItem(0, 1, new QTableWidgetItem("55"));
+
 	QJsonObject json =
 	{
 		{"firstName", "John"},
 		{"lastName", "Do"}
 	};
-	
-	_editor = new QTextEdit();
-	_editor->setText(QJsonDocument(json).toJson(QJsonDocument::JsonFormat::Compact));
-	getContentWidget()->layout()->addWidget(_editor);
-	//auto outputSlot = new view::Slot(this, false);
-	_bgColor = view::colors::byzantium;
+
+	_ui.textEdit_body->setText(QJsonDocument(json).toJson(QJsonDocument::JsonFormat::Indented));
+
+	getContentWidget()->layout()->addWidget(widget);
+
 	connect(_node, &model::Node::ready, this, [=]()
 		{
-			_node->getOutputSlots().first()->setData(_editor->toPlainText());
-			_node->evaluate();
+			prepareAndSend();
 		});
+	setMinSize(QSize(480, 300));
+	setSize(600, 500);
+}
 
-	setSize(300, 200);
+void logic::PayloadNode::prepareAndSend() const
+{
+	model::Message message(_ui.textEdit_body->toPlainText());
+	message.setPathVars(fillFromTable(_ui.tableWidget_path));
+	message.setQueryParams(fillFromTable(_ui.tableWidget_query));
+
+	_node->getOutputSlots().first()->setData(message);
+	_node->evaluate();
+}
+
+QMap<QString, QVariant> logic::PayloadNode::fillFromTable(QTableWidget* tableWidget) const
+{
+	QMap<QString, QVariant> outputMap;
+
+	for (int i = 0; i < tableWidget->rowCount(); i++)
+	{
+		auto keyItem = tableWidget->item(i, 0);
+		if (keyItem == nullptr) continue;
+		auto key = keyItem->text();
+		if (key.isEmpty()) continue;
+		auto valueItem = tableWidget->item(i, 1);
+		if (valueItem == nullptr) continue;
+		auto value = valueItem->text();
+		outputMap[key] = value;
+	}
+
+	return outputMap;
 }

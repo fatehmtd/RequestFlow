@@ -53,6 +53,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>.\view;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <AdditionalDependencies>BleachUIModel.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -67,13 +68,13 @@
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>5.15.1</QtInstall>
-    <QtModules>core;gui;network;webchannel;websockets;widgets;xml;xmlpatterns</QtModules>
+    <QtInstall>5.15.2</QtInstall>
+    <QtModules>core;gui;network;uitools;webchannel;webengine;webenginewidgets;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.1</QtInstall>
-    <QtModules>core;gui;network;webchannel;websockets;widgets;xml;xmlpatterns</QtModules>
+    <QtInstall>5.15.2</QtInstall>
+    <QtModules>core;gui;network;uitools;webchannel;webengine;webenginewidgets;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -102,18 +103,20 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="logic\DelayNode.cpp" />
     <ClCompile Include="logic\EndpointNode.cpp" />
+    <ClCompile Include="logic\ModifierNode.cpp" />
     <ClCompile Include="logic\PayloadNode.cpp" />
+    <ClCompile Include="logic\ScriptNode.cpp" />
     <ClCompile Include="logic\ViewerNode.cpp" />
     <ClCompile Include="view\ConnectionEdge.cpp" />
     <ClCompile Include="view\ContentWidget.cpp" />
     <ClCompile Include="view\Edge.cpp" />
     <ClCompile Include="view\Node.cpp" />
-    <ClCompile Include="view\NodeContentWidget.cpp" />
     <ClCompile Include="view\SceneGraph.cpp" />
     <ClCompile Include="view\SceneGraphWidget.cpp" />
     <ClCompile Include="view\Slot.cpp" />
@@ -123,9 +126,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="view\NodeContentWidget.h" />
     <QtMoc Include="logic\EndpointNode.h" />
+    <ClInclude Include="logic\DelayNode.h" />
+    <ClInclude Include="logic\ModifierNode.h" />
     <ClInclude Include="logic\PayloadNode.h" />
+    <ClInclude Include="logic\ScriptNode.h" />
     <ClInclude Include="logic\ViewerNode.h" />
     <ClInclude Include="view\ConnectionEdge.h" />
     <QtMoc Include="view\ContentWidget.h" />
@@ -138,7 +143,11 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ui\BleachUI.ui" />
+    <QtUic Include="ui\DelayNodeUi.ui" />
     <QtUic Include="ui\EndpointNodeUi.ui" />
+    <QtUic Include="ui\ModifierNodeUi.ui" />
+    <QtUic Include="ui\PayloadNodeUi.ui" />
+    <QtUic Include="ui\ViewerNodeUi.ui" />
     <QtUic Include="view\NodeContentWidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

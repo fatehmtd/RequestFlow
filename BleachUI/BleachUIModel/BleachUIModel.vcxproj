@@ -48,12 +48,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.1</QtInstall>
-    <QtModules>core</QtModules>
+    <QtModules>core;webchannel;websockets;xml;xmlpatterns</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.15.1</QtInstall>
-    <QtModules>core</QtModules>
+    <QtModules>core;webchannel;websockets;xml;xmlpatterns</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -84,16 +84,18 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="model\BaseEntity.cpp" />
     <ClCompile Include="model\Edge.cpp" />
     <ClCompile Include="model\Graph.cpp" />
+    <ClCompile Include="model\Message.cpp" />
     <ClCompile Include="model\Node.cpp" />
     <ClCompile Include="model\Slot.cpp" />
     <ClInclude Include="bleachuimodel_global.h" />
+    <ClInclude Include="model\Message.h" />
     <QtMoc Include="model\BaseEntity.h" />
     <QtMoc Include="model\Slot.h" />
     <QtMoc Include="model\Node.h" />

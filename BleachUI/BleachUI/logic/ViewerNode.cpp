@@ -3,6 +3,8 @@
 #include <model/Node.h>
 #include <model/Slot.h>
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 logic::ViewerNode::ViewerNode(model::Node* modelNode) : view::Node(modelNode)
 {
@@ -10,15 +12,30 @@ logic::ViewerNode::ViewerNode(model::Node* modelNode) : view::Node(modelNode)
 	setTitle("Viewer");
 }
 
+void logic::ViewerNode::clearUI()
+{
+	_ui.textEdit_raw->clear();
+	_ui.textEdit_json->clear();
+}
+
 void logic::ViewerNode::setupUi()
 {
-	_editor = new QTextEdit();
-	getContentWidget()->layout()->addWidget(_editor);
+	auto widget = new QWidget();
+	_ui.setupUi(widget);
+
+	getContentWidget()->layout()->addWidget(widget);
 	_bgColor = view::colors::green;
 	connect(_node, &model::Node::ready, this, [=]()
 		{
-			_editor->setPlainText(_node->getInputSlots().first()->getData().toString().toUtf8());
-			//qDebug() << _editor->toPlainText();
+			auto request = _node->getInputSlots().first()->getData();
+
+			auto data = request.getBody();
+			
+			QJsonDocument document = QJsonDocument::fromJson(data.toUtf8());
+
+			_ui.textEdit_raw->setPlainText(data);
+			_ui.textEdit_json->setPlainText(document.toJson());
+			
 			_node->evaluate();
 		});
 

@@ -19,16 +19,20 @@ view::Node::Node(model::Node* modelNode) : _node(modelNode)
 
 view::Node::~Node()
 {
+	// delete slots
+	//auto children = findChildren<Slot*>();
+	//qDeleteAll(children);
+	//delete _node;
 }
 
 int view::Node::width() const
 {
-	return _width;
+	return _size.width();
 }
 
 int view::Node::height() const
 {
-	return _height;
+	return _size.height();
 }
 
 int view::Node::getSlotIndex(const Slot* slot) const
@@ -65,8 +69,12 @@ view::Slot* view::Node::getSlot(const QString& name) const
 
 void view::Node::setupUi()
 {
-	_width = 320;
-	_height = 160;
+	_size.setWidth(320);
+	_size.setHeight(160);
+	
+	_minSize.setWidth(200);
+	_minSize.setHeight(200);
+
 	_edgeSize = 5;
 
 	setAcceptHoverEvents(true);
@@ -93,11 +101,11 @@ void view::Node::setupContentWidget()
 	_contentWidget = new ContentWidget(nullptr);
 	proxyWidget->setWidget(_contentWidget);
 
-	int top = 50;
-	int bottom = _height - (top + 20);
-	_contentWidget->setGeometry(_edgeSize, top, _width - 2 * _edgeSize, bottom);
+	int top = getHeaderHeight() + getSlotsSectionHeight();
+	int bottom = _size.height() - (top + 20);
+	_contentWidget->setGeometry(_edgeSize, top, _size.width() - 2 * _edgeSize, bottom);
 
-	setSize(_width, _height);
+	setSize(_size.width(), _size.height());
 }
 
 void view::Node::setupUIForModel()
@@ -122,7 +130,7 @@ void view::Node::setupUIForModel()
 
 QRectF view::Node::boundingRect() const
 {
-	auto rect = QRectF(0, 0, _width, _height);
+	auto rect = QRectF(0, 0, _size.width(), _size.height());
 	return rect;
 }
 
@@ -139,23 +147,122 @@ QString view::Node::getTitle() const
 void view::Node::setSize(int w, int h)
 {
 	prepareGeometryChange();
-	_width = w;
-	_height = h;
+
+	auto spacing = _edgeSize * 2;
+
+	float headerSizeY = getHeaderHeight() + getSlotsSectionHeight();
+
 	if (_contentWidget != nullptr)
 	{
-		int top = 50;
-		int bottom = _height - (top + 10);
-		_contentWidget->setGeometry(_edgeSize, top, _width - 2 * _edgeSize, bottom);
+		_contentWidget->adjustSize();
+		
+		auto minSize = _contentWidget->minimumSizeHint();
 
-		qDebug() << _contentWidget->minimumSize();
+		float tempH = std::max(h, (int)headerSizeY + 2*spacing + minSize.height());
+		float tempW = std::max(w, 2 * spacing + minSize.width());
+
+		// manual fixed min width, height
+		tempH = std::max(tempH, (float)_minSize.height());
+		tempW = std::max(tempW, (float)_minSize.width());
+		
+		int top = headerSizeY - spacing;
+		int bottom = tempH - (top + spacing);
+
+		h = tempH;
+		w = tempW;
+
+		_contentWidget->setGeometry(_edgeSize, top, tempW - 2 * _edgeSize, bottom);
 	}
+	else
+	{
+		h = std::max((int)headerSizeY, h);
+		w = std::max(_minSize.width(), w);
+	}
+
+	_size.setWidth(w);
+	_size.setHeight(h);
 
 	_bottomRightCorner = _topLeftCorner + QPointF(w, h);
 }
 
+float view::Node::getSlotHeight() const
+{
+	return 25.0f;
+}
+
+float view::Node::getHeaderHeight() const
+{
+	return 45.0f;
+}
+
+float view::Node::getSlotsSectionHeight() const
+{
+	int numOutputSlots = 0, numInputSlots = 0;
+	const auto allChildren = childItems();
+	int index = 0;
+	for (auto child : allChildren)
+	{
+		auto childSlot = dynamic_cast<Slot*>(child);
+		if (childSlot == nullptr) continue;
+		if (childSlot->isInput())
+			numInputSlots++;
+		else
+			numOutputSlots++;
+	}
+	return getSlotHeight() * std::max(numInputSlots, numOutputSlots);
+}
+
+float view::Node::getContentHeight() const
+{
+	if (_contentWidget != nullptr)
+	{
+		return _contentWidget->height();
+	}
+	return 0.0f;
+}
+
+void view::Node::setMinSize(QSize size)
+{
+	_minSize = size;
+}
+
+QSize view::Node::getMinSize() const
+{
+	return _minSize;
+}
+
+void view::Node::clearUI()
+{
+
+}
+
+bool view::Node::isResizable() const
+{
+	return _isResizable;
+}
+
+void view::Node::setResizable(bool status)
+{
+	_isResizable = status;
+}
+
+view::SceneGraph* view::Node::getSceneGraph() const
+{
+	return dynamic_cast<SceneGraph*>(scene());
+}
+
+#include <QStyleOptionGraphicsItem>
+
 void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-	painter->beginNativePainting();
+	painter->setClipRect(option->exposedRect);
+	// hack to resize at startup
+	if (_firstTimeResize)
+	{
+		setSize(1, 1);
+		_firstTimeResize = false;
+	}
+
 	auto rect = boundingRect();
 	int w = rect.width(), h = rect.height();
 
@@ -171,7 +278,7 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		backgroundPath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
 		painter->setPen(pen);
 		painter->setBrush(backgroundBrush);
-		painter->drawPath(backgroundPath.simplified());
+		painter->drawPath(backgroundPath);
 	}
 
 	// Title background
@@ -181,23 +288,24 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		auto bgColor = _bgColor;
 		QPen pen(bgColor);
 
+		float headerHeight = getHeaderHeight();
 		QBrush backgroundBrush(bgColor);
 		backgroundPath.setFillRule(Qt::FillRule::WindingFill);
-		backgroundPath.addRoundedRect(0, 0, w, 20, _edgeSize, _edgeSize);
-		backgroundPath.addRoundedRect(0, 10, w, 20, 0, 0);
+		backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);
+		backgroundPath.addRoundedRect(0, 10, w, headerHeight, 0, 0);
 		painter->setPen(pen);
 		painter->setBrush(backgroundBrush);
-		painter->drawPath(backgroundPath.simplified());
+		painter->drawPath(backgroundPath);
 	}
 
 	// Outline
 	{
 		QPainterPath outlinePath;
 		outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-		QPen pen(isSelected() ? QColor("#FFFFA637") : QColor("#7F000000"), isSelected() ? 2.0f : 1.0f);
+		QPen pen(isSelected() ? colors::orange : colors::outlineGrey, isSelected() ? 2.0f : 1.0f);
 		painter->setPen(pen);
 		painter->setBrush(Qt::BrushStyle::NoBrush);
-		painter->drawPath(outlinePath.simplified());
+		painter->drawPath(outlinePath);
 	}
 
 	// Outline for resizing
@@ -226,11 +334,10 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 			QPen pen(QColor("#FFFFA637"), _edgeSize * 1.5, Qt::PenStyle::DashDotDotLine);
 			painter->setPen(pen);
 			painter->setBrush(Qt::BrushStyle::NoBrush);
-			painter->drawPath(outlinePath.simplified());
+			painter->drawPath(outlinePath);
 		}
 
 	}
-	painter->endNativePainting();
 }
 
 void view::Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
@@ -271,9 +378,9 @@ void view::Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void view::Node::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-	_mouseHover = true;
-	QGraphicsObject::hoverEnterEvent(event);
+	_mouseHover = true;	
 	handleResize(event->scenePos());
+	QGraphicsObject::hoverEnterEvent(event);
 }
 
 void view::Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
@@ -375,7 +482,7 @@ QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant& value
 void view::Node::doResize(QGraphicsSceneMouseEvent* event)
 {
 	auto p = event->scenePos();
-	float x = 0, y = 0, w = _width, h = _height;
+	float x = 0, y = 0, w = width(), h = height();
 
 	// handle the size change
 	if (_cursorResizeMode & Handle::RIGHT)
@@ -409,7 +516,7 @@ void view::Node::doResize(QGraphicsSceneMouseEvent* event)
 		h = _bottomRightCorner.y() - _topLeftCorner.y();
 	}
 
-	if (w != _width || h != _height)
+	if (w != width() || h != height())
 	{
 		setSize(w, h);
 	}
@@ -420,7 +527,7 @@ void view::Node::doResize(QGraphicsSceneMouseEvent* event)
 int view::Node::computeGripCorner(const QPointF& p)
 {
 	auto relativePos = p - scenePos();
-	float thresh = _edgeSize * 2;
+	float thresh = 5;
 
 	int corner = 0;
 
@@ -428,7 +535,7 @@ int view::Node::computeGripCorner(const QPointF& p)
 	{
 		corner |= Handle::LEFT;
 	}
-	else if ((_width - relativePos.x()) <= thresh)
+	else if ((width() - relativePos.x()) <= thresh)
 	{
 		corner |= Handle::RIGHT;
 	}
@@ -437,7 +544,7 @@ int view::Node::computeGripCorner(const QPointF& p)
 	{
 		corner |= Handle::TOP;
 	}
-	else if ((_height - relativePos.y()) <= thresh)
+	else if ((height() - relativePos.y()) <= thresh)
 	{
 		corner |= Handle::BOTTOM;
 	}
@@ -447,6 +554,8 @@ int view::Node::computeGripCorner(const QPointF& p)
 
 void view::Node::handleResize(const QPointF& pos)
 {
+	if (!isResizable()) return;
+
 	_cursorResizeMode = computeGripCorner(pos);
 
 	_resizeEligible = _cursorResizeMode != 0;
@@ -473,4 +582,6 @@ void view::Node::handleResize(const QPointF& pos)
 		setCursor(Qt::CursorShape::ArrowCursor);
 		break;
 	}
+
+	update();
 }

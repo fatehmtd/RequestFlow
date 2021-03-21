@@ -8,9 +8,12 @@
 #include "ContentWidget.h"
 #include "Colors.h"
 
+#include "SceneGraph.h"
+
 namespace view
 {
 	class Slot;
+	class SceneGraph;
 
 	class Node : public QGraphicsObject
 	{
@@ -35,6 +38,21 @@ namespace view
 		QString getTitle() const;
 
 		void setSize(int w, int h);
+
+		float getSlotHeight() const;
+		float getHeaderHeight() const;
+		float getSlotsSectionHeight() const;
+		float getContentHeight() const;
+
+		void setMinSize(QSize size);
+		QSize getMinSize() const;
+
+		virtual void clearUI();
+
+		bool isResizable() const;
+		void setResizable(bool status);
+
+		view::SceneGraph* getSceneGraph() const;
 
 	protected:
 		enum Handle
@@ -72,7 +90,7 @@ namespace view
 		model::Node* _node = nullptr;
 		QGraphicsTextItem* _title = nullptr;
 		ContentWidget* _contentWidget = nullptr;
-		int _width, _height;
+		QSize _size;
 		int _padding;
 		int _edgeSize;
 		QPointF _mouseShift;
@@ -85,6 +103,9 @@ namespace view
 		bool _resizeEligible = false;
 		bool _isResizing = false;
 		QPointF _topLeftCorner, _bottomRightCorner;
+		bool _firstTimeResize = true;
+		QSize _minSize;
+		bool _isResizable = true;
 	};
 }
 

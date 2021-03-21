@@ -29,8 +29,10 @@ namespace logic
         void setTimeout(unsigned int sec);
         void setUrl(const QUrl& url);
         void setMethod(HttpMethod method);
+
+        virtual void clearUI() override;
     private:
-        void setupUi();
+        void initUI();
         void sendPayload();
         void sendGet();
         void sendPost();
@@ -38,6 +40,7 @@ namespace logic
         void sendPut();
         void sendPatch();
         bool validateHttpStatus(int status) const;
+        QUrl resolveUrl(const QString& rawUrl) const;
 
         void processResponse(QNetworkReply* reply);
 

@@ -2,6 +2,7 @@
 
 #include "BaseEntity.h"
 #include <QVariant>
+#include "Message.h"
 
 namespace model
 {
@@ -36,13 +37,13 @@ namespace model
 
 		int getDataType() const;
 
-		QVariant getData() const;
-		void setData(const QVariant& data);
+		Message getData() const;
+		void setData(const Message& data);
 
 		Node* getNode() const;
 	protected:
 		int _dataType;
-		QVariant _data;
+		Message _data;
 	private:
 		Direction _direction;
 	};
