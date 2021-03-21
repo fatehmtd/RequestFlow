@@ -3,6 +3,7 @@
 #include "Edge.h"
 #include <QDebug>
 #include "Slot.h"
+#include <QSet>
 
 model::Graph::Graph()
 {
@@ -16,12 +17,55 @@ model::Graph::~Graph()
 
 QList<model::Node*> model::Graph::getNodes() const
 {
-    return findChildren<Node*>();
+	return findChildren<Node*>();
 }
 
 QList<model::Edge*> model::Graph::getEdges() const
 {
-    return findChildren<Edge*>();
+	return findChildren<Edge*>();
+}
+
+model::Edge* model::Graph::findEdge(const InputSlot* destination, const OutputSlot* origin) const
+{
+	for (auto edge : getEdges())
+	{
+		if (edge->getOriginSlot() == origin &&
+			edge->getDestinationSlot() == destination)
+			return edge;
+	}
+	return nullptr;
+}
+
+QList<model::Edge*> model::Graph::findEdges(const Slot* slot) const
+{
+	QList<Edge*> edges;
+
+	for (auto edge : getEdges())
+	{
+		if (edge->getOriginSlot() == slot ||
+			edge->getDestinationSlot() == slot)
+			edges << edge;
+	}
+	return std::move(edges);
+}
+
+QList<model::Edge*> model::Graph::findEdges(const Node* node) const
+{
+	QList<Edge*> edgesList;
+
+	for (auto slot : node->getInputSlots().values())
+	{
+		auto list = findEdges(slot);
+		edgesList.append(list);
+	}
+
+	for (auto slot : node->getOutputSlots().values())
+	{
+		auto list = findEdges(slot);
+		edgesList.append(list);
+	}
+
+	return edgesList.toSet().toList();
 }
 
 int model::Graph::start()
@@ -99,4 +143,19 @@ model::Edge* model::Graph::connectSlots(OutputSlot* origin, InputSlot* destinati
 	edge->setOrigin(origin);
 	edge->setDestination(destination);
 	return edge;
+}
+
+void model::Graph::setEnvContext(const QMap<QString, QVariant>& context)
+{
+	_envContext = context;
+}
+
+QMap<QString, QVariant> model::Graph::getEnvContext() const
+{
+	return _envContext;
+}
+
+QMap<QString, QVariant>& model::Graph::getEnvContext()
+{
+	return _envContext;
 }

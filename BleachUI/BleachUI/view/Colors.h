@@ -17,12 +17,16 @@ namespace view
 		const QColor lightestGrey("#BDBDBD");
 		const QColor lightGrey("#8E8E8E");
 
+		const QColor orange("#FF953D");
+		const QColor outlineGrey("#5F5F5F");
 
 		const QColor metalicSunburst("#A59132");
 		const QColor chocolateWeb("#DA7422");
 		const QColor vividBurgundy("#9E0031");
 		const QColor byzantium("#770058");
 		const QColor charcoal("#40434E");
+		const QColor queenBlue("#577590");
+		const QColor gunMetal("#1F2933");
 
 		namespace light
 		{

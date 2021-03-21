@@ -1,12 +1,15 @@
 #pragma once
 #include <QObject>
 #include <QList>
+#include <QMap>
+#include <QVariant>
 #include "../bleachuimodel_global.h"
 
 namespace model
 {
 	class Node;
 	class Edge;
+	class Slot;
 	class OutputSlot;
 	class InputSlot;
 
@@ -20,6 +23,10 @@ namespace model
 		QList<Node*> getNodes() const;
 		QList<Edge*> getEdges() const;
 
+		Edge* findEdge(const InputSlot* destination, const OutputSlot* origin) const;
+		QList<Edge*> findEdges(const Slot* slot) const;
+		QList<Edge*> findEdges(const Node* node) const;
+
 		Edge* connectSlots(OutputSlot* origin, InputSlot* destination);
 
 		enum Status
@@ -29,6 +36,10 @@ namespace model
 			MISSING_ENDING_NODE,
 			MISSING_EDGES
 		};
+
+		void setEnvContext(const QMap<QString, QVariant>& context);
+		QMap<QString, QVariant> getEnvContext() const;
+		QMap<QString, QVariant>& getEnvContext();
 
 	public slots:
 		virtual int start();
@@ -44,5 +55,6 @@ namespace model
 		void clear();
 	private:
 		QList<Node*> _startingNodes, _endingNodes;
+		QMap<QString, QVariant> _envContext;
 	};
 }

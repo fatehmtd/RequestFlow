@@ -9,9 +9,6 @@ namespace view
 		Q_OBJECT
 	public:
 		ContentWidget(QWidget* parent);
-
-	protected:
-		QVBoxLayout* _layout = nullptr;
 	};
 }
 

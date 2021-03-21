@@ -43,9 +43,6 @@
     <Filter Include="view\Edge">
       <UniqueIdentifier>{01e77ef7-a748-4b44-82c9-4ebdc14301c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="view\NodeContentWidget">
-      <UniqueIdentifier>{b1707570-8d32-43cc-bb9f-56089afa0eab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="logic">
       <UniqueIdentifier>{2c658a5e-8dfc-4d21-8416-8ae543e9d5fa}</UniqueIdentifier>
     </Filter>
@@ -73,8 +70,8 @@
     <Filter Include="logic\DelayNode">
       <UniqueIdentifier>{95f40509-c146-407e-82f7-3c5204bf92e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logic\RepeaterNode">
-      <UniqueIdentifier>{bd81cdd9-f91c-4998-8939-437dcfdbace1}</UniqueIdentifier>
+    <Filter Include="logic\ScriptNode">
+      <UniqueIdentifier>{2ebc8a62-d70e-46d6-b414-190258fedcb6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,9 +101,6 @@
     <ClCompile Include="view\Edge.cpp">
       <Filter>view\Edge</Filter>
     </ClCompile>
-    <ClCompile Include="view\NodeContentWidget.cpp">
-      <Filter>view\NodeContentWidget</Filter>
-    </ClCompile>
     <ClCompile Include="view\ConnectionEdge.cpp">
       <Filter>view\ConnectionEdge</Filter>
     </ClCompile>
@@ -121,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="logic\ViewerNode.cpp">
       <Filter>logic\ViewerNode</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\ModifierNode.cpp">
+      <Filter>logic\ModifierNode</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\DelayNode.cpp">
+      <Filter>logic\DelayNode</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\ScriptNode.cpp">
+      <Filter>logic\ScriptNode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,13 +148,19 @@
     <ClInclude Include="logic\ViewerNode.h">
       <Filter>logic\ViewerNode</Filter>
     </ClInclude>
+    <ClInclude Include="logic\ModifierNode.h">
+      <Filter>logic\ModifierNode</Filter>
+    </ClInclude>
+    <ClInclude Include="logic\DelayNode.h">
+      <Filter>logic\DelayNode</Filter>
+    </ClInclude>
+    <ClInclude Include="logic\ScriptNode.h">
+      <Filter>logic\ScriptNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="BleachUI.h">
       <Filter>MainWindow</Filter>
-    </QtMoc>
-    <QtMoc Include="view\NodeContentWidget.h">
-      <Filter>view\NodeContentWidget</Filter>
     </QtMoc>
     <QtMoc Include="view\ContentWidget.h">
       <Filter>view\Node\ContentWidget</Filter>
@@ -167,13 +176,25 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="ui\BleachUI.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
     <QtUic Include="view\NodeContentWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\EndpointNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\BleachUI.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ModifierNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\DelayNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ViewerNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\PayloadNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

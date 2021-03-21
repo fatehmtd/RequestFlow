@@ -14,6 +14,7 @@ namespace view
 		Q_OBJECT
 	public:
 		Slot(Node* parent, model::Slot* slot);
+		~Slot();
 
 		bool isInput() const;
 

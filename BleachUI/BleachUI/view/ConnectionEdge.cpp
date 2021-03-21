@@ -4,17 +4,26 @@
 #include <QBrush>
 #include <QPainterPath>
 #include <QPainter>
+#include <QDebug>
 
 view::ConnectionEdge::ConnectionEdge()
 {
 	_thickness = 10.0f;
 	_eligibility = NO_CANDIDATE;
 	setZValue(1);
+	//setAttribute(Qt::WA_OpaquePaintEvent, true);
 }
 
 void view::ConnectionEdge::setOrigin(Slot* slot)
 {
 	_slotOrigin = slot;
+	if (slot != nullptr)
+		setOriginP(slot->getBasePosition(true));
+}
+
+void view::ConnectionEdge::setOriginP(const QPointF& position)
+{
+	_originPos = position;
 }
 
 void view::ConnectionEdge::setDestination(const QPointF& position)
@@ -39,41 +48,45 @@ void view::ConnectionEdge::setNoCandidateAvaible()
 
 void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
+	painter->setClipRect(boundingRect());
+	painter->setClipping(false);
+
 	if (_slotOrigin != nullptr)
 	{
 		auto originPosition = _destinationPos;
+		//auto destinationPosition = _originPos;
 		auto destinationPosition = _slotOrigin->getBasePosition(true);
 
-		QColor noCandidateColor("#FFFFA637");
-		QColor notEligibleColor("#FF0000");
-		QColor eligibleColor("#00FF00");
+		//auto originPosition = _slotOrigin->getBasePosition(true);
+		//auto destinationPosition = _destinationPos;
 
-		QColor color = noCandidateColor;
+
+		QColor color = _noCandidateColor;
 		Qt::PenStyle style = Qt::PenStyle::DashDotDotLine;
 		float thickness = _thickness;
 		switch (_eligibility)
 		{
 		case Eligibility::NO_CANDIDATE:
 		{
-			color = noCandidateColor;
+			color = _noCandidateColor;
 			style = Qt::PenStyle::DashDotDotLine;
 			thickness = _thickness;
 		}
-			break;
+		break;
 		case Eligibility::NOT_ELIGIBLE:
 		{
-			color = notEligibleColor;
+			color = _notEligibleColor;
 			style = Qt::PenStyle::DotLine;
-			thickness = _thickness*0.5f;
+			thickness = _thickness * 0.5f;
 		}
-			break;
+		break;
 		case Eligibility::ELIGIBLE:
 		{
-			color = eligibleColor;
+			color = _eligibleColor;
 			style = Qt::PenStyle::SolidLine;
-			thickness = _thickness*0.75f;
+			thickness = _thickness * 0.75f;
 		}
-			break;
+		break;
 		}
 
 		QPen pen(color);
@@ -86,7 +99,7 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 			path.addEllipse(originPosition, halfSize, halfSize);
 			painter->setPen(pen);
 			painter->setBrush(brush);
-			painter->drawPath(path.simplified());
+			painter->drawPath(path);
 		}
 
 		// destination point
@@ -97,7 +110,7 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
 			painter->setPen(pen);
 			painter->setBrush(brush);
-			painter->drawPath(path.simplified());
+			painter->drawPath(path);
 		}
 
 		QPointF ctrlPointA, ctrlPointB;
@@ -123,6 +136,8 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
 QPainterPath view::ConnectionEdge::buildPath() const
 {
+	//qDebug() << __FUNCTION__ << rand()%10000 <<_slotOrigin;
+
 	if (_slotOrigin != nullptr)
 	{
 		auto destinationPosition = _slotOrigin->getBasePosition(true);
@@ -138,7 +153,7 @@ QPainterPath view::ConnectionEdge::buildPath() const
 		QPainterPath path(originPosition);
 		path.cubicTo(ctrlPointA, ctrlPointB, destinationPosition);
 
-		return path;
+		return path.simplified();
 	}
 	else
 		return QPainterPath();
@@ -146,5 +161,13 @@ QPainterPath view::ConnectionEdge::buildPath() const
 
 QRectF view::ConnectionEdge::boundingRect() const
 {
-	return buildPath().simplified().boundingRect();
+	//TODO: fix this workaround to render using the proper boundingRect
+	float size = 1 << 18;
+	float hsize = size * 0.5f;
+	return QRectF(-hsize, -hsize, size, size);
+}
+
+QPainterPath view::ConnectionEdge::shape() const
+{
+	return buildPath().simplified();
 }

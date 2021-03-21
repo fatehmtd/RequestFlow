@@ -1,20 +1,21 @@
 #pragma once
 #include "../view/Node.h"
 #include <QTextEdit>
-#include "ui_ViewerNodeUi.h"
 
 namespace logic
 {
-    class ViewerNode : public view::Node
+    class ScriptNode : public view::Node
     {
     public:
-        ViewerNode(model::Node* modelNode);
+        ScriptNode(model::Node* modelNode);
 
         virtual void clearUI() override;
     private:
         void setupUi();
 
+        void executeScript();
+
     private:
-        Ui::ViewerWidgetUiForm _ui;
+        QTextEdit* _editor = nullptr;
     };
 }

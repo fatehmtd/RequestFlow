@@ -2,14 +2,13 @@
 #include "Node.h"
 #include <QDebug>
 
-model::Slot::Slot(Node* parent, QString name, Direction direction, int dataType) : BaseEntity(parent), _dataType(dataType), _direction(direction)
+model::Slot::Slot(Node* parent, QString name, Direction direction, int dataType) : BaseEntity(parent), _dataType(dataType), _direction(direction), _data("")
 {
     setObjectName(name);
 }
 
 model::Slot::~Slot()
 {
-
 }
 
 model::Node* model::Slot::getNode() const
@@ -27,12 +26,12 @@ int model::Slot::getDataType() const
     return _dataType;
 }
 
-QVariant model::Slot::getData() const
+model::Message model::Slot::getData() const
 {
     return _data;
 }
 
-void model::Slot::setData(const QVariant& data)
+void model::Slot::setData(const Message& data)
 {
     _data = data;
 }

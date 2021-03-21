@@ -47,12 +47,9 @@ model::OutputSlot* model::Edge::getOriginSlot() const
 
 void model::Edge::onDataReceived()
 {
-	//qDebug() << __FUNCTION__;
-
 	if (_originSlot != nullptr && _destinationSlot != nullptr)
 	{
 		_destinationSlot->setData(_originSlot->getData());
-		// notify the input node that data was received
 		emit dataReceived();
 	}
 }

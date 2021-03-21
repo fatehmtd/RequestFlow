@@ -2,6 +2,7 @@
 #include <QGraphicsPathItem>
 #include <QGraphicsTextItem>
 #include <model/Slot.h>
+#include <QColor>
 
 namespace view
 {
@@ -13,6 +14,7 @@ namespace view
 		ConnectionEdge();
 
 		void setOrigin(Slot* slot);
+		void setOriginP(const QPointF& position);
 		void setDestination(const QPointF& position);
 
 		enum Eligibility
@@ -31,11 +33,16 @@ namespace view
 
 		QPainterPath buildPath() const;
 		virtual QRectF boundingRect() const override;
+		virtual QPainterPath shape() const override;
 
 	protected:
 		Slot* _slotOrigin = nullptr;
-		QPointF _destinationPos;
+		QPointF _destinationPos, _originPos;
 		int _thickness = 10;
 		Eligibility _eligibility;
+
+		QColor _noCandidateColor = QColor("#FFFFA637");
+		QColor _notEligibleColor = QColor("#FF0000");
+		QColor _eligibleColor = QColor("#00FF00");
 	};
 }

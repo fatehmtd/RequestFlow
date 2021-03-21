@@ -36,10 +36,16 @@
     <Filter Include="model\BaseEntity">
       <UniqueIdentifier>{dde3d8e9-a165-4714-a69a-86c14da542e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="model\Message">
+      <UniqueIdentifier>{bba23486-73ee-4380-959a-2ebbc4943716}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bleachuimodel_global.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Message.h">
+      <Filter>model\Message</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +63,9 @@
     </ClCompile>
     <ClCompile Include="model\Node.cpp">
       <Filter>model\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Message.cpp">
+      <Filter>model\Message</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
