@@ -156,8 +156,10 @@ bool model::Graph::canConnectSlots(Slot* origin, Slot* destination) const
 	//TODO: implement edge creation logic
 	if (origin->getDirection() == destination->getDirection()) return false; // fail when same type nodes
 	if (origin->getNode() == destination->getNode()) return false; // fail when the two slots belong to the same node
-	if (!findEdges(destination).isEmpty()) return false; // fail when the destination slot is already connected
 	if (origin->getDataType() != destination->getDataType()) return false; // fail if different data types
+
+	auto edgesDestination = findEdges(destination);
+	if (!edgesDestination.isEmpty()) return false; // fail when the destination slot is already connected
 
 	return true;
 }
