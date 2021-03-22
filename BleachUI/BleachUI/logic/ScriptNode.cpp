@@ -39,7 +39,8 @@ void logic::ScriptNode::setupUi()
 
 	auto outputSlot = _node->getOutputSlots().first();
 
-	_bgColor = view::colors::charcoal;
+	//_bgColor = view::colors::charcoal;
+	_bgColor = view::colors::queenBlue;
 
 	connect(_node, &model::Node::ready, this, [=]()
 		{

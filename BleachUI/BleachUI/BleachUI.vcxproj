@@ -132,6 +132,7 @@
     <ClInclude Include="logic\PayloadNode.h" />
     <ClInclude Include="logic\ScriptNode.h" />
     <ClInclude Include="logic\ViewerNode.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="view\ConnectionEdge.h" />
     <QtMoc Include="view\ContentWidget.h" />
     <ClInclude Include="view\Edge.h" />
@@ -149,6 +150,13 @@
     <QtUic Include="ui\PayloadNodeUi.ui" />
     <QtUic Include="ui\ViewerNodeUi.ui" />
     <QtUic Include="view\NodeContentWidget.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BleachUI.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icons\node (1).ico" />
+    <Image Include="icons\node (1).png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

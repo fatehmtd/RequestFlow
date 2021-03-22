@@ -111,12 +111,7 @@ QPointF view::Slot::getBasePosition(bool global) const
 
 bool view::Slot::acceptConnection(Slot* origin) const
 {
-	if (isInput() && !origin->isInput())
-	{
-		return getModelSlot()->getDataType() == origin->getModelSlot()->getDataType();
-	}
-
-	return false;
+	return getModelSlot()->getNode()->getGraph()->canConnectSlots(getModelSlot(), origin->getModelSlot());
 }
 
 model::Slot* view::Slot::getModelSlot() const

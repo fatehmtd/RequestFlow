@@ -28,6 +28,7 @@ namespace model
 		QList<Edge*> findEdges(const Node* node) const;
 
 		Edge* connectSlots(OutputSlot* origin, InputSlot* destination);
+		bool canConnectSlots(Slot* origin, Slot* destination) const;
 
 		enum Status
 		{

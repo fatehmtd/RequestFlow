@@ -39,5 +39,6 @@ void logic::ViewerNode::setupUi()
 			_node->evaluate();
 		});
 
-	setSize(300, 200);
+	setMinSize(QSize(400, 300));
+	setSize(300, 200);	
 }

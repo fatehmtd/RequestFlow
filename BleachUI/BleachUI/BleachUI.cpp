@@ -8,4 +8,5 @@ BleachUI::BleachUI(QWidget *parent)
     setMinimumSize(1280, 800);
     _sceneGraphWidget = new SceneGraphWidget(this);
     setCentralWidget(_sceneGraphWidget);
+    setWindowIcon(QIcon(":/BleachUI/graph"));
 }
