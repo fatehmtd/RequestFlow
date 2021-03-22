@@ -92,7 +92,7 @@ void view::SceneGraph::clearNodes()
 void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
 	QGraphicsScene::drawBackground(painter, rect);
-	return;
+	//return;
 	
 	const int left = floor(rect.left());
 	const int right = ceil(rect.right());
@@ -165,48 +165,50 @@ void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 	if (item == nullptr)
 	{
 		QMenu menu;
-		auto startGraphAction = menu.addAction("Start Graph");
+		auto startGraphAction = menu.addAction(QIcon(":/BleachUI/play"), "Start Graph");
 		connect(startGraphAction, &QAction::triggered, this, [=]()
 			{
 				qDebug() << "Graph start result : " << _modelGraph->start();
 			});
 
-		auto createPayloadNodeAction = menu.addAction("Create Payload Node");
+		auto createPayloadNodeAction = menu.addAction(QIcon(":/BleachUI/data"), "Create Payload Node");
 		connect(createPayloadNodeAction, &QAction::triggered, this, [=]()
 			{
 				auto node = createPayloadNode();
 				node->setPos(event->scenePos());
 			});
 
-		auto createEndpointNodeAction = menu.addAction("Create Endpoint Node");
+		auto createEndpointNodeAction = menu.addAction(QIcon(":/BleachUI/transfer"), "Create Endpoint Node");
 		connect(createEndpointNodeAction, &QAction::triggered, this, [=]()
 			{
 				auto node = createEndpointNode();
 				node->setPos(event->scenePos());
 			});
 
-		auto createViewerNodeAction = menu.addAction("Create Viewer Node");
+		auto createViewerNodeAction = menu.addAction(QIcon(":/BleachUI/view"), "Create Viewer Node");
 		connect(createViewerNodeAction, &QAction::triggered, this, [=]()
 			{
 				auto node = createViewerNode();
 				node->setPos(event->scenePos());
 			});
 
+		/*
 		auto createModiferNodeAction = menu.addAction("Create Modifier Node");
 		connect(createModiferNodeAction, &QAction::triggered, this, [=]()
 			{
 				auto node = createModifierNode();
 				node->setPos(event->scenePos());
 			});
+		*/
 
-		auto createDelayNodeAction = menu.addAction("Create Delay Node");
+		auto createDelayNodeAction = menu.addAction(QIcon(":/BleachUI/stopWatch"), "Create Delay Node");
 		connect(createDelayNodeAction, &QAction::triggered, this, [=]()
 			{
 				auto node = createDelayNode();
 				node->setPos(event->scenePos());
 			});
 
-		auto createScriptNodeAction = menu.addAction("Create Script Node");
+		auto createScriptNodeAction = menu.addAction(QIcon(":/BleachUI/menu"), "Create Script Node");
 		connect(createScriptNodeAction, &QAction::triggered, this, [=]()
 			{
 				auto node = createScriptNode();
@@ -269,7 +271,7 @@ void view::SceneGraph::setupUi()
 	_darkGrid = colors::lightGrey;
 	//*/
 
-	const int gridSize = 1 << 17;
+	const int gridSize = 1 << 18;
 	const int hgridSize = gridSize >> 1;
 	qDebug() << gridSize << hgridSize;
 

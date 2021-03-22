@@ -1,4 +1,14 @@
 <RCC>
-    <qresource prefix="BleachUI">
+    <qresource prefix="/BleachUI">
+        <file alias="menu">icons/menu.png</file>
+        <file alias="graph">icons/node (1).png</file>
+        <file alias="play">icons/play.png</file>
+        <file alias="view">icons/view.png</file>
+        <file alias="stopWatch">icons/stopwatch.png</file>
+        <file alias="delete">icons/clear.png</file>
+        <file alias="stop">icons/stop.png</file>
+        <file alias="data">icons/data.png</file>
+        <file alias="transfer">icons/transfer.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

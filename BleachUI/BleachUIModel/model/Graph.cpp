@@ -138,11 +138,28 @@ void model::Graph::clear()
 
 model::Edge* model::Graph::connectSlots(OutputSlot* origin, InputSlot* destination)
 {
-	//TODO: implement edge creation logic
+	if (!canConnectSlots(origin, destination)) return nullptr;
+
+	auto edges = findEdges(destination);
+
+	if (!edges.isEmpty()) return nullptr; // fail when the destination slot is already connected
+	if (origin->getNode() == destination->getNode()) return nullptr; // fail when the two slots belong to the same node
+
 	auto edge = new Edge(this);
 	edge->setOrigin(origin);
 	edge->setDestination(destination);
 	return edge;
+}
+
+bool model::Graph::canConnectSlots(Slot* origin, Slot* destination) const
+{
+	//TODO: implement edge creation logic
+	if (origin->getDirection() == destination->getDirection()) return false; // fail when same type nodes
+	if (origin->getNode() == destination->getNode()) return false; // fail when the two slots belong to the same node
+	if (!findEdges(destination).isEmpty()) return false; // fail when the destination slot is already connected
+	if (origin->getDataType() != destination->getDataType()) return false; // fail if different data types
+
+	return true;
 }
 
 void model::Graph::setEnvContext(const QMap<QString, QVariant>& context)
