@@ -9,7 +9,7 @@
 #include <model/Node.h>
 #include <model/Slot.h>
 
-view::Node::Node(model::Node* modelNode) : _node(modelNode)
+view::Node::Node(model::Node* modelNode, QString nodeType) : _node(modelNode), _nodeType(nodeType)
 {
 	_bgColor = colors::light::purple;
 	setupUi();
@@ -19,10 +19,6 @@ view::Node::Node(model::Node* modelNode) : _node(modelNode)
 
 view::Node::~Node()
 {
-	// delete slots
-	//auto children = findChildren<Slot*>();
-	//qDeleteAll(children);
-	//delete _node;
 }
 
 int view::Node::width() const
@@ -249,6 +245,33 @@ void view::Node::setResizable(bool status)
 view::SceneGraph* view::Node::getSceneGraph() const
 {
 	return dynamic_cast<SceneGraph*>(scene());
+}
+
+#include <QJSEngine>
+
+QJSValue view::Node::toJSValue(QJSEngine& engine) const
+{
+	//QJSEngine engine;
+	QJSValue value = engine.newObject();
+	value.setProperty("_type", getNodeType());
+	auto coords = scenePos();
+	value.setProperty("_x", coords.x());
+	value.setProperty("_y", coords.y());
+	value.setProperty("_w", width());
+	value.setProperty("_h", height());
+	return value;
+}
+
+#include <exception>
+
+void view::Node::fromJSValue(const QJSValue& jsValue)
+{
+	throw std::exception("fromJSValue not implemented");
+}
+
+QString view::Node::getNodeType() const
+{
+	return _nodeType;
 }
 
 #include <QStyleOptionGraphicsItem>

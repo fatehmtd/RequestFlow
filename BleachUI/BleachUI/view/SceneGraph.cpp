@@ -4,6 +4,12 @@
 #include <QDebug>
 #include <QPainterPath>
 
+#include <QJSValue>
+#include <QJSEngine>
+#include <QFile>
+#include <QTextStream>
+#include <QJsonDocument>
+
 #include <QMenu>
 
 #include "Node.h"
@@ -62,6 +68,31 @@ view::Edge* view::SceneGraph::findbyModel(model::Edge* edge) const
 	return nullptr;
 }
 
+QList<view::Node*> view::SceneGraph::getNodes() const
+{
+	QList<Node*> nodesList;
+
+	for (auto item : items())
+	{
+		auto node = dynamic_cast<Node*>(item);
+		if (node != nullptr)
+			nodesList << node;
+	}
+
+	return nodesList;
+}
+
+QList<view::Edge*> view::SceneGraph::getEdges() const
+{
+	auto modelEdgesList = getModelGraph()->getEdges();
+	QList<Edge*> edgesList;
+	for (auto modelEdge : modelEdgesList)
+	{
+		edgesList << findbyModel(modelEdge);
+	}
+	return edgesList;
+}
+
 model::Graph* view::SceneGraph::getModelGraph() const
 {
 	return _modelGraph;
@@ -89,11 +120,89 @@ void view::SceneGraph::clearNodes()
 	}
 }
 
+void view::SceneGraph::persist(const QString& fileName) const
+{
+	QJSEngine engine;
+	QJSValue project = engine.newObject();
+
+	// nodes
+	QList<Node*> nodesList = getNodes();
+	{
+		auto nodesValue = engine.newArray(nodesList.size());
+		int index = 0;
+		for (auto node : nodesList)
+		{
+			nodesValue.setProperty(index++, node->toJSValue(engine));
+		}
+		project.setProperty("_nodes", nodesValue);
+	}
+
+	// edges
+	{
+		QList<Edge*> edgesList = getEdges();
+
+		auto edgesValue = engine.newArray(edgesList.size());
+
+		int index = 0;
+		for (auto edge : edgesList)
+		{
+			auto originNode = edge->getOriginSlot()->getNode();
+			auto destinationNode = edge->getDestinationSlot()->getNode();
+			int idxOrigin = nodesList.indexOf(originNode);
+			int idxDestination = nodesList.indexOf(destinationNode);
+			QJSValue edgeValue = engine.newObject();
+			edgeValue.setProperty("_o", idxOrigin);
+			edgeValue.setProperty("_d", idxDestination);
+			edgesValue.setProperty(index++, edgeValue);
+		}
+
+		project.setProperty("_edges", edgesValue);
+	}
+
+	// save to file
+	auto document = QJsonDocument::fromVariant(project.toVariant());
+
+	QFile fp(fileName);
+	if (fp.open(QIODevice::Text | QIODevice::WriteOnly))
+	{
+		QTextStream out(&fp);
+		out << QString(document.toJson(QJsonDocument::JsonFormat::Compact));
+	}
+}
+
+#include <QJSValueIterator>
+
+bool view::SceneGraph::load(const QString& fileName)
+{
+	QFile fp(fileName);
+	if (fp.open(QIODevice::Text | QIODevice::ReadOnly))
+	{
+		QTextStream in(&fp);
+		auto contents = in.readAll();
+		QJSEngine engine;
+		auto project = engine.evaluate(contents);
+		if (project.isError()) return false;
+		auto nodes = project.property("_nodes");
+		{
+			QJSValueIterator it(nodes);
+			while (it.hasNext())
+			{
+				qDebug() << it.value().toString();
+				it.next();
+			}
+		}
+		auto edges = project.property("_edge");
+		return true;
+	}
+
+	return false;
+}
+
 void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
 	QGraphicsScene::drawBackground(painter, rect);
 	//return;
-	
+
 	const int left = floor(rect.left());
 	const int right = ceil(rect.right());
 	const int top = floor(rect.top());
@@ -159,6 +268,7 @@ void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 
 void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
+	createNode("");
 	auto item = itemAt(event->scenePos(), QTransform());
 
 	// handle right clicking on empty space
@@ -214,6 +324,15 @@ void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 				auto node = createScriptNode();
 				node->setPos(event->scenePos());
 			});
+
+
+		auto saveToFile = menu.addAction(QIcon(), "Save to file...");
+		connect(saveToFile, &QAction::triggered, this, [=]()
+			{
+				//persist("d:/scene.json");
+				load("d:/scene.json");
+			});
+
 
 		menu.exec(event->screenPos());
 	}
@@ -413,6 +532,18 @@ view::Node* view::SceneGraph::createScriptNode()
 	return graphicNode;
 }
 
+#include <QMetaObject>
+
+view::Node* view::SceneGraph::createNode(QString nodeType)
+{
+	if (nodeType.contains("Delay")) return createDelayNode();
+	if (nodeType.contains("Endpoint")) return createEndpointNode();
+	if (nodeType.contains("Payload")) return createPayloadNode();
+	if (nodeType.contains("Script")) return createScriptNode();
+	if (nodeType.contains("Viewer")) return createViewerNode();
+	return nullptr;
+}
+
 void view::SceneGraph::deleteNode(Node* node)
 {
 	auto edges = getModelGraph()->findEdges(node->getModelNode());
@@ -480,7 +611,7 @@ void view::SceneGraph::mousePressEvent(QGraphicsSceneMouseEvent* event)
 void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 	//bring to front
-	if(event->button())
+	if (event->button())
 	{
 		bringToFront(event->scenePos());
 	}
@@ -510,7 +641,7 @@ void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 			_connectionEdge->setNoCandidateAvaible();
 		}
 		_connectionEdge->setDestination(_cursorPosition);
-		
+
 		_connectionEdge->update();
 	}
 

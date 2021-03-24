@@ -7,7 +7,7 @@ namespace logic
     class ModifierNode : public view::Node
     {
     public:
-        ModifierNode(model::Node* modelNode);
+        Q_INVOKABLE ModifierNode(model::Node* modelNode);
 
         virtual void clearUI() override;
     private:

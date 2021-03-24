@@ -8,8 +8,9 @@ namespace logic
     class PayloadNode : public view::Node
     {
     public:
-        PayloadNode(model::Node* modelNode);
-
+        Q_INVOKABLE PayloadNode(model::Node* modelNode);
+        virtual QJSValue toJSValue(QJSEngine& engine) const;
+        model::Message composeMessage() const;
         virtual void clearUI() override;
     private:
         void setupUi();

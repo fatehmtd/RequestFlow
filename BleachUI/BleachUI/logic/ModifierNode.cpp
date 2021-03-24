@@ -6,7 +6,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-logic::ModifierNode::ModifierNode(model::Node* modelNode) : view::Node(modelNode), _ui(new Ui::ModifierNodeUiForm)
+logic::ModifierNode::ModifierNode(model::Node* modelNode) : view::Node(modelNode, "Modifier"), _ui(new Ui::ModifierNodeUiForm)
 {
 	setupUi();
 	setTitle("Modifier");

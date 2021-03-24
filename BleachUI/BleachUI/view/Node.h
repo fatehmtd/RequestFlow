@@ -4,11 +4,15 @@
 #include <QGraphicsObject>
 #include <QGraphicsWidget>
 #include <QObject>
+#include <QJSValue>
+#include <QJSEngine>
 #include <model/Node.h>
 #include "ContentWidget.h"
 #include "Colors.h"
 
 #include "SceneGraph.h"
+
+class PersistenceHandler;
 
 namespace view
 {
@@ -19,7 +23,7 @@ namespace view
 	{
 		Q_OBJECT
 	public:
-		Node(model::Node* modelNode);
+		Node(model::Node* modelNode, QString nodeType);
 		~Node();
 
 		int width() const;
@@ -53,6 +57,12 @@ namespace view
 		void setResizable(bool status);
 
 		view::SceneGraph* getSceneGraph() const;
+
+		// persistence
+		virtual QJSValue toJSValue(QJSEngine& engine) const;
+		virtual void fromJSValue(const QJSValue& jsValue);
+
+		QString getNodeType() const;
 
 	protected:
 		enum Handle
@@ -106,6 +116,8 @@ namespace view
 		bool _firstTimeResize = true;
 		QSize _minSize;
 		bool _isResizable = true;
+	private:
+		QString _nodeType;
 	};
 }
 

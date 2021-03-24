@@ -28,12 +28,18 @@ namespace view
 		Node* findbyModel(model::Node* node) const;
 		Edge* findbyModel(model::Edge* edge) const;
 
+		QList<Node*> getNodes() const;
+		QList<Edge*> getEdges() const;
+
 		model::Graph* getModelGraph() const;
 
 		void registerEdgeAction(QString name, std::function<void(view::Edge*)> func);
 		void registerNodeAction(QString name, std::function<void(view::Node*)> func);
 
 		void clearNodes();
+
+		void persist(const QString& fileName) const;
+		bool load(const QString& fileName);
 
 	protected:
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
@@ -56,6 +62,8 @@ namespace view
 		Node* createModifierNode();
 		Node* createDelayNode();
 		Node* createScriptNode();
+
+		Node* createNode(QString nodeType);
 
 		void deleteNode(Node* node);
 		void deleteEdge(Edge* edge);

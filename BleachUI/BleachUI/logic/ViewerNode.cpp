@@ -6,10 +6,17 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-logic::ViewerNode::ViewerNode(model::Node* modelNode) : view::Node(modelNode)
+logic::ViewerNode::ViewerNode(model::Node* modelNode) : view::Node(modelNode, "Viewer")
 {
 	setupUi();
 	setTitle("Viewer");
+}
+
+QJSValue logic::ViewerNode::toJSValue(QJSEngine& engine) const
+{
+	auto value = Node::toJSValue(engine);
+	value.setProperty("_currentTab", _ui.tabWidget->currentIndex());
+	return value;
 }
 
 void logic::ViewerNode::clearUI()

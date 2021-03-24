@@ -94,3 +94,13 @@ void view::Edge::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 	_mouseHovering = false;
 	QGraphicsItem::hoverLeaveEvent(event);
 }
+
+view::Slot* view::Edge::getOriginSlot() const
+{
+	return _slotOrigin;
+}
+
+view::Slot* view::Edge::getDestinationSlot() const
+{
+	return _slotDestination;
+}

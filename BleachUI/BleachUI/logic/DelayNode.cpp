@@ -6,7 +6,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-logic::DelayNode::DelayNode(model::Node* modelNode) : view::Node(modelNode)
+logic::DelayNode::DelayNode(model::Node* modelNode) : view::Node(modelNode, "Delay")
 {
 	setupUi();
 	setTitle("Delay");
@@ -15,6 +15,13 @@ logic::DelayNode::DelayNode(model::Node* modelNode) : view::Node(modelNode)
 void logic::DelayNode::clearUI()
 {
 	//_editor->clear();
+}
+
+QJSValue logic::DelayNode::toJSValue(QJSEngine& engine) const
+{
+	auto value = Node::toJSValue(engine);
+	value.setProperty("_delay", _ui.spinBox->value());
+	return value;
 }
 
 void logic::DelayNode::onTimeout()

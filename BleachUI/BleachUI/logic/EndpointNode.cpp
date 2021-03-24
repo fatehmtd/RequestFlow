@@ -5,12 +5,21 @@
 #include <QRegularExpression>
 
 
-logic::EndpointNode::EndpointNode(model::Node* modelNode) : view::Node(modelNode), _ui(new Ui::EndpointNodeUiWidget)
+logic::EndpointNode::EndpointNode(model::Node* modelNode) : view::Node(modelNode, "Endpoint"), _ui(new Ui::EndpointNodeUiWidget)
 {
 	_networkAccessManager = new QNetworkAccessManager(this);
 	connect(_networkAccessManager, &QNetworkAccessManager::finished, this, &EndpointNode::replyReceived);
 	initUI();
 	setTitle("Endpoint");
+}
+
+QJSValue logic::EndpointNode::toJSValue(QJSEngine& engine) const
+{
+	auto value = Node::toJSValue(engine);
+	value.setProperty("_url", _ui->lineEdit_url->text());
+	value.setProperty("_method", _ui->comboBox_method->currentIndex());
+	value.setProperty("_contentTyoe", _ui->comboBox_contentType->currentIndex());
+	return value;
 }
 
 void logic::EndpointNode::setTimeout(unsigned int sec)
@@ -183,8 +192,6 @@ QUrl logic::EndpointNode::resolveUrl(const QString& rawUrl) const
 		workingUrl = QString("%1?%2").arg(workingUrl).arg(queryStringList.join("&"));
 	}
 
-	// replace env vars placeholders
-
 
 	// extract :vars
 	QList<QString> pathVariablesPlaceHolders;
@@ -198,6 +205,8 @@ QUrl logic::EndpointNode::resolveUrl(const QString& rawUrl) const
 			pathVariablesPlaceHolders.push_back(match.captured());
 		}
 	}
+
+	//TODO: replace env vars placeholders
 
 	QMap<QString, QVariant> temp;
 	temp["baseUrl"] = "http://localhost:8080";

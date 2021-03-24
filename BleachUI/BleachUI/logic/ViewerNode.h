@@ -8,7 +8,8 @@ namespace logic
     class ViewerNode : public view::Node
     {
     public:
-        ViewerNode(model::Node* modelNode);
+        Q_INVOKABLE ViewerNode(model::Node* modelNode);
+        virtual QJSValue toJSValue(QJSEngine& engine) const;
 
         virtual void clearUI() override;
     private:

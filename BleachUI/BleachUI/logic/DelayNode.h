@@ -8,9 +8,11 @@ namespace logic
     class DelayNode : public view::Node
     {
     public:
-        DelayNode(model::Node* modelNode);
+        Q_INVOKABLE DelayNode(model::Node* modelNode);
 
         virtual void clearUI() override;
+
+        virtual QJSValue toJSValue(QJSEngine& engine) const;
     private slots:
         void onTimeout();
     private:
