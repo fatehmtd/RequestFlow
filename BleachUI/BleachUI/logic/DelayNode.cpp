@@ -24,6 +24,12 @@ QJSValue logic::DelayNode::toJSValue(QJSEngine& engine) const
 	return value;
 }
 
+void logic::DelayNode::fromJSValue(const QJSValue& jsValue)
+{
+	Node::fromJSValue(jsValue);
+	_ui.spinBox->setValue(jsValue.property("_delay").toInt());
+}
+
 void logic::DelayNode::onTimeout()
 {
 	_node->getOutputSlots().first()->setData(_node->getInputSlots().first()->getData());
@@ -39,7 +45,7 @@ void logic::DelayNode::setupUi()
 
 	setResizable(false);
 
-	setMinSize(QSize(50, 50));
+	setMinSize(QSize(100, 50));
 
 	_timer = new QTimer(this);
 	_timer->setSingleShot(true);
@@ -53,5 +59,5 @@ void logic::DelayNode::setupUi()
 			_timer->start(_ui.spinBox->value());
 		});
 
-	setSize(100, 50);
+	setSize(100, 150);
 }

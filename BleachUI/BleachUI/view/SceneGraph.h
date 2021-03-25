@@ -37,6 +37,7 @@ namespace view
 		void registerNodeAction(QString name, std::function<void(view::Node*)> func);
 
 		void clearNodes();
+		void clearScene();
 
 		void persist(const QString& fileName) const;
 		bool load(const QString& fileName);
@@ -67,7 +68,7 @@ namespace view
 
 		void deleteNode(Node* node);
 		void deleteEdge(Edge* edge);
-		void cloneNode(Node* node);
+		Node* cloneNode(Node* node);
 
 		void createEdge();
 

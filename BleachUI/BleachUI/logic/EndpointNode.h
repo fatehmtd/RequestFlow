@@ -17,7 +17,8 @@ namespace logic
     public:
         Q_INVOKABLE EndpointNode(model::Node* modelNode);
 
-        virtual QJSValue toJSValue(QJSEngine& engine) const;
+        virtual QJSValue toJSValue(QJSEngine& engine) const override;
+        virtual void fromJSValue(const QJSValue& jsValue) override;
 
         enum HttpMethod
         {

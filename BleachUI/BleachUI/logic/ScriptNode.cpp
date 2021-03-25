@@ -21,6 +21,12 @@ QJSValue logic::ScriptNode::toJSValue(QJSEngine& engine) const
 	return value;
 }
 
+void logic::ScriptNode::fromJSValue(const QJSValue& jsValue)
+{
+	Node::fromJSValue(jsValue);
+	_editor->setText(jsValue.property("_script").toString());
+}
+
 void logic::ScriptNode::clearUI()
 {
 	//_editor->clear();

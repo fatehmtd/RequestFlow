@@ -22,6 +22,14 @@ QJSValue logic::EndpointNode::toJSValue(QJSEngine& engine) const
 	return value;
 }
 
+void logic::EndpointNode::fromJSValue(const QJSValue& jsValue)
+{
+	Node::fromJSValue(jsValue);
+	_ui->lineEdit_url->setText(jsValue.property("_url").toString());
+	_ui->comboBox_method->setCurrentIndex(jsValue.property("_method").toInt());
+	_ui->comboBox_contentType->setCurrentIndex(jsValue.property("_contentTyoe").toInt());
+}
+
 void logic::EndpointNode::setTimeout(unsigned int sec)
 {
 }
@@ -66,6 +74,7 @@ void logic::EndpointNode::initUI()
 			sendPayload();
 		});
 
+	setMinSize(QSize(280, 200));
 	setSize(300, 100);
 }
 

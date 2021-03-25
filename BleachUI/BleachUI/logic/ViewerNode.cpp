@@ -19,6 +19,12 @@ QJSValue logic::ViewerNode::toJSValue(QJSEngine& engine) const
 	return value;
 }
 
+void logic::ViewerNode::fromJSValue(const QJSValue& jsValue)
+{
+	Node::fromJSValue(jsValue);
+	_ui.tabWidget->setCurrentIndex(jsValue.property("_currentTab").toInt());
+}
+
 void logic::ViewerNode::clearUI()
 {
 	_ui.textEdit_raw->clear();

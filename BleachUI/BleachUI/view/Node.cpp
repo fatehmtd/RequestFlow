@@ -175,6 +175,8 @@ void view::Node::setSize(int w, int h)
 		w = std::max(_minSize.width(), w);
 	}
 
+	_firstTimeResize = true;
+
 	_size.setWidth(w);
 	_size.setHeight(h);
 
@@ -266,7 +268,12 @@ QJSValue view::Node::toJSValue(QJSEngine& engine) const
 
 void view::Node::fromJSValue(const QJSValue& jsValue)
 {
-	throw std::exception("fromJSValue not implemented");
+	float x = jsValue.property("_x").toNumber();
+	float y = jsValue.property("_y").toNumber();
+	float w = jsValue.property("_w").toNumber();
+	float h = jsValue.property("_h").toNumber();
+	setPos(x, y);
+	setSize(w, h);
 }
 
 QString view::Node::getNodeType() const
@@ -279,11 +286,23 @@ QString view::Node::getNodeType() const
 void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 	painter->setClipRect(option->exposedRect);
-	// hack to resize at startup
-	if (_firstTimeResize)
+
 	{
-		setSize(1, 1);
-		_firstTimeResize = false;
+		// FIXME: hack to resize at startup
+
+		if (_contentWidget != nullptr)
+		{
+			auto rect = _contentWidget->layout()->contentsRect();
+			if (rect.width() <= 0 || rect.height() <= 0)
+			{
+				setSize(width(), height());
+			}
+		}
+		if (_firstTimeResize)
+		{
+			setSize(width(), height());
+			_firstTimeResize = false;
+		}
 	}
 
 	auto rect = boundingRect();
@@ -499,6 +518,7 @@ QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant& value
 	default:
 		break;
 	}
+	update(boundingRect());
 	return QGraphicsObject::itemChange(change, value);
 }
 
@@ -539,7 +559,7 @@ void view::Node::doResize(QGraphicsSceneMouseEvent* event)
 		h = _bottomRightCorner.y() - _topLeftCorner.y();
 	}
 
-	if (w != width() || h != height())
+	//if (w != width() || h != height())
 	{
 		setSize(w, h);
 	}

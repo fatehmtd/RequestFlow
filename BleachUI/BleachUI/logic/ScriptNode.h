@@ -10,6 +10,7 @@ namespace logic
         Q_INVOKABLE ScriptNode(model::Node* modelNode);
 
         virtual QJSValue toJSValue(QJSEngine& engine) const;
+        virtual void fromJSValue(const QJSValue& jsValue);
 
         virtual void clearUI() override;
     private:
