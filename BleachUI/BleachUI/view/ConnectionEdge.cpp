@@ -54,12 +54,7 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 	if (_slotOrigin != nullptr)
 	{
 		auto originPosition = _destinationPos;
-		//auto destinationPosition = _originPos;
 		auto destinationPosition = _slotOrigin->getBasePosition(true);
-
-		//auto originPosition = _slotOrigin->getBasePosition(true);
-		//auto destinationPosition = _destinationPos;
-
 
 		QColor color = _noCandidateColor;
 		Qt::PenStyle style = Qt::PenStyle::DashDotDotLine;
@@ -113,18 +108,8 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 			painter->drawPath(path);
 		}
 
-		QPointF ctrlPointA, ctrlPointB;
-
-		float dx = (originPosition.x() - destinationPosition.x());
-
-		float cltrX = dx < 20.0f ? 250 : 50;
-
-		ctrlPointA = originPosition + QPointF(-cltrX, 0);
-		ctrlPointB = destinationPosition + QPointF(cltrX, 0);
-
 		{
-			QPainterPath path(originPosition);
-			path.cubicTo(ctrlPointA, ctrlPointB, destinationPosition);
+			auto path = buildPath();
 
 			QPen pen(color, thickness, style);
 			painter->setPen(pen);
@@ -136,16 +121,14 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
 QPainterPath view::ConnectionEdge::buildPath() const
 {
-	//qDebug() << __FUNCTION__ << rand()%10000 <<_slotOrigin;
-
 	if (_slotOrigin != nullptr)
 	{
 		auto destinationPosition = _slotOrigin->getBasePosition(true);
 		auto originPosition = _destinationPos;
 
-		float dx = (originPosition.x() - destinationPosition.x());
-
-		float cltrX = dx < 20.0f ? 250 : 50;
+		float dx = (originPosition.x() - destinationPosition.x());		
+		float thresh = abs(dx) * 0.5f;
+		float cltrX = std::min(300.0f, std::max(thresh, 100.0f));
 
 		auto ctrlPointA = originPosition + QPointF(-cltrX, 0);
 		auto ctrlPointB = destinationPosition + QPointF(cltrX, 0);
@@ -153,7 +136,7 @@ QPainterPath view::ConnectionEdge::buildPath() const
 		QPainterPath path(originPosition);
 		path.cubicTo(ctrlPointA, ctrlPointB, destinationPosition);
 
-		return path.simplified();
+		return path;
 	}
 	else
 		return QPainterPath();

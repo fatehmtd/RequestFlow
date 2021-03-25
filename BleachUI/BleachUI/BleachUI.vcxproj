@@ -113,6 +113,7 @@
     <ClCompile Include="logic\PayloadNode.cpp" />
     <ClCompile Include="logic\ScriptNode.cpp" />
     <ClCompile Include="logic\ViewerNode.cpp" />
+    <ClCompile Include="PersistenceHandler.cpp" />
     <ClCompile Include="view\ConnectionEdge.cpp" />
     <ClCompile Include="view\ContentWidget.cpp" />
     <ClCompile Include="view\Edge.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="logic\PayloadNode.h" />
     <ClInclude Include="logic\ScriptNode.h" />
     <ClInclude Include="logic\ViewerNode.h" />
+    <ClInclude Include="PersistenceHandler.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="view\ConnectionEdge.h" />
     <QtMoc Include="view\ContentWidget.h" />

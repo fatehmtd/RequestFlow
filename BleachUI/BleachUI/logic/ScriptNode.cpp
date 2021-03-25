@@ -8,10 +8,23 @@
 #include <QJSEngine>
 #include <QJSValue>
 
-logic::ScriptNode::ScriptNode(model::Node* modelNode) : view::Node(modelNode)
+logic::ScriptNode::ScriptNode(model::Node* modelNode) : view::Node(modelNode, "Script")
 {
 	setupUi();
 	setTitle("Script");
+}
+
+QJSValue logic::ScriptNode::toJSValue(QJSEngine& engine) const
+{
+	auto value = Node::toJSValue(engine);
+	value.setProperty("_script", _editor->toPlainText());
+	return value;
+}
+
+void logic::ScriptNode::fromJSValue(const QJSValue& jsValue)
+{
+	Node::fromJSValue(jsValue);
+	_editor->setText(jsValue.property("_script").toString());
 }
 
 void logic::ScriptNode::clearUI()

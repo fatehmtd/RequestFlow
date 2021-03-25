@@ -20,6 +20,9 @@ namespace view
 
 		model::Edge* getModelEdge() const { return _edge; }
 
+		Slot* getOriginSlot() const;
+		Slot* getDestinationSlot() const;
+
 		virtual QPainterPath shape() const override;
 	protected:
 		virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

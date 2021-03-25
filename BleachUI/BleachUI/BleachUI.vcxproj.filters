@@ -73,6 +73,9 @@
     <Filter Include="logic\ScriptNode">
       <UniqueIdentifier>{2ebc8a62-d70e-46d6-b414-190258fedcb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="persistence">
+      <UniqueIdentifier>{bd6baa53-b97d-477f-8421-8f998337635f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="BleachUI.qrc">
@@ -125,6 +128,9 @@
     <ClCompile Include="logic\ScriptNode.cpp">
       <Filter>logic\ScriptNode</Filter>
     </ClCompile>
+    <ClCompile Include="PersistenceHandler.cpp">
+      <Filter>persistence</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="view\SceneGraph.h">
@@ -159,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PersistenceHandler.h">
+      <Filter>persistence</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,10 @@ namespace logic
     class ScriptNode : public view::Node
     {
     public:
-        ScriptNode(model::Node* modelNode);
+        Q_INVOKABLE ScriptNode(model::Node* modelNode);
+
+        virtual QJSValue toJSValue(QJSEngine& engine) const;
+        virtual void fromJSValue(const QJSValue& jsValue);
 
         virtual void clearUI() override;
     private:

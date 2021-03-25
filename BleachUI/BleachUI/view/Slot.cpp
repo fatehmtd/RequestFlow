@@ -118,3 +118,8 @@ model::Slot* view::Slot::getModelSlot() const
 {
 	return _slot;
 }
+
+view::Node* view::Slot::getNode() const
+{
+	return dynamic_cast<Node*>(parentItem());
+}

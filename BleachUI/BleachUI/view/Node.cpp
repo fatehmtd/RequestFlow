@@ -9,7 +9,7 @@
 #include <model/Node.h>
 #include <model/Slot.h>
 
-view::Node::Node(model::Node* modelNode) : _node(modelNode)
+view::Node::Node(model::Node* modelNode, QString nodeType) : _node(modelNode), _nodeType(nodeType)
 {
 	_bgColor = colors::light::purple;
 	setupUi();
@@ -19,10 +19,6 @@ view::Node::Node(model::Node* modelNode) : _node(modelNode)
 
 view::Node::~Node()
 {
-	// delete slots
-	//auto children = findChildren<Slot*>();
-	//qDeleteAll(children);
-	//delete _node;
 }
 
 int view::Node::width() const
@@ -179,6 +175,8 @@ void view::Node::setSize(int w, int h)
 		w = std::max(_minSize.width(), w);
 	}
 
+	_firstTimeResize = true;
+
 	_size.setWidth(w);
 	_size.setHeight(h);
 
@@ -251,16 +249,60 @@ view::SceneGraph* view::Node::getSceneGraph() const
 	return dynamic_cast<SceneGraph*>(scene());
 }
 
+#include <QJSEngine>
+
+QJSValue view::Node::toJSValue(QJSEngine& engine) const
+{
+	//QJSEngine engine;
+	QJSValue value = engine.newObject();
+	value.setProperty("_type", getNodeType());
+	auto coords = scenePos();
+	value.setProperty("_x", coords.x());
+	value.setProperty("_y", coords.y());
+	value.setProperty("_w", width());
+	value.setProperty("_h", height());
+	return value;
+}
+
+#include <exception>
+
+void view::Node::fromJSValue(const QJSValue& jsValue)
+{
+	float x = jsValue.property("_x").toNumber();
+	float y = jsValue.property("_y").toNumber();
+	float w = jsValue.property("_w").toNumber();
+	float h = jsValue.property("_h").toNumber();
+	setPos(x, y);
+	setSize(w, h);
+}
+
+QString view::Node::getNodeType() const
+{
+	return _nodeType;
+}
+
 #include <QStyleOptionGraphicsItem>
 
 void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 	painter->setClipRect(option->exposedRect);
-	// hack to resize at startup
-	if (_firstTimeResize)
+
 	{
-		setSize(1, 1);
-		_firstTimeResize = false;
+		// FIXME: hack to resize at startup
+
+		if (_contentWidget != nullptr)
+		{
+			auto rect = _contentWidget->layout()->contentsRect();
+			if (rect.width() <= 0 || rect.height() <= 0)
+			{
+				setSize(width(), height());
+			}
+		}
+		if (_firstTimeResize)
+		{
+			setSize(width(), height());
+			_firstTimeResize = false;
+		}
 	}
 
 	auto rect = boundingRect();
@@ -476,6 +518,7 @@ QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant& value
 	default:
 		break;
 	}
+	update(boundingRect());
 	return QGraphicsObject::itemChange(change, value);
 }
 
@@ -516,7 +559,7 @@ void view::Node::doResize(QGraphicsSceneMouseEvent* event)
 		h = _bottomRightCorner.y() - _topLeftCorner.y();
 	}
 
-	if (w != width() || h != height())
+	//if (w != width() || h != height())
 	{
 		setSize(w, h);
 	}

@@ -23,6 +23,9 @@ namespace view
 		bool acceptConnection(Slot* origin) const;
 
 		model::Slot* getModelSlot() const;
+		
+		Node* getNode() const;
+
 	protected:
 		virtual QRectF boundingRect() const override;
 		virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

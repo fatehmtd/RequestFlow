@@ -7,10 +7,26 @@
 #include <QJsonDocument>
 #include <QTableWidgetItem>
 
-logic::PayloadNode::PayloadNode(model::Node* modelNode) : view::Node(modelNode)
+logic::PayloadNode::PayloadNode(model::Node* modelNode) : view::Node(modelNode, "Payload")
 {
 	setupUi();
 	setTitle("Payload");
+}
+
+QJSValue logic::PayloadNode::toJSValue(QJSEngine& engine) const
+{
+	auto value = Node::toJSValue(engine);
+	auto message = composeMessage().toVariant();
+	value.setProperty("_message", engine.toScriptValue<QVariant>(message));
+	return value;
+}
+
+model::Message logic::PayloadNode::composeMessage() const
+{
+	model::Message message(_ui.textEdit_body->toPlainText());
+	message.setPathVars(fillFromTable(_ui.tableWidget_path));
+	message.setQueryParams(fillFromTable(_ui.tableWidget_query));
+	return message;
 }
 
 void logic::PayloadNode::clearUI()
@@ -52,11 +68,7 @@ void logic::PayloadNode::setupUi()
 
 void logic::PayloadNode::prepareAndSend() const
 {
-	model::Message message(_ui.textEdit_body->toPlainText());
-	message.setPathVars(fillFromTable(_ui.tableWidget_path));
-	message.setQueryParams(fillFromTable(_ui.tableWidget_query));
-
-	_node->getOutputSlots().first()->setData(message);
+	_node->getOutputSlots().first()->setData(composeMessage());
 	_node->evaluate();
 }
 
