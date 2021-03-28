@@ -117,6 +117,7 @@
     <ClCompile Include="view\ConnectionEdge.cpp" />
     <ClCompile Include="view\ContentWidget.cpp" />
     <ClCompile Include="view\Edge.cpp" />
+    <ClCompile Include="view\InteractionsHandler.cpp" />
     <ClCompile Include="view\Node.cpp" />
     <ClCompile Include="view\SceneGraph.cpp" />
     <ClCompile Include="view\SceneGraphWidget.cpp" />
@@ -141,6 +142,7 @@
     <QtMoc Include="view\Slot.h" />
     <ClInclude Include="view\Colors.h" />
     <QtMoc Include="view\Node.h" />
+    <ClInclude Include="view\InteractionsHandler.h" />
     <ClInclude Include="view\SceneGraph.h" />
     <ClInclude Include="view\SceneGraphWidget.h" />
   </ItemGroup>

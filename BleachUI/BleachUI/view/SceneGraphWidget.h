@@ -21,6 +21,7 @@ protected:
 	virtual void mouseMiddleButtonReleased(QMouseEvent* event);
 
 	void performZoom(QWheelEvent* event);
+	void setOGLBackend();
 
 protected:
 	view::SceneGraph* _sceneGraph = nullptr;

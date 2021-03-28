@@ -344,7 +344,7 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	{
 		QPainterPath outlinePath;
 		outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-		QPen pen(isSelected() ? colors::orange : colors::outlineGrey, isSelected() ? 2.0f : 1.0f);
+		QPen pen(isSelected() ? colors::orange : QColor("#4D4B4D"), isSelected() ? 2.0f : 1.0f);
 		painter->setPen(pen);
 		painter->setBrush(Qt::BrushStyle::NoBrush);
 		painter->drawPath(outlinePath);
@@ -367,7 +367,7 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	else
 	{
 		// Outline Hover
-		if (_mouseHover)
+		if (_mouseHover && false)
 		{
 			QPainterPath outlinePath;
 			float outlineEdgeSize = _edgeSize * 1.2f;
@@ -384,6 +384,8 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
 void view::Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
+	getSceneGraph()->bringToFront(this);
+
 	if (_isResizing)
 	{
 		doResize(event);
@@ -396,6 +398,8 @@ void view::Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
 void view::Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+	getSceneGraph()->bringToFront(this);
+
 	if (_resizeEligible)
 	{
 		_isResizing = true;
@@ -518,7 +522,6 @@ QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant& value
 	default:
 		break;
 	}
-	update(boundingRect());
 	return QGraphicsObject::itemChange(change, value);
 }
 
@@ -559,12 +562,7 @@ void view::Node::doResize(QGraphicsSceneMouseEvent* event)
 		h = _bottomRightCorner.y() - _topLeftCorner.y();
 	}
 
-	//if (w != width() || h != height())
-	{
-		setSize(w, h);
-	}
-
-	update();
+	setSize(w, h);
 }
 
 int view::Node::computeGripCorner(const QPointF& p)
@@ -625,6 +623,4 @@ void view::Node::handleResize(const QPointF& pos)
 		setCursor(Qt::CursorShape::ArrowCursor);
 		break;
 	}
-
-	update();
 }

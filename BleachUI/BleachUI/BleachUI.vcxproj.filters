@@ -73,7 +73,10 @@
     <Filter Include="logic\ScriptNode">
       <UniqueIdentifier>{2ebc8a62-d70e-46d6-b414-190258fedcb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="persistence">
+    <Filter Include="InteractionsHandler">
+      <UniqueIdentifier>{102b008b-2a0b-4648-b70f-5ae801b8b0b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Persistence">
       <UniqueIdentifier>{bd6baa53-b97d-477f-8421-8f998337635f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -129,7 +132,10 @@
       <Filter>logic\ScriptNode</Filter>
     </ClCompile>
     <ClCompile Include="PersistenceHandler.cpp">
-      <Filter>persistence</Filter>
+      <Filter>Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="view\InteractionsHandler.cpp">
+      <Filter>InteractionsHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +173,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PersistenceHandler.h">
-      <Filter>persistence</Filter>
+      <Filter>Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="view\InteractionsHandler.h">
+      <Filter>InteractionsHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,7 +8,7 @@
 
 view::ConnectionEdge::ConnectionEdge()
 {
-	_thickness = 10.0f;
+	_thickness = 7.0f;
 	_eligibility = NO_CANDIDATE;
 	setZValue(1);
 	//setAttribute(Qt::WA_OpaquePaintEvent, true);
