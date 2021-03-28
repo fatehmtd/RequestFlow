@@ -28,21 +28,13 @@ void SceneGraphWidget::initUi()
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
-	setRenderHint(QPainter::RenderHint::Antialiasing, false);
+	setRenderHint(QPainter::RenderHint::Antialiasing, true);
 	setRenderHint(QPainter::RenderHint::TextAntialiasing, false);
 	setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, false);
-	/*
-	setRenderHints(
-		QPainter::RenderHint::Antialiasing |
-		QPainter::RenderHint::TextAntialiasing |
-		QPainter::RenderHint::SmoothPixmapTransform
-	);
-	//*/
-	
+
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-	/*
-	setOptimizationFlags(QGraphicsView::DontClipPainter);
+	
 	setOptimizationFlags(QGraphicsView::DontSavePainterState);
 	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
 	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
@@ -53,29 +45,16 @@ void SceneGraphWidget::initUi()
 
 	_zoomInFactor = 1.5f;
 	_zoomStep = 1;
-	_zoomLevel = 4;
+	_zoomLevel = 2;
 	_minZoomLevel = 1;
-	_maxZoomLevel = 10;
+	_maxZoomLevel = 5;
 
-	/*
-	QSurfaceFormat surfaceFormat;
-	surfaceFormat.setSamples(8);
-	surfaceFormat.setVersion(4, 2);
-	//surfaceFormat.setProfile(QSurfaceFormat::CompatibilityProfile);
-	//surfaceFormat.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
-	surfaceFormat.setSwapInterval(1);
-
-	QSurfaceFormat::setDefaultFormat(surfaceFormat);
-	//surfaceFormat.setSwapBehavior(QSurfaceFormat::SwapBehavior::SingleBuffer);
-
-	auto glWidget = new QOpenGLWidget();
-	//glWidget->setFormat(surfaceFormat);
-	setViewport(glWidget);
-	//*/
+	//setOGLBackend();
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 {
+	qDebug() << mapToScene(viewport()->rect()).boundingRect().center();
 	if (event->button() == Qt::MouseButton::MiddleButton)
 	{
 		mouseMiddleButtonPressed(event);
@@ -171,4 +150,22 @@ void SceneGraphWidget::performZoom(QWheelEvent* event)
 			scale(factor, factor);
 		}
 	}
+}
+
+void SceneGraphWidget::setOGLBackend()
+{
+	QSurfaceFormat surfaceFormat;
+	surfaceFormat.setSamples(8);
+	surfaceFormat.setVersion(4, 2);
+	//surfaceFormat.setProfile(QSurfaceFormat::CompatibilityProfile);
+	//surfaceFormat.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
+	surfaceFormat.setSwapInterval(1);
+
+	QSurfaceFormat::setDefaultFormat(surfaceFormat);
+	//surfaceFormat.setSwapBehavior(QSurfaceFormat::SwapBehavior::SingleBuffer);
+
+	auto glWidget = new QOpenGLWidget();
+	//glWidget->setFormat(surfaceFormat);
+	setViewport(glWidget);
+	//*/
 }

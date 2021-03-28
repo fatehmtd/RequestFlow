@@ -15,7 +15,7 @@ view::Edge::Edge(SceneGraph* graph, model::Edge* edge) : _edge(edge)
 	setZValue(-1);
 	setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
 	setAcceptHoverEvents(true);
-	_thickness = 10.0f;
+	_thickness = 7.0f;
 }
 
 view::Edge::~Edge()
@@ -44,7 +44,7 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
 	auto path = buildPath();
 	setPath(path);
-	QPen pen(isSelected() ? colors::orange : (_mouseHovering ? colors::orange : colors::outlineGrey), _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
+	QPen pen(isSelected() ? colors::orange : (_mouseHovering ? colors::orange : QColor("#4D4B4D")), _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
 	painter->setPen(pen);
 	painter->setBrush(Qt::BrushStyle::NoBrush);
 	painter->drawPath(path);

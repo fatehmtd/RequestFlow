@@ -9,6 +9,8 @@
         <file alias="stop">icons/stop.png</file>
         <file alias="data">icons/data.png</file>
         <file alias="transfer">icons/transfer.png</file>
+        <file alias="save">icons/loading.png</file>
+        <file alias="load">icons/open.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

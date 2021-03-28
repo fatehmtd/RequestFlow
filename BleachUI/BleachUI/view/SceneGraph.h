@@ -13,6 +13,7 @@
 
 namespace view
 {
+	class InteractionsHandler;
 	class Node;
 	class Link;
 	class Slot;
@@ -31,6 +32,8 @@ namespace view
 		QList<Node*> getNodes() const;
 		QList<Edge*> getEdges() const;
 
+		Node* getNodeAt(const QPointF& p) const;
+
 		model::Graph* getModelGraph() const;
 
 		void registerEdgeAction(QString name, std::function<void(view::Edge*)> func);
@@ -44,6 +47,8 @@ namespace view
 
 	protected:
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
+		void drawPointsBackground(QPainter* painter, const QRectF& rect);
+		void drawGridBackground(QPainter* painter, const QRectF& rect);
 
 		virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
@@ -55,20 +60,6 @@ namespace view
 
 		virtual void setupUi();
 
-		void createSampleScenario();
-
-		Node* createEndpointNode();
-		Node* createPayloadNode();
-		Node* createViewerNode();
-		Node* createModifierNode();
-		Node* createDelayNode();
-		Node* createScriptNode();
-
-		Node* createNode(QString nodeType);
-
-		void deleteNode(Node* node);
-		void deleteEdge(Edge* edge);
-		Node* cloneNode(Node* node);
 
 		void createEdge();
 
@@ -81,6 +72,8 @@ namespace view
 		Slot* _originSlot = nullptr, * _destinationSlot = nullptr;
 		QPointF _cursorPosition;
 		ConnectionEdge* _connectionEdge = nullptr;
+
+		InteractionsHandler* _interactionsHandler = nullptr;
 
 		QMap<QString, std::function<void(view::Edge*)>> _edgesActions;
 		QMap<QString, std::function<void(view::Node*)>> _nodesActions;

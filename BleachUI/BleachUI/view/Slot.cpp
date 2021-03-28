@@ -44,8 +44,9 @@ QRectF view::Slot::boundingRect() const
 void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 	QPainterPath path, outline;
-	QPen pen(colors::purple);
+	QPen pen(QColor("#4D4B4D"));
 	QBrush brush(isInput() ? colors::green : colors::red);
+	//QBrush brush(QColor("#4D4B4D"));
 
 	path.setFillRule(Qt::FillRule::WindingFill);
 	painter->setPen(pen);
@@ -72,7 +73,7 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	if (_mouseHovering)
 	{
 		painter->setBrush(Qt::BrushStyle::NoBrush);
-		QPen pen(brush.color(), 3.0f);
+		QPen pen(brush.color(), 5.0f);
 		painter->setPen(pen);
 		painter->drawPath(outline.simplified());
 	}
