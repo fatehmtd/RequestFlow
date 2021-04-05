@@ -4,7 +4,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "Colors.h"
 #include "Slot.h"
-#include <QGraphicsProxyWidget>
+#include "CustomProxyWidget.h"
 
 #include <model/Node.h>
 #include <model/Slot.h>
@@ -15,6 +15,9 @@ view::Node::Node(model::Node* modelNode, QString nodeType) : _node(modelNode), _
 	setupUi();
 	setupUIForModel();
 	setupContentWidget();
+
+	//connect(modelNode, &model::Node::evaluated, this, [=]() { update(); });
+	//connect(modelNode, &model::Node::ready, this, [=]() { update(); });
 }
 
 view::Node::~Node()
@@ -78,7 +81,8 @@ void view::Node::setupUi()
 	setFlag(GraphicsItemFlag::ItemIsSelectable);
 	setFlag(GraphicsItemFlag::ItemIsMovable);
 	setFlag(GraphicsItemFlag::ItemSendsGeometryChanges);
-	setCacheMode(CacheMode::DeviceCoordinateCache);
+	//setCacheMode(CacheMode::DeviceCoordinateCache);
+	setCacheMode(CacheMode::ItemCoordinateCache);
 
 	QFont font;
 	font.setBold(true);
@@ -90,16 +94,20 @@ void view::Node::setupUi()
 	_title->setPos(18, 5);
 }
 
+
 void view::Node::setupContentWidget()
 {
 	////////////////////////////
-	auto proxyWidget = new QGraphicsProxyWidget(this);
+	auto proxyWidget = new CustomProxyWidget(this);
 	_contentWidget = new ContentWidget(nullptr);
 	proxyWidget->setWidget(_contentWidget);
 
+	//proxyWidget->setVisible(false);
 	int top = getHeaderHeight() + getSlotsSectionHeight();
 	int bottom = _size.height() - (top + 20);
 	_contentWidget->setGeometry(_edgeSize, top, _size.width() - 2 * _edgeSize, bottom);
+
+	//_contentWidget->setVisible(false);
 
 	setSize(_size.width(), _size.height());
 }
@@ -285,7 +293,7 @@ QString view::Node::getNodeType() const
 
 void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-	painter->setClipRect(option->exposedRect);
+	//painter->setClipRect(option->exposedRect);
 
 	{
 		// FIXME: hack to resize at startup
@@ -408,7 +416,7 @@ void view::Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 	else
 	{
 		QGraphicsObject::mousePressEvent(event);
-	}	
+	}
 }
 
 void view::Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -416,7 +424,6 @@ void view::Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 	if(_isResizing)
 	{
 		_isResizing = false;
-		update();
 	}
 
 	QGraphicsObject::mouseReleaseEvent(event);
@@ -624,3 +631,4 @@ void view::Node::handleResize(const QPointF& pos)
 		break;
 	}
 }
+

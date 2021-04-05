@@ -1,5 +1,5 @@
 #pragma once
-#include "../bleachuimodel_global.h"
+#include "../coremodel_global.h"
 #include "BaseEntity.h"
 
 namespace model
@@ -8,7 +8,7 @@ namespace model
 	class OutputSlot;
 	class Graph;
 
-	class BLEACHUIMODEL_EXPORT Edge : public BaseEntity
+	class COREMODEL_EXPORT Edge : public BaseEntity
 	{
 		Q_OBJECT
 	public:

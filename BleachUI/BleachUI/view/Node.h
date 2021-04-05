@@ -3,6 +3,7 @@
 #include <QGraphicsTextItem>
 #include <QGraphicsObject>
 #include <QGraphicsWidget>
+#include <QPixmap>
 #include <QObject>
 #include <QJSValue>
 #include <QJSEngine>
@@ -37,7 +38,7 @@ namespace view
 
 		// Inherited via QGraphicsItem
 		virtual QRectF boundingRect() const override;
-		
+
 		void setTitle(const QString& txt);
 		QString getTitle() const;
 
@@ -69,7 +70,7 @@ namespace view
 		{
 			LEFT = 1,
 			RIGHT = 2,
-			TOP = 4, 
+			TOP = 4,
 			BOTTOM = 8,
 			TOP_LEFT = 5,
 			TOP_RIGHT = 6,
@@ -116,6 +117,8 @@ namespace view
 		bool _firstTimeResize = true;
 		QSize _minSize;
 		bool _isResizable = true;
+		QPixmap _pixmap;
+		bool _painted = false;
 	private:
 		QString _nodeType;
 	};

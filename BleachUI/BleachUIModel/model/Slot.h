@@ -9,7 +9,7 @@ namespace model
 	class Node;
 	class Edge;
 
-	class BLEACHUIMODEL_EXPORT Slot : public BaseEntity
+	class COREMODEL_EXPORT Slot : public BaseEntity
 	{
 	public:
 		enum Direction
@@ -48,7 +48,7 @@ namespace model
 		Direction _direction;
 	};
 
-	class BLEACHUIMODEL_EXPORT InputSlot : public Slot
+	class COREMODEL_EXPORT InputSlot : public Slot
 	{
 		Q_OBJECT
 	public:
@@ -59,7 +59,7 @@ namespace model
 		void dataReceived();
 	};
 
-	class BLEACHUIMODEL_EXPORT OutputSlot : public Slot
+	class COREMODEL_EXPORT OutputSlot : public Slot
 	{
 		Q_OBJECT
 	public:

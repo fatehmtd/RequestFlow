@@ -220,13 +220,13 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 			auto node = dynamic_cast<Node*>(item);
 			if (node != nullptr)
 			{
-				auto deleteAction = menu->addAction("Delete");
+				auto deleteAction = menu->addAction(QIcon(":/BleachUI/delete"), "Delete");
 				connect(deleteAction, &QAction::triggered, this, [=]()
 					{
 						deleteNode(node);
 					});
 
-				auto cloneAction = menu->addAction("Clone");
+				auto cloneAction = menu->addAction(QIcon(":/BleachUI/copy"), "Clone");
 
 				connect(cloneAction, &QAction::triggered, this, [=]()
 					{

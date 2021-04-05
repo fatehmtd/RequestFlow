@@ -1,6 +1,7 @@
 #include "EndpointNode.h"
 #include <QGraphicsProxyWidget>
 #include <model/Node.h>
+#include <model/Environment.h>
 #include <QDebug>
 #include <QRegularExpression>
 
@@ -201,7 +202,6 @@ QUrl logic::EndpointNode::resolveUrl(const QString& rawUrl) const
 		workingUrl = QString("%1?%2").arg(workingUrl).arg(queryStringList.join("&"));
 	}
 
-
 	// extract :vars
 	QList<QString> pathVariablesPlaceHolders;
 	{
@@ -215,27 +215,11 @@ QUrl logic::EndpointNode::resolveUrl(const QString& rawUrl) const
 		}
 	}
 
-	//TODO: replace env vars placeholders
+	auto environment = getSceneGraph()->getModelGraph()->getActiveEnvironment();
 
-	QMap<QString, QVariant> temp;
-	temp["baseUrl"] = "http://localhost:8080";
-
-	for (const auto& key : temp.keys())
+	if (environment != nullptr)
 	{
-		QRegularExpression pattern(QString("{{%1}}").arg(key));
-		workingUrl = workingUrl.replace(pattern, temp[key].toString());
-	}
-
-
-	// extract {vars}
-	{
-		QRegularExpression envVarPattern("{{([\\d\\w]+)}}");
-		auto it = envVarPattern.globalMatch(rawUrl);
-		while (it.hasNext())
-		{
-			auto match = it.next();
-			auto name = match.captured(1);
-		}
+		workingUrl = environment->evaluate(workingUrl);
 	}
 
 	return QUrl(workingUrl);

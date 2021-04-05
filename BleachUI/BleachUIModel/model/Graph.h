@@ -3,7 +3,7 @@
 #include <QList>
 #include <QMap>
 #include <QVariant>
-#include "../bleachuimodel_global.h"
+#include "../coremodel_global.h"
 
 namespace model
 {
@@ -12,16 +12,20 @@ namespace model
 	class Slot;
 	class OutputSlot;
 	class InputSlot;
+	class Environment;
+	class Project;
 
-	class BLEACHUIMODEL_EXPORT Graph : public QObject
+	class COREMODEL_EXPORT Graph : public QObject
 	{
 		Q_OBJECT
 	public:
-		Graph();
+		Graph(Project* parent);
 		~Graph();
 
+		Project* getProject() const;
+
 		QList<Node*> getNodes() const;
-		QList<Edge*> getEdges() const;
+		QList<Edge*> getEdges() const;		
 
 		Edge* findEdge(const InputSlot* destination, const OutputSlot* origin) const;
 		QList<Edge*> findEdges(const Slot* slot) const;
@@ -38,9 +42,8 @@ namespace model
 			MISSING_EDGES
 		};
 
-		void setEnvContext(const QMap<QString, QVariant>& context);
-		QMap<QString, QVariant> getEnvContext() const;
-		QMap<QString, QVariant>& getEnvContext();
+		void setActiveEnvironment(Environment* env);
+		Environment* getActiveEnvironment() const;
 
 	public slots:
 		virtual int start();
@@ -56,6 +59,6 @@ namespace model
 		void clear();
 	private:
 		QList<Node*> _startingNodes, _endingNodes;
-		QMap<QString, QVariant> _envContext;
+		Environment* _environment = nullptr;
 	};
 }

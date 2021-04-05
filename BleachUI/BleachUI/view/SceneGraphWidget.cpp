@@ -7,7 +7,10 @@
 #include <QGraphicsProxyWidget>
 #include <QApplication>
 
+#include "Node.h" 
+
 #include <model/Graph.h>
+#include <model/Environment.h>
 
 SceneGraphWidget::SceneGraphWidget(QWidget* parent) : QGraphicsView(parent)
 {
@@ -17,6 +20,11 @@ SceneGraphWidget::SceneGraphWidget(QWidget* parent) : QGraphicsView(parent)
 SceneGraphWidget::~SceneGraphWidget()
 {
 
+}
+
+view::SceneGraph* SceneGraphWidget::getSceneGraph() const
+{
+	return _sceneGraph;
 }
 
 #include <QTimer>
@@ -29,19 +37,24 @@ void SceneGraphWidget::initUi()
 
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
 	setRenderHint(QPainter::RenderHint::Antialiasing, true);
-	setRenderHint(QPainter::RenderHint::TextAntialiasing, false);
-	setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, false);
+	setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
+	setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
 
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-	
+
 	setOptimizationFlags(QGraphicsView::DontSavePainterState);
 	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
 	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
 	//*/
-
+	/*
 	_sceneGraph = new view::SceneGraph(new model::Graph, this);
+	auto env = new model::Environment(_sceneGraph->getModelGraph());
+	env->setName("Default environment");
+	env->getEntries().insert("baseUrl", "https://jsonplaceholder.typicode.com");
+	_sceneGraph->getModelGraph()->setActiveEnvironment(env);	
 	setScene(_sceneGraph);
+	*/
 
 	_zoomInFactor = 1.5f;
 	_zoomStep = 1;
@@ -49,7 +62,7 @@ void SceneGraphWidget::initUi()
 	_minZoomLevel = 1;
 	_maxZoomLevel = 5;
 
-	//setOGLBackend();
+	//setOGLBackend();	
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
@@ -79,6 +92,7 @@ void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
 {
+	if (_sceneGraph == nullptr) return;
 	if (dragMode() == DragMode::ScrollHandDrag)
 	{
 		auto p = (event->pos());
@@ -88,19 +102,31 @@ void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
 
 		horizontalScrollBar()->setValue(horizontalScrollBar()->value() - delta.x());
 		verticalScrollBar()->setValue(verticalScrollBar()->value() - delta.y());
+
+		auto items = _sceneGraph->items(viewport()->rect());
+
+		for (auto item : items)
+		{
+			auto node = dynamic_cast<QGraphicsProxyWidget*>(item);
+			if (node == nullptr) continue;
+			node->widget()->repaint();
+		}
 	}
 	QGraphicsView::mouseMoveEvent(event);
 }
 
+
 void SceneGraphWidget::wheelEvent(QWheelEvent* event)
 {
+	if (_sceneGraph == nullptr) return;
+
 	// always zoom in/out when ctrl is pressed
-	bool ctrlPressed = Qt::KeyboardModifier::ControlModifier& event->modifiers();
+	bool ctrlPressed = Qt::KeyboardModifier::ControlModifier & event->modifiers();
 
 	auto itemUnderCursor = _sceneGraph->itemAt(mapToScene(event->pos()), QTransform());
 
 	if (itemUnderCursor != nullptr && !ctrlPressed)
-	{		
+	{
 		auto widget = dynamic_cast<QGraphicsProxyWidget*>(itemUnderCursor);
 
 		if (widget != nullptr)
@@ -117,6 +143,16 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
 	else
 	{
 		performZoom(event);
+	}
+
+
+	auto items = _sceneGraph->items(viewport()->rect());
+
+	for (auto item : items)
+	{
+		auto node = dynamic_cast<QGraphicsProxyWidget*>(item);
+		if (node == nullptr) continue;
+		node->widget()->repaint();
 	}
 }
 
@@ -156,16 +192,23 @@ void SceneGraphWidget::setOGLBackend()
 {
 	QSurfaceFormat surfaceFormat;
 	surfaceFormat.setSamples(8);
-	surfaceFormat.setVersion(4, 2);
+	//surfaceFormat.setVersion(4, 2);
 	//surfaceFormat.setProfile(QSurfaceFormat::CompatibilityProfile);
 	//surfaceFormat.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
-	surfaceFormat.setSwapInterval(1);
+	//surfaceFormat.setSwapInterval(1);
 
-	QSurfaceFormat::setDefaultFormat(surfaceFormat);
+	//QSurfaceFormat::setDefaultFormat(surfaceFormat);
 	//surfaceFormat.setSwapBehavior(QSurfaceFormat::SwapBehavior::SingleBuffer);
 
 	auto glWidget = new QOpenGLWidget();
-	//glWidget->setFormat(surfaceFormat);
+	glWidget->setFormat(surfaceFormat);
 	setViewport(glWidget);
 	//*/
+}
+
+void SceneGraphWidget::paintEvent(QPaintEvent* paintEvent)
+{
+	auto newEvent = new QPaintEvent(paintEvent->region().boundingRect());
+	QGraphicsView::paintEvent(newEvent);
+	delete newEvent;
 }

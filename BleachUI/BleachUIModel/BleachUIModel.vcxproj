@@ -16,6 +16,7 @@
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+    <ProjectName>CoreModel</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -66,7 +67,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>BLEACHUIMODEL_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>COREMODEL_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -80,7 +81,7 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>MaxSpeed</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>BLEACHUIMODEL_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>COREMODEL_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,12 +91,16 @@
   <ItemGroup>
     <ClCompile Include="model\BaseEntity.cpp" />
     <ClCompile Include="model\Edge.cpp" />
+    <ClCompile Include="model\Environment.cpp" />
     <ClCompile Include="model\Graph.cpp" />
     <ClCompile Include="model\Message.cpp" />
     <ClCompile Include="model\Node.cpp" />
+    <ClCompile Include="model\Project.cpp" />
     <ClCompile Include="model\Slot.cpp" />
-    <ClInclude Include="bleachuimodel_global.h" />
+    <ClInclude Include="coremodel_global.h" />
+    <ClInclude Include="model\Environment.h" />
     <ClInclude Include="model\Message.h" />
+    <ClInclude Include="model\Project.h" />
     <QtMoc Include="model\BaseEntity.h" />
     <QtMoc Include="model\Slot.h" />
     <QtMoc Include="model\Node.h" />

@@ -16,6 +16,7 @@
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+    <ProjectName>CoreView</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -52,19 +53,19 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\view;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\view;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>BleachUIModel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CoreModel.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\view;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\view;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>BleachUIModel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CoreModel.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
@@ -107,6 +108,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionGroup.cpp" />
+    <ClCompile Include="ActionItem.cpp" />
+    <ClCompile Include="ActionPage.cpp" />
+    <ClCompile Include="ActionToolBar.cpp" />
+    <ClCompile Include="EnvironmentsWidget.cpp" />
+    <ClCompile Include="logic\AssertionNode.cpp" />
     <ClCompile Include="logic\DelayNode.cpp" />
     <ClCompile Include="logic\EndpointNode.cpp" />
     <ClCompile Include="logic\ModifierNode.cpp" />
@@ -116,6 +123,7 @@
     <ClCompile Include="PersistenceHandler.cpp" />
     <ClCompile Include="view\ConnectionEdge.cpp" />
     <ClCompile Include="view\ContentWidget.cpp" />
+    <ClCompile Include="view\CustomProxyWidget.cpp" />
     <ClCompile Include="view\Edge.cpp" />
     <ClCompile Include="view\InteractionsHandler.cpp" />
     <ClCompile Include="view\Node.cpp" />
@@ -123,12 +131,18 @@
     <ClCompile Include="view\SceneGraphWidget.cpp" />
     <ClCompile Include="view\Slot.cpp" />
     <QtRcc Include="BleachUI.qrc" />
-    <QtMoc Include="BleachUI.h" />
-    <ClCompile Include="BleachUI.cpp" />
+    <QtMoc Include="RequestFlow.h" />
+    <ClCompile Include="RequestFlow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="logic\EndpointNode.h" />
+    <QtMoc Include="EnvironmentsWidget.h" />
+    <QtMoc Include="ActionGroup.h" />
+    <ClInclude Include="ActionItem.h" />
+    <QtMoc Include="ActionPage.h" />
+    <QtMoc Include="ActionToolBar.h" />
+    <ClInclude Include="logic\AssertionNode.h" />
     <ClInclude Include="logic\DelayNode.h" />
     <ClInclude Include="logic\ModifierNode.h" />
     <ClInclude Include="logic\PayloadNode.h" />
@@ -138,16 +152,20 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="view\ConnectionEdge.h" />
     <QtMoc Include="view\ContentWidget.h" />
-    <ClInclude Include="view\Edge.h" />
+    <QtMoc Include="view\Edge.h" />
     <QtMoc Include="view\Slot.h" />
     <ClInclude Include="view\Colors.h" />
     <QtMoc Include="view\Node.h" />
+    <ClInclude Include="view\CustomProxyWidget.h" />
     <ClInclude Include="view\InteractionsHandler.h" />
     <ClInclude Include="view\SceneGraph.h" />
     <ClInclude Include="view\SceneGraphWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="ui\BleachUI.ui" />
+    <QtUic Include="EnvironmentsWidget.ui" />
+    <QtUic Include="ui\ActionGroup.ui" />
+    <QtUic Include="ui\ActionPage.ui" />
+    <QtUic Include="ui\RequestFlow.ui" />
     <QtUic Include="ui\DelayNodeUi.ui" />
     <QtUic Include="ui\EndpointNodeUi.ui" />
     <QtUic Include="ui\ModifierNodeUi.ui" />

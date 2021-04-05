@@ -273,8 +273,7 @@ void view::SceneGraph::drawPointsBackground(QPainter* painter, const QRectF& rec
 	const int top = floor(rect.top());
 	const int bottom = ceil(rect.bottom());
 
-	// points
-
+	// points	 
 	const int firstLeft = left - (left % _cellSize);
 	const int firstTop = top - (top % _cellSize);
 	int count = (1 + (right - firstLeft) / _cellSize) * (1 + (bottom - firstTop) / _cellSize);
@@ -361,6 +360,7 @@ void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
 void view::SceneGraph::setupUi()
 {
+	setItemIndexMethod(ItemIndexMethod::BspTreeIndex);
 	_cellSize = 40; // in pixels
 	_blockSize = 10; // in cells
 

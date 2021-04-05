@@ -11,6 +11,41 @@
         <file alias="transfer">icons/transfer.png</file>
         <file alias="save">icons/loading.png</file>
         <file alias="load">icons/open.png</file>
+        <file alias="copy">icons/copy.png</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/ui">
+        <file>icons/statistics.svg</file>
+        <file alias="import">icons/import.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/pause.svg</file>
+        <file>icons/play.svg</file>
+        <file>icons/duplicate.svg</file>
+        <file>icons/desk-lamp.svg</file>
+        <file>icons/desk.svg</file>
+        <file>icons/broom.svg</file>
+        <file alias="minus">icons/minus.svg</file>
+        <file alias="plus">icons/plus.svg</file>
+        <file>icons/selective.svg</file>
+        <file>icons/folder.svg</file>
+        <file>icons/screen.svg</file>
+        <file>icons/tools.svg</file>
+        <file>icons/trash.svg</file>
+        <file>icons/wrench.svg</file>
+        <file>icons/delete_icon.svg</file>
+        <file alias="new_file">icons/file_2.svg</file>
+        <file alias="close_file">icons/file_close.svg</file>
+        <file>icons/add_database_2.svg</file>
+        <file>icons/add_folder_2.svg</file>
+        <file>icons/add_link_2.svg</file>
+        <file alias="project">icons/briefcase_1.svg</file>
+        <file>icons/create_new_2.svg</file>
+        <file>icons/engineering_1.svg</file>
+        <file>icons/information_1.svg</file>
+        <file alias="open_file">icons/live_folder_2.svg</file>
+        <file>icons/monitor_1.svg</file>
+        <file>icons/save_2.svg</file>
+        <file alias="export">icons/export.svg</file>
+        <file alias="save_file">icons/file_save.svg</file>
+        <file alias="test_case">icons/blueprint.svg</file>
+    </qresource>
 </RCC>

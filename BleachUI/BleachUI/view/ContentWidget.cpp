@@ -1,4 +1,7 @@
 #include "ContentWidget.h"
+#include <QPaintEvent>
+
+#include <QDebug>
 
 view::ContentWidget::ContentWidget(QWidget* widget) : QWidget(widget)
 {

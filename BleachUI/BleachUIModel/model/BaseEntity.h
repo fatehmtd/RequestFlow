@@ -1,10 +1,10 @@
 #pragma once
 #include <QObject>
-#include "../bleachuimodel_global.h"
+#include "../coremodel_global.h"
 
 namespace model
 {
-	class BLEACHUIMODEL_EXPORT BaseEntity : public QObject
+	class COREMODEL_EXPORT BaseEntity : public QObject
 	{
 		Q_OBJECT
 	public:

@@ -9,7 +9,10 @@ namespace logic
     {
     public:
         Q_INVOKABLE PayloadNode(model::Node* modelNode);
-        virtual QJSValue toJSValue(QJSEngine& engine) const;
+
+        QJSValue toJSValue(QJSEngine& engine) const override;
+        void fromJSValue(const QJSValue& jsValue) override;
+
         model::Message composeMessage() const;
         virtual void clearUI() override;
     private:

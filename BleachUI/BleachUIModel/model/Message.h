@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../bleachuimodel_global.h"
+#include "../coremodel_global.h"
 
 #include <QMap>
 #include <QVariant>
 
 namespace model
 {
-	class BLEACHUIMODEL_EXPORT Message
+	class COREMODEL_EXPORT Message
 	{
 	public:
 		explicit Message(QString body="");

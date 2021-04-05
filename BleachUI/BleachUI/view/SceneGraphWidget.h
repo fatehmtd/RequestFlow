@@ -3,12 +3,15 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include "SceneGraph.h"
+#include <QTimer>
 
 class SceneGraphWidget : public QGraphicsView
 {
 public:
 	SceneGraphWidget(QWidget* parent = nullptr);
 	~SceneGraphWidget();
+
+	view::SceneGraph* getSceneGraph() const;
 protected:
 	void initUi();
 
@@ -23,6 +26,7 @@ protected:
 	void performZoom(QWheelEvent* event);
 	void setOGLBackend();
 
+	virtual void paintEvent(QPaintEvent* paintEvent);
 protected:
 	view::SceneGraph* _sceneGraph = nullptr;
 
@@ -30,9 +34,10 @@ protected:
 	QPointF _prevPos;
 	QPointF _position;
 
+	int _timer = 0;
+
 	// Zooming
 	float _zoomInFactor;
 	float _zoomStep, _zoomLevel;
 	float _minZoomLevel, _maxZoomLevel;
 };
-

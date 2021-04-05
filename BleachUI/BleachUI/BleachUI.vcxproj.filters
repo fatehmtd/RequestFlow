@@ -28,9 +28,6 @@
     <Filter Include="view\SceneGraph">
       <UniqueIdentifier>{777e9590-ce08-42ae-afe5-7f527359d813}</UniqueIdentifier>
     </Filter>
-    <Filter Include="view\SceneGraphWidget">
-      <UniqueIdentifier>{39628f14-187e-420d-92ed-cb39bd49a4a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="view\Node">
       <UniqueIdentifier>{8566f5a9-4414-4e24-adfe-775d59cbe64a}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,30 @@
     <Filter Include="Persistence">
       <UniqueIdentifier>{bd6baa53-b97d-477f-8421-8f998337635f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\Node\CustomProxyWidget">
+      <UniqueIdentifier>{6ef132e2-2ffb-4164-acd5-495bb0e157b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{a5873439-36d0-4953-a916-a8e6c3a82a05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\EnvironmentsWidget">
+      <UniqueIdentifier>{3cdbb07d-f31d-4331-8949-210e4c283d24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar">
+      <UniqueIdentifier>{f716ad78-a1c4-4056-929a-e1054bf39353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar\ActionGroup">
+      <UniqueIdentifier>{96191848-b9a8-4823-a5ab-a32541bc72af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar\ActionItem">
+      <UniqueIdentifier>{2d1e772c-a79a-4267-9762-f0b760fda269}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar\ActionPage">
+      <UniqueIdentifier>{b96f7731-ef0e-4fb4-91f8-3803cf731023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneGraphWidget">
+      <UniqueIdentifier>{39628f14-187e-420d-92ed-cb39bd49a4a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="BleachUI.qrc">
@@ -93,12 +114,12 @@
       <Filter>view\SceneGraph</Filter>
     </ClCompile>
     <ClCompile Include="view\SceneGraphWidget.cpp">
-      <Filter>view\SceneGraphWidget</Filter>
+      <Filter>Widgets\SceneGraphWidget</Filter>
     </ClCompile>
     <ClCompile Include="view\Node.cpp">
       <Filter>view\Node</Filter>
     </ClCompile>
-    <ClCompile Include="BleachUI.cpp">
+    <ClCompile Include="RequestFlow.cpp">
       <Filter>MainWindow</Filter>
     </ClCompile>
     <ClCompile Include="view\Slot.cpp">
@@ -137,19 +158,37 @@
     <ClCompile Include="view\InteractionsHandler.cpp">
       <Filter>InteractionsHandler</Filter>
     </ClCompile>
+    <ClCompile Include="logic\AssertionNode.cpp">
+      <Filter>logic\AssertionNode</Filter>
+    </ClCompile>
+    <ClCompile Include="view\CustomProxyWidget.cpp">
+      <Filter>view\Node\CustomProxyWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentsWidget.cpp">
+      <Filter>Widgets\EnvironmentsWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionGroup.cpp">
+      <Filter>Widgets\ActionToolBar\ActionGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionItem.cpp">
+      <Filter>Widgets\ActionToolBar\ActionItem</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionPage.cpp">
+      <Filter>Widgets\ActionToolBar\ActionPage</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionToolBar.cpp">
+      <Filter>Widgets\ActionToolBar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="view\SceneGraph.h">
       <Filter>view\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="view\SceneGraphWidget.h">
-      <Filter>view\SceneGraphWidget</Filter>
+      <Filter>Widgets\SceneGraphWidget</Filter>
     </ClInclude>
     <ClInclude Include="view\Colors.h">
       <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="view\Edge.h">
-      <Filter>view\Edge</Filter>
     </ClInclude>
     <ClInclude Include="view\ConnectionEdge.h">
       <Filter>view\ConnectionEdge</Filter>
@@ -178,9 +217,18 @@
     <ClInclude Include="view\InteractionsHandler.h">
       <Filter>InteractionsHandler</Filter>
     </ClInclude>
+    <ClInclude Include="logic\AssertionNode.h">
+      <Filter>logic\AssertionNode</Filter>
+    </ClInclude>
+    <ClInclude Include="view\CustomProxyWidget.h">
+      <Filter>view\Node\CustomProxyWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionItem.h">
+      <Filter>Widgets\ActionToolBar\ActionItem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="BleachUI.h">
+    <QtMoc Include="RequestFlow.h">
       <Filter>MainWindow</Filter>
     </QtMoc>
     <QtMoc Include="view\ContentWidget.h">
@@ -195,6 +243,21 @@
     <QtMoc Include="logic\EndpointNode.h">
       <Filter>logic\EndpointNode</Filter>
     </QtMoc>
+    <QtMoc Include="view\Edge.h">
+      <Filter>view\Edge</Filter>
+    </QtMoc>
+    <QtMoc Include="EnvironmentsWidget.h">
+      <Filter>Widgets\EnvironmentsWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionGroup.h">
+      <Filter>Widgets\ActionToolBar\ActionGroup</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionPage.h">
+      <Filter>Widgets\ActionToolBar\ActionPage</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionToolBar.h">
+      <Filter>Widgets\ActionToolBar</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="view\NodeContentWidget.ui">
@@ -203,7 +266,7 @@
     <QtUic Include="ui\EndpointNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="ui\BleachUI.ui">
+    <QtUic Include="ui\RequestFlow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\ModifierNodeUi.ui">
@@ -216,6 +279,15 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\PayloadNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="EnvironmentsWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ActionGroup.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ActionPage.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

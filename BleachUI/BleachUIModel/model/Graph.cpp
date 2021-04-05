@@ -1,11 +1,13 @@
 #include "Graph.h"
 #include "Node.h"
 #include "Edge.h"
+#include "Environment.h"
 #include <QDebug>
 #include "Slot.h"
 #include <QSet>
+#include "Project.h"
 
-model::Graph::Graph()
+model::Graph::Graph(Project* parent) : QObject(parent)
 {
 
 }
@@ -13,6 +15,11 @@ model::Graph::Graph()
 model::Graph::~Graph()
 {
 
+}
+
+model::Project* model::Graph::getProject() const
+{
+	return dynamic_cast<Project*>(parent());
 }
 
 QList<model::Node*> model::Graph::getNodes() const
@@ -74,6 +81,16 @@ int model::Graph::start()
 	if (result == Status::OK)
 		emit started();
 	return result;
+}
+
+void model::Graph::setActiveEnvironment(Environment* env)
+{
+	_environment = env;
+}
+
+model::Environment* model::Graph::getActiveEnvironment() const
+{
+	return _environment;
 }
 
 void model::Graph::stop()
@@ -162,19 +179,4 @@ bool model::Graph::canConnectSlots(Slot* origin, Slot* destination) const
 	if (!edgesDestination.isEmpty()) return false; // fail when the destination slot is already connected
 
 	return true;
-}
-
-void model::Graph::setEnvContext(const QMap<QString, QVariant>& context)
-{
-	_envContext = context;
-}
-
-QMap<QString, QVariant> model::Graph::getEnvContext() const
-{
-	return _envContext;
-}
-
-QMap<QString, QVariant>& model::Graph::getEnvContext()
-{
-	return _envContext;
 }

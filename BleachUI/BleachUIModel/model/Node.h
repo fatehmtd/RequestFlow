@@ -8,7 +8,7 @@ namespace model
 	class InputSlot;
 	class OutputSlot;
 
-	class BLEACHUIMODEL_EXPORT Node : public BaseEntity
+	class COREMODEL_EXPORT Node : public BaseEntity
 	{
 		Q_OBJECT
 	public:

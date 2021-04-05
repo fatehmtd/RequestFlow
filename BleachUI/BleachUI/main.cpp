@@ -1,4 +1,4 @@
-#include "BleachUI.h"
+#include "RequestFlow.h"
 #include <QtWidgets/QApplication>
 
 #ifdef Q_OS_WIN
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
-    BleachUI w;
+    RequestFlow w;
     w.show();
 
     return a.exec();

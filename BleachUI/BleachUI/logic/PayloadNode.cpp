@@ -21,6 +21,12 @@ QJSValue logic::PayloadNode::toJSValue(QJSEngine& engine) const
 	return value;
 }
 
+void logic::PayloadNode::fromJSValue(const QJSValue& jsValue)
+{
+	Node::fromJSValue(jsValue);
+	auto variant = jsValue.toVariant();
+}
+
 model::Message logic::PayloadNode::composeMessage() const
 {
 	model::Message message(_ui.textEdit_body->toPlainText());
@@ -50,8 +56,8 @@ void logic::PayloadNode::setupUi()
 
 	QJsonObject json =
 	{
-		{"firstName", "John"},
-		{"lastName", "Do"}
+		//{"firstName", "John"},
+		//{"lastName", "Do"}
 	};
 
 	_ui.textEdit_body->setText(QJsonDocument(json).toJson(QJsonDocument::JsonFormat::Indented));
