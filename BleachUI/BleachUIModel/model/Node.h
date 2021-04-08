@@ -14,8 +14,8 @@ namespace model
 	public:
 		Node(Graph* parent, const QString& name);
 
-		InputSlot* getDestination(const QString& name) const;
-		OutputSlot* getOrigin(const QString& name) const;
+		InputSlot* getDestinationSlot(const QString& name) const;
+		OutputSlot* getOriginSlot(const QString& name) const;
 
 		InputSlot* addInputSlot(QString name, int dataType);
 		OutputSlot* addOutputSlot(QString name, int dataType);

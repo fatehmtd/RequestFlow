@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RequestFlowClass</class>
- <widget class="QMainWindow" name="RequestFlowClass">
+ <class>MainWindowClass</class>
+ <widget class="QMainWindow" name="MainWindowClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -25,10 +25,10 @@
      <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>9</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>0</number>
+     <number>9</number>
     </property>
     <item row="0" column="0">
      <widget class="QMdiArea" name="mdiArea">
@@ -115,9 +115,36 @@
     <string>Environments</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="EnvironmentsWidget" name="environmentsWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Scenarios</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="ScenariosWidget" name="scenariosWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_4">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea|Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Inventory</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="InventoryWidget" name="inventoryWidget"/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -125,7 +152,19 @@
   <customwidget>
    <class>EnvironmentsWidget</class>
    <extends>QWidget</extends>
-   <header location="global">environmentswidget.h</header>
+   <header>environmentswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ScenariosWidget</class>
+   <extends>QWidget</extends>
+   <header>scenarioswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>InventoryWidget</class>
+   <extends>QWidget</extends>
+   <header>inventorywidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

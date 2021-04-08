@@ -4,11 +4,12 @@
 #include <QMouseEvent>
 #include "SceneGraph.h"
 #include <QTimer>
+#include "SceneGraph.h"
 
 class SceneGraphWidget : public QGraphicsView
 {
 public:
-	SceneGraphWidget(QWidget* parent = nullptr);
+	SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph);
 	~SceneGraphWidget();
 
 	view::SceneGraph* getSceneGraph() const;
@@ -25,8 +26,6 @@ protected:
 
 	void performZoom(QWheelEvent* event);
 	void setOGLBackend();
-
-	virtual void paintEvent(QPaintEvent* paintEvent);
 protected:
 	view::SceneGraph* _sceneGraph = nullptr;
 

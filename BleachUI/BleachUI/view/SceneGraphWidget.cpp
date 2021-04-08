@@ -12,9 +12,10 @@
 #include <model/Graph.h>
 #include <model/Environment.h>
 
-SceneGraphWidget::SceneGraphWidget(QWidget* parent) : QGraphicsView(parent)
+SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph) : QGraphicsView(parent), _sceneGraph(sceneGraph)
 {
 	initUi();
+	setScene(_sceneGraph);
 }
 
 SceneGraphWidget::~SceneGraphWidget()
@@ -204,11 +205,4 @@ void SceneGraphWidget::setOGLBackend()
 	glWidget->setFormat(surfaceFormat);
 	setViewport(glWidget);
 	//*/
-}
-
-void SceneGraphWidget::paintEvent(QPaintEvent* paintEvent)
-{
-	auto newEvent = new QPaintEvent(paintEvent->region().boundingRect());
-	QGraphicsView::paintEvent(newEvent);
-	delete newEvent;
 }

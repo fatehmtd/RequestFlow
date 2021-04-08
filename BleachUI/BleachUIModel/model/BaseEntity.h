@@ -12,9 +12,17 @@ namespace model
 
 		virtual void clear(); // used to clear internal attributes
 
+		void setIdentifier(QString id);
+		void setType(QString type);
+
+		QString getIdentifier() const;
+		QString getType() const;
+
 	protected slots:
 		virtual void onGraphStart();
 		virtual void onGraphStop();
+	private:
+		QString _id, _type;
 	};
 }
 

@@ -1,12 +1,14 @@
-#include "RequestFlow.h"
+#include "MainWindow.h"
 #include <QtWidgets/QApplication>
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #endif
 
-int main(int argc, char *argv[])
+
+void enableHDPISupport()
 {
+    //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #ifdef Q_OS_WIN
     ::SetProcessDPIAware(); // call before the main event loop
 #endif // Q_OS_WIN 
@@ -16,12 +18,15 @@ int main(int argc, char *argv[])
 #else
     qputenv("QT_DEVICE_PIXEL_RATIO", QByteArray("1"));
 #endif // QT_VERSION
+}
 
-    //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+int main(int argc, char *argv[])
+{
+    enableHDPISupport();    
     QApplication a(argc, argv);
-    RequestFlow w;
-    w.show();
 
+    MainWindow w;
+    w.show();
     return a.exec();
 }
 

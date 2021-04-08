@@ -100,6 +100,12 @@
     <Filter Include="Widgets\SceneGraphWidget">
       <UniqueIdentifier>{39628f14-187e-420d-92ed-cb39bd49a4a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\ScenariosWidget">
+      <UniqueIdentifier>{a95cad9b-967f-47f0-ba33-44a702e4cb05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Inventory">
+      <UniqueIdentifier>{bcfd1626-a6d0-4b42-9c17-e6f43dcc89d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="BleachUI.qrc">
@@ -119,7 +125,7 @@
     <ClCompile Include="view\Node.cpp">
       <Filter>view\Node</Filter>
     </ClCompile>
-    <ClCompile Include="RequestFlow.cpp">
+    <ClCompile Include="MainWindow.cpp">
       <Filter>MainWindow</Filter>
     </ClCompile>
     <ClCompile Include="view\Slot.cpp">
@@ -179,6 +185,12 @@
     <ClCompile Include="ActionToolBar.cpp">
       <Filter>Widgets\ActionToolBar</Filter>
     </ClCompile>
+    <ClCompile Include="ScenariosWidget.cpp">
+      <Filter>Widgets\ScenariosWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryWidget.cpp">
+      <Filter>Widgets\Inventory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="view\SceneGraph.h">
@@ -228,7 +240,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="RequestFlow.h">
+    <QtMoc Include="MainWindow.h">
       <Filter>MainWindow</Filter>
     </QtMoc>
     <QtMoc Include="view\ContentWidget.h">
@@ -258,6 +270,12 @@
     <QtMoc Include="ActionToolBar.h">
       <Filter>Widgets\ActionToolBar</Filter>
     </QtMoc>
+    <QtMoc Include="ScenariosWidget.h">
+      <Filter>Widgets\ScenariosWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="InventoryWidget.h">
+      <Filter>Widgets\Inventory</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="view\NodeContentWidget.ui">
@@ -266,7 +284,7 @@
     <QtUic Include="ui\EndpointNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="ui\RequestFlow.ui">
+    <QtUic Include="ui\MainWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\ModifierNodeUi.ui">
@@ -288,6 +306,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\ActionPage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ScenariosWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="InventoryWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

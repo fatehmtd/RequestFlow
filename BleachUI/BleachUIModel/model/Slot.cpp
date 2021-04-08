@@ -11,6 +11,11 @@ model::Slot::~Slot()
 {
 }
 
+void model::Slot::clear()
+{
+    _data = model::Message("");
+}
+
 model::Node* model::Slot::getNode() const
 {
     return dynamic_cast<Node*>(parent());

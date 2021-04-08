@@ -22,12 +22,12 @@ model::Node::Node(Graph* parent, const QString& name) : BaseEntity(parent)
 	connect(this, &Node::exceptionRaised, parent, &Graph::onNodeEvaluated);
 }
 
-model::InputSlot* model::Node::getDestination(const QString& name) const
+model::InputSlot* model::Node::getDestinationSlot(const QString& name) const
 {
 	return findChild<InputSlot*>(name, Qt::FindChildOption::FindDirectChildrenOnly);
 }
 
-model::OutputSlot* model::Node::getOrigin(const QString& name) const
+model::OutputSlot* model::Node::getOriginSlot(const QString& name) const
 {
 	return findChild<OutputSlot*>(name, Qt::FindChildOption::FindDirectChildrenOnly);
 }

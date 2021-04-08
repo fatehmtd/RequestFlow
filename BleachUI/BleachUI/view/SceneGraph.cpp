@@ -24,8 +24,7 @@
 #include "ConnectionEdge.h"
 #include "InteractionsHandler.h"
 
-view::SceneGraph::SceneGraph(model::Graph* modelGraph, QObject* parent) : QGraphicsScene(parent),
-_modelGraph(modelGraph)
+view::SceneGraph::SceneGraph(model::Graph* modelGraph, QObject* parent) : QGraphicsScene(parent), _modelGraph(modelGraph)
 {
 	_interactionsHandler = new InteractionsHandler(this);
 	setupUi();

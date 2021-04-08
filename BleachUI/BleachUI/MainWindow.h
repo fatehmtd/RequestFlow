@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "ui_RequestFlow.h"
+#include "ui_MainWindow.h"
 #include "./view/SceneGraphWidget.h"
 
 #include "ActionToolBar.h"
@@ -11,11 +11,11 @@
 
 #include <model/Project.h>
 
-class RequestFlow : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    RequestFlow(QWidget *parent = Q_NULLPTR);
+    MainWindow(QWidget *parent = Q_NULLPTR);
 
 private:
     void setupUi();
@@ -24,6 +24,10 @@ private:
     void setupSceneGraph();
 
     void setProject(model::Project* project);
+    
+    void createScenario(QString name);
+    void openScenario(view::SceneGraph* sceneGraph);
+    void deleteScenario(view::SceneGraph* sceneGraph);
 
 private slots:
     void onNewProject();
@@ -31,10 +35,11 @@ private slots:
     void onCloseProject();
 
 private:
-    Ui::RequestFlowClass _ui;
-    SceneGraphWidget* _sceneGraphWidget = nullptr;
+    Ui::MainWindowClass _ui;
+
     ActionToolBar* _toolbar = nullptr;
     QToolButton* _newProject, * _openProject, * _closeProject, * _saveProject;
+    ActionGroup* _scenariosGroup = nullptr;
 
     std::unique_ptr<model::Project> _project;
 };

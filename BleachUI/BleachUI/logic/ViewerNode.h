@@ -3,6 +3,13 @@
 #include <QTextEdit>
 #include "ui_ViewerNodeUi.h"
 
+//#include <model/Node.h>
+
+namespace model
+{
+    //class ViewerNode : public model::
+}
+
 namespace logic
 {
     class ViewerNode : public view::Node

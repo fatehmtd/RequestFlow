@@ -113,6 +113,7 @@
     <ClCompile Include="ActionPage.cpp" />
     <ClCompile Include="ActionToolBar.cpp" />
     <ClCompile Include="EnvironmentsWidget.cpp" />
+    <ClCompile Include="InventoryWidget.cpp" />
     <ClCompile Include="logic\AssertionNode.cpp" />
     <ClCompile Include="logic\DelayNode.cpp" />
     <ClCompile Include="logic\EndpointNode.cpp" />
@@ -121,6 +122,7 @@
     <ClCompile Include="logic\ScriptNode.cpp" />
     <ClCompile Include="logic\ViewerNode.cpp" />
     <ClCompile Include="PersistenceHandler.cpp" />
+    <ClCompile Include="ScenariosWidget.cpp" />
     <ClCompile Include="view\ConnectionEdge.cpp" />
     <ClCompile Include="view\ContentWidget.cpp" />
     <ClCompile Include="view\CustomProxyWidget.cpp" />
@@ -131,8 +133,8 @@
     <ClCompile Include="view\SceneGraphWidget.cpp" />
     <ClCompile Include="view\Slot.cpp" />
     <QtRcc Include="BleachUI.qrc" />
-    <QtMoc Include="RequestFlow.h" />
-    <ClCompile Include="RequestFlow.cpp" />
+    <QtMoc Include="MainWindow.h" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +144,7 @@
     <ClInclude Include="ActionItem.h" />
     <QtMoc Include="ActionPage.h" />
     <QtMoc Include="ActionToolBar.h" />
+    <QtMoc Include="InventoryWidget.h" />
     <ClInclude Include="logic\AssertionNode.h" />
     <ClInclude Include="logic\DelayNode.h" />
     <ClInclude Include="logic\ModifierNode.h" />
@@ -150,6 +153,7 @@
     <ClInclude Include="logic\ViewerNode.h" />
     <ClInclude Include="PersistenceHandler.h" />
     <ClInclude Include="resource.h" />
+    <QtMoc Include="ScenariosWidget.h" />
     <ClInclude Include="view\ConnectionEdge.h" />
     <QtMoc Include="view\ContentWidget.h" />
     <QtMoc Include="view\Edge.h" />
@@ -163,9 +167,11 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="EnvironmentsWidget.ui" />
+    <QtUic Include="InventoryWidget.ui" />
+    <QtUic Include="ScenariosWidget.ui" />
     <QtUic Include="ui\ActionGroup.ui" />
     <QtUic Include="ui\ActionPage.ui" />
-    <QtUic Include="ui\RequestFlow.ui" />
+    <QtUic Include="ui\MainWindow.ui" />
     <QtUic Include="ui\DelayNodeUi.ui" />
     <QtUic Include="ui\EndpointNodeUi.ui" />
     <QtUic Include="ui\ModifierNodeUi.ui" />
