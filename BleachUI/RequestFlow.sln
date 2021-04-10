@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BleachUI", "BleachUI\BleachUI.vcxproj", "{C3B9D856-8EB4-40B2-959A-E5951BC42016}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreView", "CoreView\CoreView.vcxproj", "{C3B9D856-8EB4-40B2-959A-E5951BC42016}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A1CE99CA-A4D2-49D4-BF8D-A71F17A33076} = {A1CE99CA-A4D2-49D4-BF8D-A71F17A33076}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BleachUIModel", "BleachUIModel\BleachUIModel.vcxproj", "{A1CE99CA-A4D2-49D4-BF8D-A71F17A33076}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreModel", "CoreModel\CoreModel.vcxproj", "{A1CE99CA-A4D2-49D4-BF8D-A71F17A33076}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
