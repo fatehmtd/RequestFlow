@@ -2,7 +2,7 @@
 #include "Node.h"
 #include <QDebug>
 
-model::Slot::Slot(Node* parent, QString name, Direction direction, int dataType) : BaseEntity(parent), _dataType(dataType), _direction(direction), _data("")
+model::Slot::Slot(Node* parent, QString name, Direction direction, int dataType) : NotifiableEntity(parent), _dataType(dataType), _direction(direction), _data("")
 {
     setObjectName(name);
 }

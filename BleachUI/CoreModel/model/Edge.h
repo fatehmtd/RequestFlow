@@ -1,6 +1,6 @@
 #pragma once
 #include "../coremodel_global.h"
-#include "BaseEntity.h"
+#include "NotifiableEntity.h"
 
 namespace model
 {
@@ -8,7 +8,7 @@ namespace model
 	class OutputSlot;
 	class Graph;
 
-	class COREMODEL_EXPORT Edge : public BaseEntity
+	class COREMODEL_EXPORT Edge : public NotifiableEntity
 	{
 		Q_OBJECT
 	public:

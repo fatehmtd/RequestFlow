@@ -7,7 +7,7 @@
 #include <QSet>
 #include "Project.h"
 
-model::Graph::Graph(Project* parent) : QObject(parent)
+model::Graph::Graph(Project* parent) : IdentifiableEntity(parent)
 {
 
 }
@@ -78,7 +78,7 @@ QList<model::Edge*> model::Graph::findEdges(const Node* node) const
 int model::Graph::start()
 {
 	int result = computeExecutionPath();
-	if (result == Status::OK)
+	if (result == ErrorCode::OK)
 		emit started();
 	return result;
 }
@@ -136,11 +136,11 @@ int model::Graph::computeExecutionPath()
 		}
 	}
 
-	if (_startingNodes.isEmpty()) return Status::MISSING_STARTING_NODE;
-	if (_endingNodes.isEmpty()) return Status::MISSING_ENDING_NODE;
-	if (getEdges().isEmpty()) return Status::MISSING_EDGES;
+	if (_startingNodes.isEmpty()) return ErrorCode::MISSING_STARTING_NODE;
+	if (_endingNodes.isEmpty()) return ErrorCode::MISSING_ENDING_NODE;
+	if (getEdges().isEmpty()) return ErrorCode::MISSING_EDGES;
 
-	return Status::OK;
+	return ErrorCode::OK;
 }
 
 void model::Graph::clear()

@@ -8,6 +8,8 @@
 #include <model/Project.h>
 #include <model/Graph.h>
 
+class ScenariosModel;
+
 class ScenariosWidget : public QWidget
 {
 	Q_OBJECT
@@ -20,10 +22,17 @@ public:
 
 	void setCurrentSceneGraph(view::SceneGraph* sceneGraph);
 	view::SceneGraph* const getCurrentSceneGraph() const;
-private:
+
+private slots:
 	void fillScenariosList();
+	void onContextMenuRequested(const QPoint& p);
+
+signals:
+	void currentScenarioChanged(view::SceneGraph*);
+
 private:
-	Ui::ScenariosWidget ui;
-	std::unique_ptr<model::Project> _project;
+	Ui::ScenariosWidget _ui;
+	model::Project* _project = nullptr;
 	view::SceneGraph* _currentSceneGraph = nullptr;
+	ScenariosModel* _scenariosModel = nullptr;
 };

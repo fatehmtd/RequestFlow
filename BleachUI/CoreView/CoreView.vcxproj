@@ -117,7 +117,6 @@
     <ClCompile Include="logic\AssertionNode.cpp" />
     <ClCompile Include="logic\DelayNode.cpp" />
     <ClCompile Include="logic\EndpointNode.cpp" />
-    <ClCompile Include="logic\ModifierNode.cpp" />
     <ClCompile Include="logic\PayloadNode.cpp" />
     <ClCompile Include="logic\ScriptNode.cpp" />
     <ClCompile Include="logic\ViewerNode.cpp" />
@@ -146,9 +145,8 @@
     <QtMoc Include="ActionToolBar.h" />
     <QtMoc Include="InventoryWidget.h" />
     <ClInclude Include="logic\AssertionNode.h" />
-    <QtMoc Include="logic\DelayNode.h" />
-    <ClInclude Include="logic\ModifierNode.h" />
-    <QtMoc Include="logic\PayloadNode.h" />
+    <ClInclude Include="logic\DelayNode.h" />
+    <ClInclude Include="logic\PayloadNode.h" />
     <ClInclude Include="logic\ScriptNode.h" />
     <ClInclude Include="logic\ViewerNode.h" />
     <ClInclude Include="PersistenceHandler.h" />

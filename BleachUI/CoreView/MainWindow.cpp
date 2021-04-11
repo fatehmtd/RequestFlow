@@ -7,8 +7,6 @@
 #include <QMdiSubWindow>
 #include <QFileDialog>
 #include <QDebug>
-
-
 #include <QObject>
 #include <QPixmap>
 #include <QPainter>
@@ -100,8 +98,8 @@ void MainWindow::setupRibbonBar()
 	//casesGroup->addActionItem("Start/Stop", [=]() {}, QIcon(":/BleachUI/play"));
 	_scenariosGroup->addActionItem("New", [=]()
 		{
-			openScenario(new view::SceneGraph(new model::Graph(_project.get())));
-
+			QString name = QString("Scenario %1").arg(rand() % 999999);
+			createScenario(name);
 		}, QIcon(":/ui/test_case"));
 	_scenariosGroup->addActionItem("Export", [=]() {}, QIcon(":/ui/export"));
 	_scenariosGroup->addActionItem("Import", [=]() {}, QIcon(":/ui/import"));
@@ -115,26 +113,31 @@ void MainWindow::setupEnvironmentsWidget()
 
 void MainWindow::setupSceneGraph()
 {
-	/*
-	_sceneGraphWidget = new SceneGraphWidget(this);
-	_sceneGraphWidget->setWindowIcon(QIcon(":/ui/test_case"));
-	auto window = _ui.mdiArea->addSubWindow(_sceneGraphWidget);
-	window->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, false);
-	window->setWindowIcon(QIcon(":/ui/test_case"));
-	window->setWindowTitle("Test case");
-	window->showMaximized();
-	*/
 	_ui.mdiArea->setTabsClosable(false);
 }
 
 void MainWindow::setProject(model::Project* project)
 {
+	_ui.environmentsWidget->setEnabled(true);
+
 	_project = std::make_unique<model::Project>(project);
 	_scenariosGroup->setEnabled(true);
+
+	if (_project->getEnvironments().isEmpty())
+	{
+		auto environment = new model::Environment(_project.get());
+		environment->setName(QString("Default environment"));
+	}
+
+	_ui.environmentsWidget->setProject(_project.get());
+	_ui.scenariosWidget->setProject(_project.get());
 }
 
 void MainWindow::createScenario(QString name)
 {
+	auto graph = new model::Graph(_project.get());
+	graph->setName(QString("Scenario %1").arg(rand() % 10000));
+	openScenario(new view::SceneGraph(graph));
 }
 
 void MainWindow::openScenario(view::SceneGraph* sceneGraph)
@@ -145,7 +148,7 @@ void MainWindow::openScenario(view::SceneGraph* sceneGraph)
 	auto window = _ui.mdiArea->addSubWindow(sceneGraphWidget);
 	window->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, false);
 	window->setWindowIcon(QIcon(":/ui/test_case"));
-	window->setWindowTitle("Test case");
+	window->setWindowTitle(sceneGraph->getModelGraph()->getName());
 	window->showMaximized();
 }
 
@@ -159,7 +162,7 @@ void MainWindow::onOpenProject()
 
 	if (!fileName.isEmpty())
 	{
-		
+
 	}
 }
 

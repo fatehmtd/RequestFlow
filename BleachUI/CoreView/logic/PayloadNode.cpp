@@ -97,39 +97,3 @@ QMap<QString, QVariant> logic::PayloadNode::fillFromTable(QTableWidget* tableWid
 
 	return outputMap;
 }
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="graph"></param>
-
-model::PayloadNode::PayloadNode(model::Graph* graph) : model::Node(graph, "Payload")
-{
-
-}
-
-void model::PayloadNode::createModel()
-{
-	_outputSlot = addOutputSlot("output", Slot::CUSTOM);
-}
-
-void model::PayloadNode::setMessage(const model::Message& message)
-{
-	_message = message;
-}
-
-model::Message model::PayloadNode::getMessage() const
-{
-	return _message;
-}
-
-void model::PayloadNode::evaluate()
-{
-	getOutputSlot()->setData(getMessage());
-	Node::evaluate();
-}
-
-model::OutputSlot* model::PayloadNode::getOutputSlot() const
-{
-	return _outputSlot;
-}

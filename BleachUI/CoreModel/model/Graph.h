@@ -3,7 +3,7 @@
 #include <QList>
 #include <QMap>
 #include <QVariant>
-#include "../coremodel_global.h"
+#include "IdentifiableEntity.h"
 
 namespace model
 {
@@ -15,7 +15,7 @@ namespace model
 	class Environment;
 	class Project;
 
-	class COREMODEL_EXPORT Graph : public QObject
+	class COREMODEL_EXPORT Graph : public IdentifiableEntity
 	{
 		Q_OBJECT
 	public:
@@ -25,7 +25,7 @@ namespace model
 		Project* getProject() const;
 
 		QList<Node*> getNodes() const;
-		QList<Edge*> getEdges() const;		
+		QList<Edge*> getEdges() const;
 
 		Edge* findEdge(const InputSlot* destination, const OutputSlot* origin) const;
 		QList<Edge*> findEdges(const Slot* slot) const;
@@ -34,7 +34,7 @@ namespace model
 		Edge* connectSlots(OutputSlot* origin, InputSlot* destination);
 		bool canConnectSlots(Slot* origin, Slot* destination) const;
 
-		enum Status
+		enum ErrorCode
 		{
 			OK,
 			MISSING_STARTING_NODE,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BaseEntity.h"
+#include "NotifiableEntity.h"
 #include <QVariant>
 #include "Message.h"
 
@@ -9,7 +9,7 @@ namespace model
 	class Node;
 	class Edge;
 
-	class COREMODEL_EXPORT Slot : public BaseEntity
+	class COREMODEL_EXPORT Slot : public NotifiableEntity
 	{
 	public:
 		enum Direction

@@ -1,33 +1,7 @@
 #pragma once
 #include "../view/Node.h"
 #include <QTextEdit>
-
-namespace model
-{
-	class ScriptNode : public model::Node
-	{
-	public:
-		ScriptNode(model::Graph* graph);
-
-		void setScript(const QString& script);
-		QString getScript() const;
-
-		InputSlot* getInputSlot() const;
-		OutputSlot* getOutputSlot() const;
-
-		void createModel() override;
-
-		void evaluate() override;
-
-	private:
-		bool executeScript();		
-
-	private:
-		InputSlot* _inputSlot = nullptr;
-		OutputSlot* _outputSlot = nullptr;
-		QString _script;
-	};
-}
+#include <model/ScriptNode.h>
 
 namespace logic
 {

@@ -1,5 +1,0 @@
-﻿  uic ui\EndpointNodeUi.ui
-  EndpointNode.cpp
-  InteractionsHandler.cpp
-  moc_EndpointNode.cpp
-  CoreView.vcxproj -> D:\developpement\libs\BleachUICpp\BleachUI\x64\Release\CoreView.exe

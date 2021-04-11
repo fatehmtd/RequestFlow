@@ -3,7 +3,7 @@
 #include "Slot.h"
 #include <QDebug>
 
-model::Edge::Edge(Graph* parent) : BaseEntity(parent)
+model::Edge::Edge(Graph* parent) : NotifiableEntity(parent)
 {
 
 }

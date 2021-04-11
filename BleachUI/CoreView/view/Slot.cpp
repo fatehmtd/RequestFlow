@@ -13,6 +13,8 @@ view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsObject(parent), _sl
 {
 	_size = 20;
 	setFlag(GraphicsItemFlag::ItemIsSelectable);
+	setAcceptDrops(true);
+	
 	setAcceptHoverEvents(true);
 	QFont font;
 	font.setPointSize(12);
@@ -87,6 +89,7 @@ void view::Slot::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 
 void view::Slot::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
+	_mouseHovering = true;
 	QGraphicsItem::hoverMoveEvent(event);
 }
 

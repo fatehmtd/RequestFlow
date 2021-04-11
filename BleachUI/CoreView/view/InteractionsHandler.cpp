@@ -5,10 +5,10 @@
 #include "Colors.h"
 #include "Edge.h"
 #include "ConnectionEdge.h"
+
 #include "../logic/PayloadNode.h"
 #include "../logic/EndpointNode.h"
 #include "../logic/ViewerNode.h"
-#include "../logic/ModifierNode.h"
 #include "../logic/DelayNode.h"
 #include "../logic/ScriptNode.h"
 

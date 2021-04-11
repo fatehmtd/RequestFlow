@@ -10,13 +10,13 @@
 
 #include <QTimer>
 
+class EnvironmentsModel;
+
 class EnvironmentsWidget : public QWidget
 {
 	Q_OBJECT
-
 public:
-	EnvironmentsWidget(QWidget *parent = Q_NULLPTR);
-	~EnvironmentsWidget();
+	EnvironmentsWidget(QWidget *parent = nullptr);
 
 	void setActiveEnvironment(model::Environment* env);
 	model::Environment* getActiveEnvironment() const;
@@ -29,9 +29,18 @@ protected slots:
 
 	void onExportEnvironments();
 	void onImportEnvironments();
+
+	void copyEnvironmentEntriesFromUi();
+	void copyEnvironmentEntriesToUi();
+
+	void onSelectCurrentEnvironmentIndex(int index);
+
+signals:
+	void currentEnvironmentChanged();
+
 private:
 	Ui::EnvironmentsWidget _ui;
 	model::Environment* _environment = nullptr;
 	model::Project* _project = nullptr;
-	QTimer _timer;
+	EnvironmentsModel* _environmentsModel = nullptr;
 };

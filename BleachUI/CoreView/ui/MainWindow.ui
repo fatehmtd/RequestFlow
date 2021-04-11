@@ -105,6 +105,9 @@
      <height>38</height>
     </size>
    </property>
+   <property name="windowIcon">
+    <iconset theme=":/ui/environment"/>
+   </property>
    <property name="features">
     <set>QDockWidget::DockWidgetMovable</set>
    </property>

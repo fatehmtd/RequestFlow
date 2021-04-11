@@ -53,8 +53,8 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
 	if (_slotOrigin != nullptr)
 	{
-		auto originPosition = _destinationPos;
-		auto destinationPosition = _slotOrigin->getBasePosition(true);
+		auto destinationPosition = _destinationPos;
+		auto originPosition = _slotOrigin->getBasePosition(true);
 
 		QColor color = _noCandidateColor;
 		Qt::PenStyle style = Qt::PenStyle::DashDotDotLine;
@@ -72,14 +72,14 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 		{
 			color = _notEligibleColor;
 			style = Qt::PenStyle::DotLine;
-			thickness = _thickness * 0.5f;
+			thickness = _thickness * 0.75f;
 		}
 		break;
 		case Eligibility::ELIGIBLE:
 		{
 			color = _eligibleColor;
 			style = Qt::PenStyle::SolidLine;
-			thickness = _thickness * 0.75f;
+			thickness = _thickness * 1.25f;
 		}
 		break;
 		}
@@ -107,7 +107,7 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 			painter->setBrush(brush);
 			painter->drawPath(path);
 		}
-
+		
 		{
 			auto path = buildPath();
 

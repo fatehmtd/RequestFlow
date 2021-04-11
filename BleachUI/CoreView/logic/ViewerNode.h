@@ -2,32 +2,14 @@
 #include "../view/Node.h"
 #include <QTextEdit>
 #include "ui_ViewerNodeUi.h"
-
-namespace model
-{
-    class Graph;
-
-    class ViewerNode : public model::Node
-    {
-    public:
-        ViewerNode(model::Graph* graph);
-
-        void createModel() override;
-
-        void evaluate() override;
-
-        model::InputSlot* getInput() const;
-    private:
-        model::InputSlot* _inputSlot = nullptr;
-    };
-}
+#include <model/ViewerNode.h>
 
 namespace logic
 {
     class ViewerNode : public view::Node
     {
     public:
-        Q_INVOKABLE ViewerNode(model::Node* modelNode);
+        ViewerNode(model::ViewerNode* modelNode);
         virtual QJSValue toJSValue(QJSEngine& engine) const;
         virtual void fromJSValue(const QJSValue& jsValue);
 

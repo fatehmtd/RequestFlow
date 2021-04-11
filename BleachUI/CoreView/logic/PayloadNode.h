@@ -2,26 +2,7 @@
 #include "../view/Node.h"
 #include <QTextEdit>
 #include "ui_PayloadNodeUi.h"
-
-namespace model
-{
-    class PayloadNode : public model::Node
-    {
-        Q_OBJECT
-    public:
-        PayloadNode(model::Graph* graph);
-        void createModel() override;
-
-        void setMessage(const model::Message& message);
-        model::Message getMessage() const;
-
-        void evaluate() override;
-        OutputSlot* getOutputSlot() const;
-    private:
-        model::Message _message;
-        OutputSlot* _outputSlot = nullptr;
-    };
-}
+#include <model/PayloadNode.h>
 
 namespace logic
 {

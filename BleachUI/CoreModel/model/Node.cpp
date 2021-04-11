@@ -4,9 +4,9 @@
 #include <QChildEvent>
 #include <QDebug>
 
-model::Node::Node(Graph* parent, const QString& name) : BaseEntity(parent)
+model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(parent)
 {
-	setObjectName(name);
+	setType(typeName);
 	connect(parent, &Graph::started, this, [this]() 
 		{
 			onGraphStart();

@@ -11,6 +11,7 @@ namespace model
 
 	class COREMODEL_EXPORT Environment : public QObject
 	{
+		Q_OBJECT
 	public:
 		Environment(Project* parent);
 		Environment(const Environment& original);

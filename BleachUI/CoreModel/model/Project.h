@@ -1,14 +1,13 @@
 #pragma once
 
-#include "../coremodel_global.h" 
-#include <QObject>
+#include "IdentifiableEntity.h"
 
 namespace model
 {
 	class Environment;
 	class Graph;
 
-	class COREMODEL_EXPORT Project : public QObject
+	class COREMODEL_EXPORT Project : public IdentifiableEntity
 	{
 	public:
 		Project(QObject* parent);

@@ -47,15 +47,6 @@ void SceneGraphWidget::initUi()
 	setOptimizationFlags(QGraphicsView::DontSavePainterState);
 	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
 	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
-	//*/
-	/*
-	_sceneGraph = new view::SceneGraph(new model::Graph, this);
-	auto env = new model::Environment(_sceneGraph->getModelGraph());
-	env->setName("Default environment");
-	env->getEntries().insert("baseUrl", "https://jsonplaceholder.typicode.com");
-	_sceneGraph->getModelGraph()->setActiveEnvironment(env);	
-	setScene(_sceneGraph);
-	*/
 
 	_zoomInFactor = 1.5f;
 	_zoomStep = 1;

@@ -1,6 +1,6 @@
 #pragma once
 #include "../view/Node.h"
-#include <QTextEdit>
+#include <model/AssertionNode.h>
 
 namespace logic
 {

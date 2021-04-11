@@ -85,32 +85,26 @@
     <Filter Include="Widgets\Inventory">
       <UniqueIdentifier>{bcfd1626-a6d0-4b42-9c17-e6f43dcc89d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logic\model">
-      <UniqueIdentifier>{6cc6b322-6c86-4557-bd70-44c539f16c42}</UniqueIdentifier>
-    </Filter>
     <Filter Include="logic\view">
       <UniqueIdentifier>{b8aabbaf-5eca-43b3-9ce4-bcf34ebc4358}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logic\view\EndpointNode">
-      <UniqueIdentifier>{e9207ecb-e4c3-4921-814c-2b72c068ea62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\view\DelayNode">
-      <UniqueIdentifier>{95f40509-c146-407e-82f7-3c5204bf92e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\view\AssertionNode">
+    <Filter Include="logic\AssertionNode">
       <UniqueIdentifier>{75eaa480-c862-4b0b-827b-1c43f0f92b3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logic\view\PayloadNode">
+    <Filter Include="logic\DelayNode">
+      <UniqueIdentifier>{95f40509-c146-407e-82f7-3c5204bf92e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\EndpointNode">
+      <UniqueIdentifier>{e9207ecb-e4c3-4921-814c-2b72c068ea62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\PayloadNode">
       <UniqueIdentifier>{99bf675a-2283-4fc0-9a0a-efdb92960fea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logic\view\ScriptNode">
+    <Filter Include="logic\ScriptNode">
       <UniqueIdentifier>{2ebc8a62-d70e-46d6-b414-190258fedcb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logic\view\ViewerNode">
+    <Filter Include="logic\ViewerNode">
       <UniqueIdentifier>{a64593c2-4097-4c4e-8dac-dd84a3c9812e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\view\ModifierNode">
-      <UniqueIdentifier>{0532c18f-cead-4a5e-abc7-f33017ce4708}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,25 +138,22 @@
       <Filter>view\ConnectionEdge</Filter>
     </ClCompile>
     <ClCompile Include="logic\PayloadNode.cpp">
-      <Filter>logic\view\PayloadNode</Filter>
+      <Filter>logic\PayloadNode</Filter>
     </ClCompile>
     <ClCompile Include="view\ContentWidget.cpp">
       <Filter>view\Node\ContentWidget</Filter>
     </ClCompile>
     <ClCompile Include="logic\EndpointNode.cpp">
-      <Filter>logic\view\EndpointNode</Filter>
+      <Filter>logic\EndpointNode</Filter>
     </ClCompile>
     <ClCompile Include="logic\ViewerNode.cpp">
-      <Filter>logic\view\ViewerNode</Filter>
-    </ClCompile>
-    <ClCompile Include="logic\ModifierNode.cpp">
-      <Filter>logic\view\ModifierNode</Filter>
+      <Filter>logic\ViewerNode</Filter>
     </ClCompile>
     <ClCompile Include="logic\DelayNode.cpp">
-      <Filter>logic\view\DelayNode</Filter>
+      <Filter>logic\DelayNode</Filter>
     </ClCompile>
     <ClCompile Include="logic\ScriptNode.cpp">
-      <Filter>logic\view\ScriptNode</Filter>
+      <Filter>logic\ScriptNode</Filter>
     </ClCompile>
     <ClCompile Include="PersistenceHandler.cpp">
       <Filter>Persistence</Filter>
@@ -171,7 +162,7 @@
       <Filter>InteractionsHandler</Filter>
     </ClCompile>
     <ClCompile Include="logic\AssertionNode.cpp">
-      <Filter>logic\view\AssertionNode</Filter>
+      <Filter>logic\AssertionNode</Filter>
     </ClCompile>
     <ClCompile Include="view\CustomProxyWidget.cpp">
       <Filter>view\Node\CustomProxyWidget</Filter>
@@ -212,13 +203,10 @@
       <Filter>view\ConnectionEdge</Filter>
     </ClInclude>
     <ClInclude Include="logic\ViewerNode.h">
-      <Filter>logic\view\ViewerNode</Filter>
-    </ClInclude>
-    <ClInclude Include="logic\ModifierNode.h">
-      <Filter>logic\view\ModifierNode</Filter>
+      <Filter>logic\ViewerNode</Filter>
     </ClInclude>
     <ClInclude Include="logic\ScriptNode.h">
-      <Filter>logic\view\ScriptNode</Filter>
+      <Filter>logic\ScriptNode</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
@@ -230,13 +218,19 @@
       <Filter>InteractionsHandler</Filter>
     </ClInclude>
     <ClInclude Include="logic\AssertionNode.h">
-      <Filter>logic\view\AssertionNode</Filter>
+      <Filter>logic\AssertionNode</Filter>
     </ClInclude>
     <ClInclude Include="view\CustomProxyWidget.h">
       <Filter>view\Node\CustomProxyWidget</Filter>
     </ClInclude>
     <ClInclude Include="ActionItem.h">
       <Filter>Widgets\ActionToolBar\ActionItem</Filter>
+    </ClInclude>
+    <ClInclude Include="logic\PayloadNode.h">
+      <Filter>logic\PayloadNode</Filter>
+    </ClInclude>
+    <ClInclude Include="logic\DelayNode.h">
+      <Filter>logic\DelayNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,7 +247,7 @@
       <Filter>view\Slot</Filter>
     </QtMoc>
     <QtMoc Include="logic\EndpointNode.h">
-      <Filter>logic\view\EndpointNode</Filter>
+      <Filter>logic\EndpointNode</Filter>
     </QtMoc>
     <QtMoc Include="view\Edge.h">
       <Filter>view\Edge</Filter>
@@ -275,12 +269,6 @@
     </QtMoc>
     <QtMoc Include="InventoryWidget.h">
       <Filter>Widgets\Inventory</Filter>
-    </QtMoc>
-    <QtMoc Include="logic\DelayNode.h">
-      <Filter>logic\view\DelayNode</Filter>
-    </QtMoc>
-    <QtMoc Include="logic\PayloadNode.h">
-      <Filter>logic\view\PayloadNode</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-logic::ViewerNode::ViewerNode(model::Node* modelNode) : view::Node(modelNode, "Viewer")
+logic::ViewerNode::ViewerNode(model::ViewerNode* modelNode) : view::Node(modelNode, "Viewer")
 {
 	setupUi();
 	setTitle("Viewer");
@@ -54,29 +54,4 @@ void logic::ViewerNode::setupUi()
 
 	setMinSize(QSize(400, 300));
 	setSize(300, 200);	
-}
-
-/*
-*/
-
-model::ViewerNode::ViewerNode(model::Graph* graph) : model::Node(graph, "Result")
-{
-
-}
-
-#include <QDebug>
-
-void model::ViewerNode::createModel()
-{
-	_inputSlot = addInputSlot("in", model::Slot::DataType::CUSTOM);
-}
-
-void model::ViewerNode::evaluate()
-{
-	Node::evaluate();
-}
-
-model::InputSlot* model::ViewerNode::getInput() const
-{
-	return _inputSlot;
 }
