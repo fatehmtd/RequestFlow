@@ -100,7 +100,7 @@ void view::InteractionsHandler::deleteEdge(Edge* edge)
 }
 
 view::Node* view::InteractionsHandler::cloneNode(Node* originalNode)
-{
+{/*
 	QJSEngine engine;
 	auto nodeValue = originalNode->toJSValue(engine);
 	auto nodeTypeStr = nodeValue.property("_type").toString();
@@ -110,7 +110,8 @@ view::Node* view::InteractionsHandler::cloneNode(Node* originalNode)
 		node->fromJSValue(nodeValue);
 		node->update();
 	}
-	return node;
+	return node;*/
+	return nullptr;
 }
 
 #include <QMenu>
@@ -164,20 +165,6 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 			{
 				auto node = createScriptNode();
 				node->setPos(p);
-			});
-
-		menu->addSeparator();
-
-		auto saveToFile = menu->addAction(QIcon(":/BleachUI/save"), "Save to file...");
-		connect(saveToFile, &QAction::triggered, this, [=]()
-			{
-				_sceneGraph->persist("d:/scene.json");
-			});
-
-		auto loadFromFile = menu->addAction(QIcon(":/BleachUI/load"), "Load from file...");
-		connect(loadFromFile, &QAction::triggered, this, [=]()
-			{
-				_sceneGraph->load("d:/scene.json");
 			});
 	}
 	else

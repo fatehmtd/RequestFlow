@@ -4,7 +4,7 @@
 
 model::Slot::Slot(Node* parent, QString name, Direction direction, int dataType) : NotifiableEntity(parent), _dataType(dataType), _direction(direction), _data("")
 {
-    setObjectName(name);
+    setName(name);
 }
 
 model::Slot::~Slot()
@@ -21,7 +21,7 @@ model::Node* model::Slot::getNode() const
     return dynamic_cast<Node*>(parent());
 }
 
-model::Slot::Direction model::Slot::getDirection() const
+int model::Slot::getDirection() const
 {
     return _direction;
 }
@@ -45,6 +45,7 @@ void model::Slot::setData(const Message& data)
 
 model::InputSlot::InputSlot(Node* parent, QString name, int dataType) : Slot(parent, name, Slot::Direction::INPUT, dataType)
 {
+    setType("InputSlot");
     //connect(this, &InputSlot::dataReceived, this, &InputSlot::onDataReceived);
 }
 
@@ -59,11 +60,10 @@ void model::InputSlot::onDataReceived()
 
 model::OutputSlot::OutputSlot(Node* parent, QString name, int dataType) : Slot(parent, name, Slot::Direction::OUTPUT, dataType)
 {
-
+    setType("OutputSlot");
 }
 
 void model::OutputSlot::sendData()
 {
     emit dataSent();
 }
-

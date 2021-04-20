@@ -257,33 +257,6 @@ view::SceneGraph* view::Node::getSceneGraph() const
 	return dynamic_cast<SceneGraph*>(scene());
 }
 
-#include <QJSEngine>
-
-QJSValue view::Node::toJSValue(QJSEngine& engine) const
-{
-	//QJSEngine engine;
-	QJSValue value = engine.newObject();
-	value.setProperty("_type", getNodeType());
-	auto coords = scenePos();
-	value.setProperty("_x", coords.x());
-	value.setProperty("_y", coords.y());
-	value.setProperty("_w", width());
-	value.setProperty("_h", height());
-	return value;
-}
-
-#include <exception>
-
-void view::Node::fromJSValue(const QJSValue& jsValue)
-{
-	float x = jsValue.property("_x").toNumber();
-	float y = jsValue.property("_y").toNumber();
-	float w = jsValue.property("_w").toNumber();
-	float h = jsValue.property("_h").toNumber();
-	setPos(x, y);
-	setSize(w, h);
-}
-
 QString view::Node::getNodeType() const
 {
 	return _nodeType;

@@ -9,10 +9,6 @@ namespace logic
 	{
 	public:
 		ScriptNode(model::ScriptNode* modelNode);
-
-		virtual QJSValue toJSValue(QJSEngine& engine) const;
-		virtual void fromJSValue(const QJSValue& jsValue);
-
 		virtual void clearUI() override;
 	private:
 		void setupUi();

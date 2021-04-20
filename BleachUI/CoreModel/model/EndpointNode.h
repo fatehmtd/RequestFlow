@@ -20,10 +20,10 @@ namespace model
         Q_PROPERTY(int timeout MEMBER _timeout READ getTimeout WRITE setTimeout NOTIFY timeoutChanged)
         Q_PROPERTY(int httpMethod MEMBER _httpMethod READ getHttpMethod WRITE setHttpMethod NOTIFY httpMethodChanged)
         Q_PROPERTY(QString contentType MEMBER _contentType READ getContentType WRITE setContentType NOTIFY contentTypeChanged)
-        Q_PROPERTY(QString consoleLog MEMBER _consoleLog READ getConsoleLog WRITE setConsoleLog NOTIFY consoleLogChanged)
+        //Q_PROPERTY(QString consoleLog MEMBER _consoleLog READ getConsoleLog WRITE setConsoleLog NOTIFY consoleLogChanged)
         Q_PROPERTY(QString userAgent MEMBER _userAgent READ getUserAgent WRITE setUserAgent NOTIFY userAgentChanged)
     public:
-        EndpointNode(model::Graph* graph);
+        Q_INVOKABLE EndpointNode(model::Graph* graph);
         
         void createModel() override;
 
@@ -85,8 +85,6 @@ namespace model
 		QNetworkReply* sendPatch(QNetworkRequest request);
 
     private:
-        InputSlot* _inputSlot = nullptr;
-        OutputSlot* _outputSlot = nullptr;
         int _timeout;
         int _httpMethod;
         QString _url;

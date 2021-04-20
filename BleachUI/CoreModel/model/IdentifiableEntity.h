@@ -1,10 +1,11 @@
 #pragma once
 #include "../coremodel_global.h"
 #include <QObject>
+#include "PersistableEntity.h"
 
 namespace model
 {
-	class COREMODEL_EXPORT IdentifiableEntity : public QObject
+	class COREMODEL_EXPORT IdentifiableEntity : public PersistableEntity
 	{
 		Q_OBJECT
 		Q_PROPERTY(QString identifier READ getIdentifier WRITE setIdentifier NOTIFY identifierChanged)
@@ -23,10 +24,9 @@ namespace model
 		QString getName() const;
 
 	signals:
-		void identifierChanged(QString);
-		void nameChanged(QString);
+		void identifierChanged(const QString&);
+		void nameChanged(const QString&);
 	private:
 		QString _name, _type;
 	};
 }
-

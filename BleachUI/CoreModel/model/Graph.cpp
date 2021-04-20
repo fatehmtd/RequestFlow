@@ -9,7 +9,7 @@
 
 model::Graph::Graph(Project* parent) : IdentifiableEntity(parent)
 {
-
+	setType("Graph");
 }
 
 model::Graph::~Graph()
@@ -91,6 +91,64 @@ void model::Graph::setActiveEnvironment(Environment* env)
 model::Environment* model::Graph::getActiveEnvironment() const
 {
 	return _environment;
+}
+
+QJSValue model::Graph::saveToJSValue(PersistenceHandler* persistenceHandler) const
+{
+	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
+
+	auto nodes = getNodes();
+	saveChildren(value, persistenceHandler, "nodes", (PersistableEntity* const*)nodes.toVector().data(), nodes.size());
+
+	auto edges = getEdges();
+	saveChildren(value, persistenceHandler, "edges", (PersistableEntity* const*)edges.toVector().data(), edges.size());
+
+	return value;
+}
+
+#include "PayloadNode.h"
+#include "ViewerNode.h"
+#include "EndpointNode.h"
+#include "ScriptNode.h"
+#include "DelayNode.h"
+#include "AssertionNode.h"
+#include <QMetaMethod>
+#include <QDebug>
+
+bool model::Graph::loadFromJSValue(const QJSValue& v)
+{
+	PersistableEntity::loadFromJSValue(v);
+
+	QMap<QString, QMetaObject> nodesMap;
+	nodesMap["Payload"] = PayloadNode::staticMetaObject;
+	nodesMap["Endpoint"] = EndpointNode::staticMetaObject;
+	nodesMap["Script"] = ScriptNode::staticMetaObject;
+	nodesMap["Viewer"] = ViewerNode::staticMetaObject;
+	nodesMap["Delay"] = DelayNode::staticMetaObject;
+	nodesMap["Assertion"] = AssertionNode::staticMetaObject;
+
+	auto nodesValue = v.property("nodes");
+	for (int i = 0; i < nodesValue.property("length").toInt(); i++)
+	{
+		auto nodeValue = nodesValue.property(i);
+		auto nodeType = nodeValue.property("entityType").toString();
+		if (nodesMap.contains(nodeType))
+		{
+			Node* node = reinterpret_cast<Node*>(nodesMap[nodeType].newInstance(Q_ARG(model::Graph*, this)));
+			if (node != nullptr)
+			{
+				node->loadFromJSValue(nodeValue);
+			}
+		}
+	}
+
+	auto edgesValue = v.property("edges");
+	for (int i = 0; i < edgesValue.property("length").toInt(); i++)
+	{
+		auto edge = new Edge(this);
+		edge->loadFromJSValue(edgesValue.property(i));
+	}
+	return true;
 }
 
 void model::Graph::stop()

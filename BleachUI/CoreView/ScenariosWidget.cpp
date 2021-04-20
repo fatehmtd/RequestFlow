@@ -71,7 +71,7 @@ private:
 };
 
 
-ScenariosWidget::ScenariosWidget(QWidget *parent) : QWidget(parent)
+ScenariosWidget::ScenariosWidget(QWidget* parent) : QWidget(parent)
 {
 	_ui.setupUi(this);
 	_scenariosModel = new ScenariosModel(this);
@@ -97,34 +97,55 @@ model::Project* const ScenariosWidget::getProject() const
 	return _project;
 }
 
-void ScenariosWidget::setCurrentSceneGraph(view::SceneGraph* sceneGraph)
+void ScenariosWidget::setCurrentScene(model::Graph* sceneGraph)
 {
-	_currentSceneGraph = sceneGraph;
 	//TODO: select the correct item in the list
-	emit currentScenarioChanged(sceneGraph);
+	emit currentSceneChanged(sceneGraph);
 }
 
-view::SceneGraph* const ScenariosWidget::getCurrentSceneGraph() const
+model::Graph* const ScenariosWidget::getCurrentSceneGraph() const
 {
-	return _currentSceneGraph;
+	return nullptr;
+}
+
+void ScenariosWidget::updateScenariosList() const
+{
+	_scenariosModel->beginResetModel();
+	_scenariosModel->endResetModel();
+	_ui.listView->update();
 }
 
 void ScenariosWidget::fillScenariosList()
 {
-	qDebug() <<__FUNCTION__ << _project->getGraphs().size();
-
-	_scenariosModel->beginResetModel();
-	_scenariosModel->endResetModel();
-	_ui.listView->update();
-	update();
+	updateScenariosList();
 }
+
+#include <QMenu>
+#include <functional>
+#include <model/Graph.h>
 
 void ScenariosWidget::onContextMenuRequested(const QPoint& p)
 {
-	
-	fillScenariosList();
-	auto index = _ui.listView->currentIndex();
+	auto index = _ui.listView->indexAt(p);
+
 	if (index.isValid())
 	{
-	}	
+		auto graph = reinterpret_cast<model::Graph*>(index.internalPointer());
+
+		QMenu menu(this);
+		{
+			menu.addAction<std::function<void(void)>>(QIcon(":/ui/test_case"), "Activate", [=]()
+				{
+					emit currentSceneChanged(graph);
+				});
+
+			menu.addAction<std::function<void(void)>>(QIcon(":/BleachUI/delete"), "Delete", [=]()
+				{
+					emit sceneDeleted(graph->getIdentifier());
+					delete graph;
+					updateScenariosList();
+				});
+		}
+		menu.exec(mapToGlobal(p));
+	}
 }

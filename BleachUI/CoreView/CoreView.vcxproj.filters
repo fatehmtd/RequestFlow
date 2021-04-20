@@ -52,9 +52,6 @@
     <Filter Include="InteractionsHandler">
       <UniqueIdentifier>{102b008b-2a0b-4648-b70f-5ae801b8b0b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Persistence">
-      <UniqueIdentifier>{bd6baa53-b97d-477f-8421-8f998337635f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="view\Node\CustomProxyWidget">
       <UniqueIdentifier>{6ef132e2-2ffb-4164-acd5-495bb0e157b0}</UniqueIdentifier>
     </Filter>
@@ -84,9 +81,6 @@
     </Filter>
     <Filter Include="Widgets\Inventory">
       <UniqueIdentifier>{bcfd1626-a6d0-4b42-9c17-e6f43dcc89d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\view">
-      <UniqueIdentifier>{b8aabbaf-5eca-43b3-9ce4-bcf34ebc4358}</UniqueIdentifier>
     </Filter>
     <Filter Include="logic\AssertionNode">
       <UniqueIdentifier>{75eaa480-c862-4b0b-827b-1c43f0f92b3c}</UniqueIdentifier>
@@ -155,9 +149,6 @@
     <ClCompile Include="logic\ScriptNode.cpp">
       <Filter>logic\ScriptNode</Filter>
     </ClCompile>
-    <ClCompile Include="PersistenceHandler.cpp">
-      <Filter>Persistence</Filter>
-    </ClCompile>
     <ClCompile Include="view\InteractionsHandler.cpp">
       <Filter>InteractionsHandler</Filter>
     </ClCompile>
@@ -210,9 +201,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PersistenceHandler.h">
-      <Filter>Persistence</Filter>
     </ClInclude>
     <ClInclude Include="view\InteractionsHandler.h">
       <Filter>InteractionsHandler</Filter>

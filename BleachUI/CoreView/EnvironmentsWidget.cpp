@@ -48,7 +48,7 @@ public:
 		case Qt::EditRole:
 		case Qt::DisplayRole:
 			return QVariant(env->getName());
-		}		
+		}
 
 		return QVariant();
 	}
@@ -56,7 +56,7 @@ public:
 	void setProject(model::Project* project)
 	{
 		beginResetModel();
-		_project = project;		
+		_project = project;
 		endResetModel();
 	}
 
@@ -95,7 +95,7 @@ EnvironmentsWidget::EnvironmentsWidget(QWidget* parent) : QWidget(parent)
 
 	connect(_ui.comboBox_environments, SIGNAL(currentIndexChanged(int)), this, SLOT(onSelectCurrentEnvironmentIndex(int)));
 
-	connect(_ui.tableWidget_entries, &QTableWidget::itemChanged, this, [=](QTableWidgetItem* item) 
+	connect(_ui.tableWidget_entries, &QTableWidget::itemChanged, this, [=](QTableWidgetItem* item)
 		{
 			if (_environment == nullptr) return;
 
@@ -113,7 +113,7 @@ void EnvironmentsWidget::setActiveEnvironment(model::Environment* env)
 	_ui.tableWidget_entries->setRowCount(100);
 	if (_environment != nullptr)
 	{
-		copyEnvironmentEntriesToUi();		
+		copyEnvironmentEntriesToUi();
 	}
 }
 
@@ -153,16 +153,21 @@ void EnvironmentsWidget::onCreateEnvironment()
 
 void EnvironmentsWidget::onCloneEnvironment()
 {
-	_environmentsModel->beginResetModel();
 
-	QString name = QString("%1 (Clone)").arg(_environment->getName()); //TODO: generate valid name
-	auto newEnv = new model::Environment(*_environment);
-	newEnv->setEntries(_environment->getEntries());
-	newEnv->setName(name);
+	QString tempName = QString("%1 (Clone)").arg(_environment->getName()); //TODO: generate valid name
+	auto name = QInputDialog::getText(this, "Create Environment", "New Environment name :", QLineEdit::EchoMode::Normal, tempName);
+	if (!name.isEmpty()) //TODO: validate the name
+	{
+		_environmentsModel->beginResetModel();
 
-	_environmentsModel->endResetModel();
-	int index = _project->getEnvironments().indexOf(newEnv);
-	_ui.comboBox_environments->setCurrentIndex(index);
+		auto newEnv = new model::Environment(*_environment);
+		newEnv->setEntries(_environment->getEntries());
+		newEnv->setName(name);
+
+		_environmentsModel->endResetModel();
+		int index = _project->getEnvironments().indexOf(newEnv);
+		_ui.comboBox_environments->setCurrentIndex(index);
+	}
 }
 
 void EnvironmentsWidget::onDeleteEnvironment()
@@ -236,6 +241,6 @@ void EnvironmentsWidget::onSelectCurrentEnvironmentIndex(int index)
 	{
 		setActiveEnvironment(env);
 
-		emit currentEnvironmentChanged();
+		emit currentEnvironmentChanged(env);
 	}
 }

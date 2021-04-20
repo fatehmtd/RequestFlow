@@ -29,6 +29,8 @@ namespace view
 		Node* findbyModel(model::Node* node) const;
 		Edge* findbyModel(model::Edge* edge) const;
 
+		void createGraphiNodesForModel();
+
 		QList<Node*> getNodes() const;
 		QList<Edge*> getEdges() const;
 
@@ -42,15 +44,13 @@ namespace view
 		void clearNodes();
 		void clearScene();
 
-		void persist(const QString& fileName) const;
-		bool load(const QString& fileName);
-
 		void bringToFront(Node* node) const;
 
 	protected:
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 		void drawPointsBackground(QPainter* painter, const QRectF& rect);
 		void drawGridBackground(QPainter* painter, const QRectF& rect);
+		void drawCrossBackground(QPainter* painter, const QRectF& rect);
 
 		virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 

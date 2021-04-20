@@ -69,6 +69,12 @@
     <Filter Include="model\NotifiableEntity">
       <UniqueIdentifier>{dde3d8e9-a165-4714-a69a-86c14da542e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="model\PersistableEntity">
+      <UniqueIdentifier>{992dfe55-a19a-416b-8b07-c984dec7331b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\PersistenceHandler">
+      <UniqueIdentifier>{235abd1d-da6a-4c09-87a4-830bf4e7d7bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coremodel_global.h">
@@ -80,14 +86,11 @@
     <ClInclude Include="model\Project.h">
       <Filter>model\Project</Filter>
     </ClInclude>
-    <ClInclude Include="model\AssertionNode.h">
-      <Filter>logic\AssertionNode</Filter>
+    <ClInclude Include="model\PersistableEntity.h">
+      <Filter>model\PersistableEntity</Filter>
     </ClInclude>
-    <ClInclude Include="model\ScriptNode.h">
-      <Filter>logic\ScriptNode</Filter>
-    </ClInclude>
-    <ClInclude Include="model\ViewerNode.h">
-      <Filter>logic\ViewerNode</Filter>
+    <ClInclude Include="model\PersistenceHandler.h">
+      <Filter>model\PersistenceHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +139,12 @@
     <ClCompile Include="model\IdentifiableEntity.cpp">
       <Filter>model\IdentifiableEntity</Filter>
     </ClCompile>
+    <ClCompile Include="model\PersistableEntity.cpp">
+      <Filter>model\PersistableEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="model\PersistenceHandler.cpp">
+      <Filter>model\PersistenceHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="model\Edge.h">
@@ -167,6 +176,15 @@
     </QtMoc>
     <QtMoc Include="model\IdentifiableEntity.h">
       <Filter>model\IdentifiableEntity</Filter>
+    </QtMoc>
+    <QtMoc Include="model\ViewerNode.h">
+      <Filter>logic\ViewerNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\ScriptNode.h">
+      <Filter>logic\ScriptNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\AssertionNode.h">
+      <Filter>logic\AssertionNode</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

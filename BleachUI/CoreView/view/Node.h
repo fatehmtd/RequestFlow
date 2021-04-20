@@ -59,10 +59,6 @@ namespace view
 
 		view::SceneGraph* getSceneGraph() const;
 
-		// persistence
-		virtual QJSValue toJSValue(QJSEngine& engine) const;
-		virtual void fromJSValue(const QJSValue& jsValue);
-
 		QString getNodeType() const;
 
 	protected:

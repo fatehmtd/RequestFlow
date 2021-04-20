@@ -11,9 +11,6 @@ namespace logic
 
         virtual void clearUI() override;
 
-        virtual QJSValue toJSValue(QJSEngine& engine) const;
-        virtual void fromJSValue(const QJSValue& jsValue);
-
     private:
         void setupUi();
     };

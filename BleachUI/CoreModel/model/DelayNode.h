@@ -11,12 +11,13 @@ namespace model
     class COREMODEL_EXPORT DelayNode : public model::Node
     {
         Q_OBJECT
+        Q_PROPERTY(int delay READ getDelay WRITE setDelay)
     public:
-        DelayNode(model::Graph* graph);
+        Q_INVOKABLE DelayNode(model::Graph* graph);
 
         void createModel() override;
 
-        unsigned int getDelay() const;
+        int getDelay() const;
 
     public slots:
         void setDelay(int duration);
@@ -25,8 +26,6 @@ namespace model
         void onTimeout();
 
     private:
-        model::InputSlot* _inputSlot = nullptr;
-        model::OutputSlot* _outputSlot = nullptr;
         QTimer _timer;
     };
 }

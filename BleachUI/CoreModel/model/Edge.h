@@ -19,6 +19,9 @@ namespace model
 
 		InputSlot* getDestinationSlot() const;
 		OutputSlot* getOriginSlot() const;
+
+		QJSValue saveToJSValue(PersistenceHandler* handler) const override;
+		bool loadFromJSValue(const QJSValue& v) override;
 	protected:
 		InputSlot* _destinationSlot = nullptr;
 		OutputSlot* _originSlot = nullptr;

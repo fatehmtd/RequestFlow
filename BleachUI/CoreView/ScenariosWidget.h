@@ -20,19 +20,21 @@ public:
 	void setProject(model::Project* project);
 	model::Project* const getProject() const;
 
-	void setCurrentSceneGraph(view::SceneGraph* sceneGraph);
-	view::SceneGraph* const getCurrentSceneGraph() const;
+	void setCurrentScene(model::Graph* scene);
+	model::Graph* const getCurrentSceneGraph() const;
+
+	void updateScenariosList() const;
 
 private slots:
 	void fillScenariosList();
 	void onContextMenuRequested(const QPoint& p);
 
 signals:
-	void currentScenarioChanged(view::SceneGraph*);
+	void currentSceneChanged(model::Graph*);
+	void sceneDeleted(QString);
 
 private:
 	Ui::ScenariosWidget _ui;
 	model::Project* _project = nullptr;
-	view::SceneGraph* _currentSceneGraph = nullptr;
 	ScenariosModel* _scenariosModel = nullptr;
 };

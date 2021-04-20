@@ -22,18 +22,18 @@ QString model::ScriptNode::getScript() const
 
 model::InputSlot* model::ScriptNode::getInputSlot() const
 {
-	return _inputSlot;
+	return getInputSlots().values()[0];
 }
 
 model::OutputSlot* model::ScriptNode::getOutputSlot() const
 {
-	return _outputSlot;
+	return getOutputSlots().values()[0];
 }
 
 void model::ScriptNode::createModel()
 {
-	_inputSlot = addInputSlot("Input", InputSlot::CUSTOM);
-	_outputSlot = addOutputSlot("Output", InputSlot::CUSTOM);
+	addInputSlot("Input", InputSlot::CUSTOM);
+	addOutputSlot("Output", InputSlot::CUSTOM);
 }
 
 void model::ScriptNode::evaluate()
@@ -49,7 +49,7 @@ bool model::ScriptNode::executeScript()
 	QJSEngine engine;
 	model::Message response;
 
-	auto requestMessage = _inputSlot->getData();
+	auto requestMessage = getInputSlot()->getData();
 
 	engine.globalObject().setProperty("Request", engine.toScriptValue(requestMessage.toVariant()));
 	engine.globalObject().setProperty("Response", engine.toScriptValue(response.toVariant()));
@@ -65,6 +65,6 @@ bool model::ScriptNode::executeScript()
 
 	auto value = engine.fromScriptValue<QVariant>(engine.evaluate("Response"));
 	response.fromVariant(value);
-	_outputSlot->setData(response);
+	getOutputSlot()->setData(response);
 	return true;
 }

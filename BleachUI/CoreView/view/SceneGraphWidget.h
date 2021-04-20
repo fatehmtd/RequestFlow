@@ -13,6 +13,16 @@ public:
 	~SceneGraphWidget();
 
 	view::SceneGraph* getSceneGraph() const;
+
+	QPointF getCenter() const;
+	void setCenter(const QPointF& p);
+
+	float getZoomLevel() const;
+	void setZoomLevel(float level);
+
+	QJSValue saveToJSValue(model::PersistenceHandler* handler) const;
+	bool loadFromJSValue(const QJSValue& v);
+
 protected:
 	void initUi();
 
@@ -38,5 +48,5 @@ protected:
 	// Zooming
 	float _zoomInFactor;
 	float _zoomStep, _zoomLevel;
-	float _minZoomLevel, _maxZoomLevel;
+	float _minZoomLevel, _maxZoomLevel, _defaultZoomLevel;
 };

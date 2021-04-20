@@ -11,9 +11,6 @@ namespace logic
     public:
         Q_INVOKABLE PayloadNode(model::PayloadNode* modelNode);
 
-        QJSValue toJSValue(QJSEngine& engine) const override;
-        void fromJSValue(const QJSValue& jsValue) override;
-
         virtual void clearUI() override;
     private:
         void setupUi();

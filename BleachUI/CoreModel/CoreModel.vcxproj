@@ -47,6 +47,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.15.1</QtInstall>
     <QtModules>core;webchannel;websockets;xml;xmlpatterns</QtModules>
@@ -100,20 +105,24 @@
     <ClCompile Include="model\Message.cpp" />
     <ClCompile Include="model\Node.cpp" />
     <ClCompile Include="model\PayloadNode.cpp" />
+    <ClCompile Include="model\PersistableEntity.cpp" />
+    <ClCompile Include="model\PersistenceHandler.cpp" />
     <ClCompile Include="model\Project.cpp" />
     <ClCompile Include="model\ScriptNode.cpp" />
     <ClCompile Include="model\Slot.cpp" />
     <ClCompile Include="model\ViewerNode.cpp" />
     <ClInclude Include="coremodel_global.h" />
-    <ClInclude Include="model\AssertionNode.h" />
+    <QtMoc Include="model\AssertionNode.h" />
     <QtMoc Include="model\IdentifiableEntity.h" />
-    <ClInclude Include="model\ScriptNode.h" />
-    <ClInclude Include="model\ViewerNode.h" />
+    <ClInclude Include="model\PersistableEntity.h" />
+    <QtMoc Include="model\ScriptNode.h" />
+    <QtMoc Include="model\ViewerNode.h" />
     <QtMoc Include="model\DelayNode.h" />
     <QtMoc Include="model\EndpointNode.h" />
     <QtMoc Include="model\Environment.h" />
     <ClInclude Include="model\Message.h" />
     <QtMoc Include="model\PayloadNode.h" />
+    <ClInclude Include="model\PersistenceHandler.h" />
     <ClInclude Include="model\Project.h" />
     <QtMoc Include="model\NotifiableEntity.h" />
     <QtMoc Include="model\Slot.h" />

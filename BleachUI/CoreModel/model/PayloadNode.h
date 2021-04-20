@@ -10,8 +10,9 @@ namespace model
     class COREMODEL_EXPORT PayloadNode : public model::Node
     {
         Q_OBJECT
+        Q_PROPERTY(QVariant message READ messageToVariant WRITE messageFromVariant)
     public:
-        PayloadNode(model::Graph* graph);
+        Q_INVOKABLE PayloadNode(model::Graph* graph);
         void createModel() override;
 
         void setMessage(const model::Message& message);
@@ -19,8 +20,10 @@ namespace model
 
         void evaluate() override;
         OutputSlot* getOutputSlot() const;
+    protected:
+        QVariant messageToVariant() const;
+        void messageFromVariant(const QVariant& v);
     private:
         model::Message _message;
-        OutputSlot* _outputSlot = nullptr;
     };
 }

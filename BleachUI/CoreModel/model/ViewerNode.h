@@ -11,15 +11,14 @@ namespace model
 
     class COREMODEL_EXPORT ViewerNode : public model::Node
     {
+        Q_OBJECT
     public:
-        ViewerNode(model::Graph* graph);
+        Q_INVOKABLE ViewerNode(model::Graph* graph);
 
         void createModel() override;
 
         void evaluate() override;
 
         model::InputSlot* getInput() const;
-    private:
-        model::InputSlot* _inputSlot = nullptr;
     };
 }

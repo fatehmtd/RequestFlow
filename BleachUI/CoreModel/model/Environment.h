@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../coremodel_global.h"
+#include "IdentifiableEntity.h"
 #include <QObject>
 #include <QMap>
 #include <QVariant>
@@ -9,7 +10,7 @@ namespace model
 {
 	class Project;
 
-	class COREMODEL_EXPORT Environment : public QObject
+	class COREMODEL_EXPORT Environment : public IdentifiableEntity
 	{
 		Q_OBJECT
 	public:
@@ -18,17 +19,16 @@ namespace model
 
 		Project* getProject() const;
 
-		void setName(const QString& name);
-		QString getName() const;
-
 		void setEntries(const QMap<QString, QVariant>& entries);
 		QMap<QString, QVariant>& getEntries();
 		QMap<QString, QVariant> getEntries() const;
 
 		QString evaluate(QString input) const; // replaces {key} by the corresponding entry
 
+		QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const override;
+		bool loadFromJSValue(const QJSValue& v) override;
+
 	private:
-		QString _name;
 		QMap<QString, QVariant> _entries;
 	};
 }

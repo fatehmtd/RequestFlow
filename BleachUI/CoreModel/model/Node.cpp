@@ -24,12 +24,30 @@ model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(par
 
 model::InputSlot* model::Node::getDestinationSlot(const QString& name) const
 {
-	return findChild<InputSlot*>(name, Qt::FindChildOption::FindDirectChildrenOnly);
+	for (auto slot : findChildren<InputSlot*>())
+	{
+		if (slot->getName() == name) return slot;
+	}
+	return nullptr;
 }
 
 model::OutputSlot* model::Node::getOriginSlot(const QString& name) const
 {
-	return findChild<OutputSlot*>(name, Qt::FindChildOption::FindDirectChildrenOnly);
+	for (auto slot : findChildren<OutputSlot*>())
+	{
+		if (slot->getName() == name) return slot;
+	}
+	return nullptr;
+}
+
+model::InputSlot* model::Node::getDestinationSlotByIdentifier(const QString& id) const
+{
+	return findChild<InputSlot*>(id, Qt::FindChildOption::FindDirectChildrenOnly);
+}
+
+model::OutputSlot* model::Node::getOriginSlotByIdentifier(const QString& id) const
+{
+	return findChild<OutputSlot*>(id, Qt::FindChildOption::FindDirectChildrenOnly);
 }
 
 model::InputSlot* model::Node::addInputSlot(QString name, int dataType)
@@ -56,7 +74,7 @@ QMap<QString, model::InputSlot*> model::Node::getInputSlots() const
 		auto slot = dynamic_cast<InputSlot*>(child);
 		if (slot != nullptr)
 		{
-			output[slot->objectName()] = slot;
+			output[slot->getIdentifier()] = slot;
 		}
 	}
 	return std::move(output);
@@ -71,7 +89,7 @@ QMap<QString, model::OutputSlot*> model::Node::getOutputSlots() const
 		auto slot = dynamic_cast<OutputSlot*>(child);
 		if (slot != nullptr)
 		{
-			output[slot->objectName()] = slot;
+			output[slot->getIdentifier()] = slot;
 		}
 	}
 	return std::move(output);
@@ -85,6 +103,40 @@ model::Graph* model::Node::getGraph() const
 void model::Node::clear()
 {
 	_listOfReadySlots.clear();
+}
+
+QJSValue model::Node::saveToJSValue(PersistenceHandler* persistenceHandler) const
+{
+	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
+	auto inputSlots = getInputSlots();
+	auto oututSlots = getOutputSlots();
+	saveChildren(value, persistenceHandler, "inputSlots", (PersistableEntity*const*)inputSlots.values().toVector().data(), inputSlots.size());
+	saveChildren(value, persistenceHandler, "outputSlots", (PersistableEntity*const*)oututSlots.values().toVector().data(), oututSlots.size());
+	return value;
+}
+
+bool model::Node::loadFromJSValue(const QJSValue& v)
+{
+	PersistableEntity::loadFromJSValue(v);
+
+	qDeleteAll(getInputSlots());
+	qDeleteAll(getOutputSlots());
+
+	auto inputSlotsValue = v.property("inputSlots");
+	for (int i = 0; i < inputSlotsValue.property("length").toInt(); i++)
+	{
+		auto inputSlot = addInputSlot("", -1);
+		inputSlot->loadFromJSValue(inputSlotsValue.property(i));
+	}
+
+	auto outputSlotsValue = v.property("outputSlots");
+	for (int i = 0; i < outputSlotsValue.property("length").toInt(); i++)
+	{
+		auto outputSlot = addOutputSlot("", -1);
+		outputSlot->loadFromJSValue(outputSlotsValue.property(i));
+	}
+
+	return true;
 }
 
 void model::Node::evaluate()

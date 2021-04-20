@@ -12,23 +12,6 @@ logic::EndpointNode::EndpointNode(model::EndpointNode* modelNode) : view::Node(m
 	setTitle("Endpoint");
 }
 
-QJSValue logic::EndpointNode::toJSValue(QJSEngine& engine) const
-{
-	auto value = Node::toJSValue(engine);
-	value.setProperty("_url", _ui.lineEdit_url->text());
-	value.setProperty("_method", _ui.comboBox_method->currentIndex());
-	value.setProperty("_contentTyoe", _ui.comboBox_contentType->currentIndex());
-	return value;
-}
-
-void logic::EndpointNode::fromJSValue(const QJSValue& jsValue)
-{
-	Node::fromJSValue(jsValue);
-	_ui.lineEdit_url->setText(jsValue.property("_url").toString());
-	_ui.comboBox_method->setCurrentIndex(jsValue.property("_method").toInt());
-	_ui.comboBox_contentType->setCurrentIndex(jsValue.property("_contentTyoe").toInt());
-}
-
 void logic::EndpointNode::clearUI()
 {
 	_ui.plainTextEdit_response->clear();

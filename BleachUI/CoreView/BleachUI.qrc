@@ -49,5 +49,6 @@
         <file alias="test_case">icons/blueprint.svg</file>
         <file alias="requestflow_bg">icons/requestflow_bg.png</file>
         <file alias="environment">icons/server.svg</file>
+        <file alias="swagger">icons/swagger.png</file>
     </qresource>
 </RCC>

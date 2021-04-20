@@ -9,8 +9,10 @@ namespace model
 {
 	class COREMODEL_EXPORT ScriptNode : public model::Node
 	{
+		Q_OBJECT
+		Q_PROPERTY(QString script MEMBER _script READ getScript() WRITE setScript)
 	public:
-		ScriptNode(model::Graph* graph);
+		Q_INVOKABLE ScriptNode(model::Graph* graph);
 
 		void setScript(const QString& script);
 		QString getScript() const;
@@ -26,8 +28,6 @@ namespace model
 		bool executeScript();		
 
 	private:
-		InputSlot* _inputSlot = nullptr;
-		OutputSlot* _outputSlot = nullptr;
 		QString _script;
 	};
 }

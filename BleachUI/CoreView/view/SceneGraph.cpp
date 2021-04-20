@@ -28,6 +28,7 @@ view::SceneGraph::SceneGraph(model::Graph* modelGraph, QObject* parent) : QGraph
 {
 	_interactionsHandler = new InteractionsHandler(this);
 	setupUi();
+	createGraphiNodesForModel();
 }
 
 view::Slot* view::SceneGraph::findbyModel(model::Slot* slot) const
@@ -67,6 +68,56 @@ view::Edge* view::SceneGraph::findbyModel(model::Edge* edge) const
 		}
 	}
 	return nullptr;
+}
+
+#include "logic/PayloadNode.h"
+#include "logic/EndpointNode.h"
+#include "logic/ScriptNode.h"
+#include "logic/ViewerNode.h"
+#include "logic/DelayNode.h"
+#include "logic/AssertionNode.h"
+#include <functional>
+
+void view::SceneGraph::createGraphiNodesForModel()
+{
+	QMap<QString, std::function<view::Node*(model::Node*)>> nodesMap;
+	nodesMap["Payload"] = [](model::Node* modelNode)
+	{
+		return new logic::PayloadNode((model::PayloadNode*)modelNode);
+	};
+
+	nodesMap["Endpoint"] = [](model::Node* modelNode)
+	{
+		return new logic::EndpointNode((model::EndpointNode*)modelNode);
+	};
+	nodesMap["Script"] = [](model::Node* modelNode)
+	{
+		return new logic::ScriptNode((model::ScriptNode*)modelNode);
+	};
+	nodesMap["Viewer"] = [](model::Node* modelNode)
+	{
+		return new logic::ViewerNode((model::ViewerNode*)modelNode);
+	};
+	nodesMap["Delay"] = [](model::Node* modelNode)
+	{
+		return new logic::DelayNode((model::DelayNode*)modelNode);
+	};
+	nodesMap["Assertion"] = [](model::Node* modelNode)
+	{
+		return new logic::AssertionNode((model::AssertionNode*)modelNode);
+	};
+
+	for (auto modelNode : getModelGraph()->getNodes())
+	{
+		auto node = nodesMap[modelNode->getType()](modelNode);
+		addItem(node);
+	}
+
+	for (auto modelEdge : getModelGraph()->getEdges())
+	{
+		auto edge = new view::Edge(this, modelEdge);
+		addItem(edge);
+	}
 }
 
 QList<view::Node*> view::SceneGraph::getNodes() const
@@ -145,123 +196,10 @@ void view::SceneGraph::clearScene()
 	}
 }
 
-void view::SceneGraph::persist(const QString& fileName) const
-{
-	QJSEngine engine;
-	QJSValue project = engine.newObject();
-
-	// nodes
-	QList<Node*> nodesList = getNodes();
-	{
-		auto nodesValue = engine.newArray(nodesList.size());
-		int index = 0;
-		for (auto node : nodesList)
-		{
-			nodesValue.setProperty(index++, node->toJSValue(engine));
-		}
-		project.setProperty("_nodes", nodesValue);
-	}
-
-	// edges
-	{
-		QList<Edge*> edgesList = getEdges();
-
-		auto edgesValue = engine.newArray(edgesList.size());
-
-		int index = 0;
-		for (auto edge : edgesList)
-		{
-			auto originNode = edge->getOriginSlot()->getNode();
-			auto destinationNode = edge->getDestinationSlot()->getNode();
-			int idxOrigin = nodesList.indexOf(originNode);
-			int idxDestination = nodesList.indexOf(destinationNode);
-			QJSValue edgeValue = engine.newObject();
-			edgeValue.setProperty("_o", idxOrigin);
-			edgeValue.setProperty("_d", idxDestination);
-			edgesValue.setProperty(index++, edgeValue);
-		}
-
-		project.setProperty("_edges", edgesValue);
-	}
-
-	// save to file
-	auto document = QJsonDocument::fromVariant(project.toVariant());
-
-	QFile fp(fileName);
-	if (fp.open(QIODevice::Text | QIODevice::WriteOnly))
-	{
-		QTextStream out(&fp);
-		out << QString(document.toJson(QJsonDocument::JsonFormat::Compact));
-	}
-}
-
-bool view::SceneGraph::load(const QString& fileName)
-{
-	QFile fp(fileName);
-	if (fp.open(QIODevice::Text | QIODevice::ReadOnly))
-	{
-		QTextStream in(&fp);
-		auto contents = in.readAll();
-		QJSEngine engine;
-
-		auto project = engine.toScriptValue<QVariant>(QJsonDocument::fromJson(contents.toUtf8()).toVariant());
-
-		if (project.isError()) return false;
-
-		clearScene(); // delete all scene nodes
-
-		auto nodes = project.property("_nodes");
-		QList<Node*> nodesList;
-		{
-			int numNodes = nodes.property("length").toInt();
-			for (auto i = 0; i < numNodes; i++)
-			{
-				auto nodeValue = nodes.property(i);
-				auto nodeTypeStr = nodeValue.property("_type").toString();
-				auto node = _interactionsHandler->createNode(nodeTypeStr);
-				if (node != nullptr)
-				{
-					node->fromJSValue(nodeValue);
-					node->update();
-					nodesList << node;
-				}
-			}
-		}
-
-		auto edges = project.property("_edges");
-		{
-			int numEdges = edges.property("length").toInt();
-			for (auto i = 0; i < numEdges; i++)
-			{
-				auto edgeValue = edges.property(i);
-				int originIndex = edgeValue.property("_d").toInt();
-				int destinationIndex = edgeValue.property("_o").toInt();
-
-				auto originNode = nodesList[originIndex];
-				auto destinationNode = nodesList[destinationIndex];
-				if (originNode != nullptr && destinationNode != nullptr)
-				{
-					auto originSlot = originNode->getModelNode()->getOutputSlots().first();
-					auto destinationSlot = destinationNode->getModelNode()->getInputSlots().first();
-					auto edge = _modelGraph->connectSlots(originSlot, destinationSlot);
-					if (edge != nullptr)
-					{
-						auto grEdge = new view::Edge(this, edge);
-						addItem(grEdge);
-					}
-				}
-			}
-
-		}
-		return true;
-	}
-
-	return false;
-}
-
 void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
-	drawPointsBackground(painter, rect);
+	//drawPointsBackground(painter, rect);
+	drawCrossBackground(painter, rect);
 	//drawGridBackground(painter, rect);
 }
 
@@ -346,6 +284,38 @@ void view::SceneGraph::drawGridBackground(QPainter* painter, const QRectF& rect)
 		painter->setPen(pen);
 		painter->drawLines(_lines);
 	}
+}
+
+void view::SceneGraph::drawCrossBackground(QPainter* painter, const QRectF& rect)
+{
+	const int left = floor(rect.left());
+	const int right = ceil(rect.right());
+	const int top = floor(rect.top());
+	const int bottom = ceil(rect.bottom());
+
+	// points	 
+	const int firstLeft = left - (left % _cellSize);
+	const int firstTop = top - (top % _cellSize);
+	int count = (1 + (right - firstLeft) / _cellSize) * (1 + (bottom - firstTop) / _cellSize);
+	//QVector<QPointF> points(count);
+	QVector<QLine> lines(count * 2);
+
+	float halfLen = 3;
+
+	int index = 0;
+	for (int i = firstLeft; i < right; i += _cellSize)
+	{
+		for (int j = firstTop; j < bottom; j += _cellSize)
+		{
+			lines[index++] = QLine(i - halfLen, j, i + halfLen, j);
+			lines[index++] = QLine(i, j - halfLen, i, j + halfLen);
+		}
+	}
+
+	QPen pen(QBrush(QColor("#E4E3E4")), 2.0f);
+	//pen.setStyle(Qt::PenStyle::DashLine);
+	painter->setPen(pen);
+	painter->drawLines(lines.data(), lines.size());
 }
 
 void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

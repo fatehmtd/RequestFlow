@@ -11,6 +11,9 @@ namespace model
 
 	class COREMODEL_EXPORT Slot : public NotifiableEntity
 	{
+		Q_OBJECT
+		Q_PROPERTY(int dataType MEMBER _dataType READ getDataType)
+		Q_PROPERTY(int direction MEMBER _direction READ getDirection)
 	public:
 		enum Direction
 		{
@@ -35,7 +38,7 @@ namespace model
 
 		void clear() override;
 
-		Direction getDirection() const;
+		int getDirection() const;
 
 		int getDataType() const;
 
@@ -43,11 +46,11 @@ namespace model
 		void setData(const Message& data);
 
 		Node* getNode() const;
+
 	protected:
-		int _dataType;
+		int _dataType;		
+		int _direction;
 		Message _data;
-	private:
-		Direction _direction;
 	};
 
 	class COREMODEL_EXPORT InputSlot : public Slot

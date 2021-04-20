@@ -3,7 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-model::ViewerNode::ViewerNode(model::Graph* graph) : model::Node(graph, "Result")
+model::ViewerNode::ViewerNode(model::Graph* graph) : model::Node(graph, "Viewer")
 {
 
 }
@@ -12,7 +12,7 @@ model::ViewerNode::ViewerNode(model::Graph* graph) : model::Node(graph, "Result"
 
 void model::ViewerNode::createModel()
 {
-	_inputSlot = addInputSlot("in", model::Slot::DataType::CUSTOM);
+	addInputSlot("in", model::Slot::DataType::CUSTOM);
 }
 
 void model::ViewerNode::evaluate()
@@ -22,5 +22,5 @@ void model::ViewerNode::evaluate()
 
 model::InputSlot* model::ViewerNode::getInput() const
 {
-	return _inputSlot;
+	return getInputSlots().values().first();
 }

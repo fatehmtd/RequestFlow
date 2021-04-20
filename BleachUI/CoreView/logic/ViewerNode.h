@@ -10,9 +10,6 @@ namespace logic
     {
     public:
         ViewerNode(model::ViewerNode* modelNode);
-        virtual QJSValue toJSValue(QJSEngine& engine) const;
-        virtual void fromJSValue(const QJSValue& jsValue);
-
         virtual void clearUI() override;
     private:
         void setupUi();

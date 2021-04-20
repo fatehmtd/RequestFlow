@@ -36,7 +36,7 @@ protected slots:
 	void onSelectCurrentEnvironmentIndex(int index);
 
 signals:
-	void currentEnvironmentChanged();
+	void currentEnvironmentChanged(model::Environment*);
 
 private:
 	Ui::EnvironmentsWidget _ui;

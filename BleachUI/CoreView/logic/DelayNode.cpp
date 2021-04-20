@@ -19,19 +19,6 @@ void logic::DelayNode::clearUI()
 	//_editor->clear();
 }
 
-QJSValue logic::DelayNode::toJSValue(QJSEngine& engine) const
-{
-	auto value = Node::toJSValue(engine);
-	value.setProperty("_delay", _ui.spinBox->value());
-	return value;
-}
-
-void logic::DelayNode::fromJSValue(const QJSValue& jsValue)
-{
-	Node::fromJSValue(jsValue);
-	_ui.spinBox->setValue(jsValue.property("_delay").toInt());
-}
-
 void logic::DelayNode::setupUi()
 {
 	auto widget = new QWidget();

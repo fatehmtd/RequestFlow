@@ -13,18 +13,18 @@ model::EndpointNode::EndpointNode(model::Graph* graph) : model::Node(graph, "End
 
 void model::EndpointNode::createModel()
 {
-	_inputSlot = addInputSlot("Input", Slot::CUSTOM);
-	_outputSlot = addOutputSlot("Output", Slot::CUSTOM);
+	addInputSlot("Input", Slot::CUSTOM);
+	addOutputSlot("Output", Slot::CUSTOM);
 }
 
 model::InputSlot* model::EndpointNode::getInputSlot() const
 {
-	return _inputSlot;
+	return getInputSlots().values()[0];
 }
 
 model::OutputSlot* model::EndpointNode::getOutputSlot() const
 {
-	return _outputSlot;
+	return getOutputSlots().values()[0];
 }
 
 void model::EndpointNode::setTimeout(int msec)

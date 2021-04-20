@@ -45,6 +45,9 @@ namespace model
 		void setActiveEnvironment(Environment* env);
 		Environment* getActiveEnvironment() const;
 
+		QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const override;
+		bool loadFromJSValue(const QJSValue& v) override;
+
 	public slots:
 		virtual int start();
 		virtual void stop();

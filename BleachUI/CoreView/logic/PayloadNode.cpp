@@ -13,20 +13,6 @@ logic::PayloadNode::PayloadNode(model::PayloadNode* modelNode) : view::Node(mode
 	setTitle("Payload");
 }
 
-QJSValue logic::PayloadNode::toJSValue(QJSEngine& engine) const
-{
-	auto value = Node::toJSValue(engine);
-	auto message = composeMessage().toVariant();
-	value.setProperty("_message", engine.toScriptValue<QVariant>(message));
-	return value;
-}
-
-void logic::PayloadNode::fromJSValue(const QJSValue& jsValue)
-{
-	Node::fromJSValue(jsValue);
-	auto variant = jsValue.toVariant();
-}
-
 model::Message logic::PayloadNode::composeMessage() const
 {
 	model::Message message(_ui.textEdit_body->toPlainText());

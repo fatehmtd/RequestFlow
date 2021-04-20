@@ -9,15 +9,13 @@ namespace model
 {
     class COREMODEL_EXPORT AssertionNode : public model::Node
     {
+        Q_OBJECT
     public:
-		AssertionNode(model::Graph* graph);
+        Q_INVOKABLE AssertionNode(model::Graph* graph);
         
         void createModel() override;
 
 		InputSlot* getInputSlot() const;
 		OutputSlot* getOutputSlot() const;
-    private:
-        InputSlot* _inputSlot = nullptr;
-        OutputSlot* _outputSlot = nullptr;
     };
 }

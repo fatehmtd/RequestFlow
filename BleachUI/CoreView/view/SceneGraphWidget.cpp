@@ -16,6 +16,7 @@ SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph
 {
 	initUi();
 	setScene(_sceneGraph);
+	setObjectName(sceneGraph->getModelGraph()->getIdentifier());
 }
 
 SceneGraphWidget::~SceneGraphWidget()
@@ -50,16 +51,19 @@ void SceneGraphWidget::initUi()
 
 	_zoomInFactor = 1.5f;
 	_zoomStep = 1;
-	_zoomLevel = 2;
+
 	_minZoomLevel = 1;
 	_maxZoomLevel = 5;
+	_defaultZoomLevel = 2;
 
-	//setOGLBackend();	
+	_zoomLevel = _defaultZoomLevel;
+	//setOGLBackend();
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 {
-	qDebug() << mapToScene(viewport()->rect()).boundingRect().center();
+	// TODO: use this as the center of the view
+	//qDebug() << mapToScene(viewport()->rect()).boundingRect().center();
 	if (event->button() == Qt::MouseButton::MiddleButton)
 	{
 		mouseMiddleButtonPressed(event);
@@ -137,7 +141,6 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
 		performZoom(event);
 	}
 
-
 	auto items = _sceneGraph->items(viewport()->rect());
 
 	for (auto item : items)
@@ -163,20 +166,11 @@ void SceneGraphWidget::performZoom(QWheelEvent* event)
 {
 	if (event->angleDelta().y() > 0)
 	{
-		if (_zoomLevel > _minZoomLevel)
-		{
-			_zoomLevel -= _zoomStep;
-			scale(_zoomInFactor, _zoomInFactor);
-		}
+		setZoomLevel(_zoomLevel - _zoomStep);
 	}
 	else
 	{
-		if (_zoomLevel < _maxZoomLevel)
-		{
-			_zoomLevel += _zoomStep;
-			const float factor = 1.0f / _zoomInFactor;
-			scale(factor, factor);
-		}
+		setZoomLevel(_zoomLevel + _zoomStep);
 	}
 }
 
@@ -197,3 +191,92 @@ void SceneGraphWidget::setOGLBackend()
 	setViewport(glWidget);
 	//*/
 }
+
+QPointF SceneGraphWidget::getCenter() const
+{
+	return mapToScene(viewport()->rect()).boundingRect().center();;
+}
+
+void SceneGraphWidget::setCenter(const QPointF& p)
+{
+	centerOn(p);
+}
+
+float SceneGraphWidget::getZoomLevel() const
+{
+	return _zoomLevel;
+}
+
+void SceneGraphWidget::setZoomLevel(float level)
+{
+	if (level > _maxZoomLevel) level = _maxZoomLevel;
+	else if (level < _minZoomLevel) level = _minZoomLevel;
+
+	float factor = powf(_zoomInFactor, _zoomLevel - level);
+	scale(factor, factor);
+
+	_zoomLevel = level;
+}
+
+QJSValue SceneGraphWidget::saveToJSValue(model::PersistenceHandler* handler) const
+{
+	auto sceneValue = handler->createJsValue();
+
+	sceneValue.setProperty("center", handler->createJsValue(getCenter()));
+	sceneValue.setProperty("zoom", handler->createJsValue(getZoomLevel()));
+
+	auto nodesList = getSceneGraph()->getNodes();
+	auto nodesValue = handler->createJsValue();
+
+	for (auto node : nodesList)
+	{
+		auto nodeValue = handler->createJsValue();
+		auto pos = node->scenePos();
+		nodeValue.setProperty("position", handler->createJsValue(node->scenePos()));
+		nodeValue.setProperty("size", handler->createJsValue(QPointF(node->width(), node->height())));
+		nodesValue.setProperty(node->getModelNode()->getIdentifier(), nodeValue);
+	}
+
+	sceneValue.setProperty("nodes", nodesValue);
+
+	return sceneValue;
+}
+
+#include <QJSValueIterator>
+
+bool SceneGraphWidget::loadFromJSValue(const QJSValue& v)
+{
+	auto valueToPoint = [](const QJSValue& v)
+	{
+		return QPointF(v.property("x").toNumber(), v.property("y").toNumber());
+	};
+
+	auto center = valueToPoint(v.property("center"));
+	setCenter(center);
+	float zoom = v.property("zoom").toNumber();
+	setZoomLevel(zoom);
+
+	auto nodesValue = v.property("nodes");
+	QJSValueIterator it(nodesValue);
+	while (it.hasNext())
+	{
+		it.next();
+		auto nodeValue = nodesValue.property(it.name());
+		QString nodeId = it.name();
+		auto nodePosValue = nodeValue.property("position");
+		auto nodeSizeValue = nodeValue.property("size");
+
+		auto modelNode = getSceneGraph()->getModelGraph()->findChild<model::Node*>(nodeId);
+		auto node = getSceneGraph()->findbyModel(modelNode);
+		if (node != nullptr)
+		{
+			node->setPos(valueToPoint(nodePosValue));
+			auto sz = valueToPoint(nodeSizeValue);
+			node->setSize(sz.x(), sz.y());
+			node->update();
+		}
+	}
+
+	return true;
+}
+

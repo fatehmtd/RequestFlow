@@ -10,7 +10,7 @@ model::PayloadNode::PayloadNode(model::Graph* graph) : model::Node(graph, "Paylo
 
 void model::PayloadNode::createModel()
 {
-	_outputSlot = addOutputSlot("output", Slot::CUSTOM);
+	addOutputSlot("output", Slot::CUSTOM);
 }
 
 void model::PayloadNode::setMessage(const model::Message& message)
@@ -31,5 +31,15 @@ void model::PayloadNode::evaluate()
 
 model::OutputSlot* model::PayloadNode::getOutputSlot() const
 {
-	return _outputSlot;
+	return getOutputSlots().values()[0];
+}
+
+QVariant model::PayloadNode::messageToVariant() const
+{
+	return _message.toVariant();
+}
+
+void model::PayloadNode::messageFromVariant(const QVariant& v)
+{
+	_message.fromVariant(v);
 }

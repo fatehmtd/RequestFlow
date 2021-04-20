@@ -21,7 +21,7 @@ view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsObject(parent), _sl
 	//font.setBold(true);
 	_title = new QGraphicsTextItem(this);
 	_title->setFont(font);
-	_title->setPlainText(slot->objectName());
+	_title->setPlainText(slot->getName());
 	_title->setDefaultTextColor(Qt::white);
 }
 

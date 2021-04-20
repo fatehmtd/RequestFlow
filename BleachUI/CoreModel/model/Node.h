@@ -17,6 +17,9 @@ namespace model
 		InputSlot* getDestinationSlot(const QString& name) const;
 		OutputSlot* getOriginSlot(const QString& name) const;
 
+		InputSlot* getDestinationSlotByIdentifier(const QString& identifier) const;
+		OutputSlot* getOriginSlotByIdentifier(const QString& identifier) const;
+
 		InputSlot* addInputSlot(QString name, int dataType);
 		OutputSlot* addOutputSlot(QString name, int dataType);
 
@@ -28,6 +31,9 @@ namespace model
 		virtual void clear() override;
 
 		virtual void createModel() {};
+
+		QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const override;
+		bool loadFromJSValue(const QJSValue& v) override;
 
 	public slots:
 		virtual void evaluate();

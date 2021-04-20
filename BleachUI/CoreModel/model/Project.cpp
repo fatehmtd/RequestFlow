@@ -4,8 +4,12 @@
 #include "Graph.h"
 #include <Qdebug>
 
+#include <QMetaProperty>
+#include <QMetaObject>
+
 model::Project::Project(QObject* parent) : IdentifiableEntity(parent)
 {
+	setType("Project");
 }
 
 model::Project::~Project()
@@ -21,4 +25,45 @@ QList<model::Graph*> model::Project::getGraphs() const
 QList<model::Environment*> model::Project::getEnvironments() const
 {
 	return findChildren<model::Environment*>();
+}
+
+QJSValue model::Project::saveToJSValue(PersistenceHandler* persistenceHandler) const
+{
+	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
+	
+	auto environments = getEnvironments();
+	saveChildren(value, persistenceHandler, "environments", (PersistableEntity**)environments.toVector().data(), environments.size());
+	auto graphs = getGraphs();
+	saveChildren(value, persistenceHandler, "graphs", (PersistableEntity**)graphs.toVector().data(), graphs.size());
+
+	return value;
+}
+
+bool model::Project::loadFromJSValue(const QJSValue& v)
+{
+	PersistableEntity::loadFromJSValue(v);
+	auto envValue = v.property("environments");
+	for (int i = 0; i < envValue.property("length").toInt(); i++)
+	{
+		auto env = new model::Environment(this);
+		env->loadFromJSValue(envValue.property(i));
+	}
+
+	auto graphsValue = v.property("graphs");
+	for (int i = 0; i < graphsValue.property("length").toInt(); i++)
+	{
+		auto graph = new model::Graph(this);
+		graph->loadFromJSValue(graphsValue.property(i));
+	}
+	return true;
+}
+
+void model::Project::setPath(const QString& path)
+{
+	_path = path;
+}
+
+QString model::Project::getPath() const
+{
+	return _path;
 }
