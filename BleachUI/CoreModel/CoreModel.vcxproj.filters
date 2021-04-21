@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="model">
+      <UniqueIdentifier>{442efa4b-559e-4e7e-b639-1506461483ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Graph">
+      <UniqueIdentifier>{32b48022-6051-42b3-a432-569f0e23bc40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Node">
+      <UniqueIdentifier>{b716af6b-ae6f-42fa-9535-34a69a97881b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Edge">
+      <UniqueIdentifier>{8fc9d2ed-0b48-4021-ac65-a14b8c3c51fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Slot">
+      <UniqueIdentifier>{3fb3c63d-c0c3-4b85-86be-0c734b517236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Message">
+      <UniqueIdentifier>{bba23486-73ee-4380-959a-2ebbc4943716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Environment">
+      <UniqueIdentifier>{610f43b3-4a7b-4cf9-86bf-abdadc005732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\Project">
+      <UniqueIdentifier>{8e059d74-c19e-48e8-b3d6-784fd51897b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic">
+      <UniqueIdentifier>{a67afb44-2aa5-4880-ba76-43cea0f76548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\ViewerNode">
+      <UniqueIdentifier>{bd0396ca-0de6-4472-8cd5-fb49011d49e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\DelayNode">
+      <UniqueIdentifier>{5d331362-a928-4a33-81fc-3ef464e9ba34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\EndpointNode">
+      <UniqueIdentifier>{80f5de9e-39ac-410d-b4cc-87eb9007c60f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\PayloadNode">
+      <UniqueIdentifier>{98ca268e-f23b-473a-a426-dc4642393f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\ScriptNode">
+      <UniqueIdentifier>{4ebb336c-9299-4d73-b6de-0a3ba1b91cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logic\AssertionNode">
+      <UniqueIdentifier>{9066974f-23fc-44e3-a566-3c04178b2549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\IdentifiableEntity">
+      <UniqueIdentifier>{2051abf7-e3ac-4743-8f71-f26807cd5df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\NotifiableEntity">
+      <UniqueIdentifier>{dde3d8e9-a165-4714-a69a-86c14da542e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\PersistableEntity">
+      <UniqueIdentifier>{992dfe55-a19a-416b-8b07-c984dec7331b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\PersistenceHandler">
+      <UniqueIdentifier>{235abd1d-da6a-4c09-87a4-830bf4e7d7bb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="coremodel_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Message.h">
+      <Filter>model\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Project.h">
+      <Filter>model\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="model\PersistableEntity.h">
+      <Filter>model\PersistableEntity</Filter>
+    </ClInclude>
+    <ClInclude Include="model\PersistenceHandler.h">
+      <Filter>model\PersistenceHandler</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="model\Edge.cpp">
+      <Filter>model\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Graph.cpp">
+      <Filter>model\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="model\NotifiableEntity.cpp">
+      <Filter>model\NotifiableEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Slot.cpp">
+      <Filter>model\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Node.cpp">
+      <Filter>model\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Message.cpp">
+      <Filter>model\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Environment.cpp">
+      <Filter>model\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="model\Project.cpp">
+      <Filter>model\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="model\AssertionNode.cpp">
+      <Filter>logic\AssertionNode</Filter>
+    </ClCompile>
+    <ClCompile Include="model\DelayNode.cpp">
+      <Filter>logic\DelayNode</Filter>
+    </ClCompile>
+    <ClCompile Include="model\EndpointNode.cpp">
+      <Filter>logic\EndpointNode</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ScriptNode.cpp">
+      <Filter>logic\ScriptNode</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ViewerNode.cpp">
+      <Filter>logic\ViewerNode</Filter>
+    </ClCompile>
+    <ClCompile Include="model\PayloadNode.cpp">
+      <Filter>logic\PayloadNode</Filter>
+    </ClCompile>
+    <ClCompile Include="model\IdentifiableEntity.cpp">
+      <Filter>model\IdentifiableEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="model\PersistableEntity.cpp">
+      <Filter>model\PersistableEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="model\PersistenceHandler.cpp">
+      <Filter>model\PersistenceHandler</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="model\Edge.h">
+      <Filter>model\Edge</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Graph.h">
+      <Filter>model\Graph</Filter>
+    </QtMoc>
+    <QtMoc Include="model\NotifiableEntity.h">
+      <Filter>model\NotifiableEntity</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Slot.h">
+      <Filter>model\Slot</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Node.h">
+      <Filter>model\Node</Filter>
+    </QtMoc>
+    <QtMoc Include="model\DelayNode.h">
+      <Filter>logic\DelayNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\EndpointNode.h">
+      <Filter>logic\EndpointNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\PayloadNode.h">
+      <Filter>logic\PayloadNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Environment.h">
+      <Filter>model\Environment</Filter>
+    </QtMoc>
+    <QtMoc Include="model\IdentifiableEntity.h">
+      <Filter>model\IdentifiableEntity</Filter>
+    </QtMoc>
+    <QtMoc Include="model\ViewerNode.h">
+      <Filter>logic\ViewerNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\ScriptNode.h">
+      <Filter>logic\ScriptNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\AssertionNode.h">
+      <Filter>logic\AssertionNode</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+</Project>
