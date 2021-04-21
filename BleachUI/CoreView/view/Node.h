@@ -34,6 +34,13 @@ namespace view
 		ContentWidget* getContentWidget() const;
 
 		model::Node* getModelNode() const;
+
+		template <class T>
+		T getModelNode() const
+		{
+			return dynamic_cast<T>(getModelNode());
+		}
+
 		Slot* getSlot(const QString& name) const;
 
 		// Inherited via QGraphicsItem

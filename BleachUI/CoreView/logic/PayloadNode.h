@@ -16,6 +16,7 @@ namespace logic
         void setupUi();
         void prepareAndSend() const;
 		model::Message composeMessage() const;
+        void fillFromMessage(const model::Message& message);
 
         QMap<QString, QVariant> fillFromTable(QTableWidget* tableWidget) const;
 

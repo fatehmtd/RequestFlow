@@ -5,6 +5,11 @@
 
 model::EndpointNode::EndpointNode(model::Graph* graph) : model::Node(graph, "Endpoint")
 {
+	// default values
+	setTimeout(3000);
+	setContentType("application/json");
+	setHttpMethod(0);
+
 	_networkAccessManager = new QNetworkAccessManager(this);
 	connect(_networkAccessManager, &QNetworkAccessManager::finished, this, &model::EndpointNode::processResponse);	
 	connect(&_timer, &QTimer::timeout, this, &EndpointNode::onTimeout);

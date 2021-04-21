@@ -15,6 +15,10 @@ namespace logic
         virtual void clearUI() override;
     private:
         void initUI();
+    private slots:
+        void onHttpMethodChanged(int index);
+        void onTimeoutChanged(int delay);
+        void onContentTypeChanged(const QString& t);
     private:
         Ui::EndpointNodeUiWidget _ui;
     };

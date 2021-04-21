@@ -5,9 +5,20 @@
 #include <QJSEngine>
 #include <QJSValue>
 
+#include <QTextStream>
+
 model::ScriptNode::ScriptNode(model::Graph* graph) : Node(graph, "Script")
 {
+	QString buffer;
+	QTextStream output(&buffer);
 
+	output << "Response.body = Request.body; // the body of the request" << "\n";
+	output << "Response.query = Request.query; // the query parameters ex : ?key=value" << "\n";
+	output << "Response.path = Request.path; // the path variables ex: http://website/customers/:id" << "\n";
+	output << "Response.context = Request.context; // the current execution context, contains anything useful" << "\n";
+	//output << "Response.body = {\"firstName\" : \"James\", \"lastName\" : \"jamon\"};" << "\n";
+	
+	setScript(buffer);
 }
 
 void model::ScriptNode::setScript(const QString& script)

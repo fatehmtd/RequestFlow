@@ -16,33 +16,28 @@ logic::ScriptNode::ScriptNode(model::ScriptNode* modelNode) : view::Node(modelNo
 
 void logic::ScriptNode::clearUI()
 {
-	//_editor->clear();
 }
 
 #include <QTextStream>
 
 void logic::ScriptNode::setupUi()
 {
-	QString buffer;
-	QTextStream output(&buffer);
-
-	output << "Response.body = Request.body; // the body of the request" << "\n";
-	output << "Response.query = Request.query; // the query parameters ex : ?key=value" << "\n";
-	output << "Response.path = Request.path; // the path variables ex: http://website/customers/:id" << "\n";
-	output << "Response.context = Request.context; // the current execution context, contains anything useful" << "\n";
-	output << "Response.body = {\"firstName\" : \"James\", \"lastName\" : \"jamon\"};" << "\n";
-
+	auto node = getModelNode<model::ScriptNode*>();
 	_editor = new QTextEdit();
-	_editor->setText(buffer);
+	_editor->setText(node->getScript());
 	_editor->setPlaceholderText("// javascript");
 	getContentWidget()->layout()->addWidget(_editor);
 
-	//_bgColor = view::colors::charcoal;
-	_bgColor = view::colors::queenBlue;
+	connect(_editor, &QTextEdit::textChanged, this, [=]() 
+		{
+			node->setScript(_editor->toPlainText());
+		});
+
+	_bgColor = view::colors::charcoal;
+	//_bgColor = view::colors::queenBlue;
 
 	connect(_node, &model::Node::ready, this, [=]()
 		{
-			dynamic_cast<model::ScriptNode*>(getModelNode())->setScript(_editor->toPlainText());
 			getModelNode()->evaluate();
 		});
 
