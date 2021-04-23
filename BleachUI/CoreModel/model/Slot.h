@@ -60,8 +60,10 @@ namespace model
 		InputSlot(Node* parent, QString name, int dataType);
 	public slots:
 		virtual void onDataReceived();
+		void onFailed();
 	signals:
 		void dataReceived();
+		void failed();
 	};
 
 	class COREMODEL_EXPORT OutputSlot : public Slot
@@ -71,7 +73,10 @@ namespace model
 		OutputSlot(Node* parent, QString name, int dataType);
 
 		void sendData();
+	public slots:
+		void onNodeFail();
 	signals:
 		void dataSent();
+		void failed();
 	};
 }

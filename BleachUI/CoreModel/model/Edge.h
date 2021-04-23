@@ -28,8 +28,10 @@ namespace model
 
 	signals:
 		void dataReceived();
+		void failed();
 
 	protected slots:
 		void onDataReceived();
+		void onOriginSlotFailed();
 	};
 }

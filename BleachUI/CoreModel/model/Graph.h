@@ -52,6 +52,7 @@ namespace model
 		virtual int start();
 		virtual void stop();
 		virtual void onNodeEvaluated();	
+		virtual void onNodeFailed();	
 		virtual void onNodeException(QString reason);
 	signals:
 		void started();
@@ -60,8 +61,10 @@ namespace model
 	private:
 		int computeExecutionPath();
 		void clear();
+		void checkExecutionStatus();
 	private:
 		QList<Node*> _startingNodes, _endingNodes;
+		QMap<Node*, int> _executionNodes;
 		Environment* _environment = nullptr;
 	};
 }

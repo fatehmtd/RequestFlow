@@ -12,7 +12,8 @@ view::Edge::Edge(SceneGraph* graph, model::Edge* edge) : _edge(edge)
 	connect(graph->getModelGraph(), &model::Graph::started, this, &Edge::onGraphStarted, Qt::ConnectionType::DirectConnection);
 	//connect(edge->getOriginSlot(), &model::OutputSlot::dataSent, this, &Edge::onDataReceived);
 	//connect(edge->getDestinationSlot(), &model::InputSlot::dataReceived, this, &Edge::onDataReceived);
-	connect(edge, &model::Edge::dataReceived, this, &Edge::onDataReceived);
+	connect(edge, &model::Edge::dataReceived, this, &Edge::onDataReceived, Qt::ConnectionType::QueuedConnection);
+	connect(edge, &model::Edge::failed, this, &Edge::onFailed, Qt::ConnectionType::QueuedConnection);
 
 	_slotOrigin = graph->findbyModel(edge->getDestinationSlot());
 	_slotDestination = graph->findbyModel(edge->getOriginSlot());
@@ -123,11 +124,19 @@ QColor view::Edge::evalColor() const
 void view::Edge::onGraphStarted()
 {
 	_transferStatus = 0;
+	update();
 }
 
 void view::Edge::onDataReceived()
 {
 	_transferStatus = 1;
+	update();
+}
+
+void view::Edge::onFailed()
+{
+	_transferStatus = -1;
+	update();
 }
 
 view::Slot* view::Edge::getOriginSlot() const

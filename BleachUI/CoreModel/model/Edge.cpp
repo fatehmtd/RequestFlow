@@ -20,6 +20,7 @@ bool model::Edge::setDestination(InputSlot* slot)
 	_destinationSlot = slot;
 
 	connect(this, &Edge::dataReceived, _destinationSlot, &InputSlot::onDataReceived, Qt::ConnectionType::DirectConnection);
+	connect(this, &Edge::failed, _destinationSlot, &InputSlot::failed, Qt::ConnectionType::DirectConnection);
 
 	return true;
 }
@@ -33,6 +34,7 @@ bool model::Edge::setOrigin(OutputSlot* slot)
 	}
 	_originSlot = slot;
 	connect(_originSlot, &OutputSlot::dataSent, this, &Edge::onDataReceived, Qt::ConnectionType::DirectConnection);
+	connect(_originSlot, &OutputSlot::failed, this, &Edge::onOriginSlotFailed, Qt::ConnectionType::DirectConnection);
 
 	return true;
 }
@@ -81,6 +83,15 @@ bool model::Edge::loadFromJSValue(const QJSValue& v)
 	setOrigin((OutputSlot*)getSlot(v.property("origin"), graph));
 	setDestination((InputSlot*)getSlot(v.property("destination"), graph));
 	return true;
+}
+
+void model::Edge::onOriginSlotFailed()
+{
+	emit failed();
+	//if (_destinationSlot != nullptr)
+	{
+		//emit _destinationSlot->failed();
+	}	
 }
 
 void model::Edge::onDataReceived()

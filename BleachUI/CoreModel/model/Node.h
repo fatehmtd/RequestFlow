@@ -35,8 +35,20 @@ namespace model
 		QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const override;
 		bool loadFromJSValue(const QJSValue& v) override;
 
+		enum Status
+		{
+			IDLE,
+			READY,
+			EVALUATED,
+			FAILED
+		};
+
+		int getStatus() const;
+	private:
+		void setStatus(int status);
 	public slots:
 		virtual void evaluate();
+		virtual void fail();
 		void raiseException(QString reason);
 
 		virtual void onGraphStart() override;
@@ -48,12 +60,15 @@ namespace model
 		void evaluated();
 		void exceptionRaised(QString reason);
 		void ready();
+		void failed();
 
 	protected slots:
 		void slotDataReceived();
 		void slotDataSent();
+		void slotFailed();
 
 	protected:
 		QList<InputSlot*> _listOfReadySlots;
+		int _executionStatus=0;
 	};
 }

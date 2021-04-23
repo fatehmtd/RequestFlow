@@ -19,7 +19,8 @@ model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(par
 
 	//connect(this, &Node::readyForEvaluation, this, &Node::evaluate);
 	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated, Qt::ConnectionType::QueuedConnection);
-	connect(this, &Node::exceptionRaised, parent, &Graph::onNodeEvaluated, Qt::ConnectionType::QueuedConnection);
+	connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
+	connect(this, &Node::exceptionRaised, parent, &Graph::onNodeException, Qt::ConnectionType::QueuedConnection);
 }
 
 model::InputSlot* model::Node::getDestinationSlot(const QString& name) const
@@ -54,6 +55,7 @@ model::InputSlot* model::Node::addInputSlot(QString name, int dataType)
 {
 	auto slot = new InputSlot(this, name, dataType);
 	connect(slot, &InputSlot::dataReceived, this, &Node::slotDataReceived, Qt::ConnectionType::QueuedConnection);
+	connect(slot, &InputSlot::failed, this, &Node::slotFailed, Qt::ConnectionType::QueuedConnection);
 	return slot;
 }
 
@@ -61,6 +63,7 @@ model::OutputSlot* model::Node::addOutputSlot(QString name, int dataType)
 {
 	auto slot = new OutputSlot(this, name, dataType);
 	connect(this, &Node::evaluated, slot, [slot]() { slot->sendData(); }, Qt::ConnectionType::QueuedConnection);
+	connect(this, &Node::failed, slot, &OutputSlot::onNodeFail, Qt::ConnectionType::QueuedConnection);
 	connect(slot, &OutputSlot::dataSent, this, &Node::slotDataSent, Qt::ConnectionType::QueuedConnection);
 	return slot;
 }
@@ -102,6 +105,7 @@ model::Graph* model::Node::getGraph() const
 
 void model::Node::clear()
 {
+	setStatus(IDLE);
 	_listOfReadySlots.clear();
 }
 
@@ -142,15 +146,32 @@ bool model::Node::loadFromJSValue(const QJSValue& v)
 void model::Node::evaluate()
 {
 	emit evaluated();
+	setStatus(EVALUATED);
 
 	for (auto slot : getOutputSlots().values())
 	{
 		slot->sendData();
-	}	
+	}
+}
+
+int model::Node::getStatus() const
+{
+	return _executionStatus;
+}
+
+void model::Node::setStatus(int status)
+{
+	_executionStatus = status;
+}
+
+void model::Node::fail()
+{
+	emit failed();
 }
 
 void model::Node::raiseException(QString reason)
 {
+	fail();
 	emit exceptionRaised(reason);
 }
 
@@ -198,4 +219,10 @@ void model::Node::slotDataReceived()
 void model::Node::slotDataSent() 
 {
 
+}
+
+void model::Node::slotFailed()
+{
+	setStatus(FAILED);
+	fail();
 }

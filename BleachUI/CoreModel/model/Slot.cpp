@@ -67,3 +67,13 @@ void model::OutputSlot::sendData()
 {
     emit dataSent();
 }
+
+void model::OutputSlot::onNodeFail()
+{
+    emit failed();
+}
+
+void model::InputSlot::onFailed()
+{
+    emit failed();
+}

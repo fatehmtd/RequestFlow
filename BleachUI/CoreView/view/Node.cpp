@@ -16,6 +16,9 @@ view::Node::Node(model::Node* modelNode, QString nodeType) : _node(modelNode), _
 	setupUIForModel();
 	setupContentWidget();
 
+	connect(modelNode->getGraph(), &model::Graph::started, this, &view::Node::onGraphStarted);
+	connect(modelNode->getGraph(), &model::Graph::stopped, this, &view::Node::onGraphFinished);
+
 	//connect(modelNode, &model::Node::evaluated, this, [=]() { update(); });
 	//connect(modelNode, &model::Node::ready, this, [=]() { update(); });
 }
@@ -260,6 +263,22 @@ view::SceneGraph* view::Node::getSceneGraph() const
 QString view::Node::getNodeType() const
 {
 	return _nodeType;
+}
+
+void view::Node::onGraphStarted()
+{
+	if (_contentWidget != nullptr)
+	{
+		_contentWidget->setEnabled(false);
+	}
+}
+
+void view::Node::onGraphFinished()
+{
+	if (_contentWidget != nullptr)
+	{
+		_contentWidget->setEnabled(true);
+	}
 }
 
 #include <QStyleOptionGraphicsItem>

@@ -67,6 +67,9 @@ namespace view
 		view::SceneGraph* getSceneGraph() const;
 
 		QString getNodeType() const;
+	private slots:
+		void onGraphStarted();
+		void onGraphFinished();
 
 	protected:
 		enum Handle

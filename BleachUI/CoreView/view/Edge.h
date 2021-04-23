@@ -39,6 +39,7 @@ namespace view
 	protected slots:
 		void onGraphStarted();
 		void onDataReceived();
+		void onFailed();
 
 	protected:
 		Slot* _slotOrigin = nullptr, * _slotDestination = nullptr;

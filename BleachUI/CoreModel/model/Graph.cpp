@@ -162,6 +162,18 @@ void model::Graph::onNodeEvaluated()
 	if (node != nullptr)
 	{
 		//qDebug() << __FUNCTION__ << node;
+		_executionNodes[node] = 1;
+		checkExecutionStatus();
+	}
+}
+
+void model::Graph::onNodeFailed()
+{
+	auto node = dynamic_cast<Node*>(sender());
+	if (node != nullptr)
+	{
+		_executionNodes[node] = -1;
+		checkExecutionStatus();
 	}
 }
 
@@ -170,6 +182,8 @@ void model::Graph::onNodeException(QString reason)
 	auto node = dynamic_cast<Node*>(sender());
 	if (node != nullptr)
 	{
+		_executionNodes[node] = -1;
+		checkExecutionStatus();
 		emit exceptionRaised(node, reason);
 	}
 
@@ -203,12 +217,17 @@ int model::Graph::computeExecutionPath()
 
 void model::Graph::clear()
 {
-	for (auto node : _endingNodes)
-	{
-	}
-
+	_executionNodes.clear();
 	_startingNodes.clear();
 	_endingNodes.clear();
+}
+
+void model::Graph::checkExecutionStatus()
+{
+	if (_executionNodes.size() == getNodes().size())
+	{
+		emit stopped();
+	}
 }
 
 model::Edge* model::Graph::connectSlots(OutputSlot* origin, InputSlot* destination)
