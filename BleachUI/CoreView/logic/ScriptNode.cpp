@@ -23,12 +23,12 @@ void logic::ScriptNode::clearUI()
 void logic::ScriptNode::setupUi()
 {
 	auto node = getModelNode<model::ScriptNode*>();
-	_editor = new QTextEdit();
-	_editor->setText(node->getScript());
+	_editor = new QPlainTextEdit();
+	_editor->setPlainText(node->getScript());
 	_editor->setPlaceholderText("// javascript");
 	getContentWidget()->layout()->addWidget(_editor);
 
-	connect(_editor, &QTextEdit::textChanged, this, [=]() 
+	connect(_editor, &QPlainTextEdit::textChanged, this, [=]()
 		{
 			node->setScript(_editor->toPlainText());
 		});
@@ -39,8 +39,8 @@ void logic::ScriptNode::setupUi()
 	connect(_node, &model::Node::ready, this, [=]()
 		{
 			getModelNode()->evaluate();
-		});
+		}, Qt::ConnectionType::QueuedConnection);
 
-	setMinSize(QSize(500, 500));
+	setMinSize(QSize(300, 300));
 	setSize(300, 200);
 }

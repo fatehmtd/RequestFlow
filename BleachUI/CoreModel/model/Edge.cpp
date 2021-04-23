@@ -19,7 +19,7 @@ bool model::Edge::setDestination(InputSlot* slot)
 	}
 	_destinationSlot = slot;
 
-	connect(this, &Edge::dataReceived, _destinationSlot, &InputSlot::onDataReceived);
+	connect(this, &Edge::dataReceived, _destinationSlot, &InputSlot::onDataReceived, Qt::ConnectionType::DirectConnection);
 
 	return true;
 }
@@ -32,7 +32,7 @@ bool model::Edge::setOrigin(OutputSlot* slot)
 		if (slot->getDataType() != _destinationSlot->getDataType()) return false;
 	}
 	_originSlot = slot;
-	connect(_originSlot, &OutputSlot::dataSent, this, &Edge::onDataReceived);
+	connect(_originSlot, &OutputSlot::dataSent, this, &Edge::onDataReceived, Qt::ConnectionType::DirectConnection);
 
 	return true;
 }

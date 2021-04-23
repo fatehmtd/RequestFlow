@@ -27,17 +27,13 @@ void logic::ViewerNode::setupUi()
 	_bgColor = view::colors::green;
 	connect(_node, &model::Node::ready, this, [=]()
 		{
-			auto request = _node->getInputSlots().first()->getData();
-
-			auto data = request.getBody();
-			
+			auto message = _node->getInputSlots().first()->getData();
+			auto data = message.getBody();
 			QJsonDocument document = QJsonDocument::fromJson(data.toUtf8());
-
 			_ui.textEdit_raw->setPlainText(data);
 			_ui.textEdit_json->setPlainText(document.toJson());
-			
 			_node->evaluate();
-		});
+		}, Qt::ConnectionType::QueuedConnection);
 
 	setMinSize(QSize(400, 300));
 	setSize(300, 200);	

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/js">
+        <file alias="jsonpath">resources/js/index-browser-umd.min.js</file>
+    </qresource>
+</RCC>

@@ -1,6 +1,6 @@
 #pragma once
 #include "../view/Node.h"
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <model/ScriptNode.h>
 
 namespace logic
@@ -13,6 +13,6 @@ namespace logic
 	private:
 		void setupUi();
 	private:
-		QTextEdit* _editor = nullptr;
+		QPlainTextEdit* _editor = nullptr;
 	};
 }

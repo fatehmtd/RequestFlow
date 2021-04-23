@@ -50,5 +50,6 @@
         <file alias="requestflow_bg">icons/requestflow_bg.png</file>
         <file alias="environment">icons/server.svg</file>
         <file alias="swagger">icons/swagger.png</file>
+        <file alias="warning">icons/warning.svg</file>
     </qresource>
 </RCC>

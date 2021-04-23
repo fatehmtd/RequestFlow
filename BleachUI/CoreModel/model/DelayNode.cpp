@@ -7,13 +7,12 @@ model::DelayNode::DelayNode(model::Graph* graph) : model::Node(graph, "Delay")
 {
 	_timer.setInterval(1000);
 	_timer.setSingleShot(true);
-	connect(&_timer, &QTimer::timeout, this, &DelayNode::onTimeout);
+	connect(&_timer, &QTimer::timeout, this, &DelayNode::onTimeout, Qt::ConnectionType::DirectConnection);
 
 	connect(this, &Node::ready, this, [=]()
 		{
-			qDebug() << "ready";
 			_timer.start();
-		});
+		}, Qt::ConnectionType::DirectConnection);
 }
 
 void model::DelayNode::createModel()

@@ -10,16 +10,16 @@ model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(par
 	connect(parent, &Graph::started, this, [this]() 
 		{
 			onGraphStart();
-		});
+		}, Qt::ConnectionType::QueuedConnection);
 
 	connect(parent, &Graph::stopped, this, [this]()
 		{
 			onGraphStop();
-		});
+		}, Qt::ConnectionType::QueuedConnection);
 
 	//connect(this, &Node::readyForEvaluation, this, &Node::evaluate);
-	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated);
-	connect(this, &Node::exceptionRaised, parent, &Graph::onNodeEvaluated);
+	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated, Qt::ConnectionType::QueuedConnection);
+	connect(this, &Node::exceptionRaised, parent, &Graph::onNodeEvaluated, Qt::ConnectionType::QueuedConnection);
 }
 
 model::InputSlot* model::Node::getDestinationSlot(const QString& name) const
@@ -53,15 +53,15 @@ model::OutputSlot* model::Node::getOriginSlotByIdentifier(const QString& id) con
 model::InputSlot* model::Node::addInputSlot(QString name, int dataType)
 {
 	auto slot = new InputSlot(this, name, dataType);
-	connect(slot, &InputSlot::dataReceived, this, &Node::slotDataReceived);
+	connect(slot, &InputSlot::dataReceived, this, &Node::slotDataReceived, Qt::ConnectionType::QueuedConnection);
 	return slot;
 }
 
 model::OutputSlot* model::Node::addOutputSlot(QString name, int dataType)
 {
 	auto slot = new OutputSlot(this, name, dataType);
-	connect(this, &Node::evaluated, slot, [slot]() { slot->sendData(); });
-	connect(slot, &OutputSlot::dataSent, this, &Node::slotDataSent);
+	connect(this, &Node::evaluated, slot, [slot]() { slot->sendData(); }, Qt::ConnectionType::QueuedConnection);
+	connect(slot, &OutputSlot::dataSent, this, &Node::slotDataSent, Qt::ConnectionType::QueuedConnection);
 	return slot;
 }
 

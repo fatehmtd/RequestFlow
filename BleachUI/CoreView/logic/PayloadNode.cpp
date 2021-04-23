@@ -15,9 +15,12 @@ logic::PayloadNode::PayloadNode(model::PayloadNode* modelNode) : view::Node(mode
 
 model::Message logic::PayloadNode::composeMessage() const
 {
-	model::Message message(_ui.textEdit_body->toPlainText());
+	model::Message message;
+	message.setBody(_ui.plainTextEdit_body->toPlainText());
 	message.setPathVars(fillFromTable(_ui.tableWidget_path));
 	message.setQueryParams(fillFromTable(_ui.tableWidget_query));
+
+	//message.printMe();
 	return message;
 }
 
@@ -38,7 +41,6 @@ void logic::PayloadNode::fillFromMessage(const model::Message& message)
 		}
 	}
 
-
 	{
 		auto keys = message.getPathVars().keys();
 		for (int i = 0; i < keys.size(); i++)
@@ -48,7 +50,7 @@ void logic::PayloadNode::fillFromMessage(const model::Message& message)
 		}
 	}
 
-	_ui.textEdit_body->setText(message.getBody());
+	_ui.plainTextEdit_body->setPlainText(message.getBody());
 }
 
 void logic::PayloadNode::clearUI()
@@ -66,29 +68,13 @@ void logic::PayloadNode::setupUi()
 	_ui.tableWidget_path->setRowCount(50);
 	_ui.tableWidget_query->setRowCount(50);
 
-	// add a dummy path variable
-	//_ui.tableWidget_path->setItem(0, 0, new QTableWidgetItem("id"));
-	//_ui.tableWidget_path->setItem(0, 1, new QTableWidgetItem("55"));
-	/*
-	QJsonObject json =
-	{
-		{"firstName", "John"},
-		{"lastName", "Do"}
-	};
-
-	_ui.textEdit_body->setText(QJsonDocument(json).toJson(QJsonDocument::JsonFormat::Indented));
-	*/
 	auto message = dynamic_cast<model::PayloadNode*>(getModelNode())->getMessage();
-	//_ui.textEdit_body->setText(message.getBody());
 
 	fillFromMessage(message);
 
 	getContentWidget()->layout()->addWidget(widget);
 
-	connect(_node, &model::Node::ready, this, [=]()
-		{
-			prepareAndSend();
-		});
+	connect(_node, &model::Node::ready, this, &PayloadNode::prepareAndSend);
 
 	setMinSize(QSize(480, 300));
 	setSize(10, 10);

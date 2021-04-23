@@ -11,6 +11,7 @@
 #include "../logic/ViewerNode.h"
 #include "../logic/DelayNode.h"
 #include "../logic/ScriptNode.h"
+#include "../logic/AssertionNode.h"
 
 view::InteractionsHandler::InteractionsHandler(SceneGraph* scene) : QObject(scene), _sceneGraph(scene)
 {
@@ -69,6 +70,16 @@ view::Node* view::InteractionsHandler::createScriptNode()
 	return graphicNode;
 }
 
+view::Node* view::InteractionsHandler::createAssertionNode()
+{
+	auto modelNode = new model::AssertionNode(_sceneGraph->getModelGraph());
+	modelNode->createModel();
+
+	auto graphicNode = new logic::AssertionNode(modelNode);
+	_sceneGraph->addItem(graphicNode);
+	return graphicNode;
+}
+
 view::Node* view::InteractionsHandler::createNode(QString nodeType)
 {
 	if (nodeType.contains("Delay")) return createDelayNode();
@@ -76,6 +87,7 @@ view::Node* view::InteractionsHandler::createNode(QString nodeType)
 	if (nodeType.contains("Payload")) return createPayloadNode();
 	if (nodeType.contains("Script")) return createScriptNode();
 	if (nodeType.contains("Viewer")) return createViewerNode();
+	if (nodeType.contains("Assertion")) return createAssertionNode();
 	return nullptr;
 }
 
@@ -164,6 +176,13 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 		connect(createScriptNodeAction, &QAction::triggered, this, [=]()
 			{
 				auto node = createScriptNode();
+				node->setPos(p);
+			});
+
+		auto createAssertionNodeAction = menu->addAction(QIcon(":/ui/warning"), "Create Assertion Node");
+		connect(createAssertionNodeAction, &QAction::triggered, this, [=]()
+			{
+				auto node = createAssertionNode();
 				node->setPos(p);
 			});
 	}

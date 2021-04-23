@@ -159,7 +159,7 @@ QString model::Message::JSONStringify(const QVariant& v)
 QVariant model::Message::JSONParse(const QString& s)
 {
 	QJSEngine engine;
-	auto result = engine.evaluate(s);
+	auto result = engine.evaluate(QString("(%1)").arg(s));
 	if (!result.isError())
 	{
 		return engine.fromScriptValue<QVariant>(result);

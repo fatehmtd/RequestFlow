@@ -122,12 +122,12 @@ QColor view::Edge::evalColor() const
 
 void view::Edge::onGraphStarted()
 {
-	//_transferStatus = 0;
+	_transferStatus = 0;
 }
 
 void view::Edge::onDataReceived()
 {
-	//_transferStatus = 1;
+	_transferStatus = 1;
 }
 
 view::Slot* view::Edge::getOriginSlot() const

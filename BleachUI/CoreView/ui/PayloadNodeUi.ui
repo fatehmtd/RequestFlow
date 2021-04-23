@@ -25,7 +25,10 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QTextEdit" name="textEdit_body">
+        <widget class="QPlainTextEdit" name="plainTextEdit_body">
+         <property name="backgroundVisible">
+          <bool>false</bool>
+         </property>
          <property name="placeholderText">
           <string>{ &quot;body&quot; : {} }</string>
          </property>

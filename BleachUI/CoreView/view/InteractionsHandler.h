@@ -20,6 +20,7 @@ namespace view
 		Node* createViewerNode();
 		Node* createDelayNode();
 		Node* createScriptNode();
+		Node* createAssertionNode();
 
 		Node* createNode(QString nodeType);
 
