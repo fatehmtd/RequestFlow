@@ -95,6 +95,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="model\AssertionNode.cpp" />
+    <ClCompile Include="model\Document.cpp" />
+    <ClCompile Include="model\EndpointEntry.cpp" />
+    <ClCompile Include="model\EntryDefinition.cpp" />
     <ClCompile Include="model\NotifiableEntity.cpp" />
     <ClCompile Include="model\DelayNode.cpp" />
     <ClCompile Include="model\Edge.cpp" />
@@ -114,6 +117,9 @@
     <ClInclude Include="coremodel_global.h" />
     <QtMoc Include="model\AssertionNode.h" />
     <QtMoc Include="model\IdentifiableEntity.h" />
+    <QtMoc Include="model\Document.h" />
+    <QtMoc Include="model\EndpointEntry.h" />
+    <ClInclude Include="model\EntryDefinition.h" />
     <ClInclude Include="model\PersistableEntity.h" />
     <QtMoc Include="model\ScriptNode.h" />
     <QtMoc Include="model\ViewerNode.h" />

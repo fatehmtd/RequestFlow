@@ -6,6 +6,7 @@ namespace model
 {
 	class Environment;
 	class Graph;
+	class Document;
 
 	class COREMODEL_EXPORT Project : public IdentifiableEntity
 	{
@@ -15,6 +16,7 @@ namespace model
 
 		QList<Graph*> getGraphs() const;
 		QList<Environment*> getEnvironments() const;
+		QList<Document*> getDocuments() const;
 
 		QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const override;
 		bool loadFromJSValue(const QJSValue& v) override;

@@ -2,6 +2,7 @@
 
 #include "Environment.h"
 #include "Graph.h"
+#include "Document.h"
 #include <Qdebug>
 
 #include <QMetaProperty>
@@ -27,14 +28,23 @@ QList<model::Environment*> model::Project::getEnvironments() const
 	return findChildren<model::Environment*>();
 }
 
+QList<model::Document*> model::Project::getDocuments() const
+{
+	return findChildren<Document*>();
+}
+
 QJSValue model::Project::saveToJSValue(PersistenceHandler* persistenceHandler) const
 {
 	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
-	
+
 	auto environments = getEnvironments();
 	saveChildren(value, persistenceHandler, "environments", (PersistableEntity**)environments.toVector().data(), environments.size());
+	
 	auto graphs = getGraphs();
 	saveChildren(value, persistenceHandler, "graphs", (PersistableEntity**)graphs.toVector().data(), graphs.size());
+	
+	auto documents = getDocuments();
+	saveChildren(value, persistenceHandler, "documents", (PersistableEntity**)documents.toVector().data(), documents.size());
 
 	return value;
 }
@@ -42,6 +52,7 @@ QJSValue model::Project::saveToJSValue(PersistenceHandler* persistenceHandler) c
 bool model::Project::loadFromJSValue(const QJSValue& v)
 {
 	PersistableEntity::loadFromJSValue(v);
+
 	auto envValue = v.property("environments");
 	for (int i = 0; i < envValue.property("length").toInt(); i++)
 	{
@@ -55,6 +66,14 @@ bool model::Project::loadFromJSValue(const QJSValue& v)
 		auto graph = new model::Graph(this);
 		graph->loadFromJSValue(graphsValue.property(i));
 	}
+
+	auto documentsValue = v.property("documents");
+	for (int i = 0; i < documentsValue.property("length").toInt(); i++)
+	{
+		auto document = new model::Document(this);
+		document->loadFromJSValue(documentsValue.property(i));
+	}
+
 	return true;
 }
 
