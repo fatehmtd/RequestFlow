@@ -100,6 +100,9 @@
     <Filter Include="logic\ViewerNode">
       <UniqueIdentifier>{a64593c2-4097-4c4e-8dac-dd84a3c9812e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SettingsManager">
+      <UniqueIdentifier>{df59b533-0f6e-4606-bfb7-dbe8d1bd08d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="BleachUI.qrc">
@@ -179,6 +182,9 @@
     <ClCompile Include="InventoryWidget.cpp">
       <Filter>Widgets\Inventory</Filter>
     </ClCompile>
+    <ClCompile Include="view\SettingsManager.cpp">
+      <Filter>SettingsManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="view\SceneGraph.h">
@@ -219,6 +225,9 @@
     </ClInclude>
     <ClInclude Include="logic\DelayNode.h">
       <Filter>logic\DelayNode</Filter>
+    </ClInclude>
+    <ClInclude Include="view\SettingsManager.h">
+      <Filter>SettingsManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

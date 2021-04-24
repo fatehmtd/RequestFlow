@@ -13,6 +13,8 @@
 #include <QEvent>
 #include <QWidget>
 #include <QInputDialog>
+#include <QMenu>
+#include <QMessageBox>
 
 class BackgroundPaintFilter : public QObject
 {
@@ -56,6 +58,7 @@ public:
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+	_settingsManager = new view::SettingsManager(this);
 	setupUi();
 }
 
@@ -90,6 +93,11 @@ void MainWindow::setupRibbonBar()
 
 	_newProject = projectGroup->addActionItem("New", [=]() { onNewProject(); }, QIcon(":/ui/new_file"));
 	_openProject = projectGroup->addActionItem("Open", [=]() { onOpenProject(); }, QIcon(":/ui/open_file"));
+	_openProject->setPopupMode(QToolButton::ToolButtonPopupMode::MenuButtonPopup);
+	_openProject->setMenu(new QMenu());
+
+	updateRecentProjectsList();
+
 	_saveProject = projectGroup->addActionItem("Save", [=]() { onSaveProject(); }, QIcon(":/ui/save_file"));
 	_closeProject = projectGroup->addActionItem("Close", [=]() { onCloseProject(); }, QIcon(":/ui/close_file"));
 	
@@ -127,6 +135,38 @@ void MainWindow::setupSceneGraph()
 	connect(_ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::onSubWindowActivated);
 	connect(_ui.scenariosWidget, &ScenariosWidget::sceneDeleted, this, &MainWindow::onSceneDeleted);
 	connect(_ui.scenariosWidget, &ScenariosWidget::currentSceneChanged, this, &MainWindow::onActivateScene);
+}
+
+void MainWindow::openProject(const QString& fileName)
+{
+	if (!fileName.isEmpty())
+	{
+		QFile fp(fileName);
+		if (fp.open(QIODevice::ReadOnly))
+		{
+			model::PersistenceHandler handler;
+			QString contents(QString("(%1)").arg(QString(QJsonDocument::fromJson(fp.readAll()).toJson(QJsonDocument::JsonFormat::Compact))));
+
+			auto projectValue = handler.evaluate(contents);
+
+			if (!projectValue.isError())
+			{
+				onCloseProject();
+
+				auto project = new model::Project(nullptr);
+				project->setPath(fileName);
+				project->loadFromJSValue(projectValue);
+
+				setProject(project);
+
+				loadFromJSValue(projectValue.property("ui"));
+
+				_settingsManager->addRecentProject(fileName);
+			}
+
+			updateRecentProjectsList();
+		}
+	}
 }
 
 void MainWindow::setProject(model::Project* project)
@@ -251,33 +291,59 @@ bool MainWindow::loadFromJSValue(const QJSValue& v)
 
 void MainWindow::onOpenProject()
 {
-	auto fileName = QFileDialog::getOpenFileName(this, "Open project", "", "RQFL Project (*.rqfl)");
+	auto fileName = QFileDialog::getOpenFileName(this, "Open project", _settingsManager->getLastOpenedLocation(), "RQFL Project (*.rqfl)");
+	openProject(fileName);
+}
 
-	if (!fileName.isEmpty())
+void MainWindow::updateRecentProjectsList()
+{
+	auto recentProjects = _settingsManager->enumRecentProjects();
+	auto menu = _openProject->menu();
+	auto actions = menu->actions();
+
+	for (auto action : actions)
 	{
-		QFile fp(fileName);
-		if (fp.open(QIODevice::ReadOnly))
-		{
-			model::PersistenceHandler handler;
-			QString contents(QString("(%1)").arg(QString(QJsonDocument::fromJson(fp.readAll()).toJson(QJsonDocument::JsonFormat::Compact))));
-			
-			auto projectValue = handler.evaluate(contents);
+		menu->removeAction(action);
+		delete action;
+	}
 
-			if (!projectValue.isError())
+	// add an open project action
+	for (auto prj : recentProjects)
+	{
+		auto action = menu->addAction(QIcon(":/BleachUI/graph"), prj);
+		connect(action, &QAction::triggered, [=]()
 			{
-				onCloseProject();
+				openProject(prj);
+			});
+	}
 
-				auto project = new model::Project(nullptr);
-				project->setPath(fileName);
-				project->loadFromJSValue(projectValue);
-
-				setProject(project);
-
-				loadFromJSValue(projectValue.property("ui"));
-			}
-		}
+	if (recentProjects.size() > 0)
+	{
+		menu->addSeparator();
+		auto action = menu->addAction("Clear recent projects list");
+		auto font = action->font();
+		font.setBold(true);
+		action->setFont(font);
+		action->setIcon(QIcon(":/ui/broom"));
+		connect(action, &QAction::triggered, [=]()
+			{
+				if (QMessageBox::warning(this,
+					"Warning",
+					"Clear recent projects list",
+					QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Yes)
+				{
+					_settingsManager->clearRecentProjects();
+					updateRecentProjectsList();
+				}
+			});
+	}
+	else
+	{
+		auto action = menu->addAction("Empty list");
+		action->setEnabled(false);
 	}
 }
+
 
 void MainWindow::onCloseProject()
 {

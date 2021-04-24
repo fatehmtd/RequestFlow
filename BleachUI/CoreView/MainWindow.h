@@ -8,6 +8,7 @@
 #include "ActionPage.h"
 #include "ActionGroup.h"
 #include "ActionItem.h"
+#include "SettingsManager.h"
 
 #include <model/Project.h>
 #include <model/PersistenceHandler.h>
@@ -37,12 +38,14 @@ private:
     void setupRibbonBar();
     void setupEnvironmentsWidget();
     void setupSceneGraph();
-
+    void openProject(const QString& path);
     void setProject(model::Project* project);
 
     void createScenario(QString name);
     void openScenario(view::SceneGraph* sceneGraph);
     void deleteScenario(view::SceneGraph* sceneGraph);
+
+    void updateRecentProjectsList();
 
     QJSValue savetoJSValue(model::PersistenceHandler* handler) const;
     bool loadFromJSValue(const QJSValue& v);
@@ -59,4 +62,5 @@ private:
 
     std::unique_ptr<model::Project> _project;
     QMap<QString, QMdiSubWindow*> _subwindowsMap;
+    view::SettingsManager* _settingsManager = nullptr;
 };

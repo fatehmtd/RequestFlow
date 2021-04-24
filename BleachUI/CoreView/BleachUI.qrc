@@ -22,7 +22,7 @@
         <file>icons/duplicate.svg</file>
         <file>icons/desk-lamp.svg</file>
         <file>icons/desk.svg</file>
-        <file>icons/broom.svg</file>
+        <file alias="broom">icons/broom.svg</file>
         <file alias="minus">icons/minus.svg</file>
         <file alias="plus">icons/plus.svg</file>
         <file>icons/selective.svg</file>

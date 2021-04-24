@@ -129,6 +129,7 @@
     <ClCompile Include="view\Node.cpp" />
     <ClCompile Include="view\SceneGraph.cpp" />
     <ClCompile Include="view\SceneGraphWidget.cpp" />
+    <ClCompile Include="view\SettingsManager.cpp" />
     <ClCompile Include="view\Slot.cpp" />
     <QtRcc Include="BleachUI.qrc" />
     <QtMoc Include="MainWindow.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="view\SettingsManager.h" />
     <QtMoc Include="logic\EndpointNode.h" />
     <QtMoc Include="EnvironmentsWidget.h" />
     <QtMoc Include="ActionGroup.h" />
