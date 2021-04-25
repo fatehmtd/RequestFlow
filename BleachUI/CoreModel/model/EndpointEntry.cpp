@@ -3,7 +3,7 @@
 
 model::EndpointEntry::EndpointEntry(Document* document) : IdentifiableEntity(document)
 {
-
+	setType("EndpointEntry");
 }
 
 void model::EndpointEntry::setUrl(const QString& url)
@@ -64,4 +64,47 @@ void model::EndpointEntry::setHttpMethod(int method)
 int model::EndpointEntry::getHttpMethod() const
 {
 	return _method;
+}
+
+template <typename T>
+QJSValue saveListtoJSValue(const QList<T>& list, model::PersistenceHandler* handler)
+{
+	auto jsArray = handler->createJsValueArray(list.size());
+	for (int i = 0; i < list.size(); i++)
+	{
+		jsArray.setProperty(i, handler->createJsValue(list[i]));
+	}	
+	return jsArray;
+}
+
+template <typename T>
+QList<T> loadListFromJSValue(const QString& name, const QJSValue& v)
+{
+	QList<T> output;
+	auto jsArray = v.property(name);
+	for (int i = 0; i < jsArray.property("length").toInt(); i++)
+	{
+		output << jsArray.property(i).toString();
+	}
+	return output;
+}
+
+QJSValue model::EndpointEntry::saveToJSValue(PersistenceHandler* handler) const
+{
+	auto value = PersistableEntity::saveToJSValue(handler);
+	value.setProperty("queryParams", saveListtoJSValue(getQueryParams(), handler));
+	value.setProperty("pathParams", saveListtoJSValue(getPathParams(), handler));
+	value.setProperty("productTypes", saveListtoJSValue(getProductTypes(), handler));
+	value.setProperty("consumptionTypes", saveListtoJSValue(getConsumptionTypes(), handler));
+	return value;
+}
+
+bool model::EndpointEntry::loadFromJSValue(const QJSValue& v)
+{
+	PersistableEntity::loadFromJSValue(v);
+	setQueryParams(loadListFromJSValue<QString>("queryParams", v));
+	setPathParams(loadListFromJSValue<QString>("pathParams", v));
+	setProductTypes(loadListFromJSValue<QString>("productTypes", v));
+	setConsumptionTypes(loadListFromJSValue<QString>("consumptionTypes", v));
+	return true;
 }

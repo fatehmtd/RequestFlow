@@ -15,10 +15,58 @@
 
 view::InteractionsHandler::InteractionsHandler(SceneGraph* scene) : QObject(scene), _sceneGraph(scene)
 {
+	registerCommonActions();
 }
 
 view::InteractionsHandler::~InteractionsHandler()
 {
+}
+
+void view::InteractionsHandler::registerGenericAction(const QString& name,
+	std::function<bool(QGraphicsItem*)> filter,
+	std::function<void(const QPointF&)> func,
+	QIcon icon, int order)
+{
+	ItemAction action = { order, name, func, filter, icon };
+	_itemActionsList << action;
+
+	qSort(_itemActionsList);
+}
+
+void view::InteractionsHandler::registerNodeTypeAction(const QString& name, const QString& nodeType, std::function<void(const QPointF&)> func, QIcon icon, int order)
+{
+	registerGenericAction(name, [nodeType](QGraphicsItem* item)
+		{
+			auto node = dynamic_cast<view::Node*>(item);
+			if (node == nullptr) return false;
+			return nodeType.toLower() == node->getNodeType().toLower();
+		}, func, icon, order);
+}
+
+void view::InteractionsHandler::registerNodeAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon, int order)
+{
+	registerGenericAction(name, [](QGraphicsItem* item)
+		{
+			auto node = dynamic_cast<view::Node*>(item);
+			return node != nullptr;
+		}, func, icon, order);
+}
+
+void view::InteractionsHandler::registerEdgeAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon, int order)
+{
+	registerGenericAction(name, [](QGraphicsItem* item)
+		{
+			auto edge = dynamic_cast<view::Edge*>(item);
+			return edge != nullptr;
+		}, func, icon, order);
+}
+
+void view::InteractionsHandler::registerEmptySpaceAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon, int order)
+{
+	registerGenericAction(name, [](QGraphicsItem* item)
+		{			
+			return item == nullptr;
+		}, func, icon, order);
 }
 
 view::Node* view::InteractionsHandler::createEndpointNode()
@@ -80,17 +128,6 @@ view::Node* view::InteractionsHandler::createAssertionNode()
 	return graphicNode;
 }
 
-view::Node* view::InteractionsHandler::createNode(QString nodeType)
-{
-	if (nodeType.contains("Delay")) return createDelayNode();
-	if (nodeType.contains("Endpoint")) return createEndpointNode();
-	if (nodeType.contains("Payload")) return createPayloadNode();
-	if (nodeType.contains("Script")) return createScriptNode();
-	if (nodeType.contains("Viewer")) return createViewerNode();
-	if (nodeType.contains("Assertion")) return createAssertionNode();
-	return nullptr;
-}
-
 void view::InteractionsHandler::deleteNode(Node* node)
 {
 	auto edges = _sceneGraph->getModelGraph()->findEdges(node->getModelNode());
@@ -130,101 +167,109 @@ view::Node* view::InteractionsHandler::cloneNode(Node* originalNode)
 
 QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 {
+	auto selectedItems = _sceneGraph->selectedItems();
+
 	auto item = _sceneGraph->itemAt(p, QTransform());
 	QMenu* menu = new QMenu();
 
-	// handle right clicking on empty space
-	if (item == nullptr)
+	QList<ItemAction> availableActions;
+	for (const auto& action : _itemActionsList)
 	{
-		auto startGraphAction = menu->addAction(QIcon(":/BleachUI/play"), "Start Graph");
-		connect(startGraphAction, &QAction::triggered, this, [=]()
-			{
-				qDebug() << "Graph start result : " << _sceneGraph->getModelGraph()->start();
-			});
-
-		menu->addSeparator();
-
-		auto createPayloadNodeAction = menu->addAction(QIcon(":/BleachUI/data"), "Create Payload Node");
-		connect(createPayloadNodeAction, &QAction::triggered, this, [=]()
-			{
-				auto node = createPayloadNode();
-				node->setPos(p);
-			});
-
-		auto createEndpointNodeAction = menu->addAction(QIcon(":/BleachUI/transfer"), "Create Endpoint Node");
-		connect(createEndpointNodeAction, &QAction::triggered, this, [=]()
-			{
-				auto node = createEndpointNode();
-				node->setPos(p);
-			});
-
-		auto createViewerNodeAction = menu->addAction(QIcon(":/BleachUI/view"), "Create Viewer Node");
-		connect(createViewerNodeAction, &QAction::triggered, this, [=]()
-			{
-				auto node = createViewerNode();
-				node->setPos(p);
-			});
-
-		auto createDelayNodeAction = menu->addAction(QIcon(":/BleachUI/stopWatch"), "Create Delay Node");
-		connect(createDelayNodeAction, &QAction::triggered, this, [=]()
-			{
-				auto node = createDelayNode();
-				node->setPos(p);
-			});
-
-		auto createScriptNodeAction = menu->addAction(QIcon(":/BleachUI/menu"), "Create Script Node");
-		connect(createScriptNodeAction, &QAction::triggered, this, [=]()
-			{
-				auto node = createScriptNode();
-				node->setPos(p);
-			});
-
-		auto createAssertionNodeAction = menu->addAction(QIcon(":/ui/warning"), "Create Assertion Node");
-		connect(createAssertionNodeAction, &QAction::triggered, this, [=]()
-			{
-				auto node = createAssertionNode();
-				node->setPos(p);
-			});
+		if (action.filter(item))
+			availableActions << action;
 	}
-	else
+
+	qSort(availableActions);
+
+	int prevOrder = -1;
+	if (availableActions.size() > 0)
+		prevOrder = availableActions[0].order;
+
+	for (const auto& action : availableActions)
 	{
-		// handle right clicking on an edge
-		{
-			auto edge = dynamic_cast<Edge*>(item);
-			if (edge != nullptr)
+		if (prevOrder != action.order)
+			menu->addSeparator();
+
+		auto qaction = menu->addAction(action.icon, action.name);
+		connect(qaction, &QAction::triggered, this, [=]()
 			{
-				auto deleteEdgeAction = menu->addAction(QIcon(":/BleachUI/delete"), "Delete");
-				connect(deleteEdgeAction, &QAction::triggered, this, [=]()
-					{
-						deleteEdge(edge);
-					});
-			}
-		}
-
-		// handle right clicking on a node
-		{
-			auto node = dynamic_cast<Node*>(item);
-			if (node != nullptr)
-			{
-				auto deleteAction = menu->addAction(QIcon(":/BleachUI/delete"), "Delete");
-				connect(deleteAction, &QAction::triggered, this, [=]()
-					{
-						deleteNode(node);
-					});
-
-				auto cloneAction = menu->addAction(QIcon(":/BleachUI/copy"), "Clone");
-
-				connect(cloneAction, &QAction::triggered, this, [=]()
-					{
-						auto newNode = cloneNode(node);
-						if (newNode != nullptr)
-						{
-							newNode->setPos(p);
-						}
-					});
-			}
-		}
+				action.func(p);
+			});
+		prevOrder = action.order;
 	}
 
 	return menu;
+}
+
+void view::InteractionsHandler::registerCommonActions()
+{
+	registerGenericAction("Delete", 
+		[](QGraphicsItem* item)
+		{
+			if (dynamic_cast<Node*>(item)) return true;
+			if (dynamic_cast<Edge*>(item)) return true;
+			return false;
+		},
+		[=](const QPointF& p)
+		{
+			auto item = _sceneGraph->itemAt(p, QTransform());
+			auto edge = dynamic_cast<Edge*>(item);
+			if (edge != nullptr)
+			{
+				deleteEdge(edge);
+			}
+			else
+			{
+				auto node = dynamic_cast<Node*>(item);
+				deleteNode(node);
+			}
+		}, QIcon(":/BleachUI/delete"));
+
+
+	registerEmptySpaceAction("Start Graph", [=](const QPointF& p)
+		{
+			qDebug() << "Graph start result : " << _sceneGraph->getModelGraph()->start();
+		}, QIcon(":/BleachUI/play"));
+
+	registerEmptySpaceAction("Create Payload Node", [=](const QPointF& p)
+		{
+			auto node = createPayloadNode();
+			node->setPos(p);
+		}, QIcon(":/BleachUI/data"), 1);
+
+	registerEmptySpaceAction("Create EndpointNode Node", [=](const QPointF& p)
+		{
+			auto node = createEndpointNode();
+			node->setPos(p);
+		}, QIcon(":/BleachUI/transfer"), 1);
+
+	registerEmptySpaceAction("Create Viewer Node", [=](const QPointF& p)
+		{
+			auto node = createViewerNode();
+			node->setPos(p);
+		}, QIcon(":/BleachUI/view"), 1);
+
+	registerEmptySpaceAction("Create Delay Node", [=](const QPointF& p)
+		{
+			auto node = createDelayNode();
+			node->setPos(p);
+		}, QIcon(":/BleachUI/stopWatch"), 1);
+
+	registerEmptySpaceAction("Create Script Node", [=](const QPointF& p)
+		{
+			auto node = createScriptNode();
+			node->setPos(p);
+		}, QIcon(":/BleachUI/menu"), 1);
+
+	registerEmptySpaceAction("Create Assertion Node", [=](const QPointF& p)
+		{
+			auto node = createAssertionNode();
+			node->setPos(p);
+		}, QIcon(":/ui/warning"), 1);
+
+	registerNodeAction("Clone Node", [=](const QPointF& p)
+		{
+			//auto node = createAssertionNode();
+			//node->setPos(p);
+		}, QIcon(":/BleachUI/copy"), 1);
 }

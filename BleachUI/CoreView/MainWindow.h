@@ -30,6 +30,7 @@ private slots:
     void onOpenProject();
     void onCloseProject();
     void onSaveProject();
+    void onImportSwagger();
     void onCurrentEnvironmentChanged(model::Environment* environment);
     void onSubWindowActivated(QMdiSubWindow* subWindow);
 

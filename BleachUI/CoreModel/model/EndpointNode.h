@@ -32,7 +32,6 @@ namespace model
 			GET,
 			POST,
 			PUT,
-			PATCH,
 			DEL
 		};
         Q_ENUM(HttpMethod);
@@ -82,7 +81,6 @@ namespace model
 		QNetworkReply* sendPost(QNetworkRequest request);
 		QNetworkReply* sendDel(QNetworkRequest request);
 		QNetworkReply* sendPut(QNetworkRequest request);
-		QNetworkReply* sendPatch(QNetworkRequest request);
 
     private:
         int _timeout;

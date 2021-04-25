@@ -1,6 +1,9 @@
 #pragma once
 #include <QObject>
 #include <QMenu>
+#include <QList>
+#include <functional>
+#include <QGraphicsItem>
 
 namespace view
 {
@@ -15,6 +18,13 @@ namespace view
 		InteractionsHandler(SceneGraph* scene);
 		~InteractionsHandler();
 
+		void registerGenericAction(const QString& name, std::function<bool(QGraphicsItem*)> filter, std::function<void(const QPointF&)> func, QIcon icon = QIcon(), int order=99);
+		void registerNodeTypeAction(const QString& name, const QString& nodeType, std::function<void(const QPointF&)> func, QIcon icon = QIcon(), int order=99);
+		void registerNodeAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon = QIcon(), int order=99);
+		void registerEdgeAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon = QIcon(), int order=99);
+		void registerEmptySpaceAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon = QIcon(), int order=99);
+
+
 		Node* createEndpointNode();
 		Node* createPayloadNode();
 		Node* createViewerNode();
@@ -22,14 +32,29 @@ namespace view
 		Node* createScriptNode();
 		Node* createAssertionNode();
 
-		Node* createNode(QString nodeType);
-
 		void deleteNode(Node* node);
 		void deleteEdge(Edge* edge);
 		Node* cloneNode(Node* node);
 
 		QMenu* createContextMenu(const QPointF& p);
 	private:
+		struct ItemAction
+		{
+			int order;			
+			QString name;
+			std::function<void(const QPointF&)> func;
+			std::function<bool(QGraphicsItem*)> filter;
+			QIcon icon;
+
+			bool operator < (const ItemAction& ia) const
+			{
+				return this->order >= ia.order;
+			}
+		};
+
+		void registerCommonActions();
+
+		QList<ItemAction> _itemActionsList;
 		SceneGraph* _sceneGraph = nullptr;
 	};
 }

@@ -51,5 +51,9 @@
         <file alias="environment">icons/server.svg</file>
         <file alias="swagger">icons/swagger.png</file>
         <file alias="warning">icons/warning.svg</file>
+        <file alias="get">icons/get.svg</file>
+        <file alias="post">icons/post.svg</file>
+        <file alias="del">icons/del.svg</file>
+        <file alias="put">icons/put.svg</file>
     </qresource>
 </RCC>

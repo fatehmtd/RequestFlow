@@ -41,7 +41,6 @@ namespace model
 			GET,
 			POST,
 			PUT,
-			PATCH,
 			DEL
 		};
 		Q_ENUM(HttpMethod);
@@ -49,12 +48,15 @@ namespace model
 		void setHttpMethod(int method);
 		int getHttpMethod() const;
 
+		QJSValue saveToJSValue(PersistenceHandler* handler) const override;
+		bool loadFromJSValue(const QJSValue& v) override;
+
 	private:
 		QString _url;
 		QList<QString> _productTypes;
 		QList<QString> _consumptionTypes;
 		QList<QString> _queryParams;
 		QList<QString> _pathParams;
-		int _method;
+		int _method = 0;
 	};
 }

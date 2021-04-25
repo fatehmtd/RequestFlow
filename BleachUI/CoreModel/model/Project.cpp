@@ -38,13 +38,13 @@ QJSValue model::Project::saveToJSValue(PersistenceHandler* persistenceHandler) c
 	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
 
 	auto environments = getEnvironments();
-	saveChildren(value, persistenceHandler, "environments", (PersistableEntity**)environments.toVector().data(), environments.size());
+	saveChildren(value, persistenceHandler, "environments", (PersistableEntity*const*)environments.toVector().data(), environments.size());
 	
 	auto graphs = getGraphs();
-	saveChildren(value, persistenceHandler, "graphs", (PersistableEntity**)graphs.toVector().data(), graphs.size());
+	saveChildren(value, persistenceHandler, "graphs", (PersistableEntity* const*)graphs.toVector().data(), graphs.size());
 	
 	auto documents = getDocuments();
-	saveChildren(value, persistenceHandler, "documents", (PersistableEntity**)documents.toVector().data(), documents.size());
+	saveChildren(value, persistenceHandler, "documents", (PersistableEntity* const*)documents.toVector().data(), documents.size());
 
 	return value;
 }

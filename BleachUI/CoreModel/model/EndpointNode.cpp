@@ -250,12 +250,6 @@ QNetworkReply* model::EndpointNode::sendPut(QNetworkRequest request)
 	return _networkAccessManager->put(request, data.toUtf8());
 }
 
-QNetworkReply* model::EndpointNode::sendPatch(QNetworkRequest request)
-{
-	auto data = getInputSlot()->getData().getBody();
-	return _networkAccessManager->sendCustomRequest(request, "PATCH", data.toUtf8());
-}
-
 QString model::EndpointNode::getUserAgent() const
 {
 	return _userAgent;
@@ -279,10 +273,7 @@ void model::EndpointNode::sendPayload()
 	case 2: // PUT
 		_networkReply = sendPut(request);
 		break;
-	case 3: // PATCH
-		_networkReply = sendPatch(request);
-		break;
-	case 4: // DEL
+	case 3: // DEL
 		_networkReply = sendDel(request);
 		break;
 	}

@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QMap>
 #include <QList>
+#include <QFile>
+#include <QTextStream>
+#include <QJsonDocument>
+#include <QJSValueIterator>
+
 
 namespace model
 {
@@ -18,5 +23,10 @@ namespace model
 
 		QMap<QString, EndpointEntry*> getEndpointsMap() const;
 		QList<EndpointEntry*> getEndpoints() const;
+
+		QJSValue saveToJSValue(PersistenceHandler* handler) const override;
+		bool loadFromJSValue(const QJSValue& v);
+
+		bool importFromSwagger(const QString& path);
 	};
 }

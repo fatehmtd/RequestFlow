@@ -78,6 +78,8 @@ void MainWindow::setupUi()
 #include <QFile>
 #include <QTextStream>
 
+#include <model/Document.h>
+
 void MainWindow::setupRibbonBar()
 {
 	_ui.dockWidget->setTitleBarWidget(new QWidget());
@@ -101,7 +103,10 @@ void MainWindow::setupRibbonBar()
 	_saveProject = projectGroup->addActionItem("Save", [=]() { onSaveProject(); }, QIcon(":/ui/save_file"));
 	_closeProject = projectGroup->addActionItem("Close", [=]() { onCloseProject(); }, QIcon(":/ui/close_file"));
 	
-	projectGroup->addActionItem("Import", [=]() {}, QIcon(":/ui/swagger"));
+	auto swaggerImport = projectGroup->addActionItem("Import", [=]() 
+		{
+			onImportSwagger();
+		}, QIcon(":/ui/swagger"));
 
 	_saveProject->setEnabled(false);
 	_closeProject->setEnabled(false);
@@ -176,6 +181,9 @@ void MainWindow::setProject(model::Project* project)
 	_closeProject->setEnabled(projectAvailable);
 	_saveProject->setEnabled(projectAvailable);
 	_scenariosGroup->setEnabled(projectAvailable);
+
+
+	_ui.inventoryWidget->setProject(project);
 
 	if (projectAvailable)
 	{
@@ -383,6 +391,25 @@ void MainWindow::onSaveProject()
 			QTextStream out(&fp);
 			out << handler.evaluate(projectValue);
 			fp.close();
+		}
+	}
+}
+
+void MainWindow::onImportSwagger()
+{
+	if (_project)
+	{
+		//qDeleteAll(_project->getDocuments());
+
+		auto fileName = QFileDialog::getOpenFileName(this, "Import swagger file", "", "JSON (*.json)");
+
+		if (!fileName.isEmpty())
+		{
+			auto document = new model::Document(_project.get());
+			if (!document->importFromSwagger(fileName))
+			{
+				delete document;
+			}
 		}
 	}
 }
