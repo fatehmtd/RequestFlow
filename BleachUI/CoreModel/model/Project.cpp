@@ -37,14 +37,9 @@ QJSValue model::Project::saveToJSValue(PersistenceHandler* persistenceHandler) c
 {
 	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
 
-	auto environments = getEnvironments();
-	saveChildren(value, persistenceHandler, "environments", (PersistableEntity*const*)environments.toVector().data(), environments.size());
-	
-	auto graphs = getGraphs();
-	saveChildren(value, persistenceHandler, "graphs", (PersistableEntity* const*)graphs.toVector().data(), graphs.size());
-	
-	auto documents = getDocuments();
-	saveChildren(value, persistenceHandler, "documents", (PersistableEntity* const*)documents.toVector().data(), documents.size());
+	saveChildren(value, persistenceHandler, "environments", getEnvironments());
+	saveChildren(value, persistenceHandler, "graphs", getGraphs());
+	saveChildren(value, persistenceHandler, "documents", getDocuments());
 
 	return value;
 }
@@ -53,26 +48,23 @@ bool model::Project::loadFromJSValue(const QJSValue& v)
 {
 	PersistableEntity::loadFromJSValue(v);
 
-	auto envValue = v.property("environments");
-	for (int i = 0; i < envValue.property("length").toInt(); i++)
-	{
-		auto env = new model::Environment(this);
-		env->loadFromJSValue(envValue.property(i));
-	}
+	loadChildren(v, "environments", [=](const QJSValue& value)
+		{
+			auto env = new model::Environment(this);
+			env->loadFromJSValue(value);
+		});
 
-	auto graphsValue = v.property("graphs");
-	for (int i = 0; i < graphsValue.property("length").toInt(); i++)
-	{
-		auto graph = new model::Graph(this);
-		graph->loadFromJSValue(graphsValue.property(i));
-	}
+	loadChildren(v, "documents", [=](const QJSValue& value)
+		{
+			auto env = new model::Document(this);
+			env->loadFromJSValue(value);
+		});
 
-	auto documentsValue = v.property("documents");
-	for (int i = 0; i < documentsValue.property("length").toInt(); i++)
-	{
-		auto document = new model::Document(this);
-		document->loadFromJSValue(documentsValue.property(i));
-	}
+	loadChildren(v, "graphs", [=](const QJSValue& value)
+		{
+			auto env = new model::Graph(this);
+			env->loadFromJSValue(value);
+		});
 
 	return true;
 }
@@ -85,4 +77,13 @@ void model::Project::setPath(const QString& path)
 QString model::Project::getPath() const
 {
 	return _path;
+}
+
+bool model::Project::eventFilter(QObject* watched, QEvent* event)
+{
+	if (dynamic_cast<Graph*>(watched))
+	{
+		qDebug() << watched << event;
+	}
+	return QObject::eventFilter(watched, event);
 }

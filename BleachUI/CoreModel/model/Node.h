@@ -23,8 +23,11 @@ namespace model
 		InputSlot* addInputSlot(QString name, int dataType);
 		OutputSlot* addOutputSlot(QString name, int dataType);
 
-		QMap<QString, InputSlot*> getInputSlots() const;
-		QMap<QString, OutputSlot*> getOutputSlots() const;
+		QMap<QString, InputSlot*> getInputSlotsMap() const;
+		QMap<QString, OutputSlot*> getOutputSlotsMap() const;
+
+		QList<InputSlot*> getInputSlots() const;
+		QList<OutputSlot*> getOutputSlots() const;
 
 		Graph* getGraph() const;
 
@@ -48,8 +51,7 @@ namespace model
 		void setStatus(int status);
 	public slots:
 		virtual void evaluate();
-		virtual void fail();
-		void raiseException(QString reason);
+		virtual void fail(const QString& reason);
 
 		virtual void onGraphStart() override;
 		virtual void onGraphStop() override;
@@ -60,7 +62,7 @@ namespace model
 		void evaluated();
 		void exceptionRaised(QString reason);
 		void ready();
-		void failed();
+		void failed(const QString&);
 
 	protected slots:
 		void slotDataReceived();

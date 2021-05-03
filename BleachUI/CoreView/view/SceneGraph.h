@@ -46,7 +46,13 @@ namespace view
 
 		void bringToFront(Node* node) const;
 
+		Node* cloneNode(Node* originalNode);
+
+		InteractionsHandler* getInteractionsHandler() const;
+
 	protected:
+		Node* createVisualNodeForModelNode(model::Node* node);
+
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 		void drawPointsBackground(QPainter* painter, const QRectF& rect);
 		void drawGridBackground(QPainter* painter, const QRectF& rect);
@@ -63,6 +69,12 @@ namespace view
 		virtual void setupUi();
 
 		void createEdge();
+
+		virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
+		virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
+		virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
+		virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
+
 
 	protected:
 		model::Graph* _modelGraph = nullptr;

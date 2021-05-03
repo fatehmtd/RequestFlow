@@ -12,13 +12,17 @@ namespace model
     class COREMODEL_EXPORT ViewerNode : public model::Node
     {
         Q_OBJECT
+        Q_PROPERTY(QString filter MEMBER _filter READ getFilter WRITE setFilter)
     public:
         Q_INVOKABLE ViewerNode(model::Graph* graph);
 
         void createModel() override;
 
-        void evaluate() override;
-
         model::InputSlot* getInput() const;
+
+        void setFilter(const QString& filter);
+        QString getFilter() const;
+    private:
+        QString _filter;
     };
 }

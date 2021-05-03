@@ -87,6 +87,12 @@
     <Filter Include="exchange">
       <UniqueIdentifier>{21726092-d158-4ed0-a80d-b07f0a591ae1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{54bced45-7803-4d8f-802d-188a5cb11c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\logger">
+      <UniqueIdentifier>{d48dd62a-4a2f-46e5-9e74-dfc4189ac69e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coremodel_global.h">
@@ -103,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="model\PersistenceHandler.h">
       <Filter>model\PersistenceHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="model\EntryDefinition.h">
-      <Filter>model\EntryDefinition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +172,9 @@
     <ClCompile Include="model\EntryDefinition.cpp">
       <Filter>model\EntryDefinition</Filter>
     </ClCompile>
+    <ClCompile Include="model\MessageLogger.cpp">
+      <Filter>utils\logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="model\Edge.h">
@@ -215,6 +221,12 @@
     </QtMoc>
     <QtMoc Include="model\Document.h">
       <Filter>model\Document</Filter>
+    </QtMoc>
+    <QtMoc Include="model\EntryDefinition.h">
+      <Filter>model\EntryDefinition</Filter>
+    </QtMoc>
+    <QtMoc Include="model\MessageLogger.h">
+      <Filter>utils\logger</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

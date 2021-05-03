@@ -31,7 +31,7 @@ void model::PayloadNode::evaluate()
 
 model::OutputSlot* model::PayloadNode::getOutputSlot() const
 {
-	return getOutputSlots().values()[0];
+	return getOutputSlotsMap().values()[0];
 }
 
 QVariant model::PayloadNode::messageToVariant() const

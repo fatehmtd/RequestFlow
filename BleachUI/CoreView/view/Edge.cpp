@@ -66,6 +66,11 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
 QPainterPath view::Edge::buildPath() const
 {
+	return buildPathSegmented();
+}
+
+QPainterPath view::Edge::buildPathCubic() const
+{
 	auto inPosition = _slotDestination->getBasePosition(true);
 	auto outPosition = _slotOrigin->getBasePosition(true);
 
@@ -74,13 +79,50 @@ QPainterPath view::Edge::buildPath() const
 	float thresh = abs(dx) * 0.5f;
 
 	float cltrX = std::min(300.0f, std::max(thresh, 100.0f));
-	 
+
 	auto ctrlPointA = outPosition + QPointF(-cltrX, 0);
 	auto ctrlPointB = inPosition + QPointF(cltrX, 0);
 
 	QPainterPath path(outPosition);
 
 	path.cubicTo(ctrlPointA, ctrlPointB, inPosition);
+	return path;
+}
+
+QPainterPath view::Edge::buildPathSegmented() const
+{
+	auto destinationPos = _slotDestination->getBasePosition(true);
+	auto originPos = _slotOrigin->getBasePosition(true);
+
+	const float gap = 50;
+	float dx = (originPos.x() - destinationPos.x());
+
+	QPainterPath path(originPos);
+
+
+	if (dx >= gap)
+	{
+		//float halfX = 0.8f * (originPos.x() + destinationPos.x());
+		float halfX = destinationPos.x() + gap;
+
+		path.lineTo(halfX, originPos.y());
+		path.lineTo(halfX, destinationPos.y());
+
+		path.lineTo(destinationPos);
+	}
+	else
+	{
+		float thresh = abs(dx) * 0.5f;
+
+		float cltrX = std::min(300.0f, std::max(thresh, 100.0f));
+
+		auto ctrlPointA = originPos + QPointF(-cltrX, 0);
+		auto ctrlPointB = destinationPos + QPointF(cltrX, 0);
+
+
+		path.cubicTo(ctrlPointA, ctrlPointB, destinationPos);
+
+	}
 
 	return path;
 }

@@ -5,6 +5,11 @@
 #include <functional>
 #include <QGraphicsItem>
 
+namespace model
+{
+	class EndpointEntry;
+}
+
 namespace view
 {
 	class SceneGraph;
@@ -24,8 +29,7 @@ namespace view
 		void registerEdgeAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon = QIcon(), int order=99);
 		void registerEmptySpaceAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon = QIcon(), int order=99);
 
-
-		Node* createEndpointNode();
+		Node* createEndpointNode(const model::EndpointEntry* entry = nullptr);
 		Node* createPayloadNode();
 		Node* createViewerNode();
 		Node* createDelayNode();
@@ -34,7 +38,7 @@ namespace view
 
 		void deleteNode(Node* node);
 		void deleteEdge(Edge* edge);
-		Node* cloneNode(Node* node);
+		void deleteInputSlot(Slot* slot);
 
 		QMenu* createContextMenu(const QPointF& p);
 	private:
@@ -53,6 +57,7 @@ namespace view
 		};
 
 		void registerCommonActions();
+		void renameInputSlots(view::Node* node) const;
 
 		QList<ItemAction> _itemActionsList;
 		SceneGraph* _sceneGraph = nullptr;

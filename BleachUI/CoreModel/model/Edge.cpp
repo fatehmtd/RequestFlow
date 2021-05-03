@@ -10,6 +10,11 @@ model::Edge::Edge(Graph* parent) : NotifiableEntity(parent)
 	setType("Edge");
 }
 
+model::Graph* model::Edge::getGraph() const
+{
+	return dynamic_cast<model::Graph*>(parent());
+}
+
 bool model::Edge::setDestination(InputSlot* slot)
 {
 	if (_originSlot != nullptr)
@@ -96,6 +101,8 @@ void model::Edge::onOriginSlotFailed()
 
 void model::Edge::onDataReceived()
 {
+	if (!getGraph()->isRunning()) return;
+
 	if (_originSlot != nullptr && _destinationSlot != nullptr)
 	{
 		_destinationSlot->setData(_originSlot->getData());

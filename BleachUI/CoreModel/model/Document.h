@@ -30,3 +30,4 @@ namespace model
 		bool importFromSwagger(const QString& path);
 	};
 }
+//Q_DECLARE_METATYPE(model::Document*);

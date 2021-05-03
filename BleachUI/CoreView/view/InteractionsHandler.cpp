@@ -64,15 +64,23 @@ void view::InteractionsHandler::registerEdgeAction(const QString& name, std::fun
 void view::InteractionsHandler::registerEmptySpaceAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon, int order)
 {
 	registerGenericAction(name, [](QGraphicsItem* item)
-		{			
+		{
 			return item == nullptr;
 		}, func, icon, order);
 }
 
-view::Node* view::InteractionsHandler::createEndpointNode()
+#include <model/EndpointEntry.h> 
+
+view::Node* view::InteractionsHandler::createEndpointNode(const model::EndpointEntry* entry)
 {
 	auto nodeModel = new model::EndpointNode(_sceneGraph->getModelGraph());
 	nodeModel->createModel();
+
+	if (entry != nullptr)
+	{
+		nodeModel->setHttpMethod(entry->getHttpMethod());
+		nodeModel->setUrl(entry->getUrl());
+	}
 
 	auto grNodeC = new logic::EndpointNode(nodeModel);
 	_sceneGraph->addItem(grNodeC);
@@ -148,19 +156,20 @@ void view::InteractionsHandler::deleteEdge(Edge* edge)
 	delete edge;
 }
 
-view::Node* view::InteractionsHandler::cloneNode(Node* originalNode)
-{/*
-	QJSEngine engine;
-	auto nodeValue = originalNode->toJSValue(engine);
-	auto nodeTypeStr = nodeValue.property("_type").toString();
-	auto node = createNode(nodeTypeStr);
-	if (node != nullptr)
+void view::InteractionsHandler::deleteInputSlot(Slot* slot)
+{
+	// find and delete the edges
+	auto modelSlot = slot->getModelSlot();
+	for (auto edgeModel : _sceneGraph->getModelGraph()->findEdges(modelSlot))
 	{
-		node->fromJSValue(nodeValue);
-		node->update();
+		deleteEdge(_sceneGraph->findbyModel(edgeModel));
 	}
-	return node;*/
-	return nullptr;
+	// delete the graphicsitem and the model slot
+
+	auto node = slot->getNode();
+	delete slot;
+	delete modelSlot;
+	node->update();
 }
 
 #include <QMenu>
@@ -179,31 +188,59 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 			availableActions << action;
 	}
 
-	qSort(availableActions);
-
-	int prevOrder = -1;
-	if (availableActions.size() > 0)
-		prevOrder = availableActions[0].order;
-
-	for (const auto& action : availableActions)
+	if (!availableActions.isEmpty())
 	{
-		if (prevOrder != action.order)
-			menu->addSeparator();
+		qSort(availableActions);
 
-		auto qaction = menu->addAction(action.icon, action.name);
-		connect(qaction, &QAction::triggered, this, [=]()
+		int prevOrder = -1;
+		if (availableActions.size() > 0)
+			prevOrder = availableActions[0].order;
+
+		for (const auto& action : availableActions)
+		{
+			if (prevOrder != action.order)
+				menu->addSeparator();
+
+			auto qaction = menu->addAction(action.icon, action.name);
+
+			if (_sceneGraph->getModelGraph()->isRunning())
 			{
-				action.func(p);
-			});
-		prevOrder = action.order;
+				qaction->setEnabled(action.name == "Stop");
+			}
+			else
+			{
+				qaction->setEnabled(action.name != "Stop");
+			}
+
+			connect(qaction, &QAction::triggered, this, [=]()
+				{
+					action.func(p);
+				});
+			prevOrder = action.order;
+		}
 	}
 
 	return menu;
 }
 
+#include <model/PersistenceHandler.h>
+#include <QInputDialog>
+#include <QGraphicsView>
+
 void view::InteractionsHandler::registerCommonActions()
 {
-	registerGenericAction("Delete", 
+	registerEmptySpaceAction("Stop", [=](const QPointF& p)
+		{
+			_sceneGraph->getModelGraph()->stop();
+		}, QIcon(":/BleachUI/stop"));
+
+	registerEmptySpaceAction("Execute", [=](const QPointF& p)
+		{
+			_sceneGraph->getModelGraph()->start();
+		}, QIcon(":/BleachUI/play"));
+
+
+	registerGenericAction("Delete",
 		[](QGraphicsItem* item)
 		{
 			if (dynamic_cast<Node*>(item)) return true;
@@ -224,12 +261,6 @@ void view::InteractionsHandler::registerCommonActions()
 				deleteNode(node);
 			}
 		}, QIcon(":/BleachUI/delete"));
-
-
-	registerEmptySpaceAction("Start Graph", [=](const QPointF& p)
-		{
-			qDebug() << "Graph start result : " << _sceneGraph->getModelGraph()->start();
-		}, QIcon(":/BleachUI/play"));
 
 	registerEmptySpaceAction("Create Payload Node", [=](const QPointF& p)
 		{
@@ -269,7 +300,83 @@ void view::InteractionsHandler::registerCommonActions()
 
 	registerNodeAction("Clone Node", [=](const QPointF& p)
 		{
-			//auto node = createAssertionNode();
-			//node->setPos(p);
+			auto item = _sceneGraph->itemAt(p, QTransform());
+			auto originalNode = dynamic_cast<view::Node*>(item);
+
+			auto node = _sceneGraph->cloneNode(originalNode);
+			if (node != nullptr)
+			{
+				node->setPos(p);
+			}
 		}, QIcon(":/BleachUI/copy"), 1);
+
+	registerNodeAction("Rename", [=](const QPointF& p)
+		{
+			auto item = _sceneGraph->itemAt(p, QTransform());
+			auto originalNode = dynamic_cast<view::Node*>(item);
+
+			auto newName = QInputDialog::getText(_sceneGraph->views()[0]->parentWidget(), "Rename Node", "New name :", QLineEdit::Normal, originalNode->getModelNode()->getName());
+			originalNode->setTitle(newName);
+			originalNode->update();
+
+		}, QIcon(":/ui/pen"), 1);
+
+	registerNodeTypeAction("Add input slot", "Script", [=](const QPointF& p)
+		{
+			auto item = _sceneGraph->itemAt(p, QTransform());
+			auto node = dynamic_cast<logic::ScriptNode*>(item);
+			auto modelNode = node->getModelNode();
+
+			auto modelSlot = modelNode->addInputSlot("Input", model::Slot::CUSTOM);
+			auto slot = new view::Slot(node, modelSlot);
+			renameInputSlots(slot->getNode());
+			//_sceneGraph->addItem(slot);
+			node->setSize(node->width(), node->height());
+		}, QIcon(":/BleachUI/copy"), 1);
+
+	registerGenericAction("Delete",
+		[](QGraphicsItem* item)
+		{
+			auto slot = dynamic_cast<Slot*>(item);
+			if (slot != nullptr)
+			{
+				if (!slot->getModelSlot()->getDirection() == model::Slot::Direction::INPUT) return false;
+				return dynamic_cast<model::ScriptNode*>(slot->getNode()->getModelNode()) != nullptr;
+			}
+			return false;
+		},
+		[=](const QPointF& p)
+		{
+			auto item = _sceneGraph->itemAt(p, QTransform());
+			auto slot = dynamic_cast<Slot*>(item);
+			auto node = slot->getNode();
+			deleteInputSlot(slot);
+			renameInputSlots(node);
+			node->setSize(node->width(), node->height());
+		}, QIcon(":/BleachUI/delete"));
+}
+
+void view::InteractionsHandler::renameInputSlots(view::Node* node) const
+{
+	auto modelSlots = node->getModelNode()->getInputSlots();
+
+	int number = modelSlots.size();
+	if (number > 1)
+	{
+		int index = 0;
+		for (auto modelSlot : modelSlots)
+		{
+			auto slot = _sceneGraph->findbyModel(modelSlot);
+			auto name = QString("Input %1").arg(index++);
+			slot->setName(name);
+			slot->update();
+		}
+	}
+	else if (number == 1)
+	{
+		auto slot = _sceneGraph->findbyModel(modelSlots[0]);
+		slot->setName("Input");
+	}
+
+	node->update();
 }

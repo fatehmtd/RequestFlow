@@ -10,7 +10,6 @@
 logic::PayloadNode::PayloadNode(model::PayloadNode* modelNode) : view::Node(modelNode, "Payload")
 {
 	setupUi();
-	setTitle("Payload");
 }
 
 model::Message logic::PayloadNode::composeMessage() const

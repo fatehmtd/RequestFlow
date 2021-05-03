@@ -103,6 +103,12 @@
     <Filter Include="Widgets\InventoryWidget">
       <UniqueIdentifier>{bcfd1626-a6d0-4b42-9c17-e6f43dcc89d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\GraphLogMessagesWidget">
+      <UniqueIdentifier>{f1a39ea4-344a-4321-859f-cb42b5082579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\LogMessagesWidget">
+      <UniqueIdentifier>{a2f052c8-a0fd-4cf2-9dd8-4d091a7f6f44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="BleachUI.qrc">
@@ -185,6 +191,12 @@
     <ClCompile Include="view\SettingsManager.cpp">
       <Filter>SettingsManager</Filter>
     </ClCompile>
+    <ClCompile Include="LogMessagesWidget.cpp">
+      <Filter>Widgets\LogMessagesWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphLogMessagesWidget.cpp">
+      <Filter>Widgets\GraphLogMessagesWidget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="view\SceneGraph.h">
@@ -199,32 +211,17 @@
     <ClInclude Include="view\ConnectionEdge.h">
       <Filter>view\ConnectionEdge</Filter>
     </ClInclude>
-    <ClInclude Include="logic\ViewerNode.h">
-      <Filter>logic\ViewerNode</Filter>
-    </ClInclude>
-    <ClInclude Include="logic\ScriptNode.h">
-      <Filter>logic\ScriptNode</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="view\InteractionsHandler.h">
       <Filter>InteractionsHandler</Filter>
     </ClInclude>
-    <ClInclude Include="logic\AssertionNode.h">
-      <Filter>logic\AssertionNode</Filter>
-    </ClInclude>
     <ClInclude Include="view\CustomProxyWidget.h">
       <Filter>view\Node\CustomProxyWidget</Filter>
     </ClInclude>
     <ClInclude Include="ActionItem.h">
       <Filter>Widgets\ActionToolBar\ActionItem</Filter>
-    </ClInclude>
-    <ClInclude Include="logic\PayloadNode.h">
-      <Filter>logic\PayloadNode</Filter>
-    </ClInclude>
-    <ClInclude Include="logic\DelayNode.h">
-      <Filter>logic\DelayNode</Filter>
     </ClInclude>
     <ClInclude Include="view\SettingsManager.h">
       <Filter>SettingsManager</Filter>
@@ -267,6 +264,27 @@
     <QtMoc Include="InventoryWidget.h">
       <Filter>Widgets\InventoryWidget</Filter>
     </QtMoc>
+    <QtMoc Include="LogMessagesWidget.h">
+      <Filter>Widgets\LogMessagesWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="GraphLogMessagesWidget.h">
+      <Filter>Widgets\GraphLogMessagesWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\AssertionNode.h">
+      <Filter>logic\AssertionNode</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\DelayNode.h">
+      <Filter>logic\DelayNode</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\ViewerNode.h">
+      <Filter>logic\ViewerNode</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\ScriptNode.h">
+      <Filter>logic\ScriptNode</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\PayloadNode.h">
+      <Filter>logic\PayloadNode</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="view\NodeContentWidget.ui">
@@ -305,6 +323,15 @@
     <QtUic Include="InventoryWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="ui\ScriptNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="LogMessagesWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GraphLogMessagesWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BleachUI.rc">
@@ -312,10 +339,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icons\node (1).png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="icons\node (1).ico">
+    <Image Include="icons\network.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

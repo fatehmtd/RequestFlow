@@ -25,7 +25,7 @@ namespace view
 		model::Slot* getModelSlot() const;
 		
 		Node* getNode() const;
-
+		void setName(const QString& name);
 	protected:
 		virtual QRectF boundingRect() const override;
 		virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

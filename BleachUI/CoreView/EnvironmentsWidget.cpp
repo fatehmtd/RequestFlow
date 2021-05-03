@@ -127,11 +127,20 @@ void EnvironmentsWidget::setProject(model::Project* project)
 	_project = project;
 
 	// fill the combobox
-	auto environments = _project->getEnvironments();
-	_ui.comboBox_environments->setModel(_environmentsModel);
-	_ui.comboBox_environments->update();
-
-	_environmentsModel->setProject(project);
+	if (project != nullptr)
+	{
+		auto environments = _project->getEnvironments();
+		_ui.comboBox_environments->setModel(_environmentsModel);
+		_ui.comboBox_environments->update();
+		_environmentsModel->setProject(project);
+	}
+	else
+	{
+		_environmentsModel->setProject(project);
+		_ui.comboBox_environments->setModel(nullptr);
+		_ui.comboBox_environments->clear();
+		_ui.tableWidget_entries->clearContents();
+	}
 }
 
 void EnvironmentsWidget::onCreateEnvironment()

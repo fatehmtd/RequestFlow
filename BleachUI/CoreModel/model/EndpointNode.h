@@ -19,9 +19,16 @@ namespace model
         Q_PROPERTY(QString url MEMBER _url READ getUrl WRITE setUrl NOTIFY urlChanged)
         Q_PROPERTY(int timeout MEMBER _timeout READ getTimeout WRITE setTimeout NOTIFY timeoutChanged)
         Q_PROPERTY(int httpMethod MEMBER _httpMethod READ getHttpMethod WRITE setHttpMethod NOTIFY httpMethodChanged)
+        Q_PROPERTY(int authMethod MEMBER _authMethod READ getAuthMethod WRITE setAuthMethod)
         Q_PROPERTY(QString contentType MEMBER _contentType READ getContentType WRITE setContentType NOTIFY contentTypeChanged)
+        Q_PROPERTY(QString bearerToken MEMBER _bearerToken READ getBearerToken WRITE setBearerToken)
+        Q_PROPERTY(QString baUser MEMBER _baUser READ getBasicAuthUser WRITE setBasicAuthUser)
+        Q_PROPERTY(QString baPwd MEMBER _baPwd READ getBasicAuthPassword WRITE setBasicAuthPassword)
         //Q_PROPERTY(QString consoleLog MEMBER _consoleLog READ getConsoleLog WRITE setConsoleLog NOTIFY consoleLogChanged)
         Q_PROPERTY(QString userAgent MEMBER _userAgent READ getUserAgent WRITE setUserAgent NOTIFY userAgentChanged)
+        Q_PROPERTY(QString expectedPayload MEMBER _expectedPayload READ getExpectedPayload WRITE setExpectedPayload)
+        Q_PROPERTY(QList<unsigned int> acceptedCodes MEMBER _acceptedCodes READ getAcceptedCodes WRITE setAcceptedCodes)
+        Q_PROPERTY(QList<unsigned int> rejectedCodes MEMBER _rejectedCodes READ getRejectedCodes WRITE setRejectedCodes)
     public:
         Q_INVOKABLE EndpointNode(model::Graph* graph);
         
@@ -35,6 +42,15 @@ namespace model
 			DEL
 		};
         Q_ENUM(HttpMethod);
+
+        enum AuthorizationMethod
+        {
+            NONE,
+            BASIC_AUTH,
+            BEARER,
+            OAUTH
+        };
+        Q_ENUM(AuthorizationMethod);
 
 		InputSlot* getInputSlot() const;
 		OutputSlot* getOutputSlot() const;
@@ -59,6 +75,27 @@ namespace model
 
 		void sendPayload();
 
+        void setExpectedPayload(QString& format);
+        QString getExpectedPayload() const;
+
+        void setAcceptedCodes(const QList<unsigned int>& codes);
+        QList<unsigned int> getAcceptedCodes() const;
+
+        void setRejectedCodes(const QList<unsigned int>& codes);
+        QList<unsigned int> getRejectedCodes() const;
+
+        void setAuthMethod(int method);
+        int getAuthMethod() const;
+
+        void setBasicAuthUser(const QString& user);
+        void setBasicAuthPassword(const QString& pwd);
+
+        QString getBasicAuthUser() const;
+        QString getBasicAuthPassword() const;
+
+        void setBearerToken(const QString& token);
+        QString getBearerToken() const;
+        
 	private slots:
 		void processResponse(QNetworkReply* reply);
         void onTimeout();
@@ -82,13 +119,23 @@ namespace model
 		QNetworkReply* sendDel(QNetworkRequest request);
 		QNetworkReply* sendPut(QNetworkRequest request);
 
+        void onErrorOccurred(QNetworkReply::NetworkError error);
+
     private:
         int _timeout;
         int _httpMethod;
+
+        int _authMethod;
+        QString _baUser, _baPwd;
+        QString _bearerToken;
+
+        QString _expectedPayload;
+
         QString _url;
         QString _contentType;
         QString _consoleLog;
         QString _userAgent;
+        QList<unsigned int> _acceptedCodes, _rejectedCodes;
         QNetworkAccessManager* _networkAccessManager = nullptr;
         QElapsedTimer _elapsedTimer;
         QTimer _timer;

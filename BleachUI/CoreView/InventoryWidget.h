@@ -18,6 +18,8 @@ public:
 	~InventoryWidget();
 
 	void setProject(model::Project* project);
+private slots:
+	void onContextMenuRequested(const QPoint& p);
 private:
 	Ui::InventoryWidget _ui;
 	model::Project* _project = nullptr;

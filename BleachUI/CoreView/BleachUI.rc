@@ -21,20 +21,12 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// PNG
-//
-
-IDB_PNG1                PNG                     "icons\\node (1).png"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Icon
 //
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON                    "icons\\node (1).ico"
+IDI_ICON2               ICON                    "icons\\network.ico"
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

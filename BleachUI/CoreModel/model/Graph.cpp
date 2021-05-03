@@ -6,10 +6,12 @@
 #include "Slot.h"
 #include <QSet>
 #include "Project.h"
+#include "MessageLogger.h"
 
 model::Graph::Graph(Project* parent) : IdentifiableEntity(parent)
 {
 	setType("Graph");
+	_messageLogger = new MessageLogger(this);
 }
 
 model::Graph::~Graph()
@@ -60,13 +62,13 @@ QList<model::Edge*> model::Graph::findEdges(const Node* node) const
 {
 	QList<Edge*> edgesList;
 
-	for (auto slot : node->getInputSlots().values())
+	for (auto slot : node->getInputSlotsMap().values())
 	{
 		auto list = findEdges(slot);
 		edgesList.append(list);
 	}
 
-	for (auto slot : node->getOutputSlots().values())
+	for (auto slot : node->getOutputSlotsMap().values())
 	{
 		auto list = findEdges(slot);
 		edgesList.append(list);
@@ -77,10 +79,38 @@ QList<model::Edge*> model::Graph::findEdges(const Node* node) const
 
 int model::Graph::start()
 {
+	if (isRunning())
+	{
+		error("Already running");
+		return ALREADY_RUNNING;
+	}
+
 	int result = computeExecutionPath();
-	if (result == ErrorCode::OK)
+	_isRunning = false;
+	switch (result)
+	{
+	case ErrorCode::OK:
 		emit started();
+		_elapsedTimer.start();
+		info("Starting execution...");
+		_isRunning = true;
+		break;
+	case ErrorCode::MISSING_EDGES:
+		error("All nodes need to be connected");
+		break;
+	case ErrorCode::MISSING_STARTING_NODE:
+		error("Missing source nodes");
+		break;
+	case ErrorCode::MISSING_ENDING_NODE:
+		error("Missing sink nodes");
+		break;
+	}
 	return result;
+}
+
+bool model::Graph::isRunning() const
+{
+	return _isRunning;
 }
 
 void model::Graph::setActiveEnvironment(Environment* env)
@@ -96,13 +126,8 @@ model::Environment* model::Graph::getActiveEnvironment() const
 QJSValue model::Graph::saveToJSValue(PersistenceHandler* persistenceHandler) const
 {
 	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
-
-	auto nodes = getNodes();
-	saveChildren(value, persistenceHandler, "nodes", (PersistableEntity* const*)nodes.toVector().data(), nodes.size());
-
-	auto edges = getEdges();
-	saveChildren(value, persistenceHandler, "edges", (PersistableEntity* const*)edges.toVector().data(), edges.size());
-
+	saveChildren<Node*>(value, persistenceHandler, "nodes", getNodes());
+	saveChildren<Edge*>(value, persistenceHandler, "edges", getEdges());
 	return value;
 }
 
@@ -119,6 +144,21 @@ bool model::Graph::loadFromJSValue(const QJSValue& v)
 {
 	PersistableEntity::loadFromJSValue(v);
 
+	loadChildren(v, "nodes", [=](const QJSValue& value) 
+		{
+			createNodeFromJSValue(value);
+		});
+
+	loadChildren(v, "edges", [=](const QJSValue& value)
+		{
+			auto edge = new Edge(this);
+			edge->loadFromJSValue(value);
+		});
+	return true;
+}
+
+model::Node* model::Graph::createNodeFromJSValue(const QJSValue& value)
+{
 	QMap<QString, QMetaObject> nodesMap;
 	nodesMap["Payload"] = PayloadNode::staticMetaObject;
 	nodesMap["Endpoint"] = EndpointNode::staticMetaObject;
@@ -127,33 +167,34 @@ bool model::Graph::loadFromJSValue(const QJSValue& v)
 	nodesMap["Delay"] = DelayNode::staticMetaObject;
 	nodesMap["Assertion"] = AssertionNode::staticMetaObject;
 
-	auto nodesValue = v.property("nodes");
-	for (int i = 0; i < nodesValue.property("length").toInt(); i++)
+	auto nodeType = value.property("entityType").toString();
+
+	if (nodesMap.contains(nodeType))
 	{
-		auto nodeValue = nodesValue.property(i);
-		auto nodeType = nodeValue.property("entityType").toString();
-		if (nodesMap.contains(nodeType))
+		Node* node = reinterpret_cast<Node*>(nodesMap[nodeType].newInstance(Q_ARG(model::Graph*, this)));
+		if (node != nullptr)
 		{
-			Node* node = reinterpret_cast<Node*>(nodesMap[nodeType].newInstance(Q_ARG(model::Graph*, this)));
-			if (node != nullptr)
-			{
-				node->loadFromJSValue(nodeValue);
-			}
+			node->loadFromJSValue(value);
+			return node;
 		}
 	}
 
-	auto edgesValue = v.property("edges");
-	for (int i = 0; i < edgesValue.property("length").toInt(); i++)
-	{
-		auto edge = new Edge(this);
-		edge->loadFromJSValue(edgesValue.property(i));
-	}
-	return true;
+	return nullptr;
+}
+
+model::MessageLogger* model::Graph::getLogger() const
+{
+	return _messageLogger;
 }
 
 void model::Graph::stop()
 {
-	emit stopped();
+	if (_isRunning)
+	{
+		emit stopped();
+		warn("Execution stopped by the user");
+	}
+	_isRunning = false;
 }
 
 void model::Graph::onNodeEvaluated()
@@ -161,20 +202,23 @@ void model::Graph::onNodeEvaluated()
 	auto node = dynamic_cast<Node*>(sender());
 	if (node != nullptr)
 	{
-		//qDebug() << __FUNCTION__ << node;
 		_executionNodes[node] = 1;
-		checkExecutionStatus();
+		node->success(QString("Executed [%1 : %2]").arg(node->getType()).arg(node->getName()));
 	}
+	checkExecutionStatus();
+	emit advanced();
 }
 
-void model::Graph::onNodeFailed()
+void model::Graph::onNodeFailed(const QString& reason)
 {
 	auto node = dynamic_cast<Node*>(sender());
 	if (node != nullptr)
 	{
 		_executionNodes[node] = -1;
-		checkExecutionStatus();
+		node->error(QString("Failed [%1 : %2] : %3").arg(node->getType()).arg(node->getName()).arg(reason));
 	}
+	emit advanced();
+	checkExecutionStatus();
 }
 
 void model::Graph::onNodeException(QString reason)
@@ -183,26 +227,36 @@ void model::Graph::onNodeException(QString reason)
 	if (node != nullptr)
 	{
 		_executionNodes[node] = -1;
-		checkExecutionStatus();
 		emit exceptionRaised(node, reason);
 	}
 
-	qDebug() << __FUNCTION__ << reason;
+	//error(reason);
+	checkExecutionStatus();
 }
 
 int model::Graph::computeExecutionPath()
 {
 	clear();
-
+	QList<Slot*> unconnectedSlots;
 	// find starting and ending nodes
 	for (auto node : getNodes())
 	{
-		if (node->getInputSlots().size() == 0)
+		if (node->getInputSlotsMap().isEmpty())
 		{
 			_startingNodes << node;
 		}
+		else
+		{
+			for (auto slot : node->getInputSlots())
+			{
+				if (findEdges(slot).isEmpty())
+				{
+					unconnectedSlots << slot;
+				}
+			}
+		}
 
-		if (node->getOutputSlots().size() == 0)
+		if (node->getOutputSlotsMap().isEmpty())
 		{
 			_endingNodes << node;
 		}
@@ -211,6 +265,7 @@ int model::Graph::computeExecutionPath()
 	if (_startingNodes.isEmpty()) return ErrorCode::MISSING_STARTING_NODE;
 	if (_endingNodes.isEmpty()) return ErrorCode::MISSING_ENDING_NODE;
 	if (getEdges().isEmpty()) return ErrorCode::MISSING_EDGES;
+	if (!unconnectedSlots.isEmpty()) return ErrorCode::MISSING_EDGES;
 
 	return ErrorCode::OK;
 }
@@ -226,6 +281,16 @@ void model::Graph::checkExecutionStatus()
 {
 	if (_executionNodes.size() == getNodes().size())
 	{
+		int numFails = _executionNodes.values().count(-1);
+		if (numFails > 0)
+		{
+			error(QString("%1 Nodes failed").arg(numFails));
+		}
+		else
+		{
+			info(QString("Execution successful, execution time :%1 ms").arg(_elapsedTimer.elapsed()));
+		}
+		_isRunning = false;
 		emit stopped();
 	}
 }

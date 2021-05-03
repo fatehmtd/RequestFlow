@@ -17,7 +17,7 @@ model::ScriptNode::ScriptNode(model::Graph* graph) : Node(graph, "Script")
 	output << "Response.path = Request.path; // the path variables ex: http://website/customers/:id" << "\n";
 	output << "Response.context = Request.context; // the current execution context, contains anything useful" << "\n";
 	//output << "Response.body = {\"firstName\" : \"James\", \"lastName\" : \"jamon\"};" << "\n";
-	
+
 	setScript(buffer);
 }
 
@@ -33,12 +33,12 @@ QString model::ScriptNode::getScript() const
 
 model::InputSlot* model::ScriptNode::getInputSlot() const
 {
-	return getInputSlots().values()[0];
+	return getInputSlotsMap().values()[0];
 }
 
 model::OutputSlot* model::ScriptNode::getOutputSlot() const
 {
-	return getOutputSlots().values()[0];
+	return getOutputSlotsMap().values()[0];
 }
 
 void model::ScriptNode::createModel()
@@ -78,17 +78,29 @@ bool model::ScriptNode::executeScript()
 
 	model::Message response;
 
-	auto requestMessage = getInputSlot()->getData();
+	auto inputSlots = getInputSlots();
+	if (!inputSlots.isEmpty())
+	{
+		if (inputSlots.size() >= 1)
+		{
+			int index = 0;
+			for (auto slot : inputSlots)
+			{
+				auto requestMessage = slot->getData();
+				engine.globalObject().setProperty(QString("Request%1").arg(index++), engine.toScriptValue(requestMessage.toVariant()));
+			}
 
-	engine.globalObject().setProperty("Request", engine.toScriptValue(requestMessage.toVariant()));
+			auto requestMessage = getInputSlot()->getData();
+			engine.globalObject().setProperty("Request", engine.toScriptValue(requestMessage.toVariant()));
+		}
+	}
 	engine.globalObject().setProperty("Response", engine.toScriptValue(response.toVariant()));
 
 	QJSValue result = engine.evaluate(_script);
 
 	if (result.isError())
 	{
-		qDebug() << result.toString();
-		raiseException(result.toString());
+		fail(result.toString());
 		return false;
 	}
 

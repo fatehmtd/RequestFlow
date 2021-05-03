@@ -39,6 +39,8 @@ void SceneGraphWidget::initUi()
 
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
 	setRenderHint(QPainter::RenderHint::Antialiasing, true);
+	setRenderHint(QPainter::RenderHint::HighQualityAntialiasing, true);
+	setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
 	setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
 	setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
 
@@ -58,6 +60,8 @@ void SceneGraphWidget::initUi()
 
 	_zoomLevel = _defaultZoomLevel;
 	//setOGLBackend();
+
+	setAcceptDrops(true);
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
@@ -190,6 +194,44 @@ void SceneGraphWidget::setOGLBackend()
 	glWidget->setFormat(surfaceFormat);
 	setViewport(glWidget);
 	//*/
+}
+
+#include <QMimeData>
+
+void SceneGraphWidget::dragEnterEvent(QDragEnterEvent* event)
+{
+	if (event->mimeData()->hasFormat("application/x-EndpointEntry"))
+	{
+		event->acceptProposedAction();
+	}
+}
+
+#include <QDataStream>
+#include <model/EndpointEntry.h>
+
+#include "InteractionsHandler.h"
+
+void SceneGraphWidget::dropEvent(QDropEvent* event)
+{
+	auto mime = event->mimeData();
+	auto byteArray = mime->data("application/x-EndpointEntry");
+	QDataStream in(&byteArray, QIODevice::ReadOnly);
+
+	int count = 0;
+	in >> count;
+	for (int i = 0; i < count; i++)
+	{
+		size_t ptr = 0;
+		in >> ptr;
+		auto entry = dynamic_cast<model::EndpointEntry*>(reinterpret_cast<QObject*>(ptr));
+		if (entry != nullptr)
+		{
+			auto node = _sceneGraph->getInteractionsHandler()->createEndpointNode(entry);			
+			node->setPos(mapToScene(event->pos()));
+		}
+	}
+
+	event->acceptProposedAction();
 }
 
 QPointF SceneGraphWidget::getCenter() const

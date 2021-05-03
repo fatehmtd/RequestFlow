@@ -26,27 +26,26 @@ QList<model::EndpointEntry*> model::Document::getEndpoints() const
 QJSValue model::Document::saveToJSValue(PersistenceHandler* handler) const
 {
 	auto value = PersistableEntity::saveToJSValue(handler);
-	saveChildren(value, handler, "endpoints", (PersistableEntity* const*)getEndpoints().toVector().data(), getEndpoints().size());
+	saveChildren<EndpointEntry*>(value, handler, "endpoints", getEndpoints());
 	return value;
 }
 
 bool model::Document::loadFromJSValue(const QJSValue& v)
 {
 	PersistableEntity::loadFromJSValue(v);
-	{
-		QJSValue jsEndpoints = v.property("endpoints");
-		for (int i = 0; i < jsEndpoints.property("length").toInt(); i++)
+
+	loadChildren(v, "endpoints", [=](const QJSValue& value)
 		{
-			auto jsEndpoint = jsEndpoints.property(i);
 			auto endpoint = new EndpointEntry(this);
-			endpoint->loadFromJSValue(jsEndpoint);
-		}
-	}
+			endpoint->loadFromJSValue(value);
+		});
+
 	return true;
 }
 
 bool model::Document::importFromSwagger(const QString& path)
 {
+	//TODO: refactor and clean
 	QFile fp(path);
 
 	if (fp.open(QIODevice::ReadOnly))

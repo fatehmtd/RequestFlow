@@ -55,17 +55,22 @@ public:
 	}
 };
 
-
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
 	_settingsManager = new view::SettingsManager(this);
 	setupUi();
 }
 
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+	onCloseProject();
+	event->accept();
+}
+
 void MainWindow::setupUi()
 {
 	_ui.setupUi(this);
-	setWindowIcon(QIcon(":/BleachUI/graph"));
+	setWindowIcon(QIcon(":/ui/network"));
 	//setMinimumSize(1280, 800);
 	setupRibbonBar();
 	setupSceneGraph();
@@ -103,10 +108,12 @@ void MainWindow::setupRibbonBar()
 	_saveProject = projectGroup->addActionItem("Save", [=]() { onSaveProject(); }, QIcon(":/ui/save_file"));
 	_closeProject = projectGroup->addActionItem("Close", [=]() { onCloseProject(); }, QIcon(":/ui/close_file"));
 	
-	auto swaggerImport = projectGroup->addActionItem("Import", [=]() 
+	_swaggerImport = projectGroup->addActionItem("Import", [=]() 
 		{
 			onImportSwagger();
 		}, QIcon(":/ui/swagger"));
+
+	_swaggerImport->setEnabled(false);
 
 	_saveProject->setEnabled(false);
 	_closeProject->setEnabled(false);
@@ -178,17 +185,12 @@ void MainWindow::setProject(model::Project* project)
 {
 	bool projectAvailable = project != nullptr;
 
-	_closeProject->setEnabled(projectAvailable);
-	_saveProject->setEnabled(projectAvailable);
-	_scenariosGroup->setEnabled(projectAvailable);
-
-
-	_ui.inventoryWidget->setProject(project);
+	_ui.environmentsWidget->setEnabled(projectAvailable);
+	_ui.inventoryWidget->setEnabled(projectAvailable);
+	_ui.scenariosWidget->setEnabled(projectAvailable);
 
 	if (projectAvailable)
 	{
-		_ui.environmentsWidget->setEnabled(true);
-
 		_project.reset(project);
 
 		if (project->getEnvironments().isEmpty())
@@ -197,8 +199,6 @@ void MainWindow::setProject(model::Project* project)
 			environment->setName(QString("Default environment"));
 			environment->getEntries().insert("baseUrl", "http://localhost");
 		}
-
-		_ui.environmentsWidget->setProject(project);
 
 		if (project->getGraphs().isEmpty())
 		{
@@ -218,10 +218,14 @@ void MainWindow::setProject(model::Project* project)
 
 		_ui.scenariosWidget->setProject(_project.get());
 	}
-	else
-	{
 
-	}
+	_closeProject->setEnabled(projectAvailable);
+	_saveProject->setEnabled(projectAvailable);
+	_scenariosGroup->setEnabled(projectAvailable);
+	_swaggerImport->setEnabled(projectAvailable);
+	_ui.inventoryWidget->setProject(project);
+	_ui.logMessagesWidget->setProject(project);
+	_ui.environmentsWidget->setProject(project);
 }
 
 void MainWindow::createScenario(QString name)
@@ -230,6 +234,7 @@ void MainWindow::createScenario(QString name)
 	graph->setName(name);
 	openScenario(new view::SceneGraph(graph));
 	_ui.scenariosWidget->updateScenariosList();
+	_ui.logMessagesWidget->addMessageLogger(graph->getLogger());
 }
 
 void MainWindow::openScenario(view::SceneGraph* sceneGraph)
@@ -251,6 +256,10 @@ void MainWindow::openScenario(view::SceneGraph* sceneGraph)
 
 	connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, &QMdiSubWindow::setWindowTitle);
 	window->showMaximized();
+}
+
+void MainWindow::cloneScenario(view::SceneGraph* sceneGraph, QString newName)
+{
 }
 
 void MainWindow::deleteScenario(view::SceneGraph* sceneGraph)
@@ -318,7 +327,7 @@ void MainWindow::updateRecentProjectsList()
 	// add an open project action
 	for (auto prj : recentProjects)
 	{
-		auto action = menu->addAction(QIcon(":/BleachUI/graph"), prj);
+		auto action = menu->addAction(QIcon(":/ui/network"), prj);
 		connect(action, &QAction::triggered, [=]()
 			{
 				openProject(prj);
@@ -352,9 +361,25 @@ void MainWindow::updateRecentProjectsList()
 	}
 }
 
+#include <QMessageBox>
 
 void MainWindow::onCloseProject()
 {
+	if (_project != nullptr)
+	{
+		int button = QMessageBox::information(this, "Save ?", "Save the project before closing it?",
+			QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
+		switch (button)
+		{
+		case QMessageBox::StandardButton::Yes:
+			onSaveProject();
+			break;
+		case QMessageBox::No:
+			break;
+		case QMessageBox::Cancel:
+			return;
+		}
+	}
 	_project.reset();
 	_scenariosGroup->setEnabled(false);
 
@@ -399,8 +424,6 @@ void MainWindow::onImportSwagger()
 {
 	if (_project)
 	{
-		//qDeleteAll(_project->getDocuments());
-
 		auto fileName = QFileDialog::getOpenFileName(this, "Import swagger file", "", "JSON (*.json)");
 
 		if (!fileName.isEmpty())
@@ -409,6 +432,10 @@ void MainWindow::onImportSwagger()
 			if (!document->importFromSwagger(fileName))
 			{
 				delete document;
+			}
+			else
+			{
+				_ui.inventoryWidget->setProject(_project.get());
 			}
 		}
 	}
@@ -430,10 +457,8 @@ void MainWindow::onSubWindowActivated(QMdiSubWindow* subWindow)
 	if (subWindow != nullptr)
 	{
 		auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
-		//qDebug() << sceneGraphWidget;
 		if (sceneGraphWidget != nullptr)
 		{
-			//onActivateScene(sceneGraphWidget->getSceneGraph()->getModelGraph());
 			_activeGraph = sceneGraphWidget->getSceneGraph()->getModelGraph();
 			_activeGraph->setActiveEnvironment(_ui.environmentsWidget->getActiveEnvironment());
 		}
@@ -444,13 +469,6 @@ void MainWindow::onNewProject()
 {
 	onCloseProject();
 	setProject(new model::Project(this));
-	/*
-	auto fileName = QFileDialog::getSaveFileName(this, "Create project", "", "RQFL Project (*.rqfl)");
-
-	if (!fileName.isEmpty())
-	{
-
-	}*/
 }
 
 void MainWindow::onSceneDeleted(QString identifier)

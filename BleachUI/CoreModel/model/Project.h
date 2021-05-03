@@ -23,6 +23,9 @@ namespace model
 
 		void setPath(const QString& path);
 		QString getPath() const;
+
+	private:
+		bool eventFilter(QObject* watched, QEvent* event) override;
 	protected:
 		QString _path;
 	};

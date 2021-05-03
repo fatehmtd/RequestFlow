@@ -33,7 +33,7 @@ void view::CustomProxyWidget::paint(QPainter* painter, const QStyleOptionGraphic
 
 	painter->drawPixmap(this->widget()->rect(), _pixmap);
 	*/
-
+	//setAutoFillBackground(true);
 	QGraphicsProxyWidget::paint(painter, option, widget);
 }
 

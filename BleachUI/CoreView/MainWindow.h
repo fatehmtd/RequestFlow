@@ -35,6 +35,7 @@ private slots:
     void onSubWindowActivated(QMdiSubWindow* subWindow);
 
 private:
+    void closeEvent(QCloseEvent* event) override;
     void setupUi();
     void setupRibbonBar();
     void setupEnvironmentsWidget();
@@ -44,6 +45,7 @@ private:
 
     void createScenario(QString name);
     void openScenario(view::SceneGraph* sceneGraph);
+    void cloneScenario(view::SceneGraph* sceneGraph, QString newName);
     void deleteScenario(view::SceneGraph* sceneGraph);
 
     void updateRecentProjectsList();
@@ -55,7 +57,7 @@ private:
     Ui::MainWindowClass _ui;
 
     ActionToolBar* _toolbar = nullptr;
-    QToolButton* _newProject, * _openProject, * _closeProject, * _saveProject;
+    QToolButton* _newProject, * _openProject, * _closeProject, * _saveProject, *_swaggerImport;
     ActionGroup* _scenariosGroup = nullptr;
 
     model::Environment* _activeEnvironment = nullptr;

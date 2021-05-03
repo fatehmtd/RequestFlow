@@ -11,7 +11,6 @@
 logic::ScriptNode::ScriptNode(model::ScriptNode* modelNode) : view::Node(modelNode, "Script")
 {
 	setupUi();
-	setTitle("Script");
 }
 
 void logic::ScriptNode::clearUI()
@@ -19,18 +18,20 @@ void logic::ScriptNode::clearUI()
 }
 
 #include <QTextStream>
+#include <QFile>
 
 void logic::ScriptNode::setupUi()
 {
+	auto widget = new QWidget();
+	_ui.setupUi(widget);
 	auto node = getModelNode<model::ScriptNode*>();
-	_editor = new QPlainTextEdit();
-	_editor->setPlainText(node->getScript());
-	_editor->setPlaceholderText("// javascript");
-	getContentWidget()->layout()->addWidget(_editor);
+	_ui.plainTextEdit->setPlainText(node->getScript());
+	_ui.plainTextEdit->setPlaceholderText("// javascript");
+	getContentWidget()->layout()->addWidget(widget);
 
-	connect(_editor, &QPlainTextEdit::textChanged, this, [=]()
+	connect(_ui.plainTextEdit, &QPlainTextEdit::textChanged, this, [=]()
 		{
-			node->setScript(_editor->toPlainText());
+			node->setScript(_ui.plainTextEdit->toPlainText());
 		});
 
 	_bgColor = view::colors::charcoal;

@@ -33,6 +33,6 @@ int model::DelayNode::getDelay() const
 
 void model::DelayNode::onTimeout()
 {
-	getOutputSlots().values()[0]->setData(getInputSlots().values()[0]->getData());
+	getOutputSlotsMap().values()[0]->setData(getInputSlotsMap().values()[0]->getData());
 	evaluate();
 }

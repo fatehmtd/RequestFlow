@@ -5,6 +5,8 @@
 #include "SceneGraph.h"
 #include <QTimer>
 #include "SceneGraph.h"
+#include <QDragEnterEvent>
+#include <QDropEvent>
 
 class SceneGraphWidget : public QGraphicsView
 {
@@ -36,6 +38,9 @@ protected:
 
 	void performZoom(QWheelEvent* event);
 	void setOGLBackend();
+
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
 protected:
 	view::SceneGraph* _sceneGraph = nullptr;
 
