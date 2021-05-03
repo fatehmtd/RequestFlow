@@ -17,6 +17,7 @@ SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph
 	initUi();
 	setScene(_sceneGraph);
 	setObjectName(sceneGraph->getModelGraph()->getIdentifier());
+	_rubberBand = new QRubberBand(QRubberBand::Shape::Rectangle, this);
 }
 
 SceneGraphWidget::~SceneGraphWidget()
@@ -66,6 +67,11 @@ void SceneGraphWidget::initUi()
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 {
+	if (event->button() == Qt::MouseButton::LeftButton)
+	{
+		setDragMode(QGraphicsView::RubberBandDrag);
+	}
+
 	// TODO: use this as the center of the view
 	//qDebug() << mapToScene(viewport()->rect()).boundingRect().center();
 	if (event->button() == Qt::MouseButton::MiddleButton)
@@ -80,6 +86,9 @@ void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 
 void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
 {
+	setDragMode(QGraphicsView::DragMode::NoDrag);
+
+
 	if (event->button() == Qt::MouseButton::MiddleButton)
 	{
 		mouseMiddleButtonReleased(event);
@@ -92,6 +101,7 @@ void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
 {
+
 	if (_sceneGraph == nullptr) return;
 	if (dragMode() == DragMode::ScrollHandDrag)
 	{

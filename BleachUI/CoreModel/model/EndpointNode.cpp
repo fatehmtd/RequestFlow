@@ -24,6 +24,15 @@ model::EndpointNode::EndpointNode(model::Graph* graph) : model::Node(graph, "End
 	setRejectedCodes(rejectedCodes);
 }
 
+model::EndpointNode::~EndpointNode()
+{
+	if (_networkReply != nullptr)
+	{
+		_networkReply->abort();
+		delete _networkReply;
+	}
+}
+
 void model::EndpointNode::createModel()
 {
 	addInputSlot("Input", Slot::CUSTOM);
@@ -224,7 +233,13 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
 		out << "\n\n";
 		out << "Response:\n";
 		out << data << "\n";
-
+		/*
+		if (_networkReply != nullptr)
+		{
+			_networkReply->abort();
+			delete _networkReply;
+		}
+		//*/
 		setConsoleLog(fullResponse);
 		
 		if (validateHttpStatus(status))
@@ -342,6 +357,13 @@ void model::EndpointNode::onTimeout()
 		out << "Elapsed-Time : " << msecs << " ms" << "\n";
 		out << "\n\n";
 		out << data << "\n";
+		/*
+		if (_networkReply != nullptr)
+		{
+			_networkReply->abort();
+			delete _networkReply;
+		}//*/
+
 
 		setConsoleLog(fullResponse);
 

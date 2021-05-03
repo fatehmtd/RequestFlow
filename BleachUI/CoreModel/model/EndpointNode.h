@@ -31,6 +31,7 @@ namespace model
         Q_PROPERTY(QList<unsigned int> rejectedCodes MEMBER _rejectedCodes READ getRejectedCodes WRITE setRejectedCodes)
     public:
         Q_INVOKABLE EndpointNode(model::Graph* graph);
+        ~EndpointNode();
         
         void createModel() override;
 

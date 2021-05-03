@@ -37,6 +37,11 @@ void logic::ViewerNode::setupUi()
 		{
 			filter(_ui.lineEdit_jsonPath->text());
 		});
+
+	connect(_ui.lineEdit_jsonPath, &QLineEdit::returnPressed, this, [=]()
+		{
+			filter(_ui.lineEdit_jsonPath->text());
+		});
 		
 	getContentWidget()->layout()->addWidget(widget);
 	_bgColor = view::colors::green;
