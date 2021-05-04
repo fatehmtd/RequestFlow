@@ -30,7 +30,12 @@ void LogMessagesWidget::setProject(model::Project* project)
 void LogMessagesWidget::addMessageLogger(model::MessageLogger* logger)
 {
 	auto widget = new GraphLogMessagesWidget(this, logger);
-	ui.tabWidget->addTab(widget, logger->getGraph()->getName());
+	ui.tabWidget->addTab(widget, QIcon(":/ui/test_case"), logger->getGraph()->getName());
+
+	connect(logger->getGraph(), &model::Graph::started, this, [=]() 
+		{
+			ui.tabWidget->setCurrentWidget(widget);
+		});
 }
 
 void LogMessagesWidget::clearChildren()
