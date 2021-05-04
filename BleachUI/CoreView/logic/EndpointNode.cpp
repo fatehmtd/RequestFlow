@@ -45,7 +45,6 @@ void logic::EndpointNode::initUI()
 	{
 		_ui.tableWidget_acceptedCodes->clearContents();
 		auto codes = endpointNode->getAcceptedCodes();
-		qDebug() << codes;
 		for (int i = 0; i < codes.size(); i++)
 		{
 			_ui.tableWidget_acceptedCodes->setItem(i, 0, new QTableWidgetItem(QString("%1").arg(codes[i])));
