@@ -141,12 +141,47 @@ void MainWindow::setupEnvironmentsWidget()
 	connect(_ui.environmentsWidget, &EnvironmentsWidget::currentEnvironmentChanged, this, &MainWindow::onCurrentEnvironmentChanged);
 }
 
+#include "view/Node.h"
+#include <QPropertyAnimation>
+
 void MainWindow::setupSceneGraph()
 {
 	_ui.mdiArea->setTabsClosable(false);
 	connect(_ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::onSubWindowActivated);
 	connect(_ui.scenariosWidget, &ScenariosWidget::sceneDeleted, this, &MainWindow::onSceneDeleted);
 	connect(_ui.scenariosWidget, &ScenariosWidget::currentSceneChanged, this, &MainWindow::onActivateScene);
+
+	connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node) 
+		{
+			for (auto subWindow : _ui.mdiArea->subWindowList())
+			{
+				auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+				if (sceneGraphWidget != nullptr)
+				{
+					if (sceneGraphWidget->getSceneGraph()->getModelGraph() == node->getGraph())
+					{
+						auto nodeGr = sceneGraphWidget->getSceneGraph()->findbyModel(node);
+
+						_ui.mdiArea->setActiveSubWindow(subWindow);
+
+						{
+							auto propAnimation = new QPropertyAnimation();
+							propAnimation->setTargetObject(sceneGraphWidget);
+							propAnimation->setDuration(200);
+							propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::InOutCubic));
+							propAnimation->setStartValue(sceneGraphWidget->getCenter());
+							propAnimation->setEndValue(nodeGr->pos() + QPointF(nodeGr->width() * 0.5f, nodeGr->height() * 0.5f));
+							propAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+							sceneGraphWidget->setZoomLevel(2);
+							connect(propAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& v)
+								{
+									sceneGraphWidget->centerOn(v.toPointF());
+								});
+						}
+					}
+				}
+			}
+		});
 }
 
 void MainWindow::openProject(const QString& fileName)

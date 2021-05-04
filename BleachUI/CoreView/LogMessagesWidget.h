@@ -4,6 +4,7 @@
 #include "ui_LogMessagesWidget.h"
 #include <model/Project.h>
 #include <model/MessageLogger.h>
+#include <model/Node.h>
 
 class LogMessagesWidget : public QWidget
 {
@@ -15,6 +16,9 @@ public:
 	void setProject(model::Project* project);
 
 	void addMessageLogger(model::MessageLogger* logger);
+
+signals:
+	void senderSelected(model::Node*);
 
 private:
 	void clearChildren();

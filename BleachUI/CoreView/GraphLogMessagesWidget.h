@@ -4,6 +4,7 @@
 #include "ui_GraphLogMessagesWidget.h"
 #include <model/Graph.h>
 #include <model/MessageLogger.h>
+#include <model/Node.h>
 
 class GraphLogMessagesWidget : public QWidget
 {
@@ -11,6 +12,9 @@ class GraphLogMessagesWidget : public QWidget
 public:
 	GraphLogMessagesWidget(QWidget *parent, model::MessageLogger* logger);
 	~GraphLogMessagesWidget();
+
+signals:
+	void senderSelected(model::Node*);
 protected slots:
 	void onCleared();
 	void onUpdated();

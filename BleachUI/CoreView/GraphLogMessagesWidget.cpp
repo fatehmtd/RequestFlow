@@ -1,4 +1,5 @@
 #include "GraphLogMessagesWidget.h"
+#include "LogMessagesWidget.h"
 
 GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLogger* logger) : QWidget(parent), _messageLogger(logger)
 {
@@ -26,6 +27,19 @@ GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLo
 	connect(graph, &model::Graph::stopped, this, [=]()
 		{
 			ui.progressBar->setVisible(false);
+		});
+
+	auto p = (LogMessagesWidget*)parent;
+	connect(this, &GraphLogMessagesWidget::senderSelected, p, &LogMessagesWidget::senderSelected);
+
+	connect(ui.tableWidget, &QTableWidget::itemSelectionChanged, this, [=]() 
+		{			
+			auto data = ui.tableWidget->item(ui.tableWidget->currentRow(), 0)->data(Qt::UserRole+1);
+			auto sender = data.value<model::Node*>();
+			if (sender != nullptr)
+			{
+				emit senderSelected(sender);
+			}
 		});
 }
 
@@ -55,6 +69,12 @@ void GraphLogMessagesWidget::onLogged(const model::MessageLogger::Message& m)
 	auto typeItem = new QTableWidgetItem(icons[m.type], str[m.type]);
 	auto dateTimeItem = new QTableWidgetItem(m.dateTime.toString("hh:mm:ss"));
 	auto messateItem = new QTableWidgetItem(m.message);
+
+	if (dynamic_cast<model::Node*>(m.sender))
+	{
+		typeItem->setData(Qt::UserRole + 1, QVariant::fromValue(m.sender));
+	}
+
 	ui.tableWidget->setItem(row, 0, typeItem);
 	ui.tableWidget->setItem(row, 1, dateTimeItem);
 	ui.tableWidget->setItem(row, 2, messateItem);
