@@ -3,6 +3,7 @@
 #include <QRegularExpression>
 #include <QTextStream>
 
+
 model::EndpointNode::EndpointNode(model::Graph* graph) : model::Node(graph, "Endpoint")
 {
 	// default values
@@ -112,8 +113,10 @@ void model::EndpointNode::setUserAgent(const QString& userAgent)
 
 bool model::EndpointNode::validateHttpStatus(int status) const
 {
-	if (!getAcceptedCodes().contains(status)) return false;
-	if (getRejectedCodes().contains(status)) return false;
+	if (!getAcceptedCodes().isEmpty())
+		if (!getAcceptedCodes().contains(status)) return false;
+	if (!getRejectedCodes().isEmpty())
+		if (getRejectedCodes().contains(status)) return false;
 	return true;
 }
 
@@ -142,7 +145,7 @@ QUrl model::EndpointNode::resolveUrl(const QString& rawUrl) const
 	}
 
 	QStringList queryStringList;
-	
+
 	/*
 
 	for (auto& key : queryParams.keys())
@@ -191,12 +194,12 @@ QNetworkRequest model::EndpointNode::prepareRequest()
 		auto token = QString("%1:%2").arg(getBasicAuthUser()).arg(getBasicAuthPassword()).toLocal8Bit().toBase64();
 		request.setRawHeader("Authorization", QString("Basic %1").arg(QString(token)).toLocal8Bit());
 	}
-		break;
+	break;
 	case AuthorizationMethod::BEARER:
 	{
 		request.setRawHeader("Authorization", QString("Bearer %1").arg(getBearerToken()).toLocal8Bit());
 	}
-		break;
+	break;
 	}
 	return request;
 }
@@ -229,7 +232,7 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
 		//out << "Content-Encoding : " << reply->rawHeaderPairs().first(). << "\n";
 		//out << "Last-Modified : " << reply->header(QNetworkRequest::KnownHeaders::LastModifiedHeader).toString() << "\n";
 		//out << "User-Agent : " << reply->header(QNetworkRequest::KnownHeaders::UserAgentHeader).toString() << "\n";
-		out << "Server : " << reply->header(QNetworkRequest::KnownHeaders::ServerHeader).toString() << "\n";		
+		out << "Server : " << reply->header(QNetworkRequest::KnownHeaders::ServerHeader).toString() << "\n";
 		out << "\n\n";
 		out << "Response:\n";
 		out << data << "\n";
@@ -241,7 +244,7 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
 		}
 		//*/
 		setConsoleLog(fullResponse);
-		
+
 		if (validateHttpStatus(status))
 		{
 			auto response = getInputSlot()->getData();
@@ -328,6 +331,62 @@ void model::EndpointNode::setBearerToken(const QString& token)
 QString model::EndpointNode::getBearerToken() const
 {
 	return _bearerToken;
+}
+
+void model::EndpointNode::setExtraHeaders(const QMap<QString, QString>& headers)
+{
+	_extraHeaders = headers;
+}
+
+QMap<QString, QString> model::EndpointNode::getExtraHeaders() const
+{
+	return _extraHeaders;
+}
+
+QMap<QString, QString>& model::EndpointNode::getExtraHeaders()
+{
+	return _extraHeaders;
+}
+
+QJSValue model::EndpointNode::saveToJSValue(PersistenceHandler* handler) const
+{
+	auto v = Node::saveToJSValue(handler);
+	saveChildren<unsigned int>(v, handler, "acceptedCodes", getAcceptedCodes(), [=](unsigned int v)
+		{
+			return handler->createJsValue(v);
+		});
+	saveChildren<unsigned int>(v, handler, "rejectedCodes", getRejectedCodes(), [=](unsigned int v)
+		{
+			return handler->createJsValue(v);
+		});
+
+	saveChildren<QString, QString>(v, handler, "extraHeaders", getExtraHeaders(), [=](const QString& key, const QString& v)
+		{
+			return handler->createJsValue(v);
+		});
+	return v;
+}
+
+bool model::EndpointNode::loadFromJSValue(const QJSValue& v)
+{
+	Node::loadFromJSValue(v);
+	{
+		QList<unsigned int> values;
+		loadChildren(v, "acceptedCodes", [&values](const QJSValue& v)
+			{
+				values << v.toUInt();
+			});
+		setAcceptedCodes(values);
+	}
+	{
+		QList<unsigned int> values;
+		loadChildren(v, "rejectedCodes", [&values](const QJSValue& v)
+			{
+				values << v.toUInt();
+			});
+		setRejectedCodes(values);
+	}
+	return true;
 }
 
 void model::EndpointNode::onTimeout()

@@ -29,6 +29,25 @@ namespace model
 			out.setProperty(name, jsArray);
 		}
 
+		template <typename K, typename T>
+		void saveChildren(QJSValue& out, 
+			PersistenceHandler* persistenceHandler,
+			const QString& name,
+			const QMap<K, T>& children, 
+			std::function<QJSValue (const K&, const T&)> func) const
+		{
+			auto jsArray = persistenceHandler->createJsValueArray(children.size());
+			
+			int index = 0;
+			for(const auto& k : children.keys())
+			{
+				auto jsPair = persistenceHandler->createJsValue();
+				jsPair.setProperty(k, func(k, children[k]));
+				jsArray.setProperty(index++, jsPair);
+			}
+			out.setProperty(name, jsArray);
+		}
+
 		template <typename T>
 		void saveChildren(QJSValue& out, 
 			PersistenceHandler* persistenceHandler,

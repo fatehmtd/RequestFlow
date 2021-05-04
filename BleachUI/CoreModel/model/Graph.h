@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QElapsedTimer>
 #include <QVariant>
+#include <chrono>
 #include "IdentifiableEntity.h"
 
 namespace model
@@ -60,6 +61,7 @@ namespace model
 		virtual int start();
 		virtual void stop();
 		virtual void onNodeEvaluated();	
+		virtual void onNodeReady();	
 		virtual void onNodeFailed(const QString& reason);
 		virtual void onNodeException(QString reason);
 	signals:
@@ -74,6 +76,7 @@ namespace model
 	private:
 		QList<Node*> _startingNodes, _endingNodes;
 		QMap<Node*, int> _executionNodes;
+		QMap<Node*, std::chrono::system_clock::time_point> _executionTimes;
 		Environment* _environment = nullptr;
 		MessageLogger* _messageLogger = nullptr;
 		QElapsedTimer _elapsedTimer;

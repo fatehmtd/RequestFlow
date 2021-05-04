@@ -27,8 +27,9 @@ namespace model
         //Q_PROPERTY(QString consoleLog MEMBER _consoleLog READ getConsoleLog WRITE setConsoleLog NOTIFY consoleLogChanged)
         Q_PROPERTY(QString userAgent MEMBER _userAgent READ getUserAgent WRITE setUserAgent NOTIFY userAgentChanged)
         Q_PROPERTY(QString expectedPayload MEMBER _expectedPayload READ getExpectedPayload WRITE setExpectedPayload)
-        Q_PROPERTY(QList<unsigned int> acceptedCodes MEMBER _acceptedCodes READ getAcceptedCodes WRITE setAcceptedCodes)
-        Q_PROPERTY(QList<unsigned int> rejectedCodes MEMBER _rejectedCodes READ getRejectedCodes WRITE setRejectedCodes)
+        //Q_PROPERTY(QMap<QString, QString> extraHeaders MEMBER _extraHeaders READ getExtraHeaders WRITE setExtraHeaders)
+        //Q_PROPERTY(QList<unsigned int> acceptedCodes MEMBER _acceptedCodes READ getAcceptedCodes WRITE setAcceptedCodes)
+        //Q_PROPERTY(QList<unsigned int> rejectedCodes MEMBER _rejectedCodes READ getRejectedCodes WRITE setRejectedCodes)
     public:
         Q_INVOKABLE EndpointNode(model::Graph* graph);
         ~EndpointNode();
@@ -96,6 +97,14 @@ namespace model
 
         void setBearerToken(const QString& token);
         QString getBearerToken() const;
+
+        // TODO: save and load extra headers
+        void setExtraHeaders(const QMap<QString, QString>& headers);
+        QMap<QString, QString> getExtraHeaders() const;
+        QMap<QString, QString>& getExtraHeaders();
+
+        QJSValue saveToJSValue(PersistenceHandler* handler) const override;
+        bool loadFromJSValue(const QJSValue& v);
         
 	private slots:
 		void processResponse(QNetworkReply* reply);
@@ -141,5 +150,7 @@ namespace model
         QElapsedTimer _elapsedTimer;
         QTimer _timer;
         QNetworkReply* _networkReply = nullptr;
+
+        QMap<QString, QString> _extraHeaders;
     };
 }

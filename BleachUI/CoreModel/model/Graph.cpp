@@ -197,13 +197,24 @@ void model::Graph::stop()
 	_isRunning = false;
 }
 
+void model::Graph::onNodeReady()
+{
+	auto node = dynamic_cast<Node*>(sender());
+	if (node != nullptr)
+	{
+		_executionTimes[node] = std::chrono::system_clock::now();
+	}
+}
+
 void model::Graph::onNodeEvaluated()
 {
 	auto node = dynamic_cast<Node*>(sender());
 	if (node != nullptr)
 	{
 		_executionNodes[node] = 1;
-		node->success(QString("Executed [%1 : %2]").arg(node->getType()).arg(node->getName()));
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _executionTimes[node]);
+		
+		node->success(QString("Executed [%1 : %2 ( %3 ms )]").arg(node->getType()).arg(node->getName()).arg(duration.count()));
 	}
 	checkExecutionStatus();
 	emit advanced();
@@ -275,6 +286,7 @@ void model::Graph::clear()
 	_executionNodes.clear();
 	_startingNodes.clear();
 	_endingNodes.clear();
+	_executionTimes.clear();
 }
 
 void model::Graph::checkExecutionStatus()

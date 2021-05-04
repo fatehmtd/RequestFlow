@@ -23,10 +23,8 @@ void logic::EndpointNode::initUI()
 	getContentWidget()->layout()->addWidget(widget);
 	getContentWidget()->adjustSize();
 
-	auto node = dynamic_cast<model::EndpointNode*>(getModelNode());
-
+	// set the data from the model
 	auto endpointNode = dynamic_cast<model::EndpointNode*>(getModelNode());
-	//_ui.lineEdit_url->setText(QString("https://jsonplaceholder.typicode.com/posts"));
 	_ui.lineEdit_url->setText(endpointNode->getUrl());
 	for (int i = 0; i < _ui.comboBox_contentType->count(); i++)
 	{
@@ -39,31 +37,11 @@ void logic::EndpointNode::initUI()
 	_ui.comboBox_method->setCurrentIndex(endpointNode->getHttpMethod());
 	_ui.spinBox_timeout->setValue(endpointNode->getTimeout());
 	_ui.plainTextEdit_expectedPayload->setPlainText(endpointNode->getExpectedPayload());
-	//_ui.spinBox_timeout->setValue(endpointNode->getTimeout()); // user agent
-	//_ui.comboBox_method->setCurrentIndex(0);
-
 	_ui.tabWidget_authentication->setCurrentIndex(endpointNode->getAuthMethod());
 	_ui.lineEdit_baUser->setText(endpointNode->getBasicAuthUser());
 	_ui.lineEdit_baPwd->setText(endpointNode->getBasicAuthPassword());
 	_ui.lineEdit_bearerToken->setText(endpointNode->getBearerToken());
 	
-	//_ui.tabWidget->setPalette(QPalette(Qt::black));
-
-	// connect signals
-	connect(_ui.lineEdit_url, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setUrl);
-	connect(_ui.lineEdit_baUser, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBasicAuthUser);
-	connect(_ui.lineEdit_baPwd, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBasicAuthPassword);
-	connect(_ui.lineEdit_bearerToken, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBearerToken);
-	connect(_ui.tabWidget_authentication, &QTabWidget::currentChanged, endpointNode, &model::EndpointNode::setAuthMethod);
-	connect(_ui.spinBox_timeout, SIGNAL(valueChanged(int)), this, SLOT(onTimeoutChanged(int)));
-	connect(_ui.comboBox_method, SIGNAL(currentIndexChanged(int)), this, SLOT(onHttpMethodChanged(int)));
-	connect(_ui.comboBox_contentType, SIGNAL(currentTextChanged(const QString&)), this, SLOT(onContentTypeChanged(const QString&)));
-
-	connect(node, &model::EndpointNode::consoleLogChanged, _ui.plainTextEdit_response, &QPlainTextEdit::setPlainText);
-
-	//_ui.plainTextEdit_response->setPalette(QPalette(Qt::black));
-	//_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black");
-	//_ui.plainTextEdit_response->setBackgroundVisible(true);
 	{
 		_ui.tableWidget_acceptedCodes->clearContents();
 		auto codes = endpointNode->getAcceptedCodes();
@@ -81,6 +59,78 @@ void logic::EndpointNode::initUI()
 			_ui.tableWidget_rejectedCodes->setItem(i, 0, new QTableWidgetItem(QString("%1").arg(codes[i])));
 		}
 	}
+
+	// connect signals
+	connect(_ui.lineEdit_url, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setUrl);
+	connect(_ui.lineEdit_baUser, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBasicAuthUser);
+	connect(_ui.lineEdit_baPwd, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBasicAuthPassword);
+	connect(_ui.lineEdit_bearerToken, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBearerToken);
+	connect(_ui.tabWidget_authentication, &QTabWidget::currentChanged, endpointNode, &model::EndpointNode::setAuthMethod);
+	connect(_ui.spinBox_timeout, SIGNAL(valueChanged(int)), this, SLOT(onTimeoutChanged(int)));
+	connect(_ui.comboBox_method, SIGNAL(currentIndexChanged(int)), this, SLOT(onHttpMethodChanged(int)));
+	connect(_ui.comboBox_contentType, SIGNAL(currentTextChanged(const QString&)), this, SLOT(onContentTypeChanged(const QString&)));
+
+	connect(_ui.tableWidget_acceptedCodes, &QTableWidget::itemChanged, this, [=](QTableWidgetItem* item) 
+		{
+			int value = item->data(Qt::DisplayRole).toInt();
+
+			// validate the value
+			// check if already existing
+
+			if (value < 100 || endpointNode->getAcceptedCodes().contains(value) || endpointNode->getRejectedCodes().contains(value))
+			{
+				_ui.tableWidget_acceptedCodes->blockSignals(true);
+				item->setData(Qt::DisplayRole, ""); // clear the cell
+				_ui.tableWidget_acceptedCodes->blockSignals(false);
+			}
+			else // set the values in the model
+			{
+				QList<unsigned int> values;
+				for (auto i = 0; i < _ui.tableWidget_acceptedCodes->rowCount(); i++)
+				{
+					auto item = _ui.tableWidget_acceptedCodes->item(i, 0);
+					if (item == nullptr) continue;
+					auto v = item->data(Qt::DisplayRole).toInt();
+					if (v < 100) continue;
+					values << v;
+				}
+				endpointNode->setAcceptedCodes(values);
+			}
+		});
+
+	connect(_ui.tableWidget_rejectedCodes, &QTableWidget::itemChanged, this, [=](QTableWidgetItem* item) 
+		{
+			int value = item->data(Qt::DisplayRole).toInt();
+
+			// validate the value
+			// check if already existing
+
+			if (value < 100 || endpointNode->getAcceptedCodes().contains(value) || endpointNode->getRejectedCodes().contains(value))
+			{
+				_ui.tableWidget_rejectedCodes->blockSignals(true);
+				item->setData(Qt::DisplayRole, ""); // clear the cell
+				_ui.tableWidget_rejectedCodes->blockSignals(false);
+			}
+			else // set the values in the model
+			{
+				QList<unsigned int> values;
+				for (auto i = 0; i < _ui.tableWidget_rejectedCodes->rowCount(); i++)
+				{
+					auto item = _ui.tableWidget_rejectedCodes->item(i, 0);
+					if (item == nullptr) continue;
+					auto v = item->data(Qt::DisplayRole).toInt();
+					if (v < 100) continue;
+					values << v;
+				}
+				endpointNode->setRejectedCodes(values);
+			}
+		});
+
+	connect(endpointNode, &model::EndpointNode::consoleLogChanged, _ui.plainTextEdit_response, &QPlainTextEdit::setPlainText);
+
+	//_ui.plainTextEdit_response->setPalette(QPalette(Qt::black));
+	//_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black");
+	//_ui.plainTextEdit_response->setBackgroundVisible(true);
 
 	_bgColor = view::colors::blue;
 	connect(_node, &model::Node::ready, this, [=]()

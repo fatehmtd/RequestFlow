@@ -19,6 +19,8 @@ model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(par
 
 	//connect(this, &Node::readyForEvaluation, this, &Node::evaluate);
 	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated, Qt::ConnectionType::QueuedConnection);
+	connect(this, &Node::ready, parent, &Graph::onNodeReady, Qt::ConnectionType::QueuedConnection);
+	connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
 	connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
 	//connect(this, &Node::exceptionRaised, parent, &Graph::onNodeException, Qt::ConnectionType::QueuedConnection);
 }
