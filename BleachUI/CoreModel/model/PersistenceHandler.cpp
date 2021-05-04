@@ -29,7 +29,7 @@ QJSValue model::PersistenceHandler::createJsValueArray(quint32 size)
 
 QString model::PersistenceHandler::evaluate(const QJSValue& v)
 {
-	return QJsonDocument::fromVariant(_engine.fromScriptValue<QVariant>(v)).toJson(QJsonDocument::JsonFormat::Compact);
+	return QJsonDocument::fromVariant(_engine.fromScriptValue<QVariant>(v)).toJson(QJsonDocument::JsonFormat::Indented);
 }
 
 QJSValue model::PersistenceHandler::evaluate(const QString& script)

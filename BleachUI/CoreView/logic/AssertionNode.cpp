@@ -3,7 +3,6 @@
 logic::AssertionNode::AssertionNode(model::AssertionNode* modelNode) : view::Node(modelNode, "Assertion")
 {
     setupUi();
-	setTitle("Assertion");
 }
 
 void logic::AssertionNode::clearUI()

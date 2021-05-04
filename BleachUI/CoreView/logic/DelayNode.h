@@ -7,6 +7,7 @@ namespace logic
 {
     class DelayNode : public view::Node
     {
+        Q_OBJECT
     public:
         DelayNode(model::DelayNode* modelNode);
 

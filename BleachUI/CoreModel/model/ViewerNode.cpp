@@ -5,22 +5,25 @@
 
 model::ViewerNode::ViewerNode(model::Graph* graph) : model::Node(graph, "Viewer")
 {
-
+	setFilter("$.*");
 }
-
-#include <QDebug>
 
 void model::ViewerNode::createModel()
 {
 	addInputSlot("in", model::Slot::DataType::CUSTOM);
 }
 
-void model::ViewerNode::evaluate()
-{
-	Node::evaluate();
-}
-
 model::InputSlot* model::ViewerNode::getInput() const
 {
-	return getInputSlots().values().first();
+	return getInputSlotsMap().values().first();
+}
+
+void model::ViewerNode::setFilter(const QString& filter)
+{
+	_filter = filter;
+}
+
+QString model::ViewerNode::getFilter() const
+{
+	return _filter;
 }

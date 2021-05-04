@@ -10,7 +10,6 @@
 logic::PayloadNode::PayloadNode(model::PayloadNode* modelNode) : view::Node(modelNode, "Payload")
 {
 	setupUi();
-	setTitle("Payload");
 }
 
 model::Message logic::PayloadNode::composeMessage() const
@@ -26,11 +25,11 @@ model::Message logic::PayloadNode::composeMessage() const
 
 void logic::PayloadNode::fillFromMessage(const model::Message& message)
 {	
+	_ui.tableWidget_path->setRowCount(0);
+	_ui.tableWidget_query->setRowCount(0);
+
 	_ui.tableWidget_path->setRowCount(50);
 	_ui.tableWidget_query->setRowCount(50);
-
-	_ui.tableWidget_path->clear();
-	_ui.tableWidget_query->clear();
 
 	{
 		auto keys = message.getQueryParams().keys();

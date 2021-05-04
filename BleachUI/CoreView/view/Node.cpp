@@ -21,6 +21,8 @@ view::Node::Node(model::Node* modelNode, QString nodeType) : _node(modelNode), _
 
 	//connect(modelNode, &model::Node::evaluated, this, [=]() { update(); });
 	//connect(modelNode, &model::Node::ready, this, [=]() { update(); });
+
+	setTitle(modelNode->getName());
 }
 
 view::Node::~Node()
@@ -89,7 +91,7 @@ void view::Node::setupUi()
 
 	QFont font;
 	font.setBold(true);
-	font.setPointSizeF(10);
+	font.setPointSizeF(12);
 	_title = new QGraphicsTextItem(this);
 	_title->setFont(font);
 	//_title->setPlainText(QString("Node name").arg(rand() % 100));
@@ -119,13 +121,13 @@ void view::Node::setupUIForModel()
 {
 	if (_node != nullptr)
 	{
-		auto inputSlots = _node->getInputSlots();
+		auto inputSlots = _node->getInputSlotsMap();
 		for (auto slot : inputSlots.values())
 		{
 			auto inputSlot = new view::Slot(this, slot);
 		}
 
-		auto outputSlots = _node->getOutputSlots();
+		auto outputSlots = _node->getOutputSlotsMap();
 		for (auto slot : outputSlots.values())
 		{
 			auto outputSlot = new view::Slot(this, slot);
@@ -141,9 +143,11 @@ QRectF view::Node::boundingRect() const
 	return rect;
 }
 
+
 void view::Node::setTitle(const QString& txt)
 {
-	_title->setPlainText(txt);
+	_title->setPlainText(QString("%1 [%2]").arg(getModelNode()->getType()).arg(txt));
+	getModelNode()->setName(txt);
 }
 
 QString view::Node::getTitle() const
@@ -330,7 +334,7 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		auto bgColor = _bgColor;
 		QPen pen(bgColor);
 
-		float headerHeight = getHeaderHeight();
+		float headerHeight = getHeaderHeight() *0.7f +  getSlotsSectionHeight();
 		QBrush backgroundBrush(bgColor);
 		backgroundPath.setFillRule(Qt::FillRule::WindingFill);
 		backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);

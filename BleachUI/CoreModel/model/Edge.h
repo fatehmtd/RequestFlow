@@ -14,6 +14,8 @@ namespace model
 	public:
 		Edge(Graph* parent);
 
+		Graph* getGraph() const;
+
 		bool setDestination(InputSlot* slot);
 		bool setOrigin(OutputSlot* slot);
 

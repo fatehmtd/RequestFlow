@@ -105,7 +105,7 @@ QPointF view::Slot::getBasePosition(bool global) const
 	float horizontalSpacing = 5.0f;
 	const int index = node->getSlotIndex(this);
 	const float x = isInput() ? (0 - horizontalSpacing) : (node->boundingRect().width() + horizontalSpacing);
-	const float y = node->getHeaderHeight() * 0.8f + index * node->getSlotHeight();
+	const float y = node->getHeaderHeight() * 1.0f + index * node->getSlotHeight();
 	//_title->boundingRect().height()
 
 	auto p = QPointF(x, y);
@@ -126,4 +126,11 @@ model::Slot* view::Slot::getModelSlot() const
 view::Node* view::Slot::getNode() const
 {
 	return dynamic_cast<Node*>(parentItem());
+}
+
+void view::Slot::setName(const QString& name)
+{
+	_title->setPlainText(name);
+	getModelSlot()->setName(name);
+	update();
 }

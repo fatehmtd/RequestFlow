@@ -9,7 +9,6 @@
 logic::DelayNode::DelayNode(model::DelayNode* modelNode) : view::Node(modelNode, "Delay")
 {
 	setupUi();
-	setTitle("Delay");
 	_ui.spinBox->setValue(modelNode->getDelay());
 	connect(_ui.spinBox, SIGNAL(valueChanged(int)), modelNode, SLOT(setDelay(int)));
 }

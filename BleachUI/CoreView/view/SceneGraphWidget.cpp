@@ -17,6 +17,7 @@ SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph
 	initUi();
 	setScene(_sceneGraph);
 	setObjectName(sceneGraph->getModelGraph()->getIdentifier());
+	_rubberBand = new QRubberBand(QRubberBand::Shape::Rectangle, this);
 }
 
 SceneGraphWidget::~SceneGraphWidget()
@@ -39,6 +40,8 @@ void SceneGraphWidget::initUi()
 
 	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
 	setRenderHint(QPainter::RenderHint::Antialiasing, true);
+	setRenderHint(QPainter::RenderHint::HighQualityAntialiasing, true);
+	setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
 	setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
 	setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
 
@@ -49,7 +52,7 @@ void SceneGraphWidget::initUi()
 	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
 	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
 
-	_zoomInFactor = 1.5f;
+	_zoomInFactor = 2.0f;
 	_zoomStep = 1;
 
 	_minZoomLevel = 1;
@@ -58,10 +61,17 @@ void SceneGraphWidget::initUi()
 
 	_zoomLevel = _defaultZoomLevel;
 	//setOGLBackend();
+
+	setAcceptDrops(true);
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 {
+	if (event->button() == Qt::MouseButton::LeftButton)
+	{
+		setDragMode(QGraphicsView::RubberBandDrag);
+	}
+
 	// TODO: use this as the center of the view
 	//qDebug() << mapToScene(viewport()->rect()).boundingRect().center();
 	if (event->button() == Qt::MouseButton::MiddleButton)
@@ -76,6 +86,9 @@ void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 
 void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
 {
+	setDragMode(QGraphicsView::DragMode::NoDrag);
+
+
 	if (event->button() == Qt::MouseButton::MiddleButton)
 	{
 		mouseMiddleButtonReleased(event);
@@ -88,6 +101,7 @@ void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
 {
+
 	if (_sceneGraph == nullptr) return;
 	if (dragMode() == DragMode::ScrollHandDrag)
 	{
@@ -190,6 +204,44 @@ void SceneGraphWidget::setOGLBackend()
 	glWidget->setFormat(surfaceFormat);
 	setViewport(glWidget);
 	//*/
+}
+
+#include <QMimeData>
+
+void SceneGraphWidget::dragEnterEvent(QDragEnterEvent* event)
+{
+	if (event->mimeData()->hasFormat("application/x-EndpointEntry"))
+	{
+		event->acceptProposedAction();
+	}
+}
+
+#include <QDataStream>
+#include <model/EndpointEntry.h>
+
+#include "InteractionsHandler.h"
+
+void SceneGraphWidget::dropEvent(QDropEvent* event)
+{
+	auto mime = event->mimeData();
+	auto byteArray = mime->data("application/x-EndpointEntry");
+	QDataStream in(&byteArray, QIODevice::ReadOnly);
+
+	int count = 0;
+	in >> count;
+	for (int i = 0; i < count; i++)
+	{
+		size_t ptr = 0;
+		in >> ptr;
+		auto entry = dynamic_cast<model::EndpointEntry*>(reinterpret_cast<QObject*>(ptr));
+		if (entry != nullptr)
+		{
+			auto node = _sceneGraph->getInteractionsHandler()->createEndpointNode(entry);			
+			node->setPos(mapToScene(event->pos()));
+		}
+	}
+
+	event->acceptProposedAction();
 }
 
 QPointF SceneGraphWidget::getCenter() const

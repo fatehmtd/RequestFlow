@@ -20,7 +20,7 @@ model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(par
 	//connect(this, &Node::readyForEvaluation, this, &Node::evaluate);
 	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated, Qt::ConnectionType::QueuedConnection);
 	connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
-	connect(this, &Node::exceptionRaised, parent, &Graph::onNodeException, Qt::ConnectionType::QueuedConnection);
+	//connect(this, &Node::exceptionRaised, parent, &Graph::onNodeException, Qt::ConnectionType::QueuedConnection);
 }
 
 model::InputSlot* model::Node::getDestinationSlot(const QString& name) const
@@ -68,10 +68,10 @@ model::OutputSlot* model::Node::addOutputSlot(QString name, int dataType)
 	return slot;
 }
 
-QMap<QString, model::InputSlot*> model::Node::getInputSlots() const
+QMap<QString, model::InputSlot*> model::Node::getInputSlotsMap() const
 {
 	QMap<QString, InputSlot*> output;
-	auto listOfChildren = children();
+	auto listOfChildren = findChildren<InputSlot*>();
 	for (auto child : listOfChildren)
 	{
 		auto slot = dynamic_cast<InputSlot*>(child);
@@ -83,10 +83,10 @@ QMap<QString, model::InputSlot*> model::Node::getInputSlots() const
 	return std::move(output);
 }
 
-QMap<QString, model::OutputSlot*> model::Node::getOutputSlots() const
+QMap<QString, model::OutputSlot*> model::Node::getOutputSlotsMap() const
 {
 	QMap<QString, OutputSlot*> output;
-	auto listOfChildren = children();
+	auto listOfChildren = findChildren<OutputSlot*>();
 	for (auto child : listOfChildren)
 	{
 		auto slot = dynamic_cast<OutputSlot*>(child);
@@ -96,6 +96,16 @@ QMap<QString, model::OutputSlot*> model::Node::getOutputSlots() const
 		}
 	}
 	return std::move(output);
+}
+
+QList<model::InputSlot*> model::Node::getInputSlots() const
+{
+	return findChildren<InputSlot*>();
+}
+
+QList<model::OutputSlot*> model::Node::getOutputSlots() const
+{
+	return findChildren<OutputSlot*>();
 }
 
 model::Graph* model::Node::getGraph() const
@@ -112,10 +122,10 @@ void model::Node::clear()
 QJSValue model::Node::saveToJSValue(PersistenceHandler* persistenceHandler) const
 {
 	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
-	auto inputSlots = getInputSlots();
-	auto oututSlots = getOutputSlots();
-	saveChildren(value, persistenceHandler, "inputSlots", (PersistableEntity*const*)inputSlots.values().toVector().data(), inputSlots.size());
-	saveChildren(value, persistenceHandler, "outputSlots", (PersistableEntity*const*)oututSlots.values().toVector().data(), oututSlots.size());
+
+	saveChildren<InputSlot*>(value, persistenceHandler, "inputSlots", getInputSlots());
+	saveChildren<OutputSlot*>(value, persistenceHandler, "outputSlots", getOutputSlots());
+
 	return value;
 }
 
@@ -124,31 +134,31 @@ bool model::Node::loadFromJSValue(const QJSValue& v)
 	PersistableEntity::loadFromJSValue(v);
 
 	qDeleteAll(getInputSlots());
-	qDeleteAll(getOutputSlots());
+	qDeleteAll(getInputSlots());
 
-	auto inputSlotsValue = v.property("inputSlots");
-	for (int i = 0; i < inputSlotsValue.property("length").toInt(); i++)
-	{
-		auto inputSlot = addInputSlot("", -1);
-		inputSlot->loadFromJSValue(inputSlotsValue.property(i));
-	}
+	loadChildren(v, "inputSlots", [=](const QJSValue& value) 
+		{
+			auto inputSlot = addInputSlot("", -1);
+			inputSlot->loadFromJSValue(value);
+		});
 
-	auto outputSlotsValue = v.property("outputSlots");
-	for (int i = 0; i < outputSlotsValue.property("length").toInt(); i++)
-	{
-		auto outputSlot = addOutputSlot("", -1);
-		outputSlot->loadFromJSValue(outputSlotsValue.property(i));
-	}
+	loadChildren(v, "outputSlots", [=](const QJSValue& value) 
+		{
+			auto outputSlot = addOutputSlot("", -1);
+			outputSlot->loadFromJSValue(value);
+		});
 
 	return true;
 }
 
 void model::Node::evaluate()
 {
+	if (!getGraph()->isRunning()) return;
+
 	emit evaluated();
 	setStatus(EVALUATED);
 
-	for (auto slot : getOutputSlots().values())
+	for (auto slot : getOutputSlotsMap().values())
 	{
 		slot->sendData();
 	}
@@ -164,15 +174,9 @@ void model::Node::setStatus(int status)
 	_executionStatus = status;
 }
 
-void model::Node::fail()
+void model::Node::fail(const QString& reason)
 {
-	emit failed();
-}
-
-void model::Node::raiseException(QString reason)
-{
-	fail();
-	emit exceptionRaised(reason);
+	emit failed(reason);
 }
 
 void model::Node::onGraphStart()
@@ -180,7 +184,7 @@ void model::Node::onGraphStart()
 	clear();
 
 	// If the node has no input slots, proceed to evaluation when the graph execution starts
-	if (getInputSlots().size() == 0)
+	if (getInputSlotsMap().size() == 0)
 	{
 		emit ready();
 	}
@@ -198,6 +202,7 @@ void model::Node::dataReceived(InputSlot* slot)
 
 void model::Node::slotDataReceived() 
 {
+	if (!getGraph()->isRunning()) return;
 	auto inputSlot = dynamic_cast<InputSlot*>(sender());
 	if (inputSlot != nullptr)
 	{
@@ -208,7 +213,7 @@ void model::Node::slotDataReceived()
 			_listOfReadySlots.push_back(inputSlot);
 			
 			// When all the slots receive data, the node becomes ready for evaluation
-			if (_listOfReadySlots.size() == getInputSlots().size())
+			if (_listOfReadySlots.size() == getInputSlotsMap().size())
 			{
 				emit ready();
 			}
@@ -224,5 +229,5 @@ void model::Node::slotDataSent()
 void model::Node::slotFailed()
 {
 	setStatus(FAILED);
-	fail();
+	fail("Failed from above");
 }

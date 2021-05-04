@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/BleachUI">
         <file alias="menu">icons/menu.png</file>
-        <file alias="graph">icons/node (1).png</file>
         <file alias="play">icons/play.png</file>
         <file alias="view">icons/view.png</file>
         <file alias="stopWatch">icons/stopwatch.png</file>
@@ -22,7 +21,7 @@
         <file>icons/duplicate.svg</file>
         <file>icons/desk-lamp.svg</file>
         <file>icons/desk.svg</file>
-        <file>icons/broom.svg</file>
+        <file alias="broom">icons/broom.svg</file>
         <file alias="minus">icons/minus.svg</file>
         <file alias="plus">icons/plus.svg</file>
         <file>icons/selective.svg</file>
@@ -51,5 +50,22 @@
         <file alias="environment">icons/server.svg</file>
         <file alias="swagger">icons/swagger.png</file>
         <file alias="warning">icons/warning.svg</file>
+        <file alias="get">icons/get.svg</file>
+        <file alias="post">icons/post.svg</file>
+        <file alias="del">icons/del.svg</file>
+        <file alias="put">icons/put.svg</file>
+        <file alias="url">icons/web-search-engine.svg</file>
+        <file alias="hashtag">icons/hastag.svg</file>
+        <file alias="network">icons/network.png</file>
+        <file alias="{}">icons/curly_brakets.svg</file>
+        <file alias="[]">icons/brackets.svg</file>
+        <file alias="warningyellow">icons/warning (1).svg</file>
+        <file alias="info">icons/information (1).svg</file>
+        <file alias="debug">icons/debugging.svg</file>
+        <file alias="error">icons/no-entry.svg</file>
+        <file alias="ok">icons/tick.svg</file>
+        <file alias="afilterir-">icons/air-filter.svg</file>
+        <file alias="filter">icons/right-arrow.svg</file>
+        <file alias="pen">icons/pen.svg</file>
     </qresource>
 </RCC>

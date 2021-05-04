@@ -106,7 +106,8 @@
     </size>
    </property>
    <property name="windowIcon">
-    <iconset theme=":/ui/environment"/>
+    <iconset theme=":/ui/environment">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="features">
     <set>QDockWidget::DockWidgetMovable</set>
@@ -118,7 +119,7 @@
     <string>Environments</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>2</number>
+    <number>1</number>
    </attribute>
    <widget class="EnvironmentsWidget" name="environmentsWidget"/>
   </widget>
@@ -149,6 +150,42 @@
    </attribute>
    <widget class="InventoryWidget" name="inventoryWidget"/>
   </widget>
+  <widget class="QDockWidget" name="dockWidget_5">
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea|Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Message logger</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="LogMessagesWidget" name="logMessagesWidget" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -168,6 +205,12 @@
    <class>InventoryWidget</class>
    <extends>QWidget</extends>
    <header>inventorywidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LogMessagesWidget</class>
+   <extends>QWidget</extends>
+   <header>logmessageswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

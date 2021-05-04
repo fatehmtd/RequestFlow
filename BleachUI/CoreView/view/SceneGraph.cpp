@@ -80,36 +80,10 @@ view::Edge* view::SceneGraph::findbyModel(model::Edge* edge) const
 
 void view::SceneGraph::createGraphiNodesForModel()
 {
-	QMap<QString, std::function<view::Node*(model::Node*)>> nodesMap;
-	nodesMap["Payload"] = [](model::Node* modelNode)
-	{
-		return new logic::PayloadNode((model::PayloadNode*)modelNode);
-	};
-
-	nodesMap["Endpoint"] = [](model::Node* modelNode)
-	{
-		return new logic::EndpointNode((model::EndpointNode*)modelNode);
-	};
-	nodesMap["Script"] = [](model::Node* modelNode)
-	{
-		return new logic::ScriptNode((model::ScriptNode*)modelNode);
-	};
-	nodesMap["Viewer"] = [](model::Node* modelNode)
-	{
-		return new logic::ViewerNode((model::ViewerNode*)modelNode);
-	};
-	nodesMap["Delay"] = [](model::Node* modelNode)
-	{
-		return new logic::DelayNode((model::DelayNode*)modelNode);
-	};
-	nodesMap["Assertion"] = [](model::Node* modelNode)
-	{
-		return new logic::AssertionNode((model::AssertionNode*)modelNode);
-	};
 
 	for (auto modelNode : getModelGraph()->getNodes())
 	{
-		auto node = nodesMap[modelNode->getType()](modelNode);
+		auto node = createVisualNodeForModelNode(modelNode);
 		addItem(node);
 	}
 
@@ -196,11 +170,43 @@ void view::SceneGraph::clearScene()
 	}
 }
 
+view::Node* view::SceneGraph::createVisualNodeForModelNode(model::Node* node)
+{
+	QMap<QString, std::function<view::Node* (model::Node*)>> nodesMap;
+	nodesMap["Payload"] = [](model::Node* modelNode)
+	{
+		return new logic::PayloadNode((model::PayloadNode*)modelNode);
+	};
+
+	nodesMap["Endpoint"] = [](model::Node* modelNode)
+	{
+		return new logic::EndpointNode((model::EndpointNode*)modelNode);
+	};
+	nodesMap["Script"] = [](model::Node* modelNode)
+	{
+		return new logic::ScriptNode((model::ScriptNode*)modelNode);
+	};
+	nodesMap["Viewer"] = [](model::Node* modelNode)
+	{
+		return new logic::ViewerNode((model::ViewerNode*)modelNode);
+	};
+	nodesMap["Delay"] = [](model::Node* modelNode)
+	{
+		return new logic::DelayNode((model::DelayNode*)modelNode);
+	};
+	nodesMap["Assertion"] = [](model::Node* modelNode)
+	{
+		return new logic::AssertionNode((model::AssertionNode*)modelNode);
+	};
+
+	return nodesMap[node->getType()](node);
+}
+
 void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
 	//drawPointsBackground(painter, rect);
-	drawCrossBackground(painter, rect);
-	//drawGridBackground(painter, rect);
+	//drawCrossBackground(painter, rect);
+	drawGridBackground(painter, rect);
 }
 
 void view::SceneGraph::drawPointsBackground(QPainter* painter, const QRectF& rect)
@@ -321,9 +327,11 @@ void view::SceneGraph::drawCrossBackground(QPainter* painter, const QRectF& rect
 void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
 	auto menu = _interactionsHandler->createContextMenu(event->scenePos());
-	menu->exec(event->screenPos());
-	menu->deleteLater();
-
+	if (!menu->actions().isEmpty())
+	{
+		menu->exec(event->screenPos());
+		menu->deleteLater();
+	}
 	QGraphicsScene::contextMenuEvent(event);
 }
 
@@ -335,8 +343,8 @@ void view::SceneGraph::setupUi()
 
 	//_background = QColor(140, 140, 140);
 	_background = QColor("#F4F3F4");
-	_lightGrid = QColor(120, 120, 120);
-	_darkGrid = QColor(60, 60, 60);
+	_lightGrid = QColor(200, 200, 200);
+	_darkGrid = QColor(160, 160, 160);
 	//*/
 /*
 	_background = colors::whiteGrey;
@@ -372,6 +380,38 @@ void view::SceneGraph::createEdge()
 			addItem(new Edge(this, modelEdge));
 		}
 	}
+}
+
+#include <QStandardItem>
+#include <QMimeData>
+#include <model/EndpointEntry.h>
+
+void view::SceneGraph::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+	event->acceptProposedAction();
+	return;
+	QGraphicsScene::dragEnterEvent(event);
+}
+
+void view::SceneGraph::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
+{
+	event->acceptProposedAction();
+	return;
+	QGraphicsScene::dragMoveEvent(event);
+}
+
+void view::SceneGraph::dragLeaveEvent(QGraphicsSceneDragDropEvent* event)
+{
+	event->acceptProposedAction();
+	return;
+	QGraphicsScene::dragLeaveEvent(event);
+}
+
+void view::SceneGraph::dropEvent(QGraphicsSceneDragDropEvent* event)
+{
+	event->acceptProposedAction();
+	return;
+	QGraphicsScene::dropEvent(event);
 }
 
 void view::SceneGraph::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -464,4 +504,23 @@ void view::SceneGraph::bringToFront(Node* node) const
 
 		collidingItem->stackBefore(node);
 	}
+}
+
+#include <model/PersistenceHandler.h>
+#include <QUUID>
+
+view::Node* view::SceneGraph::cloneNode(Node* originalNode)
+{
+	model::PersistenceHandler handler;
+	auto modelNode = getModelGraph()->createNodeFromJSValue(originalNode->getModelNode()->saveToJSValue(&handler));
+	modelNode->setIdentifier(QUuid::createUuid().toString());
+	//qDebug() << originalNode->metaObject()->className();
+	auto node = createVisualNodeForModelNode(modelNode);
+	addItem(node);
+	return node;
+}
+
+view::InteractionsHandler* view::SceneGraph::getInteractionsHandler() const
+{
+	return _interactionsHandler;
 }

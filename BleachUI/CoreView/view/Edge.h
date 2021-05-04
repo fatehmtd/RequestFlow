@@ -28,6 +28,8 @@ namespace view
 	protected:
 		virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 		QPainterPath buildPath() const;	
+		QPainterPath buildPathCubic() const;	
+		QPainterPath buildPathSegmented() const;	
 		virtual QRectF boundingRect() const override;
 
 		virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;

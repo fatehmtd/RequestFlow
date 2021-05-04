@@ -75,6 +75,24 @@
     <Filter Include="model\PersistenceHandler">
       <UniqueIdentifier>{235abd1d-da6a-4c09-87a4-830bf4e7d7bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="model\Document">
+      <UniqueIdentifier>{e210affc-9e44-4ab4-901b-55aa79561a4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\EndpointEntry">
+      <UniqueIdentifier>{68486b80-ad39-41ac-9fcc-d06dc623c909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model\EntryDefinition">
+      <UniqueIdentifier>{ebc9e82d-2b1b-4315-83d7-47c9e1bbdde4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="exchange">
+      <UniqueIdentifier>{21726092-d158-4ed0-a80d-b07f0a591ae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{54bced45-7803-4d8f-802d-188a5cb11c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\logger">
+      <UniqueIdentifier>{d48dd62a-4a2f-46e5-9e74-dfc4189ac69e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coremodel_global.h">
@@ -145,6 +163,18 @@
     <ClCompile Include="model\PersistenceHandler.cpp">
       <Filter>model\PersistenceHandler</Filter>
     </ClCompile>
+    <ClCompile Include="model\Document.cpp">
+      <Filter>model\Document</Filter>
+    </ClCompile>
+    <ClCompile Include="model\EndpointEntry.cpp">
+      <Filter>model\EndpointEntry</Filter>
+    </ClCompile>
+    <ClCompile Include="model\EntryDefinition.cpp">
+      <Filter>model\EntryDefinition</Filter>
+    </ClCompile>
+    <ClCompile Include="model\MessageLogger.cpp">
+      <Filter>utils\logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="model\Edge.h">
@@ -185,6 +215,18 @@
     </QtMoc>
     <QtMoc Include="model\AssertionNode.h">
       <Filter>logic\AssertionNode</Filter>
+    </QtMoc>
+    <QtMoc Include="model\EndpointEntry.h">
+      <Filter>model\EndpointEntry</Filter>
+    </QtMoc>
+    <QtMoc Include="model\Document.h">
+      <Filter>model\Document</Filter>
+    </QtMoc>
+    <QtMoc Include="model\EntryDefinition.h">
+      <Filter>model\EntryDefinition</Filter>
+    </QtMoc>
+    <QtMoc Include="model\MessageLogger.h">
+      <Filter>utils\logger</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

@@ -124,6 +124,8 @@ void ScenariosWidget::fillScenariosList()
 #include <functional>
 #include <model/Graph.h>
 
+#include <QMessageBox>
+
 void ScenariosWidget::onContextMenuRequested(const QPoint& p)
 {
 	auto index = _ui.listView->indexAt(p);
@@ -138,13 +140,26 @@ void ScenariosWidget::onContextMenuRequested(const QPoint& p)
 				{
 					emit currentSceneChanged(graph);
 				});
+			
+			/*
+			menu.addAction<std::function<void(void)>>(QIcon(":/BleachUI/copy"), "Clone", [=]()
+				{
+					//emit sceneDeleted(graph->getIdentifier());
+					//delete graph;
+					updateScenariosList();
+				});*/
 
 			menu.addAction<std::function<void(void)>>(QIcon(":/BleachUI/delete"), "Delete", [=]()
 				{
-					emit sceneDeleted(graph->getIdentifier());
-					delete graph;
-					updateScenariosList();
+					if (QMessageBox::warning(this, "Confirm deletion", QString("Delete: {%1} ?").arg(graph->getName()),
+						QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Yes)
+					{
+						emit sceneDeleted(graph->getIdentifier());
+						delete graph;
+						updateScenariosList();
+					}
 				});
+
 		}
 		menu.exec(mapToGlobal(p));
 	}

@@ -50,13 +50,13 @@ void model::AssertionNode::evaluate()
 	if (result.isError())
 	{
 		qDebug() << result.toString();
-		raiseException(result.toString());
+		fail(result.toString());
 		return;
 	}
 	else if (!result.toBool())
 	{
 		qDebug() << result.toString();
-		raiseException(result.toString());
+		fail(result.toString());
 		return;
 	}
 
@@ -66,12 +66,12 @@ void model::AssertionNode::evaluate()
 
 model::InputSlot* model::AssertionNode::getInputSlot() const
 {
-	return getInputSlots().values()[0];
+	return getInputSlotsMap().values()[0];
 }
 
 model::OutputSlot* model::AssertionNode::getOutputSlot() const
 {
-	return getOutputSlots().values()[0];
+	return getOutputSlotsMap().values()[0];
 }
 
 model::AssertionNode::AssertionNode(model::Graph* graph) : Node(graph, "Assertion")

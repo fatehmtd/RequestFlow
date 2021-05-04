@@ -13,7 +13,10 @@
 
 #include "SceneGraph.h"
 
-class PersistenceHandler;
+namespace model
+{
+	class PersistenceHandler;
+}
 
 namespace view
 {

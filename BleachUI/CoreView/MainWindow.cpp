@@ -13,6 +13,8 @@
 #include <QEvent>
 #include <QWidget>
 #include <QInputDialog>
+#include <QMenu>
+#include <QMessageBox>
 
 class BackgroundPaintFilter : public QObject
 {
@@ -53,16 +55,22 @@ public:
 	}
 };
 
-
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+	_settingsManager = new view::SettingsManager(this);
 	setupUi();
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+	onCloseProject();
+	event->accept();
 }
 
 void MainWindow::setupUi()
 {
 	_ui.setupUi(this);
-	setWindowIcon(QIcon(":/BleachUI/graph"));
+	setWindowIcon(QIcon(":/ui/network"));
 	//setMinimumSize(1280, 800);
 	setupRibbonBar();
 	setupSceneGraph();
@@ -74,6 +82,8 @@ void MainWindow::setupUi()
 
 #include <QFile>
 #include <QTextStream>
+
+#include <model/Document.h>
 
 void MainWindow::setupRibbonBar()
 {
@@ -90,10 +100,20 @@ void MainWindow::setupRibbonBar()
 
 	_newProject = projectGroup->addActionItem("New", [=]() { onNewProject(); }, QIcon(":/ui/new_file"));
 	_openProject = projectGroup->addActionItem("Open", [=]() { onOpenProject(); }, QIcon(":/ui/open_file"));
+	_openProject->setPopupMode(QToolButton::ToolButtonPopupMode::MenuButtonPopup);
+	_openProject->setMenu(new QMenu());
+
+	updateRecentProjectsList();
+
 	_saveProject = projectGroup->addActionItem("Save", [=]() { onSaveProject(); }, QIcon(":/ui/save_file"));
 	_closeProject = projectGroup->addActionItem("Close", [=]() { onCloseProject(); }, QIcon(":/ui/close_file"));
 	
-	projectGroup->addActionItem("Import", [=]() {}, QIcon(":/ui/swagger"));
+	_swaggerImport = projectGroup->addActionItem("Import", [=]() 
+		{
+			onImportSwagger();
+		}, QIcon(":/ui/swagger"));
+
+	_swaggerImport->setEnabled(false);
 
 	_saveProject->setEnabled(false);
 	_closeProject->setEnabled(false);
@@ -121,26 +141,91 @@ void MainWindow::setupEnvironmentsWidget()
 	connect(_ui.environmentsWidget, &EnvironmentsWidget::currentEnvironmentChanged, this, &MainWindow::onCurrentEnvironmentChanged);
 }
 
+#include "view/Node.h"
+#include <QPropertyAnimation>
+
 void MainWindow::setupSceneGraph()
 {
 	_ui.mdiArea->setTabsClosable(false);
 	connect(_ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::onSubWindowActivated);
 	connect(_ui.scenariosWidget, &ScenariosWidget::sceneDeleted, this, &MainWindow::onSceneDeleted);
 	connect(_ui.scenariosWidget, &ScenariosWidget::currentSceneChanged, this, &MainWindow::onActivateScene);
+
+	connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node) 
+		{
+			for (auto subWindow : _ui.mdiArea->subWindowList())
+			{
+				auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+				if (sceneGraphWidget != nullptr)
+				{
+					if (sceneGraphWidget->getSceneGraph()->getModelGraph() == node->getGraph())
+					{
+						auto nodeGr = sceneGraphWidget->getSceneGraph()->findbyModel(node);
+
+						_ui.mdiArea->setActiveSubWindow(subWindow);
+
+						{
+							auto propAnimation = new QPropertyAnimation();
+							propAnimation->setTargetObject(sceneGraphWidget);
+							propAnimation->setDuration(200);
+							propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::InOutCubic));
+							propAnimation->setStartValue(sceneGraphWidget->getCenter());
+							propAnimation->setEndValue(nodeGr->pos() + QPointF(nodeGr->width() * 0.5f, nodeGr->height() * 0.5f));
+							propAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+							sceneGraphWidget->setZoomLevel(2);
+							connect(propAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& v)
+								{
+									sceneGraphWidget->centerOn(v.toPointF());
+								});
+						}
+					}
+				}
+			}
+		});
+}
+
+void MainWindow::openProject(const QString& fileName)
+{
+	if (!fileName.isEmpty())
+	{
+		QFile fp(fileName);
+		if (fp.open(QIODevice::ReadOnly))
+		{
+			model::PersistenceHandler handler;
+			QString contents(QString("(%1)").arg(QString(QJsonDocument::fromJson(fp.readAll()).toJson(QJsonDocument::JsonFormat::Compact))));
+
+			auto projectValue = handler.evaluate(contents);
+
+			if (!projectValue.isError())
+			{
+				onCloseProject();
+
+				auto project = new model::Project(nullptr);
+				project->setPath(fileName);
+				project->loadFromJSValue(projectValue);
+
+				setProject(project);
+
+				loadFromJSValue(projectValue.property("ui"));
+
+				_settingsManager->addRecentProject(fileName);
+			}
+
+			updateRecentProjectsList();
+		}
+	}
 }
 
 void MainWindow::setProject(model::Project* project)
 {
 	bool projectAvailable = project != nullptr;
 
-	_closeProject->setEnabled(projectAvailable);
-	_saveProject->setEnabled(projectAvailable);
-	_scenariosGroup->setEnabled(projectAvailable);
+	_ui.environmentsWidget->setEnabled(projectAvailable);
+	_ui.inventoryWidget->setEnabled(projectAvailable);
+	_ui.scenariosWidget->setEnabled(projectAvailable);
 
 	if (projectAvailable)
 	{
-		_ui.environmentsWidget->setEnabled(true);
-
 		_project.reset(project);
 
 		if (project->getEnvironments().isEmpty())
@@ -149,8 +234,6 @@ void MainWindow::setProject(model::Project* project)
 			environment->setName(QString("Default environment"));
 			environment->getEntries().insert("baseUrl", "http://localhost");
 		}
-
-		_ui.environmentsWidget->setProject(project);
 
 		if (project->getGraphs().isEmpty())
 		{
@@ -170,10 +253,14 @@ void MainWindow::setProject(model::Project* project)
 
 		_ui.scenariosWidget->setProject(_project.get());
 	}
-	else
-	{
 
-	}
+	_closeProject->setEnabled(projectAvailable);
+	_saveProject->setEnabled(projectAvailable);
+	_scenariosGroup->setEnabled(projectAvailable);
+	_swaggerImport->setEnabled(projectAvailable);
+	_ui.inventoryWidget->setProject(project);
+	_ui.logMessagesWidget->setProject(project);
+	_ui.environmentsWidget->setProject(project);
 }
 
 void MainWindow::createScenario(QString name)
@@ -182,6 +269,7 @@ void MainWindow::createScenario(QString name)
 	graph->setName(name);
 	openScenario(new view::SceneGraph(graph));
 	_ui.scenariosWidget->updateScenariosList();
+	_ui.logMessagesWidget->addMessageLogger(graph->getLogger());
 }
 
 void MainWindow::openScenario(view::SceneGraph* sceneGraph)
@@ -203,6 +291,10 @@ void MainWindow::openScenario(view::SceneGraph* sceneGraph)
 
 	connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, &QMdiSubWindow::setWindowTitle);
 	window->showMaximized();
+}
+
+void MainWindow::cloneScenario(view::SceneGraph* sceneGraph, QString newName)
+{
 }
 
 void MainWindow::deleteScenario(view::SceneGraph* sceneGraph)
@@ -251,36 +343,78 @@ bool MainWindow::loadFromJSValue(const QJSValue& v)
 
 void MainWindow::onOpenProject()
 {
-	auto fileName = QFileDialog::getOpenFileName(this, "Open project", "", "RQFL Project (*.rqfl)");
+	auto fileName = QFileDialog::getOpenFileName(this, "Open project", _settingsManager->getLastOpenedLocation(), "RQFL Project (*.rqfl)");
+	openProject(fileName);
+}
 
-	if (!fileName.isEmpty())
+void MainWindow::updateRecentProjectsList()
+{
+	auto recentProjects = _settingsManager->enumRecentProjects();
+	auto menu = _openProject->menu();
+	auto actions = menu->actions();
+
+	for (auto action : actions)
 	{
-		QFile fp(fileName);
-		if (fp.open(QIODevice::ReadOnly))
-		{
-			model::PersistenceHandler handler;
-			QString contents(QString("(%1)").arg(QString(QJsonDocument::fromJson(fp.readAll()).toJson(QJsonDocument::JsonFormat::Compact))));
-			
-			auto projectValue = handler.evaluate(contents);
+		menu->removeAction(action);
+		delete action;
+	}
 
-			if (!projectValue.isError())
+	// add an open project action
+	for (auto prj : recentProjects)
+	{
+		auto action = menu->addAction(QIcon(":/ui/network"), prj);
+		connect(action, &QAction::triggered, [=]()
 			{
-				onCloseProject();
+				openProject(prj);
+			});
+	}
 
-				auto project = new model::Project(nullptr);
-				project->setPath(fileName);
-				project->loadFromJSValue(projectValue);
-
-				setProject(project);
-
-				loadFromJSValue(projectValue.property("ui"));
-			}
-		}
+	if (recentProjects.size() > 0)
+	{
+		menu->addSeparator();
+		auto action = menu->addAction("Clear recent projects list");
+		auto font = action->font();
+		font.setBold(true);
+		action->setFont(font);
+		action->setIcon(QIcon(":/ui/broom"));
+		connect(action, &QAction::triggered, [=]()
+			{
+				if (QMessageBox::warning(this,
+					"Warning",
+					"Clear recent projects list",
+					QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Yes)
+				{
+					_settingsManager->clearRecentProjects();
+					updateRecentProjectsList();
+				}
+			});
+	}
+	else
+	{
+		auto action = menu->addAction("Empty list");
+		action->setEnabled(false);
 	}
 }
 
+#include <QMessageBox>
+
 void MainWindow::onCloseProject()
 {
+	if (_project != nullptr)
+	{
+		int button = QMessageBox::information(this, "Save ?", "Save the project before closing it?",
+			QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
+		switch (button)
+		{
+		case QMessageBox::StandardButton::Yes:
+			onSaveProject();
+			break;
+		case QMessageBox::No:
+			break;
+		case QMessageBox::Cancel:
+			return;
+		}
+	}
 	_project.reset();
 	_scenariosGroup->setEnabled(false);
 
@@ -321,6 +455,27 @@ void MainWindow::onSaveProject()
 	}
 }
 
+void MainWindow::onImportSwagger()
+{
+	if (_project)
+	{
+		auto fileName = QFileDialog::getOpenFileName(this, "Import swagger file", "", "JSON (*.json)");
+
+		if (!fileName.isEmpty())
+		{
+			auto document = new model::Document(_project.get());
+			if (!document->importFromSwagger(fileName))
+			{
+				delete document;
+			}
+			else
+			{
+				_ui.inventoryWidget->setProject(_project.get());
+			}
+		}
+	}
+}
+
 void MainWindow::onCurrentEnvironmentChanged(model::Environment* environment)
 {
 	_activeEnvironment = environment;
@@ -337,10 +492,8 @@ void MainWindow::onSubWindowActivated(QMdiSubWindow* subWindow)
 	if (subWindow != nullptr)
 	{
 		auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
-		//qDebug() << sceneGraphWidget;
 		if (sceneGraphWidget != nullptr)
 		{
-			//onActivateScene(sceneGraphWidget->getSceneGraph()->getModelGraph());
 			_activeGraph = sceneGraphWidget->getSceneGraph()->getModelGraph();
 			_activeGraph->setActiveEnvironment(_ui.environmentsWidget->getActiveEnvironment());
 		}
@@ -351,13 +504,6 @@ void MainWindow::onNewProject()
 {
 	onCloseProject();
 	setProject(new model::Project(this));
-	/*
-	auto fileName = QFileDialog::getSaveFileName(this, "Create project", "", "RQFL Project (*.rqfl)");
-
-	if (!fileName.isEmpty())
-	{
-
-	}*/
 }
 
 void MainWindow::onSceneDeleted(QString identifier)

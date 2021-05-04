@@ -16,7 +16,7 @@
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
-    <ProjectName>CoreView</ProjectName>
+    <ProjectName>RequestFlow</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -99,7 +99,7 @@
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -113,6 +113,7 @@
     <ClCompile Include="ActionPage.cpp" />
     <ClCompile Include="ActionToolBar.cpp" />
     <ClCompile Include="EnvironmentsWidget.cpp" />
+    <ClCompile Include="GraphLogMessagesWidget.cpp" />
     <ClCompile Include="InventoryWidget.cpp" />
     <ClCompile Include="logic\AssertionNode.cpp" />
     <ClCompile Include="logic\DelayNode.cpp" />
@@ -120,6 +121,7 @@
     <ClCompile Include="logic\PayloadNode.cpp" />
     <ClCompile Include="logic\ScriptNode.cpp" />
     <ClCompile Include="logic\ViewerNode.cpp" />
+    <ClCompile Include="LogMessagesWidget.cpp" />
     <ClCompile Include="ScenariosWidget.cpp" />
     <ClCompile Include="view\ConnectionEdge.cpp" />
     <ClCompile Include="view\ContentWidget.cpp" />
@@ -129,6 +131,7 @@
     <ClCompile Include="view\Node.cpp" />
     <ClCompile Include="view\SceneGraph.cpp" />
     <ClCompile Include="view\SceneGraphWidget.cpp" />
+    <ClCompile Include="view\SettingsManager.cpp" />
     <ClCompile Include="view\Slot.cpp" />
     <QtRcc Include="BleachUI.qrc" />
     <QtMoc Include="MainWindow.h" />
@@ -136,6 +139,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="LogMessagesWidget.h" />
+    <QtMoc Include="GraphLogMessagesWidget.h" />
+    <ClInclude Include="view\SettingsManager.h" />
     <QtMoc Include="logic\EndpointNode.h" />
     <QtMoc Include="EnvironmentsWidget.h" />
     <QtMoc Include="ActionGroup.h" />
@@ -143,11 +149,11 @@
     <QtMoc Include="ActionPage.h" />
     <QtMoc Include="ActionToolBar.h" />
     <QtMoc Include="InventoryWidget.h" />
-    <ClInclude Include="logic\AssertionNode.h" />
-    <ClInclude Include="logic\DelayNode.h" />
-    <ClInclude Include="logic\PayloadNode.h" />
-    <ClInclude Include="logic\ScriptNode.h" />
-    <ClInclude Include="logic\ViewerNode.h" />
+    <QtMoc Include="logic\AssertionNode.h" />
+    <QtMoc Include="logic\DelayNode.h" />
+    <QtMoc Include="logic\PayloadNode.h" />
+    <QtMoc Include="logic\ScriptNode.h" />
+    <QtMoc Include="logic\ViewerNode.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="ScenariosWidget.h" />
     <ClInclude Include="view\ConnectionEdge.h" />
@@ -163,7 +169,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="EnvironmentsWidget.ui" />
+    <QtUic Include="GraphLogMessagesWidget.ui" />
     <QtUic Include="InventoryWidget.ui" />
+    <QtUic Include="LogMessagesWidget.ui" />
     <QtUic Include="ScenariosWidget.ui" />
     <QtUic Include="ui\ActionGroup.ui" />
     <QtUic Include="ui\ActionPage.ui" />
@@ -172,6 +180,7 @@
     <QtUic Include="ui\EndpointNodeUi.ui" />
     <QtUic Include="ui\ModifierNodeUi.ui" />
     <QtUic Include="ui\PayloadNodeUi.ui" />
+    <QtUic Include="ui\ScriptNodeUi.ui" />
     <QtUic Include="ui\ViewerNodeUi.ui" />
     <QtUic Include="view\NodeContentWidget.ui" />
   </ItemGroup>
@@ -179,8 +188,7 @@
     <ResourceCompile Include="BleachUI.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icons\node (1).ico" />
-    <Image Include="icons\node (1).png" />
+    <Image Include="icons\network.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -22,6 +22,12 @@ namespace model
 
 		void setName(QString name);
 		QString getName() const;
+		
+		void success(const QString& message);
+		void debug(const QString& message);
+		void warn(const QString& message);
+		void info(const QString& message);
+		void error(const QString& message);
 
 	signals:
 		void identifierChanged(const QString&);

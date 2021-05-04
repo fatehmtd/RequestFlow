@@ -5,6 +5,9 @@
 #include "SceneGraph.h"
 #include <QTimer>
 #include "SceneGraph.h"
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QRubberBand>
 
 class SceneGraphWidget : public QGraphicsView
 {
@@ -36,6 +39,9 @@ protected:
 
 	void performZoom(QWheelEvent* event);
 	void setOGLBackend();
+
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
 protected:
 	view::SceneGraph* _sceneGraph = nullptr;
 
@@ -49,4 +55,6 @@ protected:
 	float _zoomInFactor;
 	float _zoomStep, _zoomLevel;
 	float _minZoomLevel, _maxZoomLevel, _defaultZoomLevel;
+	QRubberBand* _rubberBand = nullptr;
+	QPoint _selectionOrigin;
 };

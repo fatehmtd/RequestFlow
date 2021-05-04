@@ -8,6 +8,7 @@ namespace logic
 {
     class PayloadNode : public view::Node
     {
+        Q_OBJECT
     public:
         Q_INVOKABLE PayloadNode(model::PayloadNode* modelNode);
 

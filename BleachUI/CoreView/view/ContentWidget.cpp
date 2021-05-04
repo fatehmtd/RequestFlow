@@ -2,6 +2,8 @@
 #include <QPaintEvent>
 
 #include <QDebug>
+#include <QCoreApplication>
+#include <QApplication>
 
 view::ContentWidget::ContentWidget(QWidget* widget) : QWidget(widget)
 {
@@ -11,5 +13,6 @@ view::ContentWidget::ContentWidget(QWidget* widget) : QWidget(widget)
 	setLayout(layout);
 	setAttribute(Qt::WA_NoBackground, true);
 	setAutoFillBackground(true);
-	//setStyleSheet("background: transparent; color: white");
+	//qDebug() << qApp->styleSheet();
+	setStyleSheet("color: black; ");
 }
