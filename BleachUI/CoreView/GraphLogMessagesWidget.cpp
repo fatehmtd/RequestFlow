@@ -33,12 +33,15 @@ GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLo
 	connect(this, &GraphLogMessagesWidget::senderSelected, p, &LogMessagesWidget::senderSelected);
 
 	connect(ui.tableWidget, &QTableWidget::itemSelectionChanged, this, [=]() 
-		{			
-			auto data = ui.tableWidget->item(ui.tableWidget->currentRow(), 0)->data(Qt::UserRole+1);
-			auto sender = data.value<model::Node*>();
-			if (sender != nullptr)
+		{
+			//if (ui.tableWidget->rowCount() > 1)
 			{
-				emit senderSelected(sender);
+				auto data = ui.tableWidget->item(ui.tableWidget->currentRow(), 0)->data(Qt::UserRole + 1);
+				auto sender = data.value<model::Node*>();
+				if (sender != nullptr)
+				{
+					emit senderSelected(sender);
+				}
 			}
 		});
 }
@@ -58,6 +61,8 @@ void GraphLogMessagesWidget::onCleared()
 	ui.tableWidget->setRowCount(0);
 }
 
+#include "view/Colors.h"
+
 void GraphLogMessagesWidget::onLogged(const model::MessageLogger::Message& m)
 {
 	int row = ui.tableWidget->rowCount();
@@ -68,16 +73,37 @@ void GraphLogMessagesWidget::onLogged(const model::MessageLogger::Message& m)
 
 	auto typeItem = new QTableWidgetItem(icons[m.type], str[m.type]);
 	auto dateTimeItem = new QTableWidgetItem(m.dateTime.toString("hh:mm:ss"));
-	auto messateItem = new QTableWidgetItem(m.message);
+	auto messageItem = new QTableWidgetItem(m.message);
 
-	if (dynamic_cast<model::Node*>(m.sender))
+	QMap<QString, QColor> colorsMap;
+	colorsMap["Assertion"] = view::colors::vividBurgundy;
+	colorsMap["Delay"] = view::colors::yellow;
+	colorsMap["Endpoint"] = view::colors::blue;
+	colorsMap["Payload"] = view::colors::byzantium;
+	colorsMap["Script"] = view::colors::charcoal;
+	colorsMap["Viewer"] = view::colors::green;
+
+	auto node = dynamic_cast<model::Node*>(m.sender);
+	if (node)
 	{
 		typeItem->setData(Qt::UserRole + 1, QVariant::fromValue(m.sender));
+
+		auto color = colorsMap[node->getType()];
+
+		//if (node->getType() == "Endpoint")
+		{
+			messageItem->setData(Qt::BackgroundColorRole, color);
+			messageItem->setData(Qt::ForegroundRole, QColor(255, 255, 255));
+			dateTimeItem->setData(Qt::BackgroundColorRole, color);
+			dateTimeItem->setData(Qt::ForegroundRole, QColor(255, 255, 255));
+			//typeItem->setData(Qt::BackgroundColorRole, color);
+			//typeItem->setData(Qt::ForegroundRole, QColor(255, 255, 255));
+		}
 	}
 
 	ui.tableWidget->setItem(row, 0, typeItem);
 	ui.tableWidget->setItem(row, 1, dateTimeItem);
-	ui.tableWidget->setItem(row, 2, messateItem);
-	ui.tableWidget->scrollToBottom();
+	ui.tableWidget->setItem(row, 2, messageItem);
+	//ui.tableWidget->scrollToBottom();
 	ui.tableWidget->resizeRowsToContents();
 }

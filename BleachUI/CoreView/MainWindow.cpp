@@ -63,8 +63,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-	onCloseProject();
-	event->accept();
+	if (onCloseProject() != -1)
+		event->accept();
+	else
+		event->ignore();
 }
 
 void MainWindow::setupUi()
@@ -107,8 +109,8 @@ void MainWindow::setupRibbonBar()
 
 	_saveProject = projectGroup->addActionItem("Save", [=]() { onSaveProject(); }, QIcon(":/ui/save_file"));
 	_closeProject = projectGroup->addActionItem("Close", [=]() { onCloseProject(); }, QIcon(":/ui/close_file"));
-	
-	_swaggerImport = projectGroup->addActionItem("Import", [=]() 
+
+	_swaggerImport = projectGroup->addActionItem("Import", [=]()
 		{
 			onImportSwagger();
 		}, QIcon(":/ui/swagger"));
@@ -151,7 +153,7 @@ void MainWindow::setupSceneGraph()
 	connect(_ui.scenariosWidget, &ScenariosWidget::sceneDeleted, this, &MainWindow::onSceneDeleted);
 	connect(_ui.scenariosWidget, &ScenariosWidget::currentSceneChanged, this, &MainWindow::onActivateScene);
 
-	connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node) 
+	connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node)
 		{
 			for (auto subWindow : _ui.mdiArea->subWindowList())
 			{
@@ -301,12 +303,35 @@ void MainWindow::deleteScenario(view::SceneGraph* sceneGraph)
 {
 }
 
+void MainWindow::keyPressEvent(QKeyEvent* event)
+{
+	if (event->modifiers() & Qt::Modifier::SHIFT)
+	{
+		auto now = std::chrono::steady_clock::now();
+		if (!_dblClinkInitiated)
+		{
+			_dblClinkInitiated = true;
+		}
+		else
+		{
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - _timeStamp);
+			if (duration.count() < 300) // threshold
+			{
+				showNodeFilteringWidget();
+				_dblClinkInitiated = false;
+			}
+		}
+		_timeStamp = now;
+	}
+	event->accept();
+}
+
 #include "../view/Node.h"
 #include "../view/SceneGraph.h"
 
 QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
 {
-	auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();	
+	auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
 	auto uiValue = handler->createJsValue();
 	auto scenesValue = handler->createJsValue();
 	for (auto sgw : sceneGraphWidgets)
@@ -339,6 +364,11 @@ bool MainWindow::loadFromJSValue(const QJSValue& v)
 	}
 
 	return true;
+}
+
+void MainWindow::showNodeFilteringWidget()
+{
+	//QMessageBox::information(this, "test", "test");
 }
 
 void MainWindow::onOpenProject()
@@ -398,7 +428,7 @@ void MainWindow::updateRecentProjectsList()
 
 #include <QMessageBox>
 
-void MainWindow::onCloseProject()
+int MainWindow::onCloseProject()
 {
 	if (_project != nullptr)
 	{
@@ -408,11 +438,11 @@ void MainWindow::onCloseProject()
 		{
 		case QMessageBox::StandardButton::Yes:
 			onSaveProject();
-			break;
+			return 1;
 		case QMessageBox::No:
 			break;
 		case QMessageBox::Cancel:
-			return;
+			return -1;
 		}
 	}
 	_project.reset();
@@ -427,6 +457,7 @@ void MainWindow::onCloseProject()
 	_ui.scenariosWidget->update();
 
 	setProject(nullptr);
+	return 0;
 }
 
 void MainWindow::onSaveProject()

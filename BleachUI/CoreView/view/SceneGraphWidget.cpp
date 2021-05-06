@@ -38,7 +38,7 @@ void SceneGraphWidget::initUi()
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
+	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::BoundingRectViewportUpdate);
 	setRenderHint(QPainter::RenderHint::Antialiasing, true);
 	setRenderHint(QPainter::RenderHint::HighQualityAntialiasing, true);
 	setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
@@ -52,7 +52,7 @@ void SceneGraphWidget::initUi()
 	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
 	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
 
-	_zoomInFactor = 2.0f;
+	_zoomInFactor = 1.5f;
 	_zoomStep = 1;
 
 	_minZoomLevel = 1;

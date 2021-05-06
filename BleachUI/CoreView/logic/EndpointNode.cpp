@@ -128,13 +128,16 @@ void logic::EndpointNode::initUI()
 	connect(endpointNode, &model::EndpointNode::consoleLogChanged, _ui.plainTextEdit_response, &QPlainTextEdit::setPlainText);
 
 	//_ui.plainTextEdit_response->setPalette(QPalette(Qt::black));
-	//_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black");
+	_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black;");
 	//_ui.plainTextEdit_response->setBackgroundVisible(true);
 
 	_bgColor = view::colors::blue;
 	connect(_node, &model::Node::ready, this, [=]()
 		{
 			auto node = dynamic_cast<model::EndpointNode*>(getModelNode());
+
+			node->info(QString("[Preparing] %1:%2").arg(node->getType()).arg(node->getName()));
+			//TODO make the user agent dynamic
 			node->setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107");
 			node->sendPayload();
 		});

@@ -131,6 +131,8 @@ namespace model
 
         void onErrorOccurred(QNetworkReply::NetworkError error);
 
+        void onGraphStop() override;
+
     private:
         int _timeout;
         int _httpMethod;

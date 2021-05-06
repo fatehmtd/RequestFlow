@@ -446,85 +446,13 @@ void view::Node::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant& value)
 {
-	switch (change)
-	{
-	case QGraphicsItem::ItemPositionChange:
+	if(QGraphicsItem::ItemPositionChange)
 	{
 		auto p = value.toPointF();
 		auto delta = p - _topLeftCorner;
 		_topLeftCorner = p;
 		_bottomRightCorner += delta;
-	}
-		break;
-	case QGraphicsItem::ItemMatrixChange:
-		break;
-	case QGraphicsItem::ItemVisibleChange:
-		break;
-	case QGraphicsItem::ItemEnabledChange:
-		break;
-	case QGraphicsItem::ItemSelectedChange:
-		break;
-	case QGraphicsItem::ItemParentChange:
-		break;
-	case QGraphicsItem::ItemChildAddedChange:
-		break;
-	case QGraphicsItem::ItemChildRemovedChange:
-		break;
-	case QGraphicsItem::ItemTransformChange:
-		break;
-	case QGraphicsItem::ItemPositionHasChanged:
-		break;
-	case QGraphicsItem::ItemTransformHasChanged:
-		break;
-	case QGraphicsItem::ItemSceneChange:
-		break;
-	case QGraphicsItem::ItemVisibleHasChanged:
-		break;
-	case QGraphicsItem::ItemEnabledHasChanged:
-		break;
-	case QGraphicsItem::ItemSelectedHasChanged:
-		break;
-	case QGraphicsItem::ItemParentHasChanged:
-		break;
-	case QGraphicsItem::ItemSceneHasChanged:
-		break;
-	case QGraphicsItem::ItemCursorChange:
-		break;
-	case QGraphicsItem::ItemCursorHasChanged:
-		break;
-	case QGraphicsItem::ItemToolTipChange:
-		break;
-	case QGraphicsItem::ItemToolTipHasChanged:
-		break;
-	case QGraphicsItem::ItemFlagsChange:
-		break;
-	case QGraphicsItem::ItemFlagsHaveChanged:
-		break;
-	case QGraphicsItem::ItemZValueChange:
-		break;
-	case QGraphicsItem::ItemZValueHasChanged:
-		break;
-	case QGraphicsItem::ItemOpacityChange:
-		break;
-	case QGraphicsItem::ItemOpacityHasChanged:
-		break;
-	case QGraphicsItem::ItemScenePositionHasChanged:
-		break;
-	case QGraphicsItem::ItemRotationChange:
-		break;
-	case QGraphicsItem::ItemRotationHasChanged:
-		break;
-	case QGraphicsItem::ItemScaleChange:
-		break;
-	case QGraphicsItem::ItemScaleHasChanged:
-		break;
-	case QGraphicsItem::ItemTransformOriginPointChange:
-		break;
-	case QGraphicsItem::ItemTransformOriginPointHasChanged:
-		break;
-	default:
-		break;
-	}
+	}	
 	return QGraphicsObject::itemChange(change, value);
 }
 

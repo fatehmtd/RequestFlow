@@ -14,6 +14,7 @@
 #include <model/PersistenceHandler.h>
 #include <model/PersistableEntity.h>
 #include <QMap>
+#include <chrono>
 
 class MainWindow : public QMainWindow
 {
@@ -28,7 +29,7 @@ public slots:
 private slots:
     void onNewProject();
     void onOpenProject();
-    void onCloseProject();
+    int onCloseProject();
     void onSaveProject();
     void onImportSwagger();
     void onCurrentEnvironmentChanged(model::Environment* environment);
@@ -48,13 +49,20 @@ private:
     void cloneScenario(view::SceneGraph* sceneGraph, QString newName);
     void deleteScenario(view::SceneGraph* sceneGraph);
 
+    void keyPressEvent(QKeyEvent* event) override;
+
     void updateRecentProjectsList();
 
     QJSValue savetoJSValue(model::PersistenceHandler* handler) const;
     bool loadFromJSValue(const QJSValue& v);
 
+    void showNodeFilteringWidget();
 private:
     Ui::MainWindowClass _ui;
+
+
+    bool _dblClinkInitiated = false;
+    std::chrono::steady_clock::time_point _timeStamp;
 
     ActionToolBar* _toolbar = nullptr;
     QToolButton* _newProject, * _openProject, * _closeProject, * _saveProject, *_swaggerImport;

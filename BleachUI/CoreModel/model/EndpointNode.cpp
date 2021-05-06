@@ -457,6 +457,17 @@ void model::EndpointNode::onErrorOccurred(QNetworkReply::NetworkError error)
 	qDebug() << error;
 }
 
+void model::EndpointNode::onGraphStop()
+{
+	Node::onGraphStop();
+	if (_networkReply != nullptr)
+	{
+		_networkReply->abort();
+		delete _networkReply;
+		_networkReply = nullptr;
+	}
+}
+
 QString model::EndpointNode::getUserAgent() const
 {
 	return _userAgent;
