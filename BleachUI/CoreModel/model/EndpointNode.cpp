@@ -430,6 +430,13 @@ void model::EndpointNode::onTimeout()
 	}
 }
 
+QString compactString(const QString& _body)
+{
+	auto v = model::Message::JSONParse(_body);
+	if (!v.isValid() || v.isNull()) return _body;
+	return model::Message::JSONStringify(v);
+}
+
 QNetworkReply* model::EndpointNode::sendGet(QNetworkRequest request)
 {
 	return _networkAccessManager->get(request);
@@ -437,7 +444,7 @@ QNetworkReply* model::EndpointNode::sendGet(QNetworkRequest request)
 
 QNetworkReply* model::EndpointNode::sendPost(QNetworkRequest request)
 {
-	auto data = getInputSlot()->getData().getBody();
+	auto data = compactString(getInputSlot()->getData().getBody());
 	return _networkAccessManager->post(request, data.toUtf8());
 }
 
@@ -448,7 +455,7 @@ QNetworkReply* model::EndpointNode::sendDel(QNetworkRequest request)
 
 QNetworkReply* model::EndpointNode::sendPut(QNetworkRequest request)
 {
-	auto data = getInputSlot()->getData().getBody();
+	auto data = compactString(getInputSlot()->getData().getBody());
 	return _networkAccessManager->put(request, data.toUtf8());
 }
 

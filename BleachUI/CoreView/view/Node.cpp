@@ -75,7 +75,7 @@ void view::Node::setupUi()
 {
 	_size.setWidth(320);
 	_size.setHeight(160);
-	
+
 	_minSize.setWidth(200);
 	_minSize.setHeight(200);
 
@@ -166,16 +166,16 @@ void view::Node::setSize(int w, int h)
 	if (_contentWidget != nullptr)
 	{
 		_contentWidget->adjustSize();
-		
+
 		auto minSize = _contentWidget->minimumSizeHint();
 
-		float tempH = std::max(h, (int)headerSizeY + 2*spacing + minSize.height());
+		float tempH = std::max(h, (int)headerSizeY + 2 * spacing + minSize.height());
 		float tempW = std::max(w, 2 * spacing + minSize.width());
 
 		// manual fixed min width, height
 		tempH = std::max(tempH, (float)_minSize.height());
 		tempW = std::max(tempW, (float)_minSize.width());
-		
+
 		int top = headerSizeY - spacing;
 		int bottom = tempH - (top + spacing);
 
@@ -334,7 +334,7 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		auto bgColor = _bgColor;
 		QPen pen(bgColor);
 
-		float headerHeight = getHeaderHeight() *0.7f +  getSlotsSectionHeight();
+		float headerHeight = getHeaderHeight() * 0.7f + getSlotsSectionHeight();
 		QBrush backgroundBrush(bgColor);
 		backgroundPath.setFillRule(Qt::FillRule::WindingFill);
 		backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);
@@ -346,12 +346,25 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
 	// Outline
 	{
-		QPainterPath outlinePath;
-		outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-		QPen pen(isSelected() ? colors::orange : QColor("#4D4B4D"), isSelected() ? 2.0f : 1.0f);
-		painter->setPen(pen);
-		painter->setBrush(Qt::BrushStyle::NoBrush);
-		painter->drawPath(outlinePath);
+		if (isSelected())
+		{
+			float halfedge = 0.5f * _edgeSize;
+			QPainterPath outlinePath;
+			outlinePath.addRoundedRect(halfedge, halfedge, w - _edgeSize, h - _edgeSize, _edgeSize, _edgeSize);
+			QPen pen(colors::orange, _edgeSize);
+			painter->setPen(pen);
+			painter->setBrush(Qt::BrushStyle::NoBrush);
+			painter->drawPath(outlinePath);
+		}
+		else
+		{
+			QPainterPath outlinePath;
+			outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
+			QPen pen(QColor("#4D4B4D"), 1.0f);
+			painter->setPen(pen);
+			painter->setBrush(Qt::BrushStyle::NoBrush);
+			painter->drawPath(outlinePath);
+		}
 	}
 
 	// Outline for resizing
@@ -371,10 +384,10 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	else
 	{
 		// Outline Hover
-		if (_mouseHover && false)
+		if (_mouseHover && !isSelected())
 		{
 			QPainterPath outlinePath;
-			float outlineEdgeSize = _edgeSize * 1.2f;
+			float outlineEdgeSize = _edgeSize * 0.8f;
 			float halfEdgeSize = 0.5f * outlineEdgeSize;
 			outlinePath.addRoundedRect(halfEdgeSize, halfEdgeSize, w - halfEdgeSize * 2.0, h - halfEdgeSize * 2.0, _edgeSize, _edgeSize);
 			QPen pen(QColor("#FFFFA637"), _edgeSize * 1.5, Qt::PenStyle::DashDotDotLine);
@@ -417,7 +430,7 @@ void view::Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void view::Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-	if(_isResizing)
+	if (_isResizing)
 	{
 		_isResizing = false;
 	}
@@ -427,7 +440,7 @@ void view::Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void view::Node::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-	_mouseHover = true;	
+	_mouseHover = true;
 	handleResize(event->scenePos());
 	QGraphicsObject::hoverEnterEvent(event);
 }
@@ -446,13 +459,13 @@ void view::Node::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant& value)
 {
-	if(QGraphicsItem::ItemPositionChange)
+	if (change == QGraphicsItem::ItemPositionChange)
 	{
 		auto p = value.toPointF();
 		auto delta = p - _topLeftCorner;
 		_topLeftCorner = p;
 		_bottomRightCorner += delta;
-	}	
+	}
 	return QGraphicsObject::itemChange(change, value);
 }
 

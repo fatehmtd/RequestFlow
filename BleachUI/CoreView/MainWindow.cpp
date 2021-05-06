@@ -206,6 +206,8 @@ void MainWindow::openProject(const QString& fileName)
 				project->setPath(fileName);
 				project->loadFromJSValue(projectValue);
 
+				setWindowTitle(QString("RequestFlow - %1").arg(fileName));
+
 				setProject(project);
 
 				loadFromJSValue(projectValue.property("ui"));
@@ -430,21 +432,25 @@ void MainWindow::updateRecentProjectsList()
 
 int MainWindow::onCloseProject()
 {
+	int button = -999;
 	if (_project != nullptr)
 	{
-		int button = QMessageBox::information(this, "Save ?", "Save the project before closing it?",
+		button = QMessageBox::information(this, "Save", "Save the project before closing it?",
 			QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
 		switch (button)
 		{
 		case QMessageBox::StandardButton::Yes:
 			onSaveProject();
-			return 1;
+			break;
 		case QMessageBox::No:
 			break;
 		case QMessageBox::Cancel:
 			return -1;
 		}
 	}
+
+	setWindowTitle("RequestFlow");
+
 	_project.reset();
 	_scenariosGroup->setEnabled(false);
 
@@ -457,7 +463,7 @@ int MainWindow::onCloseProject()
 	_ui.scenariosWidget->update();
 
 	setProject(nullptr);
-	return 0;
+	return button;
 }
 
 void MainWindow::onSaveProject()

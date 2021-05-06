@@ -38,7 +38,7 @@ void SceneGraphWidget::initUi()
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::BoundingRectViewportUpdate);
+	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
 	setRenderHint(QPainter::RenderHint::Antialiasing, true);
 	setRenderHint(QPainter::RenderHint::HighQualityAntialiasing, true);
 	setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);

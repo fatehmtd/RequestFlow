@@ -82,7 +82,7 @@ void logic::EndpointNode::initUI()
 				item->setData(Qt::DisplayRole, ""); // clear the cell
 				_ui.tableWidget_acceptedCodes->blockSignals(false);
 			}
-			else // set the values in the model
+			//else // set the values in the model
 			{
 				QList<unsigned int> values;
 				for (auto i = 0; i < _ui.tableWidget_acceptedCodes->rowCount(); i++)
@@ -103,14 +103,14 @@ void logic::EndpointNode::initUI()
 
 			// validate the value
 			// check if already existing
-
+			//qDebug() << endpointNode->getAcceptedCodes().contains(value) << endpointNode->getRejectedCodes().contains(value);
 			if (value < 100 || endpointNode->getAcceptedCodes().contains(value) || endpointNode->getRejectedCodes().contains(value))
 			{
 				_ui.tableWidget_rejectedCodes->blockSignals(true);
 				item->setData(Qt::DisplayRole, ""); // clear the cell
 				_ui.tableWidget_rejectedCodes->blockSignals(false);
 			}
-			else // set the values in the model
+			//else // set the values in the model
 			{
 				QList<unsigned int> values;
 				for (auto i = 0; i < _ui.tableWidget_rejectedCodes->rowCount(); i++)
@@ -128,7 +128,7 @@ void logic::EndpointNode::initUI()
 	connect(endpointNode, &model::EndpointNode::consoleLogChanged, _ui.plainTextEdit_response, &QPlainTextEdit::setPlainText);
 
 	//_ui.plainTextEdit_response->setPalette(QPalette(Qt::black));
-	_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black;");
+	//_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black;");
 	//_ui.plainTextEdit_response->setBackgroundVisible(true);
 
 	_bgColor = view::colors::blue;

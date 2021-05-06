@@ -147,7 +147,7 @@ QString model::Message::JSONStringify(const QVariant& v)
 		engine.globalObject().setProperty("value", scriptValue);
 		auto result = engine.evaluate("value");
 		auto resultValue = engine.fromScriptValue<QVariant>(result);
-		return QString(QJsonDocument::fromVariant(resultValue).toJson());
+		return QString(QJsonDocument::fromVariant(resultValue).toJson(QJsonDocument::JsonFormat::Compact));
 	}
 		break;
 	default:
