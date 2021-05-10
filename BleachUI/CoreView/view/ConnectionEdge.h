@@ -1,4 +1,6 @@
 #pragma once
+#include "coreview_global.h"
+
 #include <QGraphicsPathItem>
 #include <QGraphicsTextItem>
 #include <model/Slot.h>
@@ -8,7 +10,7 @@ namespace view
 {
 	class Slot;
 
-	class ConnectionEdge : public QGraphicsPathItem
+	class COREVIEW_EXPORT ConnectionEdge : public QGraphicsPathItem
 	{
 	public:
 		ConnectionEdge();

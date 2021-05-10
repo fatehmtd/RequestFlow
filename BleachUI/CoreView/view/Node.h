@@ -1,4 +1,6 @@
 #pragma once
+#include "coreview_global.h"
+
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsObject>
@@ -23,7 +25,7 @@ namespace view
 	class Slot;
 	class SceneGraph;
 
-	class Node : public QGraphicsObject
+	class COREVIEW_EXPORT Node : public QGraphicsObject
 	{
 		Q_OBJECT
 	public:

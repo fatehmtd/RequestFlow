@@ -80,6 +80,8 @@ void MainWindow::setupUi()
 
 	// enable the background image
 	_ui.mdiArea->viewport()->installEventFilter(new BackgroundPaintFilter(this));
+
+	openLastProject();
 }
 
 #include <QFile>
@@ -328,8 +330,8 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 	event->accept();
 }
 
-#include "../view/Node.h"
-#include "../view/SceneGraph.h"
+#include <view/Node.h>
+#include <view/SceneGraph.h>
 
 QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
 {
@@ -371,6 +373,15 @@ bool MainWindow::loadFromJSValue(const QJSValue& v)
 void MainWindow::showNodeFilteringWidget()
 {
 	//QMessageBox::information(this, "test", "test");
+}
+
+void MainWindow::openLastProject()
+{
+	auto recentProjects = _settingsManager->enumRecentProjects();
+	if (!recentProjects.isEmpty())
+	{
+		openProject(recentProjects.first());
+	}
 }
 
 void MainWindow::onOpenProject()

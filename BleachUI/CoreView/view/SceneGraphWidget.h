@@ -1,4 +1,5 @@
 #pragma once
+#include "coreview_global.h"
 
 #include <QGraphicsView>
 #include <QMouseEvent>
@@ -9,7 +10,7 @@
 #include <QDropEvent>
 #include <QRubberBand>
 
-class SceneGraphWidget : public QGraphicsView
+class COREVIEW_EXPORT SceneGraphWidget : public QGraphicsView
 {
 public:
 	SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph);

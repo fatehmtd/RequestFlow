@@ -204,9 +204,10 @@ view::Node* view::SceneGraph::createVisualNodeForModelNode(model::Node* node)
 
 void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
+	painter->fillRect(rect, QColor("#A5A5A5"));
 	//drawPointsBackground(painter, rect);
 	//drawCrossBackground(painter, rect);
-	drawGridBackground(painter, rect);
+	//drawGridBackground(painter, rect);
 }
 
 void view::SceneGraph::drawPointsBackground(QPainter* painter, const QRectF& rect)
@@ -343,6 +344,7 @@ void view::SceneGraph::setupUi()
 
 	//_background = QColor(140, 140, 140);
 	_background = QColor("#F4F3F4");
+	_background = QColor("#A0A0A0");
 	_lightGrid = QColor(200, 200, 200);
 	_darkGrid = QColor(160, 160, 160);
 	//*/

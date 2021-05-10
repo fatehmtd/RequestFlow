@@ -1,4 +1,5 @@
 #pragma once
+#include "coreview_global.h"
 #include <QObject>
 #include <QMenu>
 #include <QList>
@@ -17,7 +18,7 @@ namespace view
 	class Slot;
 	class Edge;
 
-	class InteractionsHandler : public QObject
+	class COREVIEW_EXPORT InteractionsHandler : public QObject
 	{
 	public:
 		InteractionsHandler(SceneGraph* scene);

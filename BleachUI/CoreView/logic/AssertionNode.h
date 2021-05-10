@@ -5,7 +5,7 @@
 
 namespace logic
 {
-    class AssertionNode : public view::Node
+    class COREVIEW_EXPORT AssertionNode : public view::Node
     {
         Q_OBJECT
     public:

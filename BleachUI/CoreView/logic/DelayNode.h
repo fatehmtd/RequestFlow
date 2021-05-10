@@ -5,7 +5,7 @@
 
 namespace logic
 {
-    class DelayNode : public view::Node
+    class COREVIEW_EXPORT DelayNode : public view::Node
     {
         Q_OBJECT
     public:

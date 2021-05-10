@@ -6,7 +6,7 @@
 
 namespace logic
 {
-    class EndpointNode : public view::Node
+    class COREVIEW_EXPORT EndpointNode : public view::Node
     {
         Q_OBJECT
     public:

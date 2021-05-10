@@ -6,7 +6,7 @@
 
 namespace logic
 {
-    class PayloadNode : public view::Node
+    class COREVIEW_EXPORT PayloadNode : public view::Node
     {
         Q_OBJECT
     public:

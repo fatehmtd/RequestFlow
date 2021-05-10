@@ -1,4 +1,7 @@
 #pragma once
+
+#include "coreview_global.h"
+
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsObject>
@@ -9,7 +12,7 @@ namespace view
 {
 	class Node;
 
-	class Slot : public QGraphicsObject
+	class COREVIEW_EXPORT Slot : public QGraphicsObject
 	{
 		Q_OBJECT
 	public:

@@ -18,7 +18,9 @@ void logic::ViewerNode::clearUI()
 {
 	_ui.plainTextEdit_raw->clear();
 	_ui.textEdit_json->clear();
-	_ui.treeWidget->clear();
+	_ui.treeView->reset();
+	//_ui.treeWidget->clear();
+	//_ui.treeView->clear();
 }
 
 #include <QDebug>
@@ -33,7 +35,7 @@ void logic::ViewerNode::setupUi()
 
 	connect(_ui.lineEdit_jsonPath, &QLineEdit::textChanged, viewerNode, &model::ViewerNode::setFilter);
 
-	connect(_ui.toolButton_filter, &QToolButton::clicked, this, [=]() 
+	connect(_ui.toolButton_filter, &QToolButton::clicked, this, [=]()
 		{
 			filter(_ui.lineEdit_jsonPath->text());
 		});
@@ -42,7 +44,7 @@ void logic::ViewerNode::setupUi()
 		{
 			filter(_ui.lineEdit_jsonPath->text());
 		});
-		
+
 	getContentWidget()->layout()->addWidget(widget);
 	_bgColor = view::colors::green;
 	connect(_node, &model::Node::ready, this, [=]()
@@ -63,88 +65,292 @@ void logic::ViewerNode::setupUi()
 	setSize(300, 200);
 }
 
-#include <QTreeWidgetItem>
-#include <QFont>
+#include <QAbstractItemModel>
 
-QTreeWidgetItem* toWidgetItem(const QString& name, const QVariant& v, QTreeWidgetItem* parent)
+namespace logic
 {
-	if (!v.isValid()) return nullptr;
-
-	auto widgetItem = new QTreeWidgetItem(parent);
-
-	widgetItem->setData(0, Qt::DisplayRole, name);
-	widgetItem->setData(0, Qt::ForegroundRole, QColor("#0056A0"));
-
-
-	switch (v.type())
+	class AbstractItem
 	{
-	case QVariant::Type::Map:
-	{
-		auto variantMap = v.value<QVariantMap>();
-		widgetItem->setData(1, Qt::DisplayRole, QString("Object {%1}").arg(variantMap.size()));
-		widgetItem->setData(0, Qt::DecorationRole, QIcon(":/ui/{}"));
-		widgetItem->setData(0, Qt::ForegroundRole, QColor(0, 0, 255));
-		widgetItem->setData(1, Qt::ForegroundRole, QColor(0, 0, 180));
-		QFont font;
-		font.setBold(true);
-		widgetItem->setData(0, Qt::FontRole, font);
-		widgetItem->setData(1, Qt::FontRole, font);
-		for (const auto& key : variantMap.keys())
+	public:
+		AbstractItem(const QString& path, const QString& value, int type, AbstractItem* parent)
+			: _path(path), _value(value), _type(type), _parent(parent)
 		{
-			toWidgetItem(key, variantMap[key], widgetItem);
+			switch (type)
+			{
+			case QVariant::Type::Map:
+			{
+				_decoration = QIcon(":/ui/{}");
+				_foreground = QColor(0, 0, 255);
+				break;
+			}
+			case QVariant::Type::List:
+			{
+				_decoration = QIcon(":/ui/[]");
+				_foreground = QColor(0, 0, 255);
+				break;
+			}
+			case QVariant::Type::String:
+			{
+				_foreground = QColor("#AC0D8A");
+				break;
+			}
+			case QVariant::Type::Bool:
+			{
+				_foreground = QColor("#002CF5");
+				break;
+			}
+			case QVariant::Type::Int:
+			case QVariant::Type::UInt:
+			case QVariant::Type::LongLong:
+			case QVariant::Type::ULongLong:
+			case QVariant::Type::Double:
+			{
+				_foreground = QColor("#00875C");
+				break;
+			}
+			}
+		}
+
+		~AbstractItem()
+		{
+			qDeleteAll(_children);
+		}
+
+		AbstractItem* getParent() const
+		{
+			return _parent;
+		}
+
+		QList<AbstractItem*> getChildren() const
+		{
+			return _children;
+		}
+
+		void setPath(const QString& path)
+		{
+			_path = path;
+		}
+
+		QString getPath() const { return _path; }
+
+		void setValue(const QString& value)
+		{
+			_value = value;
+		}
+
+		QString getValue() const { return _value; }
+
+		int row() const
+		{
+			if (_parent != nullptr)
+			{
+				return _parent->_children.indexOf(const_cast<AbstractItem*>(this));
+			}
+			return 0;
+		}
+
+		AbstractItem* addChild(const QString& path, const QString& value, int type)
+		{
+			auto item = new AbstractItem(path, value, type, this);
+			_children << item;
+			++_numChildren;
+			return item;
+		}
+
+		void setModelIndex(QModelIndex index)
+		{
+			_modelIndex = index;
+		}
+
+		QModelIndex getModelIndex() const
+		{
+			return _modelIndex;
+		}
+
+		int getNumChildren() const
+		{
+			return _numChildren;
+		}
+
+		int getType() const
+		{
+			return _type;
+		}
+
+		QVariant getForeground() const {
+			return _foreground;
+		}
+		
+		QVariant getDecoration() const {
+			return _decoration;
+		}
+	private:
+		QString _path, _value;
+		int _type;
+		AbstractItem* _parent = nullptr;
+		QList<AbstractItem*> _children;
+
+		QVariant _foreground, _decoration;
+
+		QModelIndex _modelIndex;
+		int _numChildren = 0;
+	};
+
+	void createItems(QString name, const QVariant& v, AbstractItem* parent)
+	{
+		auto item = parent->addChild(name, "", v.type());
+
+		switch (v.type())
+		{
+		case QVariant::Type::Map:
+		{
+			auto variantMap = v.value<QVariantMap>();
+			item->setValue(QString("Object {%1}").arg(variantMap.size()));
+
+			for (const auto& key : variantMap.keys())
+			{
+				createItems(key, variantMap[key], item);
+			}
+		}
+		break;
+		case QVariant::Type::List:
+		{
+			auto list = v.value<QVariantList>();
+			item->setValue(QString("Array [%1]").arg(list.size()));
+			int index = 0;
+			for (const auto& value : list)
+			{
+				createItems(QString("[%1]").arg(index++), value, item);
+			}
+		}
+		break;
+		default:
+			item->setValue(v.toString());
+			break;
 		}
 	}
-	break;
-	case QVariant::Type::List:
-	{
-		auto list = v.value<QVariantList>();
-		widgetItem->setData(1, Qt::DisplayRole, QString("Array [%1]").arg(list.size()));
-		widgetItem->setData(0, Qt::DecorationRole, QIcon(":/ui/[]"));
-		widgetItem->setData(0, Qt::ForegroundRole, QColor(0, 0, 180));
-		widgetItem->setData(1, Qt::ForegroundRole, QColor(0, 0, 180));
-		QFont font;
-		font.setBold(true);
-		widgetItem->setData(0, Qt::FontRole, font);
-		widgetItem->setData(1, Qt::FontRole, font);
-		int index = 0;
-		for (const auto& value : list)
-		{
-			toWidgetItem(QString("[%1]").arg(index++), value, widgetItem);
-		}
-	}
-	break;
-	case QVariant::Type::String:
-		widgetItem->setData(1, Qt::ForegroundRole, QColor("#AC0D8A"));
-		widgetItem->setData(1, Qt::DisplayRole, v.toString());
-		break;
-	case QVariant::Type::Bool:
-		widgetItem->setData(1, Qt::ForegroundRole, QColor("#002CF5"));
-		widgetItem->setData(1, Qt::DisplayRole, v.toString());
-		break;
-	case QVariant::Type::Int:
-	case QVariant::Type::UInt:
-	case QVariant::Type::LongLong:
-	case QVariant::Type::ULongLong:
-	case QVariant::Type::Double:
-		widgetItem->setData(1, Qt::ForegroundRole, QColor("#00875C"));
-		widgetItem->setData(1, Qt::DisplayRole, v.toString());
-		break;
-	default:
-		widgetItem->setData(1, Qt::DisplayRole, v.toString());
-		break;
-	}
-
-	return widgetItem;
 }
 
-void logic::ViewerNode::setJSValue(const QVariant& v)
+logic::CustomModel::CustomModel(AbstractItem* rootItem, QObject* parent) : _root(rootItem), QAbstractItemModel(parent)
 {
-	_ui.treeWidget->clear();
-	auto item = toWidgetItem("", v, nullptr);
-	_ui.treeWidget->insertTopLevelItem(0, item);
-	auto index = _ui.treeWidget->currentIndex();
 
-	_ui.treeWidget->expandAll();
+}
+
+logic::CustomModel::~CustomModel()
+{
+	if (_root != nullptr)
+		delete _root;
+}
+
+QModelIndex logic::CustomModel::index(int row, int column, const QModelIndex& parent) const
+{
+	if (!hasIndex(row, column, parent))
+		return QModelIndex();
+
+	AbstractItem* parentItem = nullptr;
+
+	if (!parent.isValid())
+		parentItem = _root;
+	else	
+		parentItem = static_cast<AbstractItem*>(parent.internalPointer());
+
+	auto item = parentItem->getChildren()[row];
+
+	auto modelIndex = createIndex(row, column, item);
+	return modelIndex;
+}
+  
+QModelIndex logic::CustomModel::parent(const QModelIndex& child) const
+{
+	if (!child.isValid())
+		return QModelIndex();
+
+	auto childItem = static_cast<AbstractItem*>(child.internalPointer());
+
+	auto parentItem = childItem->getParent();
+	
+	if (parentItem == nullptr)
+		return QModelIndex();
+
+	auto modelIndex = createIndex(parentItem->row(), 0, parentItem);
+	return modelIndex;
+}
+
+int logic::CustomModel::rowCount(const QModelIndex& parent) const
+{
+	AbstractItem* parentItem = nullptr;
+
+	if (!parent.isValid())
+		parentItem = _root;
+	else
+		parentItem = static_cast<AbstractItem*>(parent.internalPointer());
+
+	return parentItem->getNumChildren();
+}
+
+int logic::CustomModel::columnCount(const QModelIndex& parent) const
+{
+	return 2;
+}
+
+QVariant logic::CustomModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if (role == Qt::DisplayRole)
+	{
+		if (section == 0) return "Key";
+		else return "Value";
+	}
+	return QAbstractItemModel::headerData(section, orientation, role);
+}
+
+QVariant logic::CustomModel::data(const QModelIndex& index, int role) const
+{
+	if (!index.isValid()) return QVariant();
+
+	auto item = static_cast<AbstractItem*>(index.internalPointer());
+
+	switch (role)
+	{
+	case Qt::DisplayRole:
+	case Qt::EditRole:
+	{
+		switch (index.column())
+		{
+		case 0:
+			return item->getPath();
+		case 1:
+			return item->getValue();
+		default:
+			return QVariant();
+		}
+	}
+	case Qt::ForegroundRole:
+	{
+		return item->getForeground();
+	}
+	case Qt::DecorationRole:
+	{
+		return item->getDecoration();
+	}
+	}
+	return QVariant();
+}
+
+void logic::ViewerNode::setTreeModel(const QVariant& v)
+{
+	auto rootItem = new AbstractItem("root/", "root/", -1, nullptr);
+	createItems("/", v, rootItem);
+
+	auto model = _ui.treeView->model();
+	if (model != nullptr)
+		delete model;
+	model = new CustomModel(rootItem, this);
+	model->setHeaderData(0, Qt::Orientation::Horizontal, "Key");
+	model->setHeaderData(1, Qt::Orientation::Horizontal, "Value");
+	_ui.treeView->setModel(model);
+	_ui.treeView->update();
+	_ui.treeView->expand(model->index(0, 0));
+	_ui.treeView->setHeaderHidden(false);
 }
 
 #include <QFile>
@@ -166,7 +372,7 @@ void logic::ViewerNode::filter(const QString& filter)
 		}
 	}
 
-	auto message = _node->getInputSlotsMap().first()->getData(); 
+	auto message = _node->getInputSlotsMap().first()->getData();
 	auto bodyValue = engine.evaluate("(" + message.getBody() + ")");
 	engine.globalObject().setProperty("_body", bodyValue);
 	engine.globalObject().setProperty("_pathStr", engine.toScriptValue(filter));
@@ -180,5 +386,5 @@ void logic::ViewerNode::filter(const QString& filter)
 	_ui.textEdit_json->setPlainText(document.toJson());
 
 	auto value = engine.fromScriptValue<QVariant>(jsValue);
-	setJSValue(value);
+	setTreeModel(value);
 }

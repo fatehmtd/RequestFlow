@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="MainWindow">
+      <UniqueIdentifier>{442dfb8f-7eb4-4907-960f-9ebd261752ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{a5873439-36d0-4953-a916-a8e6c3a82a05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\EnvironmentsWidget">
+      <UniqueIdentifier>{3cdbb07d-f31d-4331-8949-210e4c283d24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar">
+      <UniqueIdentifier>{f716ad78-a1c4-4056-929a-e1054bf39353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar\ActionGroup">
+      <UniqueIdentifier>{96191848-b9a8-4823-a5ab-a32541bc72af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar\ActionItem">
+      <UniqueIdentifier>{2d1e772c-a79a-4267-9762-f0b760fda269}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ActionToolBar\ActionPage">
+      <UniqueIdentifier>{b96f7731-ef0e-4fb4-91f8-3803cf731023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ScenariosWidget">
+      <UniqueIdentifier>{a95cad9b-967f-47f0-ba33-44a702e4cb05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SettingsManager">
+      <UniqueIdentifier>{df59b533-0f6e-4606-bfb7-dbe8d1bd08d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\InventoryWidget">
+      <UniqueIdentifier>{bcfd1626-a6d0-4b42-9c17-e6f43dcc89d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\GraphLogMessagesWidget">
+      <UniqueIdentifier>{f1a39ea4-344a-4321-859f-cb42b5082579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\LogMessagesWidget">
+      <UniqueIdentifier>{a2f052c8-a0fd-4cf2-9dd8-4d091a7f6f44}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="BleachUI.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentsWidget.cpp">
+      <Filter>Widgets\EnvironmentsWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionGroup.cpp">
+      <Filter>Widgets\ActionToolBar\ActionGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionItem.cpp">
+      <Filter>Widgets\ActionToolBar\ActionItem</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionPage.cpp">
+      <Filter>Widgets\ActionToolBar\ActionPage</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionToolBar.cpp">
+      <Filter>Widgets\ActionToolBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenariosWidget.cpp">
+      <Filter>Widgets\ScenariosWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryWidget.cpp">
+      <Filter>Widgets\InventoryWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="LogMessagesWidget.cpp">
+      <Filter>Widgets\LogMessagesWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphLogMessagesWidget.cpp">
+      <Filter>Widgets\GraphLogMessagesWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsManager.cpp">
+      <Filter>SettingsManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionItem.h">
+      <Filter>Widgets\ActionToolBar\ActionItem</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsManager.h">
+      <Filter>SettingsManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="MainWindow.h">
+      <Filter>MainWindow</Filter>
+    </QtMoc>
+    <QtMoc Include="EnvironmentsWidget.h">
+      <Filter>Widgets\EnvironmentsWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionGroup.h">
+      <Filter>Widgets\ActionToolBar\ActionGroup</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionPage.h">
+      <Filter>Widgets\ActionToolBar\ActionPage</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionToolBar.h">
+      <Filter>Widgets\ActionToolBar</Filter>
+    </QtMoc>
+    <QtMoc Include="ScenariosWidget.h">
+      <Filter>Widgets\ScenariosWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="InventoryWidget.h">
+      <Filter>Widgets\InventoryWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="LogMessagesWidget.h">
+      <Filter>Widgets\LogMessagesWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="GraphLogMessagesWidget.h">
+      <Filter>Widgets\GraphLogMessagesWidget</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="ui\MainWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ActionGroup.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ActionPage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\DelayNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\EndpointNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\EnvironmentsWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\GraphLogMessagesWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\InventoryWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\LogMessagesWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ModifierNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\PayloadNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ScenariosWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ScriptNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ViewerNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BleachUI.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icons\network.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

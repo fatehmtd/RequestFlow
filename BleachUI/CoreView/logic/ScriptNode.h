@@ -6,7 +6,7 @@
 
 namespace logic
 {
-	class ScriptNode : public view::Node
+	class COREVIEW_EXPORT ScriptNode : public view::Node
 	{
 		Q_OBJECT
 	public:

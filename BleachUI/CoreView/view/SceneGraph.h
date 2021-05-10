@@ -1,4 +1,5 @@
 #pragma once
+#include "coreview_global.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -20,7 +21,7 @@ namespace view
 	class ConnectionEdge;
 	class Edge;
 
-	class SceneGraph : public QGraphicsScene
+	class COREVIEW_EXPORT SceneGraph : public QGraphicsScene
 	{
 	public:
 		SceneGraph(model::Graph* modelGraph, QObject* parent = nullptr);

@@ -4,7 +4,7 @@
 #include <QAbstractItemModel>
 #include "ui_ScenariosWidget.h"
 
-#include "SceneGraph.h"
+#include <view/SceneGraph.h>
 #include <model/Project.h>
 #include <model/Graph.h>
 

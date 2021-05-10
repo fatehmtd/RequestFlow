@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "./view/SceneGraphWidget.h"
+#include <view/SceneGraphWidget.h>
 
 #include "ActionToolBar.h"
 #include "ActionPage.h"
@@ -57,6 +57,8 @@ private:
     bool loadFromJSValue(const QJSValue& v);
 
     void showNodeFilteringWidget();
+
+    void openLastProject();
 private:
     Ui::MainWindowClass _ui;
 
