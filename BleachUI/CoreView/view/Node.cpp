@@ -115,6 +115,13 @@ void view::Node::setupContentWidget()
 	//_contentWidget->setVisible(false);
 
 	setSize(_size.width(), _size.height());
+
+	connect(_node, &model::Node::ready, getContentWidget(), &view::ContentWidget::enableProgressBar, Qt::ConnectionType::QueuedConnection);
+	connect(_node, &model::Node::evaluated, getContentWidget(), &view::ContentWidget::disableProgressBar, Qt::ConnectionType::QueuedConnection);
+	connect(_node, &model::Node::failed, getContentWidget(), [=](QString reason)
+		{
+			getContentWidget()->disableProgressBar();
+		}, Qt::ConnectionType::QueuedConnection);
 }
 
 void view::Node::setupUIForModel()

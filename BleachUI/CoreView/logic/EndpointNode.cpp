@@ -23,6 +23,8 @@ void logic::EndpointNode::initUI()
 	getContentWidget()->layout()->addWidget(widget);
 	getContentWidget()->adjustSize();
 
+	connect(_ui.lineEdit_url, &QLineEdit::textChanged, this, &EndpointNode::onUrlTextChanged);
+
 	// set the data from the model
 	auto endpointNode = dynamic_cast<model::EndpointNode*>(getModelNode());
 	_ui.lineEdit_url->setText(endpointNode->getUrl());
@@ -159,4 +161,43 @@ void logic::EndpointNode::onContentTypeChanged(const QString& t)
 void logic::EndpointNode::onHttpMethodChanged(int index)
 {
 	getModelNode<model::EndpointNode*>()->setHttpMethod(index);
+}
+
+#include <QRegularExpression>
+#include <QDebug>
+
+void logic::EndpointNode::onUrlTextChanged(const QString& rawUrl)
+{
+	QString workingUrl = rawUrl;
+
+	
+	QRegularExpression pattern("({[\\w\\d]+})");
+
+	auto globalMatch = pattern.globalMatch(rawUrl);
+
+	while(globalMatch.hasNext())
+	{
+		auto match = globalMatch.next();
+
+		for (auto m : match.capturedTexts())
+		{
+			//auto m = match.captured(0);
+			int l = m.size();
+			int index = rawUrl.indexOf(m);
+			//_ui.lineEdit_url->settext
+
+			qDebug() << m << index;
+		}
+		
+		//qDebug() << match.capturedStart(;
+	}
+
+	QStringList queryStringList;
+
+	auto environment = getModelNode()->getGraph()->getActiveEnvironment();
+
+	if (environment != nullptr)
+	{
+		workingUrl = environment->evaluate(workingUrl);
+	}
 }

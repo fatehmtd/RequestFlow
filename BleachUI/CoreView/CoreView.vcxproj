@@ -145,7 +145,6 @@
   <ItemGroup>
     <QtUic Include="ui\DelayNodeUi.ui" />
     <QtUic Include="ui\EndpointNodeUi.ui" />
-    <QtUic Include="ui\ModifierNodeUi.ui" />
     <QtUic Include="ui\PayloadNodeUi.ui" />
     <QtUic Include="ui\ScriptNodeUi.ui" />
     <QtUic Include="ui\ViewerNodeUi.ui" />

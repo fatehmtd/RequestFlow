@@ -66,7 +66,8 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
 QPainterPath view::Edge::buildPath() const
 {
-	return buildPathSegmented();
+	//return buildPathSegmented();
+	return buildPathCubic();
 }
 
 QPainterPath view::Edge::buildPathCubic() const

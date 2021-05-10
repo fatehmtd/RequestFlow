@@ -12,6 +12,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreModel", "CoreModel\CoreModel.vcxproj", "{A1CE99CA-A4D2-49D4-BF8D-A71F17A33076}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreView", "CoreView\CoreView.vcxproj", "{A74EA408-17DC-4C99-BA05-DCAE27478B0B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A1CE99CA-A4D2-49D4-BF8D-A71F17A33076} = {A1CE99CA-A4D2-49D4-BF8D-A71F17A33076}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

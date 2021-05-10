@@ -19,6 +19,7 @@ namespace logic
         void onHttpMethodChanged(int index);
         void onTimeoutChanged(int delay);
         void onContentTypeChanged(const QString& t);
+        void onUrlTextChanged(const QString& t);
     private:
         Ui::EndpointNodeUiWidget _ui;
     };
