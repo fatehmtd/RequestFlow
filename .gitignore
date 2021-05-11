@@ -41,3 +41,4 @@ BleachUI/BleachUI.pro
 BleachUI/CoreView/x64
 BleachUI/CoreModel/x64
 BleachUI/RequestFlow/x64
+build-*

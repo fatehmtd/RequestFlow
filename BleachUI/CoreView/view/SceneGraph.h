@@ -59,7 +59,7 @@ namespace view
 		void drawGridBackground(QPainter* painter, const QRectF& rect);
 		void drawCrossBackground(QPainter* painter, const QRectF& rect);
 
-		virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+        virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
 		virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 		virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;

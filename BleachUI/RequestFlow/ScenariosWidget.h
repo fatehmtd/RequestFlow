@@ -18,10 +18,10 @@ public:
 	~ScenariosWidget();
 
 	void setProject(model::Project* project);
-	model::Project* const getProject() const;
+    model::Project* getProject() const;
 
 	void setCurrentScene(model::Graph* scene);
-	model::Graph* const getCurrentSceneGraph() const;
+    model::Graph* getCurrentSceneGraph() const;
 
 	void updateScenariosList() const;
 
