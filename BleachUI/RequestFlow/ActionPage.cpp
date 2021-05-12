@@ -3,7 +3,7 @@
 #include "ActionGroup.h"
 #include "ui_ActionPage.h"
 #include <QPushButton>
-#include <qdebug>
+#include <QDebug>
 
 ActionPage::ActionPage(ActionToolBar* toolBar, const QString& name) : QWidget(toolBar->getWidget()), _ui(new Ui::ActionPageUi)
 {
