@@ -77,11 +77,21 @@ void MainWindow::setupUi()
 	setupRibbonBar();
 	setupSceneGraph();
 	setupEnvironmentsWidget();
+    setupMenuBar();
 
 	// enable the background image
 	_ui.mdiArea->viewport()->installEventFilter(new BackgroundPaintFilter(this));
 
-	openLastProject();
+    openLastProject();
+}
+
+#include <QMenuBar>
+
+void MainWindow::setupMenuBar()
+{
+    auto bar= menuBar();
+    bar->addMenu("File");
+    bar->addMenu("View");
 }
 
 #include <QFile>

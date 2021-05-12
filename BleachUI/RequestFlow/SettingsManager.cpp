@@ -19,11 +19,11 @@ QList<QString> view::SettingsManager::enumRecentProjects() const
 {
 	auto recentProjectsList = _settings->value("recentProjects").toList();
 	QList<QString> output;
-	for (auto v : recentProjectsList)
+    for (const auto& v : recentProjectsList)
 	{
 		output.append(v.toString());
 	}
-	return std::move(output);
+    return output;
 }
 
 void view::SettingsManager::removeRecentProject(const QString& path)

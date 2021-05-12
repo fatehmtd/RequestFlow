@@ -7,6 +7,7 @@
 #include <QGraphicsProxyWidget>
 #include <QApplication>
 
+#include <math.h>
 #include "Node.h" 
 
 #include <model/Graph.h>
@@ -231,7 +232,7 @@ void SceneGraphWidget::dropEvent(QDropEvent* event)
 	in >> count;
 	for (int i = 0; i < count; i++)
 	{
-		size_t ptr = 0;
+        quint64 ptr = 0;
 		in >> ptr;
 		auto entry = dynamic_cast<model::EndpointEntry*>(reinterpret_cast<QObject*>(ptr));
 		if (entry != nullptr)

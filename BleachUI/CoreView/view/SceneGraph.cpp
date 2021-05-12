@@ -210,6 +210,8 @@ void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 	//drawGridBackground(painter, rect);
 }
 
+#include <math.h>
+
 void view::SceneGraph::drawPointsBackground(QPainter* painter, const QRectF& rect)
 {
 	const int left = floor(rect.left());
@@ -509,7 +511,7 @@ void view::SceneGraph::bringToFront(Node* node) const
 }
 
 #include <model/PersistenceHandler.h>
-#include <QUUID>
+#include <QUuid>
 
 view::Node* view::SceneGraph::cloneNode(Node* originalNode)
 {
