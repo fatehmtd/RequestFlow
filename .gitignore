@@ -41,3 +41,4 @@ BleachUI/CoreModel/x64
 BleachUI/RequestFlow/x64
 build-*
 BleachUI/RequestFlow.pro.user*
+*.pro.user.*

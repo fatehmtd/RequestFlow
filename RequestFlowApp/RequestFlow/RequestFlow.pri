@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 HEADERS += ./resource.h \
+    $$PWD/BackgroundPaintFilter.h \
     ./MainWindow.h \
     ./EnvironmentsWidget.h \
     ./ActionToolBar.h \

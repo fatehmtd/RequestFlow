@@ -11,6 +11,7 @@ GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLo
 	connect(logger, &QObject::destroyed, this, &QObject::deleteLater);
 
 	ui.progressBar->setVisible(false);
+    ui.progressBar->setFixedHeight(20);
 	auto graph = logger->getGraph();
 
 	connect(graph, &model::Graph::started, this, [=]()
