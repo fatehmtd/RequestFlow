@@ -192,30 +192,28 @@
   <customwidget>
    <class>EnvironmentsWidget</class>
    <extends>QWidget</extends>
-   <header>environmentswidget.h</header>
+   <header>EnvironmentsWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ScenariosWidget</class>
    <extends>QWidget</extends>
-   <header>scenarioswidget.h</header>
+   <header>ScenariosWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>InventoryWidget</class>
    <extends>QWidget</extends>
-   <header>inventorywidget.h</header>
+   <header>InventoryWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>LogMessagesWidget</class>
    <extends>QWidget</extends>
-   <header>logmessageswidget.h</header>
+   <header>LogMessagesWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../BleachUI.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

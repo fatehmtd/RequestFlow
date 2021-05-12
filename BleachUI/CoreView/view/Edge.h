@@ -4,7 +4,7 @@
 #include <QGraphicsPathItem>
 #include <QGraphicsTextItem>
 
-#include <SceneGraph.h>
+#include "SceneGraph.h"
 
 #include <model/Slot.h>
 #include <model/Edge.h>

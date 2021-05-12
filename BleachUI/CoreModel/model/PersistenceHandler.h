@@ -3,6 +3,7 @@
 #include <QJSValue>
 #include <QJSEngine>
 #include <QJsonDocument>
+#include <QPointF>
 
 namespace model
 {

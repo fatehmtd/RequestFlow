@@ -5,7 +5,7 @@ model::Message::Message(QString body) : _body(body)
 
 }
 
-model::Message::Message(const Message& m) : _body(m._body), _queryParams(m._queryParams), _pathVars(m._pathVars), _context(m._context)
+model::Message::Message(const Message& m) : _pathVars(m._pathVars), _queryParams(m._queryParams),  _context(m._context), _body(m._body)
 {
 }
 
@@ -85,7 +85,7 @@ QVariant model::Message::toVariant() const
 void recursivePrint(int level, QMap<QString, QVariant> map)
 {
 	auto padding = QString("").leftJustified(level*4, '-');
-	for (auto key : map.keys())
+    for (const auto& key : map.keys())
 	{
 		auto value = map[key];
 		if (value.type() == QVariant::Map)

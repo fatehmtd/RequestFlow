@@ -92,7 +92,7 @@ void ScenariosWidget::setProject(model::Project* project)
 	_scenariosModel->setProject(project);
 }
 
-model::Project* const ScenariosWidget::getProject() const
+model::Project* ScenariosWidget::getProject() const
 {
 	return _project;
 }
@@ -103,7 +103,7 @@ void ScenariosWidget::setCurrentScene(model::Graph* sceneGraph)
 	emit currentSceneChanged(sceneGraph);
 }
 
-model::Graph* const ScenariosWidget::getCurrentSceneGraph() const
+model::Graph* ScenariosWidget::getCurrentSceneGraph() const
 {
 	return nullptr;
 }

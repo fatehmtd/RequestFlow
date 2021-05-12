@@ -38,6 +38,7 @@ private slots:
 private:
     void closeEvent(QCloseEvent* event) override;
     void setupUi();
+    void setupMenuBar();
     void setupRibbonBar();
     void setupEnvironmentsWidget();
     void setupSceneGraph();

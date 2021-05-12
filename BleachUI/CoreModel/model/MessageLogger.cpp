@@ -21,7 +21,12 @@ void model::MessageLogger::log(const Message& message)
 
 void model::MessageLogger::log(int type, const QString& message, IdentifiableEntity* sender)
 {
-	Message m = {type, message, QDateTime::currentDateTime(), sender};
+    //Message m = {type, message, QDateTime::currentDateTime(), sender};
+    Message m;
+    m.type = type;
+    m.message = message;
+    m.dateTime = QDateTime::currentDateTime();
+    m.sender = sender;
 	log(m);
 }
 

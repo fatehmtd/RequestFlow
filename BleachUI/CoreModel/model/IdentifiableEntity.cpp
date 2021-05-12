@@ -1,5 +1,5 @@
 #include "IdentifiableEntity.h"
-#include <QUUID>
+#include <QUuid>
 
 model::IdentifiableEntity::IdentifiableEntity(QObject* parent) : PersistableEntity(parent)
 {

@@ -42,7 +42,7 @@ public:
 			out << endpoints.size();
 			for (const auto& endpoint : endpoints)
 			{
-				out << reinterpret_cast<size_t>(endpoint);
+                out << reinterpret_cast<quint64>(endpoint);
 			}
 			mime->setData("application/x-EndpointEntry", array);
 		}
@@ -74,27 +74,27 @@ InventoryWidget::~InventoryWidget()
 
 void InventoryWidget::onContextMenuRequested(const QPoint& p)
 {
-	auto index = _ui.treeView->indexAt(p);
-	auto zeroIndex = _ui.treeView->model()->index(index.row(), 0, index.parent());
-	auto endpointEntry = zeroIndex.data(MEMBER_PTR_ROLE).value<model::EndpointEntry*>();
-	auto document = zeroIndex.data(MEMBER_PTR_ROLE).value<model::Document*>();
+    auto index = _ui.treeView->indexAt(p);
+    auto zeroIndex = _ui.treeView->model()->index(index.row(), 0, index.parent());
+    auto endpointEntry = zeroIndex.data(MEMBER_PTR_ROLE).value<model::EndpointEntry*>();
+    auto document = zeroIndex.data(MEMBER_PTR_ROLE).value<model::Document*>();
 
-	if (document != nullptr)
-	{
-		auto menu = new QMenu(this);
-		menu->addAction(QIcon(":/BleachUI/delete"), "Delete document", [=]()
-			{
-				int button = QMessageBox::warning(this, "Delete Document", QString("Confirm the deletion of {%1} ?").arg(document->getName()),
-					QMessageBox::Yes, QMessageBox::Cancel);
-				switch (button)
-				{
-				case QMessageBox::StandardButton::Yes:
-					delete document;
-					setProject(_project);
-					break;
-				case QMessageBox::Cancel:
-					return;
-				}
+    if (document != nullptr)
+    {
+        auto menu = new QMenu(this);
+        menu->addAction(QIcon(":/BleachUI/delete"), "Delete document", [=]()
+            {
+                int button = QMessageBox::warning(this, "Delete Document", QString("Confirm the deletion of {%1} ?").arg(document->getName()),
+                    QMessageBox::Yes, QMessageBox::Cancel);
+                switch (button)
+                {
+                case QMessageBox::StandardButton::Yes:
+                    delete document;
+                    setProject(_project);
+                    break;
+                case QMessageBox::Cancel:
+                    return;
+                }
 
 			});
 		menu->exec(mapToGlobal(p));

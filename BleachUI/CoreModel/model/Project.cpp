@@ -3,7 +3,7 @@
 #include "Environment.h"
 #include "Graph.h"
 #include "Document.h"
-#include <Qdebug>
+#include <QDebug>
 
 #include <QMetaProperty>
 #include <QMetaObject>

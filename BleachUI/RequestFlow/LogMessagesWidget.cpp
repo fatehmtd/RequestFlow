@@ -20,7 +20,7 @@ void LogMessagesWidget::setProject(model::Project* project)
 	clearChildren();
 	if (_project != nullptr)
 	{
-		for (auto graph : _project->getGraphs()) 
+        for (const auto& graph : _project->getGraphs())
 		{
 			addMessageLogger(graph->getLogger());
 		}
