@@ -6,7 +6,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
 #include <QApplication>
-
+#include <QTimer>
 #include <math.h>
 #include "Node.h" 
 
@@ -39,30 +39,32 @@ void SceneGraphWidget::initUi()
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::FullViewportUpdate);
-	setRenderHint(QPainter::RenderHint::Antialiasing, true);
-	setRenderHint(QPainter::RenderHint::HighQualityAntialiasing, true);
-	setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
-	setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
-	setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
+    //setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+
+    setRenderHint(QPainter::RenderHint::Antialiasing, true);
+    setRenderHint(QPainter::RenderHint::LosslessImageRendering, false);
+    setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
+    setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
 
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 
-	setOptimizationFlags(QGraphicsView::DontSavePainterState);
-	setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
-	setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);
+    /*
+    setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
+    setOptimizationFlags(QGraphicsView::OptimizationFlag::DontClipPainter);
+    setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);*/
 
 	_zoomInFactor = 1.5f;
 	_zoomStep = 1;
 
 	_minZoomLevel = 1;
-	_maxZoomLevel = 5;
-	_defaultZoomLevel = 2;
+    _maxZoomLevel = 5;
+    _defaultZoomLevel = 2;
 
 	_zoomLevel = _defaultZoomLevel;
-	//setOGLBackend();
 
+    //setOGLBackend();
 	setAcceptDrops(true);
 }
 
@@ -192,17 +194,17 @@ void SceneGraphWidget::performZoom(QWheelEvent* event)
 void SceneGraphWidget::setOGLBackend()
 {
 	QSurfaceFormat surfaceFormat;
-	surfaceFormat.setSamples(8);
+    surfaceFormat.setSamples(8);
 	//surfaceFormat.setVersion(4, 2);
 	//surfaceFormat.setProfile(QSurfaceFormat::CompatibilityProfile);
-	//surfaceFormat.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
-	//surfaceFormat.setSwapInterval(1);
+    surfaceFormat.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
+    surfaceFormat.setSwapInterval(1);
 
 	//QSurfaceFormat::setDefaultFormat(surfaceFormat);
-	//surfaceFormat.setSwapBehavior(QSurfaceFormat::SwapBehavior::SingleBuffer);
+    surfaceFormat.setSwapBehavior(QSurfaceFormat::SwapBehavior::TripleBuffer);
 
 	auto glWidget = new QOpenGLWidget();
-	glWidget->setFormat(surfaceFormat);
+    glWidget->setFormat(surfaceFormat);
 	setViewport(glWidget);
 	//*/
 }
@@ -242,7 +244,7 @@ void SceneGraphWidget::dropEvent(QDropEvent* event)
 		}
 	}
 
-	event->acceptProposedAction();
+    event->acceptProposedAction();
 }
 
 QPointF SceneGraphWidget::getCenter() const

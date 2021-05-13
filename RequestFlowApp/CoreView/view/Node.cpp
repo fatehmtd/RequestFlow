@@ -86,8 +86,8 @@ void view::Node::setupUi()
 	setFlag(GraphicsItemFlag::ItemIsSelectable);
 	setFlag(GraphicsItemFlag::ItemIsMovable);
 	setFlag(GraphicsItemFlag::ItemSendsGeometryChanges);
-	//setCacheMode(CacheMode::DeviceCoordinateCache);
-	setCacheMode(CacheMode::ItemCoordinateCache);
+    //setCacheMode(CacheMode::DeviceCoordinateCache);
+    //setCacheMode(CacheMode::ItemCoordinateCache);
 
 	QFont font;
 	font.setBold(true);
@@ -212,7 +212,7 @@ float view::Node::getSlotHeight() const
 
 float view::Node::getHeaderHeight() const
 {
-	return 45.0f;
+    return 45.0f;
 }
 
 float view::Node::getSlotsSectionHeight() const
@@ -426,8 +426,11 @@ void view::Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 	if (_resizeEligible)
 	{
+        if(event->button() == Qt::MouseButton::LeftButton)
+        {
 		_isResizing = true;
 		_anchorPoint = event->scenePos();
+        }
 	}
 	else
 	{

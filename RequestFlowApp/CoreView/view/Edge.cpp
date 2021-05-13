@@ -27,6 +27,8 @@ view::Edge::Edge(SceneGraph* graph, model::Edge* edge) : _edge(edge)
 	_successColor = colors::blue;
 	_failureColor = colors::red;
 	_hoverColor = colors::orange;
+
+    //setCacheMode(CacheMode::ItemCoordinateCache);
 }
 
 view::Edge::~Edge()
@@ -44,8 +46,8 @@ QPainterPath view::Edge::shape() const
 
 void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-	//painter->setClipPath(shape()); 
-	//painter->setClipRect(option->exposedRect);
+    painter->setClipPath(shape());
+    painter->setClipRect(option->exposedRect);
 
 	auto inPosition = _slotDestination->getBasePosition(true);
 	auto outPosition = _slotOrigin->getBasePosition(true);
@@ -54,7 +56,8 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	//setZValue(dx < 20 ? 1 : -1);
 
 	auto path = buildPath();
-	setPath(path);
+    setPath(path);
+
 	//QPen pen(isSelected() ? colors::orange : (_mouseHovering ? colors::orange : QColor("#4D4B4D")), _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
 	auto currentColor = (isSelected() || _mouseHovering) ? _hoverColor : evalColor();
 	QPen pen(currentColor, _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
@@ -64,10 +67,18 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	painter->drawPath(path);
 }
 
+#include <QDebug>
+
+QVariant view::Edge::itemChange(GraphicsItemChange change, const QVariant& value)
+{
+    qDebug() << change << value;
+    return QGraphicsItem::itemChange(change, value);
+}
+
 QPainterPath view::Edge::buildPath() const
 {
-	//return buildPathSegmented();
-	return buildPathCubic();
+    //return buildPathSegmented();
+    return buildPathCubic();
 }
 
 QPainterPath view::Edge::buildPathCubic() const
@@ -128,9 +139,22 @@ QPainterPath view::Edge::buildPathSegmented() const
 	return path;
 }
 
+#include <QGraphicsView>
+
 QRectF view::Edge::boundingRect() const
 {
-	return buildPath().boundingRect();
+    auto s = scene();
+    auto v = s->views()[0];
+    auto r = v->sceneRect();
+
+    return r.normalized();
+    //return buildPath().boundingRect().normalized();
+    /*
+    //TODO: fix this workaround to render using the proper boundingRect
+    float size = 1 << 13;
+    float hsize = size * 0.5f;
+    return QRectF(-hsize, -hsize, size, size);
+    //*/
 }
 
 void view::Edge::hoverEnterEvent(QGraphicsSceneHoverEvent* event)

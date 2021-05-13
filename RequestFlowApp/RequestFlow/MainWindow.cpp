@@ -52,12 +52,14 @@ void MainWindow::setupUi()
 
 void MainWindow::setupMenuBar()
 {
+    /*
     auto bar= menuBar();
     bar->addMenu("File");
     bar->addMenu("View");
     bar->addMenu("Scenario");
     bar->addMenu("Environment");
     bar->addMenu("Help");
+    //*/
 }
 
 #include <QFile>
@@ -71,7 +73,7 @@ void MainWindow::setupRibbonBar()
 	_ui.dockWidget->setFixedHeight(122);
 
 
-    _ui.dockWidget->setVisible(false);
+    //_ui.dockWidget->setVisible(false);
 
 	_toolbar = new ActionToolBar(_ui.tabWidget);
 
@@ -437,6 +439,11 @@ int MainWindow::onCloseProject()
 		case QMessageBox::Cancel:
 			return -1;
 		}
+
+        for(auto graph : _project->getGraphs())
+        {
+            graph->stop();
+        }
 	}
 
 	setWindowTitle("RequestFlow");
@@ -529,8 +536,10 @@ void MainWindow::onSubWindowActivated(QMdiSubWindow* subWindow)
 
 void MainWindow::onNewProject()
 {
-	onCloseProject();
-	setProject(new model::Project(this));
+    if(onCloseProject() != -1)
+    {
+        setProject(new model::Project(this));
+    }
 }
 
 void MainWindow::onSceneDeleted(QString identifier)

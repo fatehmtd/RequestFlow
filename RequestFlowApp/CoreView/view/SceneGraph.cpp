@@ -204,10 +204,10 @@ view::Node* view::SceneGraph::createVisualNodeForModelNode(model::Node* node)
 
 void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
-	painter->fillRect(rect, QColor("#A5A5A5"));
+    painter->fillRect(rect, QColor("#A8A8A8"));
 	//drawPointsBackground(painter, rect);
 	//drawCrossBackground(painter, rect);
-	//drawGridBackground(painter, rect);
+    //drawGridBackground(painter, rect);
 }
 
 #include <math.h>
@@ -340,7 +340,7 @@ void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
 void view::SceneGraph::setupUi()
 {
-	setItemIndexMethod(ItemIndexMethod::BspTreeIndex);
+    setItemIndexMethod(ItemIndexMethod::BspTreeIndex);
 	_cellSize = 40; // in pixels
 	_blockSize = 10; // in cells
 
@@ -483,6 +483,7 @@ void view::SceneGraph::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 	_destinationSlot = nullptr;
 	_originSlot = nullptr;
 	_connectionEdge->setOrigin(_originSlot);
+    update();
 	QGraphicsScene::mouseReleaseEvent(event);
 }
 

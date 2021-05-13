@@ -42,7 +42,7 @@ protected:
 	void setOGLBackend();
 
 	void dragEnterEvent(QDragEnterEvent* event) override;
-	void dropEvent(QDropEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
 protected:
 	view::SceneGraph* _sceneGraph = nullptr;
 
