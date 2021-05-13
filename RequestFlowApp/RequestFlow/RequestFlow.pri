@@ -42,3 +42,6 @@ FORMS += ./ui/ActionGroup.ui \
     ./ui/ScriptNodeUi.ui \
     ./ui/ViewerNodeUi.ui
 RESOURCES += BleachUI.qrc
+
+DISTFILES += \
+    $$PWD/license.txt

@@ -68,4 +68,7 @@
         <file alias="filter">icons/right-arrow.svg</file>
         <file alias="pen">icons/pen.svg</file>
     </qresource>
+    <qresource prefix="/misc">
+        <file>license.txt</file>
+    </qresource>
 </RCC>

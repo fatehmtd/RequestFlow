@@ -1,0 +1,5 @@
+RequestFlow est la propriété intellectuelle de Fateh Benmerzoug Ph.D (fateh@requestflow.dev)
+L'utilisation ou la distribution de cet outil sans l'autorisation de l'auteur est strictement interdite.
+Veuillez supprimer RequestFlow de votre ordinateur si vous n'acceptez pas les conditions d'utilisation.
+
+Accepter ces conditions d'utilisation?

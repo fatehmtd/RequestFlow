@@ -45,7 +45,7 @@ void MainWindow::setupUi()
 	// enable the background image
 	_ui.mdiArea->viewport()->installEventFilter(new BackgroundPaintFilter(this));
 
-    openLastProject();
+    //openLastProject();
 }
 
 #include <QMenuBar>
