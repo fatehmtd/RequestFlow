@@ -45,6 +45,13 @@ private:
     void openProject(const QString& path);
     void setProject(model::Project* project);
 
+    // about menu
+    void onAbout();
+    void onContactSupport();
+    void onWebsite();
+    void onActivateLicense();
+    void onTwitter();
+
     void createScenario(QString name);
     void openScenario(view::SceneGraph* sceneGraph);
     void cloneScenario(view::SceneGraph* sceneGraph, QString newName);
@@ -77,4 +84,7 @@ private:
     std::unique_ptr<model::Project> _project;
     QMap<QString, QMdiSubWindow*> _subwindowsMap;
     view::SettingsManager* _settingsManager = nullptr;
+
+    //////////////////////////////////////////////////
+
 };

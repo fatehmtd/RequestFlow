@@ -4,6 +4,7 @@
 
 HEADERS += ./resource.h \
     $$PWD/BackgroundPaintFilter.h \
+    $$PWD/aboutwidget.h \
     ./MainWindow.h \
     ./EnvironmentsWidget.h \
     ./ActionToolBar.h \
@@ -16,6 +17,7 @@ HEADERS += ./resource.h \
     ./LogMessagesWidget.h \
     ./SettingsManager.h
 SOURCES += ./main.cpp \
+    $$PWD/aboutwidget.cpp \
     ./MainWindow.cpp \
     ./EnvironmentsWidget.cpp \
     ./ActionToolBar.cpp \
@@ -28,6 +30,7 @@ SOURCES += ./main.cpp \
     ./LogMessagesWidget.cpp \
     ./SettingsManager.cpp
 FORMS += ./ui/ActionGroup.ui \
+    $$PWD/aboutwidget.ui \
     ./ui/ActionPage.ui \
     ./ui/DelayNodeUi.ui \
     ./ui/EndpointNodeUi.ui \

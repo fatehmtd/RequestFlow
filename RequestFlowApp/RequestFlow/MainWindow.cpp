@@ -52,13 +52,53 @@ void MainWindow::setupUi()
 
 void MainWindow::setupMenuBar()
 {
-    /*
     auto bar= menuBar();
-    bar->addMenu("File");
-    bar->addMenu("View");
-    bar->addMenu("Scenario");
-    bar->addMenu("Environment");
-    bar->addMenu("Help");
+
+    // File menu
+    {
+        auto mainMenu = bar->addMenu("File");
+        mainMenu->addAction(QIcon(), "New...", [=](){onNewProject();}, QKeySequence("Ctrl+N"));
+        mainMenu->addAction(QIcon(), "Open...", [=](){onOpenProject();}, QKeySequence("Ctrl+O"));
+        mainMenu->addAction(QIcon(), "Save", [=](){onOpenProject();}, QKeySequence("Ctrl+S"));
+        mainMenu->addAction(QIcon(), "Save As...", [=](){onOpenProject();}, QKeySequence("Ctrl+Shift+S"));
+        mainMenu->addSeparator();
+        mainMenu->addAction(QIcon(), "Settings...", [=](){});
+        mainMenu->addSeparator();
+        mainMenu->addAction(QIcon(), "Quit", [=](){close();}, QKeySequence("Ctrl+Q"));
+    }
+
+    //bar->addMenu("View");
+
+    // Scenario menu
+    {
+        bar->addMenu("Scenario");
+    }
+
+    // Environment menu
+    {
+        bar->addMenu("Environment");
+    }
+
+    // Window menu
+    {
+        auto mainMenu = bar->addMenu("Window");
+        mainMenu->addAction(QIcon(), "Center on scene", [=](){});
+        mainMenu->addSeparator();
+        mainMenu->addAction(QIcon(), "Switch theme...", [=](){});
+    }
+
+    // Help menu
+    {
+        auto mainMenu = bar->addMenu("Help");
+        mainMenu->addAction(QIcon(), "Contact Support...", [=](){onContactSupport();});
+        mainMenu->addAction(QIcon(), "RequestFlow website", [=](){onWebsite();});
+        mainMenu->addAction(QIcon(), "@requestflow on Twitter", [=](){onTwitter();});
+        mainMenu->addSeparator();
+        auto activateAction = mainMenu->addAction(QIcon(), "Activate", [=](){onActivateLicense();});
+        activateAction->setEnabled(false); // TODO: create activation page
+        mainMenu->addSeparator();
+        mainMenu->addAction(QIcon(), "About", [=](){onAbout();});
+    }
     //*/
 }
 
@@ -247,7 +287,46 @@ void MainWindow::setProject(model::Project* project)
 	_swaggerImport->setEnabled(projectAvailable);
 	_ui.inventoryWidget->setProject(project);
 	_ui.logMessagesWidget->setProject(project);
-	_ui.environmentsWidget->setProject(project);
+    _ui.environmentsWidget->setProject(project);
+}
+
+#include "aboutwidget.h"
+#include <QDialog>
+#include <QSizePolicy>
+
+void MainWindow::onAbout()
+{
+    auto dialog = new QDialog(this);
+    dialog->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
+    dialog->setWindowFlag(Qt::WindowType::WindowMinMaxButtonsHint, false);
+    dialog->setWindowFlag(Qt::WindowType::WindowContextHelpButtonHint, false);
+    dialog->setWindowFlag(Qt::WindowType::WindowTitleHint, false);
+    //dialog->setSizePolicy(QSizePolicy::Policy::Fixed);
+    auto widget = new AboutWidget(dialog);
+    dialog->setFixedSize(widget->size());
+    dialog->exec();
+}
+
+void MainWindow::onContactSupport()
+{
+
+}
+
+#include <QDesktopServices>
+
+void MainWindow::onWebsite()
+{
+    QDesktopServices::openUrl(QUrl("http://www.requestflow.dev"));
+}
+
+void MainWindow::onActivateLicense()
+{
+
+}
+
+void MainWindow::onTwitter()
+{
+    QDesktopServices::openUrl(QUrl("https://twitter.com/requestflow"));
 }
 
 void MainWindow::createScenario(QString name)
@@ -384,10 +463,10 @@ void MainWindow::updateRecentProjectsList()
 	}
 
 	// add an open project action
-	for (auto prj : recentProjects)
+    for (const auto& prj : recentProjects)
 	{
 		auto action = menu->addAction(QIcon(":/ui/network"), prj);
-		connect(action, &QAction::triggered, [=]()
+        connect(action, &QAction::triggered, this, [=]()
 			{
 				openProject(prj);
 			});
@@ -401,7 +480,7 @@ void MainWindow::updateRecentProjectsList()
 		font.setBold(true);
 		action->setFont(font);
 		action->setIcon(QIcon(":/ui/broom"));
-		connect(action, &QAction::triggered, [=]()
+        connect(action, &QAction::triggered, this, [=]()
 			{
 				if (QMessageBox::warning(this,
 					"Warning",
@@ -411,7 +490,7 @@ void MainWindow::updateRecentProjectsList()
 					_settingsManager->clearRecentProjects();
 					updateRecentProjectsList();
 				}
-			});
+            });
 	}
 	else
 	{

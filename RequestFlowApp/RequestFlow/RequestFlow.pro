@@ -27,3 +27,9 @@ INCLUDEPATH += $$PWD/../CoreView
 DEPENDPATH += $$PWD/../CoreView
 
 include(RequestFlow.pri)
+
+FORMS +=
+
+HEADERS +=
+
+SOURCES +=
