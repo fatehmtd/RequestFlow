@@ -17,6 +17,7 @@ namespace logic
     private:
         void setupUi();
         model::ExternalNode *getExternalNode() const;
+        void setSelectedNode(model::Node* node);
     private slots:
         void onDeltaDelayChanged(int value);
         void onBrowse();

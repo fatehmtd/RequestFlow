@@ -1,6 +1,8 @@
 #include "externalnode.h"
 #include "externalnodeselectiondialog.h"
 
+#include <QFileDialog>
+
 logic::ExternalNode::ExternalNode(model::ExternalNode *modelNode) : Node(modelNode, "External")
 {
     setupUi();
@@ -39,8 +41,7 @@ void logic::ExternalNode::setupUi()
     auto linkedNode = node->getLinkedNode();
     if(linkedNode != nullptr)
     {
-        _ui.lineEdit_externalGraph->setText(linkedNode->getGraph()->getName());
-        _ui.lineEdit_externalNode->setText(linkedNode->getName());
+        setSelectedNode(linkedNode);
     }
 
 
@@ -76,10 +77,11 @@ void logic::ExternalNode::setupUi()
     {
         node->evaluate();
     });
+
     ////////////////////////////////////////////////////////////////////////////////////////
 
-    setMinSize(QSize(200, 300));
-    setSize(200, 300);
+    setMinSize(QSize(220, 200));
+    setSize(220, 200);
 
     _bgColor = view::colors::lightGrey;
     //_ui.radioButton_alwaysExecute
@@ -88,6 +90,12 @@ void logic::ExternalNode::setupUi()
 model::ExternalNode *logic::ExternalNode::getExternalNode() const
 {
     return dynamic_cast<model::ExternalNode*>(getModelNode());
+}
+
+void logic::ExternalNode::setSelectedNode(model::Node *linkedNode)
+{
+    _ui.lineEdit_externalGraph->setText(linkedNode->getGraph()->getName());
+    _ui.lineEdit_externalNode->setText(QString("%1[%2]").arg(linkedNode->getType()).arg(linkedNode->getName()));
 }
 
 void logic::ExternalNode::onDeltaDelayChanged(int value)
@@ -107,8 +115,7 @@ void logic::ExternalNode::onBrowse()
         if(linkedNode != nullptr)
         {
             getExternalNode()->setLinkedNode(linkedNode);
-            _ui.lineEdit_externalGraph->setText(linkedNode->getGraph()->getName());
-            _ui.lineEdit_externalNode->setText(linkedNode->getName());
+            setSelectedNode(linkedNode);
         }
     }
 }

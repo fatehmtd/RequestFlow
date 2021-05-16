@@ -57,6 +57,9 @@ void logic::PayloadNode::clearUI()
 
 }
 
+#include <QFileDialog>
+#include <QGraphicsView>
+
 void logic::PayloadNode::setupUi()
 {
 	_bgColor = view::colors::byzantium;
@@ -66,6 +69,27 @@ void logic::PayloadNode::setupUi()
 
 	_ui.tableWidget_path->setRowCount(50);
 	_ui.tableWidget_query->setRowCount(50);
+
+    auto payloadNode = dynamic_cast<model::PayloadNode*>(getModelNode());
+
+    _ui.groupBox_loadFromFile->setChecked(payloadNode->getLoadFromFile());
+    _ui.lineEdit_filePath->setText(payloadNode->getFilePath());
+
+    connect(_ui.groupBox_loadFromFile, &QGroupBox::toggled, payloadNode, &model::PayloadNode::setLoadFromFile);
+    connect(_ui.lineEdit_filePath, &QLineEdit::textChanged, payloadNode, &model::PayloadNode::setFilePath);
+
+
+    connect(_ui.pushButton_browse, &QPushButton::clicked, this, [=]()
+    {
+        auto pwidget = getSceneGraph()->views().first();
+        auto fileName = QFileDialog::getOpenFileName(pwidget, "Open file location", payloadNode->getFilePath(), "JSON File (*.json);; All Files (*.*);");
+        if(!fileName.isEmpty())
+        {
+            _ui.lineEdit_filePath->setText(fileName);
+            model::Message message = payloadNode->loadMessageFromFile(payloadNode->getFilePath());
+            fillFromMessage(message);
+        }
+    });
 
 	auto message = dynamic_cast<model::PayloadNode*>(getModelNode())->getMessage();
 
@@ -79,9 +103,17 @@ void logic::PayloadNode::setupUi()
 	setSize(10, 10);
 }
 
-void logic::PayloadNode::prepareAndSend() const
+void logic::PayloadNode::prepareAndSend()
 {
-	dynamic_cast<model::PayloadNode*>(getModelNode())->setMessage(composeMessage());
+    auto payloadNode = dynamic_cast<model::PayloadNode*>(getModelNode());
+
+    if(payloadNode->getLoadFromFile())
+    {
+        model::Message message = payloadNode->loadMessageFromFile(payloadNode->getFilePath());
+        fillFromMessage(message);
+    }
+
+    payloadNode->setMessage(composeMessage());
 	_node->evaluate();
 }
 

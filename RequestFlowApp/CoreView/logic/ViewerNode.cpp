@@ -8,6 +8,8 @@
 #include <QAbstractItemModel>
 #include <QJSValue>
 #include <QJSEngine>
+#include <QFileDialog>
+#include <QGraphicsView>
 
 logic::ViewerNode::ViewerNode(model::ViewerNode* modelNode) : view::Node(modelNode, "Viewer")
 {
@@ -32,6 +34,12 @@ void logic::ViewerNode::setupUi()
 	auto widget = new QWidget();
 	_ui.setupUi(widget);
 	_ui.lineEdit_jsonPath->setText(viewerNode->getFilter());
+
+    _ui.groupBox->setChecked(viewerNode->getExportToFile());
+    _ui.lineEdit_filePath->setText(viewerNode->getFilePath());
+
+    connect(_ui.groupBox, &QGroupBox::toggled, viewerNode, &model::ViewerNode::setExportToFile);
+    connect(_ui.lineEdit_filePath, &QLineEdit::textChanged, viewerNode, &model::ViewerNode::setFilePath);
 
 	connect(_ui.lineEdit_jsonPath, &QLineEdit::textChanged, viewerNode, &model::ViewerNode::setFilter);
 
@@ -60,6 +68,17 @@ void logic::ViewerNode::setupUi()
 			filter(_ui.lineEdit_jsonPath->text());
 
 		}, Qt::ConnectionType::QueuedConnection);
+
+    connect(_ui.pushButton_browse, &QPushButton::clicked, this, [=]()
+    {
+        auto pwidget = getSceneGraph()->views().first();
+        auto fileName = QFileDialog::getSaveFileName(pwidget, "Save file location", viewerNode->getFilePath(), "JSON File (*.json);; All Files (*.*);");
+        if(!fileName.isEmpty())
+        {
+            //viewerNode->setFilePath(fileName);
+            _ui.lineEdit_filePath->setText(fileName);
+        }
+    });
 
 	setMinSize(QSize(400, 300));
 	setSize(300, 200);

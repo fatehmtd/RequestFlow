@@ -15,7 +15,7 @@ namespace logic
         virtual void clearUI() override;
     private:
         void setupUi();
-        void prepareAndSend() const;
+        void prepareAndSend();
 		model::Message composeMessage() const;
         void fillFromMessage(const model::Message& message);
 

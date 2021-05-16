@@ -158,7 +158,33 @@ ExternalNodeSelectionDialog::ExternalNodeSelectionDialog(model::Graph* current, 
         }
     });
 
+    connect(_ui.tableView_nodes, &QTableView::activated, this, [=](const QModelIndex& index)
+    {
+        _selectedNode = nullptr;
+        if(index.isValid())
+        {
+            auto node = reinterpret_cast<model::Node*>(index.internalPointer());
+            if(node != nullptr)
+            {
+                _selectedNode = node;
+                accept();
+            }
+        }
+    });
+
     connect(_ui.listView_graphs, &QListView::pressed, this, [=](const QModelIndex& index)
+    {
+        if(index.isValid())
+        {
+            auto graph = reinterpret_cast<model::Graph*>(index.internalPointer());
+            if(graph != nullptr)
+            {
+                fillNodes(graph, _ui.lineEdit_filter->text());
+            }
+        }
+    });
+
+    connect(_ui.listView_graphs, &QListView::activated, this, [=](const QModelIndex& index)
     {
         if(index.isValid())
         {
@@ -183,6 +209,8 @@ model::Node* ExternalNodeSelectionDialog::getSelectedNode() const
     return _selectedNode;
 }
 
+#include <QItemSelectionModel>
+
 void ExternalNodeSelectionDialog::fillGraphs(model::Graph* graph)
 {
     auto model = _ui.listView_graphs->model();
@@ -192,8 +220,17 @@ void ExternalNodeSelectionDialog::fillGraphs(model::Graph* graph)
     }
     model = new CustomGraphModel(graph, this);
     _ui.listView_graphs->setModel(model);
-    _ui.listView_graphs->setCurrentIndex(_ui.listView_graphs->rootIndex());
-    _ui.listView_graphs->setCurrentIndex(model->index(0, 0));
+    _ui.listView_graphs->update();
+    auto index = model->index(0, 0);
+
+    if(index.isValid())
+    {
+        auto graph = reinterpret_cast<model::Graph*>(index.internalPointer());
+        if(graph != nullptr)
+        {
+            fillNodes(graph, _ui.lineEdit_filter->text());
+        }
+    }
 }
 
 void ExternalNodeSelectionDialog::fillNodes(model::Graph *graph, const QString &filter)
