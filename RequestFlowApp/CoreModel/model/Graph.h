@@ -46,6 +46,15 @@ namespace model
 			ALREADY_RUNNING
 		};
 
+        enum State
+        {
+            IDLE,
+            PRESTART,
+            STARTED,
+            FINISHED,
+            CANCELED
+        };
+
 		bool isRunning() const;
 
 		void setActiveEnvironment(Environment* env);
@@ -57,16 +66,18 @@ namespace model
 
 		MessageLogger* getLogger() const;
 
+        void prepareNodesInternals();
+
 	public slots:
 		virtual int start();
-		virtual void stop();
+        virtual void cancel();
 		virtual void onNodeEvaluated();	
 		virtual void onNodeReady();	
 		virtual void onNodeFailed(const QString& reason);
 		virtual void onNodeException(QString reason);
 	signals:
 		void started();
-		void stopped();
+        void stopped();
 		void exceptionRaised(Node* node, QString reason);
 		void advanced();
 	private:

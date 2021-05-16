@@ -17,3 +17,9 @@ else:unix: LIBS += -L$$OUT_PWD/../CoreModel/ -lCoreModel
 
 
 include(CoreView.pri)
+
+FORMS +=
+
+HEADERS +=
+
+SOURCES +=

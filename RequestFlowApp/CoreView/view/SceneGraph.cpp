@@ -76,6 +76,7 @@ view::Edge* view::SceneGraph::findbyModel(model::Edge* edge) const
 #include "logic/ViewerNode.h"
 #include "logic/DelayNode.h"
 #include "logic/AssertionNode.h"
+#include "logic/externalnode.h"
 #include <functional>
 
 void view::SceneGraph::createGraphiNodesForModel()
@@ -198,6 +199,10 @@ view::Node* view::SceneGraph::createVisualNodeForModelNode(model::Node* node)
 	{
 		return new logic::AssertionNode((model::AssertionNode*)modelNode);
 	};
+    nodesMap["External"] = [](model::Node* modelNode)
+    {
+        return new logic::ExternalNode((model::ExternalNode*)modelNode);
+    };
 
 	return nodesMap[node->getType()](node);
 }

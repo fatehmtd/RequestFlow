@@ -48,59 +48,7 @@ void MainWindow::setupUi()
     //openLastProject();
 }
 
-#include <QMenuBar>
 
-void MainWindow::setupMenuBar()
-{
-    auto bar= menuBar();
-
-    // File menu
-    {
-        auto mainMenu = bar->addMenu("File");
-        mainMenu->addAction(QIcon(), "New...", [=](){onNewProject();}, QKeySequence("Ctrl+N"));
-        mainMenu->addAction(QIcon(), "Open...", [=](){onOpenProject();}, QKeySequence("Ctrl+O"));
-        mainMenu->addAction(QIcon(), "Save", [=](){onOpenProject();}, QKeySequence("Ctrl+S"));
-        mainMenu->addAction(QIcon(), "Save As...", [=](){onOpenProject();}, QKeySequence("Ctrl+Shift+S"));
-        mainMenu->addSeparator();
-        mainMenu->addAction(QIcon(), "Settings...", [=](){});
-        mainMenu->addSeparator();
-        mainMenu->addAction(QIcon(), "Quit", [=](){close();}, QKeySequence("Ctrl+Q"));
-    }
-
-    //bar->addMenu("View");
-
-    // Scenario menu
-    {
-        bar->addMenu("Scenario");
-    }
-
-    // Environment menu
-    {
-        bar->addMenu("Environment");
-    }
-
-    // Window menu
-    {
-        auto mainMenu = bar->addMenu("Window");
-        mainMenu->addAction(QIcon(), "Center on scene", [=](){});
-        mainMenu->addSeparator();
-        mainMenu->addAction(QIcon(), "Switch theme...", [=](){});
-    }
-
-    // Help menu
-    {
-        auto mainMenu = bar->addMenu("Help");
-        mainMenu->addAction(QIcon(), "Contact Support...", [=](){onContactSupport();});
-        mainMenu->addAction(QIcon(), "RequestFlow website", [=](){onWebsite();});
-        mainMenu->addAction(QIcon(), "@requestflow on Twitter", [=](){onTwitter();});
-        mainMenu->addSeparator();
-        auto activateAction = mainMenu->addAction(QIcon(), "Activate", [=](){onActivateLicense();});
-        activateAction->setEnabled(false); // TODO: create activation page
-        mainMenu->addSeparator();
-        mainMenu->addAction(QIcon(), "About", [=](){onAbout();});
-    }
-    //*/
-}
 
 #include <QFile>
 #include <QTextStream>
@@ -521,7 +469,7 @@ int MainWindow::onCloseProject()
 
         for(auto graph : _project->getGraphs())
         {
-            graph->stop();
+            graph->cancel();
         }
 	}
 

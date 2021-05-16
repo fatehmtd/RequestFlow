@@ -20,7 +20,9 @@ model::Project::~Project()
 
 QList<model::Graph*> model::Project::getGraphs() const
 {
-	return findChildren<model::Graph*>();
+    auto graphs = findChildren<model::Graph*>();
+    //qDebug() << __FUNCTION__ << graphs;
+    return graphs;
 }
 
 QList<model::Environment*> model::Project::getEnvironments() const
@@ -65,6 +67,12 @@ bool model::Project::loadFromJSValue(const QJSValue& v)
 			auto env = new model::Graph(this);
 			env->loadFromJSValue(value);
 		});
+
+
+    for(auto graph : getGraphs())
+    {
+        graph->prepareNodesInternals();
+    }
 
 	return true;
 }

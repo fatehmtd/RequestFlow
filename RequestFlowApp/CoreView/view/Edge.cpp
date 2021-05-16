@@ -67,14 +67,6 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	painter->drawPath(path);
 }
 
-#include <QDebug>
-
-QVariant view::Edge::itemChange(GraphicsItemChange change, const QVariant& value)
-{
-    qDebug() << change << value;
-    return QGraphicsItem::itemChange(change, value);
-}
-
 QPainterPath view::Edge::buildPath() const
 {
     //return buildPathSegmented();

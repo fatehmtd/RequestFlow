@@ -19,7 +19,7 @@ model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(par
 
 	//connect(this, &Node::readyForEvaluation, this, &Node::evaluate);
 	connect(this, &Node::evaluated, parent, &Graph::onNodeEvaluated, Qt::ConnectionType::QueuedConnection);
-	connect(this, &Node::ready, parent, &Graph::onNodeReady, Qt::ConnectionType::QueuedConnection);
+    connect(this, &Node::ready, parent, &Graph::onNodeReady, Qt::ConnectionType::QueuedConnection);
 	connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
 	connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
 	//connect(this, &Node::exceptionRaised, parent, &Graph::onNodeException, Qt::ConnectionType::QueuedConnection);
@@ -82,7 +82,7 @@ QMap<QString, model::InputSlot*> model::Node::getInputSlotsMap() const
 			output[slot->getIdentifier()] = slot;
 		}
 	}
-	return std::move(output);
+    return output;
 }
 
 QMap<QString, model::OutputSlot*> model::Node::getOutputSlotsMap() const
@@ -97,7 +97,7 @@ QMap<QString, model::OutputSlot*> model::Node::getOutputSlotsMap() const
 			output[slot->getIdentifier()] = slot;
 		}
 	}
-	return std::move(output);
+    return output;
 }
 
 QList<model::InputSlot*> model::Node::getInputSlots() const
@@ -157,18 +157,24 @@ void model::Node::evaluate()
 {
 	if (!getGraph()->isRunning()) return;
 
-	emit evaluated();
-	setStatus(EVALUATED);
+    emit evaluated();
+    setStatus(EVALUATED);
 
-	for (auto slot : getOutputSlotsMap().values())
-	{
-		slot->sendData();
-	}
+    const auto& values = getOutputSlotsMap().values();
+    for (auto slot : values)
+    {
+        slot->sendData();
+    }
 }
 
 int model::Node::getStatus() const
 {
-	return _executionStatus;
+    return _executionStatus;
+}
+
+void model::Node::prepareNodeInternals()
+{
+
 }
 
 void model::Node::setStatus(int status)

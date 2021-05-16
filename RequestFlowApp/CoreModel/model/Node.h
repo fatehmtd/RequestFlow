@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "NotifiableEntity.h"
 #include <QMap>
 
@@ -47,6 +47,8 @@ namespace model
 		};
 
 		int getStatus() const;
+
+        virtual void prepareNodeInternals();
 	private:
 		void setStatus(int status);
 	public slots:
@@ -56,7 +58,7 @@ namespace model
 		virtual void onGraphStart() override;
 		virtual void onGraphStop() override;
 
-		virtual void dataReceived(InputSlot* slot);
+        virtual void dataReceived(model::InputSlot* slot);
 
 	signals:
 		void evaluated();

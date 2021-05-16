@@ -4,6 +4,7 @@
 
 
 HEADERS += ./coremodel_global.h \
+    $$PWD/model/externalnode.h \
     ./model/Graph.h \
     ./model/Node.h \
     ./model/Edge.h \
@@ -26,6 +27,7 @@ HEADERS += ./coremodel_global.h \
     ./model/AssertionNode.h \
     ./model/MessageLogger.h
 SOURCES += ./model/Graph.cpp \
+    $$PWD/model/externalnode.cpp \
     ./model/Node.cpp \
     ./model/Edge.cpp \
     ./model/Slot.cpp \

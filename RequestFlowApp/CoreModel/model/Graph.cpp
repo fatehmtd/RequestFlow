@@ -137,6 +137,7 @@ QJSValue model::Graph::saveToJSValue(PersistenceHandler* persistenceHandler) con
 #include "ScriptNode.h"
 #include "DelayNode.h"
 #include "AssertionNode.h"
+#include "externalnode.h"
 #include <QMetaMethod>
 #include <QDebug>
 
@@ -166,6 +167,7 @@ model::Node* model::Graph::createNodeFromJSValue(const QJSValue& value)
 	nodesMap["Viewer"] = ViewerNode::staticMetaObject;
 	nodesMap["Delay"] = DelayNode::staticMetaObject;
 	nodesMap["Assertion"] = AssertionNode::staticMetaObject;
+    nodesMap["External"] = ExternalNode::staticMetaObject;
 
 	auto nodeType = value.property("entityType").toString();
 
@@ -184,10 +186,18 @@ model::Node* model::Graph::createNodeFromJSValue(const QJSValue& value)
 
 model::MessageLogger* model::Graph::getLogger() const
 {
-	return _messageLogger;
+    return _messageLogger;
 }
 
-void model::Graph::stop()
+void model::Graph::prepareNodesInternals()
+{
+    for(auto node : getNodes())
+    {
+        node->prepareNodeInternals();
+    }
+}
+
+void model::Graph::cancel()
 {
 	if (_isRunning)
 	{

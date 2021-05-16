@@ -1,5 +1,11 @@
 #include "Message.h"
 
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJSEngine>
+#include <QJSValue>
+#include <QDebug>
+
 model::Message::Message(QString body) : _body(body)
 {
 
@@ -80,27 +86,6 @@ QVariant model::Message::toVariant() const
 	return QVariant(output);
 }
 
-#include <QDebug>
-
-void recursivePrint(int level, QMap<QString, QVariant> map)
-{
-	auto padding = QString("").leftJustified(level*4, '-');
-    for (const auto& key : map.keys())
-	{
-		auto value = map[key];
-		if (value.type() == QVariant::Map)
-		{
-			qDebug() << padding << key;
-			recursivePrint(level + 1, map[key].value<QMap<QString, QVariant>>());
-		}
-		else
-		{
-			qDebug() << padding << key << value.toString();
-		}
-	}	
-}
-
-
 void model::Message::fromVariant(const QVariant& v)
 {
 	auto map = v.value<QMap<QString, QVariant>>();
@@ -108,8 +93,6 @@ void model::Message::fromVariant(const QVariant& v)
 	setQueryParams(map["query"].value<QMap<QString, QVariant>>());
 	setPathVars(map["path"].value<QMap<QString, QVariant>>());
 	setContext(map["context"].value<QMap<QString, QVariant>>());
-
-	//recursivePrint(0, map);
 }
 
 model::Message& model::Message::operator=(const Message& m)
@@ -120,18 +103,6 @@ model::Message& model::Message::operator=(const Message& m)
 	_context = m.getContext();
 	return *this;
 }
-
-void model::Message::printMe() const
-{
-	auto v = toVariant();
-	auto map = v.value<QMap<QString, QVariant>>();
-	recursivePrint(0, map);
-}
-
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QJSEngine>
-#include <QJSValue>
 
 QString model::Message::JSONStringify(const QVariant& v)
 {

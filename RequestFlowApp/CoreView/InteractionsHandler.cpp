@@ -12,6 +12,7 @@
 #include "logic/DelayNode.h"
 #include "logic/ScriptNode.h"
 #include "logic/AssertionNode.h"
+#include "logic/externalnode.h"
 
 view::InteractionsHandler::InteractionsHandler(SceneGraph* scene) : QObject(scene), _sceneGraph(scene)
 {
@@ -133,7 +134,17 @@ view::Node* view::InteractionsHandler::createAssertionNode()
 
 	auto graphicNode = new logic::AssertionNode(modelNode);
 	_sceneGraph->addItem(graphicNode);
-	return graphicNode;
+    return graphicNode;
+}
+
+view::Node *view::InteractionsHandler::createExternalNode()
+{
+    auto modelNode = new model::ExternalNode(_sceneGraph->getModelGraph());
+    modelNode->createModel();
+
+    auto graphicNode = new logic::ExternalNode(modelNode);
+    _sceneGraph->addItem(graphicNode);
+    return graphicNode;
 }
 
 void view::InteractionsHandler::deleteNode(Node* node)
@@ -231,7 +242,7 @@ void view::InteractionsHandler::registerCommonActions()
 {
 	registerEmptySpaceAction("Stop", [=](const QPointF& p)
 		{
-			_sceneGraph->getModelGraph()->stop();
+			_sceneGraph->getModelGraph()->cancel();
 		}, QIcon(":/BleachUI/stop"));
 
 	registerEmptySpaceAction("Execute", [=](const QPointF& p)
@@ -297,6 +308,12 @@ void view::InteractionsHandler::registerCommonActions()
 			auto node = createAssertionNode();
 			node->setPos(p);
 		}, QIcon(":/ui/warning"), 1);
+
+    registerEmptySpaceAction("Create External Node", [=](const QPointF& p)
+        {
+            auto node = createExternalNode();
+            node->setPos(p);
+        }, QIcon(":/ui/"), 1);
 
 	registerNodeAction("Clone Node", [=](const QPointF& p)
 		{

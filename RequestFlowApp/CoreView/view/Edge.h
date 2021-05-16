@@ -38,8 +38,6 @@ namespace view
 		virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
 		virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
 
-        QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
-
 		QColor evalColor() const;
 
 	protected slots:

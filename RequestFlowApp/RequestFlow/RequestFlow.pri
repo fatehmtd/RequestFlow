@@ -4,6 +4,7 @@
 
 HEADERS += ./resource.h \
     $$PWD/BackgroundPaintFilter.h \
+    $$PWD/MenuBar.h \
     $$PWD/aboutwidget.h \
     ./MainWindow.h \
     ./EnvironmentsWidget.h \
@@ -17,6 +18,7 @@ HEADERS += ./resource.h \
     ./LogMessagesWidget.h \
     ./SettingsManager.h
 SOURCES += ./main.cpp \
+    $$PWD/MenuBar.cpp \
     $$PWD/aboutwidget.cpp \
     ./MainWindow.cpp \
     ./EnvironmentsWidget.cpp \

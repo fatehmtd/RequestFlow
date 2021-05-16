@@ -36,6 +36,7 @@ namespace view
 		Node* createDelayNode();
 		Node* createScriptNode();
 		Node* createAssertionNode();
+        Node* createExternalNode();
 
 		void deleteNode(Node* node);
 		void deleteEdge(Edge* edge);
