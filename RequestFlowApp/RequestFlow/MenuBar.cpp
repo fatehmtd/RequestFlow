@@ -26,8 +26,8 @@ void MainWindow::setupMenuBar()
         auto mainMenu = bar->addMenu("File");
         mainMenu->addAction(QIcon(), "New...", [=](){onNewProject();}, QKeySequence("Ctrl+N"));
         mainMenu->addAction(QIcon(), "Open...", [=](){onOpenProject();}, QKeySequence("Ctrl+O"));
-        mainMenu->addAction(QIcon(), "Save", [=](){onOpenProject();}, QKeySequence("Ctrl+S"));
-        mainMenu->addAction(QIcon(), "Save As...", [=](){onOpenProject();}, QKeySequence("Ctrl+Shift+S"));
+        mainMenu->addAction(QIcon(), "Save", [=](){onSaveProject();}, QKeySequence("Ctrl+S"));
+        mainMenu->addAction(QIcon(), "Save As...", [=](){onSaveProject();}, QKeySequence("Ctrl+Shift+S"));
         mainMenu->addSeparator();
         mainMenu->addAction(QIcon(), "Settings...", [=](){});
         mainMenu->addSeparator();

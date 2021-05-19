@@ -24,44 +24,31 @@ QString model::AssertionNode::getScript() const
 	return _script;
 }
 
+#include "customjsengine.h"
+
 void model::AssertionNode::evaluate()
 {
-	QJSEngine engine;
-	engine.installExtensions(QJSEngine::Extension::AllExtensions);
-
-	{
-		QFile fp(":/js/jsonpath");
-		if (fp.open(QIODevice::ReadOnly))
-		{
-			QTextStream data(&fp);
-			auto jsonPath = engine.evaluate(data.readAll());
-			auto pathOfFunction = engine.evaluate("(function (path, obj) { return JSONPath.JSONPath(path, obj);})");
-			engine.globalObject().setProperty("pathOf", pathOfFunction);
-		}
-	}
+    CustomJSEngine engine;
 
 	auto requestMessage = getInputSlot()->getData();
 
-	engine.globalObject().setProperty("Request", engine.toScriptValue(requestMessage.toVariant()));
-	//engine.globalObject().setProperty("Response", engine.toScriptValue(response.toVariant()));
+    engine.globalObject().setProperty("Request", engine.toScriptValue(requestMessage.toVariant()));
 
-	QJSValue result = engine.evaluate(_script);
+    QString assertion = QString("(function() { try{\n %1;\n return true;\n } catch(err) {\n var baseLine=5; var thisline = new Error().lineNumber-baseLine; return \"Line \" + thisline + \" -> \" + err; \n} })").arg(_script);
 
-	if (result.isError())
-	{
-		qDebug() << result.toString();
+    engine.globalObject().setProperty("assert", engine.evaluate(assertion));
+    QJSValue result = engine.evaluate("assert();");
+
+    if (result.isError() || !result.isBool())
+    {
 		fail(result.toString());
 		return;
-	}
-	else if (!result.toBool())
-	{
-		qDebug() << result.toString();
-		fail(result.toString());
-		return;
-	}
-
-	getOutputSlot()->setData(requestMessage);
-	Node::evaluate();
+    }
+    else
+    {
+        getOutputSlot()->setData(requestMessage);
+        Node::evaluate();
+    }
 }
 
 model::InputSlot* model::AssertionNode::getInputSlot() const

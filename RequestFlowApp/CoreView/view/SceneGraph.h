@@ -51,6 +51,27 @@ namespace view
 
 		InteractionsHandler* getInteractionsHandler() const;
 
+        enum BackgroundType
+        {
+            SOLID,
+            POINTS,
+            CROSSES,
+            GRID
+        };
+
+        enum EdgeType
+        {
+            CURVES,
+            LINES
+        };
+
+
+        inline void setBackgroundType(BackgroundType bgType);
+        inline int getBackgroundType() const;
+
+        inline void setEdgeType(EdgeType type);
+        inline int getEdgeType() const;
+
 	protected:
 		Node* createVisualNodeForModelNode(model::Node* node);
 
@@ -76,8 +97,10 @@ namespace view
 		virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
 		virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
 
-
 	protected:
+        int _backgroundType = 0;
+        int _edgeType = 0;
+
 		model::Graph* _modelGraph = nullptr;
 		QColor _background;
 		QColor _lightGrid, _darkGrid;

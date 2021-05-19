@@ -40,6 +40,7 @@ SOURCES += ./view/ConnectionEdge.cpp \
     ./InteractionsHandler.cpp
 FORMS += ./ui/DelayNodeUi.ui \
     $$PWD/externalnodeselectiondialog.ui \
+    $$PWD/ui/AssertNodeUi.ui \
     $$PWD/ui/ExternalNodeUi.ui \
     ./ui/EndpointNodeUi.ui \
     ./ui/PayloadNodeUi.ui \

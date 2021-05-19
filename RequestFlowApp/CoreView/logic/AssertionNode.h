@@ -1,7 +1,7 @@
 #pragma once
 #include "../view/Node.h"
 #include <model/AssertionNode.h>
-#include <QPlainTextEdit>
+#include "ui_AssertNodeUi.h"
 
 namespace logic
 {
@@ -15,7 +15,7 @@ namespace logic
 
     private:
         void setupUi();
-    private:
-        QPlainTextEdit* _editor = nullptr;
+    private:        
+        Ui::AssertNodeWidgetUi _ui;
     };
 }

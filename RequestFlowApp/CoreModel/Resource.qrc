@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/js">
-        <file alias="jsonpath">resources/js/index-browser-umd.min.js</file>
+        <file alias="jsonpath">resources/js/index-browser-umd.min.txt</file>
+        <file alias="assert">resources/js/assert.txt</file>
     </qresource>
 </RCC>

@@ -209,10 +209,21 @@ view::Node* view::SceneGraph::createVisualNodeForModelNode(model::Node* node)
 
 void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    painter->fillRect(rect, QColor("#A8A8A8"));
-	//drawPointsBackground(painter, rect);
-	//drawCrossBackground(painter, rect);
-    //drawGridBackground(painter, rect);
+    switch(getBackgroundType())
+    {
+    case SOLID:
+        painter->fillRect(rect, QColor("#A8A8A8"));
+        break;
+    case POINTS:
+        drawPointsBackground(painter, rect);
+        break;
+    case CROSSES:
+        drawCrossBackground(painter, rect);
+        break;
+    case GRID:
+        drawGridBackground(painter, rect);
+        break;
+    }
 }
 
 #include <math.h>
@@ -532,5 +543,25 @@ view::Node* view::SceneGraph::cloneNode(Node* originalNode)
 
 view::InteractionsHandler* view::SceneGraph::getInteractionsHandler() const
 {
-	return _interactionsHandler;
+    return _interactionsHandler;
+}
+
+void view::SceneGraph::setBackgroundType(view::SceneGraph::BackgroundType bgType)
+{
+    _backgroundType = bgType;
+}
+
+int view::SceneGraph::getBackgroundType() const
+{
+    return _backgroundType;
+}
+
+void view::SceneGraph::setEdgeType(view::SceneGraph::EdgeType type)
+{
+    _edgeType = type;
+}
+
+int view::SceneGraph::getEdgeType() const
+{
+    return _edgeType;
 }

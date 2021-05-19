@@ -11,15 +11,17 @@ void logic::AssertionNode::clearUI()
 
 void logic::AssertionNode::setupUi()
 {
-	auto node = getModelNode<model::AssertionNode*>();
-	_editor = new QPlainTextEdit();
-	_editor->setPlainText(node->getScript());
-	_editor->setPlaceholderText("// javascript");
-	getContentWidget()->layout()->addWidget(_editor);
+    auto widget = new QWidget();
+    _ui.setupUi(widget);
+    getContentWidget()->layout()->addWidget(widget);
 
-	connect(_editor, &QPlainTextEdit::textChanged, this, [=]()
+	auto node = getModelNode<model::AssertionNode*>();    
+    _ui.textEdit->setPlainText(node->getScript());
+    _ui.textEdit->setPlaceholderText("// javascript");
+
+    connect(_ui.textEdit, &QTextEdit::textChanged, this, [=]()
 		{
-			node->setScript(_editor->toPlainText());
+            node->setScript(_ui.textEdit->toPlainText());
 		});
 
 	_bgColor = view::colors::vividBurgundy;

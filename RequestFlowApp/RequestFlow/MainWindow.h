@@ -70,6 +70,21 @@ private:
 private:
     Ui::MainWindowClass _ui;
 
+    //////////////////////////////////////////////
+    /// \brief Menus
+    //////////////////////////////////////////////
+    /*
+    QAction* _newProject = nullptr;
+    QAction* _openProject= nullptr;
+    QAction* _closeProject = nullptr;
+    QAction* _quitProject = nullptr;
+    QAction* _settings = nullptr;
+
+    QAction* _createScenario = nullptr;
+    QAction* _environmentConfig = nullptr;
+    //*/
+    //////////////////////////////////////////////
+
 
     bool _dblClinkInitiated = false;
     std::chrono::steady_clock::time_point _timeStamp;
