@@ -49,6 +49,17 @@ void view::SettingsManager::addRecentProject(const QString& path)
 
 QString view::SettingsManager::getLastOpenedLocation() const
 {
-	auto recentProjectsList = _settings->value("recentProjects").toList();
-	return recentProjectsList.isEmpty() ? "" : recentProjectsList.first().toString();
+    auto recentProjectsList = _settings->value("recentProjects").toList();
+    return recentProjectsList.isEmpty() ? "" : recentProjectsList.first().toString();
+}
+
+void view::SettingsManager::setEntry(const QString &name, const QVariant &value)
+{
+    _settings->setValue(name, value);
+}
+
+QVariant view::SettingsManager::getEntry(const QString &name, const QVariant &defaultValue) const
+{
+    if(!_settings->contains(name)) return defaultValue;
+    return _settings->value(name);
 }

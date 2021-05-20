@@ -18,6 +18,9 @@ namespace view
 		void removeRecentProject(const QString& path);
 		void addRecentProject(const QString& path);
 		QString getLastOpenedLocation() const;
+
+        void setEntry(const QString& name, const QVariant& value);
+        QVariant getEntry(const QString& name, const QVariant& defaultValue = QVariant()) const;
 		//////////////////////////////////////////////////////////////////////////
 	protected:
 		std::unique_ptr<QSettings> _settings;

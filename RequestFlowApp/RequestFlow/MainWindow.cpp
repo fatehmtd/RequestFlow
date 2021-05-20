@@ -16,7 +16,21 @@
 #include <QMenu>
 #include <QMessageBox>
 #include "BackgroundPaintFilter.h"
-
+#include <view/Node.h>
+#include <view/SceneGraph.h>
+#include <QFile>
+#include <QTextStream>
+#include <QJSValueIterator>
+#include <model/Document.h>
+#include "view/Node.h"
+#include <QPropertyAnimation>
+#include "aboutwidget.h"
+#include <QDialog>
+#include <QSizePolicy>
+#include <QDesktopServices>
+#include <QMessageBox>
+#include <QMenuBar>
+#include <QMenu>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
@@ -26,10 +40,14 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-	if (onCloseProject() != -1)
-		event->accept();
-	else
-		event->ignore();
+    if (onCloseProject() != -1)
+    {
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
 }
 
 void MainWindow::setupUi()
@@ -37,74 +55,24 @@ void MainWindow::setupUi()
 	_ui.setupUi(this);
 	setWindowIcon(QIcon(":/ui/network"));
 	//setMinimumSize(1280, 800);
-	setupRibbonBar();
+    setupMenuBar();
+    setupRibbonBar();
 	setupSceneGraph();
 	setupEnvironmentsWidget();
-    setupMenuBar();
 
 	// enable the background image
 	_ui.mdiArea->viewport()->installEventFilter(new BackgroundPaintFilter(this));
 
     //openLastProject();
+
+    setProject(nullptr);
 }
-
-
-
-#include <QFile>
-#include <QTextStream>
-
-#include <model/Document.h>
 
 void MainWindow::setupRibbonBar()
 {
 	_ui.dockWidget->setTitleBarWidget(new QWidget());
 	_ui.dockWidget->setFixedHeight(122);
-
-
-    //_ui.dockWidget->setVisible(false);
-
-	_toolbar = new ActionToolBar(_ui.tabWidget);
-
-	//_ui.tabWidget->setCornerWidget(new QPushButton("Test"), Qt::Corner::TopLeftCorner);
-
-	auto page = _toolbar->addPage("Project", QIcon(":/ui/project"));
-
-	auto projectGroup = page->addGroup("Project");
-
-	_newProject = projectGroup->addActionItem("New", [=]() { onNewProject(); }, QIcon(":/ui/new_file"));
-	_openProject = projectGroup->addActionItem("Open", [=]() { onOpenProject(); }, QIcon(":/ui/open_file"));
-	_openProject->setPopupMode(QToolButton::ToolButtonPopupMode::MenuButtonPopup);
-	_openProject->setMenu(new QMenu());
-
-	updateRecentProjectsList();
-
-	_saveProject = projectGroup->addActionItem("Save", [=]() { onSaveProject(); }, QIcon(":/ui/save_file"));
-	_closeProject = projectGroup->addActionItem("Close", [=]() { onCloseProject(); }, QIcon(":/ui/close_file"));
-
-	_swaggerImport = projectGroup->addActionItem("Import", [=]()
-		{
-			onImportSwagger();
-		}, QIcon(":/ui/swagger"));
-
-	_swaggerImport->setEnabled(false);
-
-	_saveProject->setEnabled(false);
-	_closeProject->setEnabled(false);
-
-	_scenariosGroup = page->addGroup("Scenarios");
-	_scenariosGroup->setEnabled(false);
-
-	//_scenariosGroup->addActionItem("Start/Stop", [=]() {}, QIcon(":/BleachUI/play"));
-	_scenariosGroup->addActionItem("New", [=]()
-		{
-			auto name = QInputDialog::getText(this, "Create Scenario", "Name :");
-			if (!name.isEmpty())
-			{
-				createScenario(name);
-			}
-		}, QIcon(":/ui/test_case"));
-	_scenariosGroup->addActionItem("Export", [=]() {}, QIcon(":/ui/export"));
-	_scenariosGroup->addActionItem("Import", [=]() {}, QIcon(":/ui/import"));
+    _ui.dockWidget->setVisible(false);
 }
 
 void MainWindow::setupEnvironmentsWidget()
@@ -114,8 +82,6 @@ void MainWindow::setupEnvironmentsWidget()
 	connect(_ui.environmentsWidget, &EnvironmentsWidget::currentEnvironmentChanged, this, &MainWindow::onCurrentEnvironmentChanged);
 }
 
-#include "view/Node.h"
-#include <QPropertyAnimation>
 
 void MainWindow::setupSceneGraph()
 {
@@ -199,6 +165,7 @@ void MainWindow::setProject(model::Project* project)
 	_ui.inventoryWidget->setEnabled(projectAvailable);
 	_ui.scenariosWidget->setEnabled(projectAvailable);
 
+    // fill default objects if the project is empty
 	if (projectAvailable)
 	{
 		_project.reset(project);
@@ -229,18 +196,25 @@ void MainWindow::setProject(model::Project* project)
 		_ui.scenariosWidget->setProject(_project.get());
 	}
 
-	_closeProject->setEnabled(projectAvailable);
-	_saveProject->setEnabled(projectAvailable);
-	_scenariosGroup->setEnabled(projectAvailable);
-	_swaggerImport->setEnabled(projectAvailable);
+    // File
+    _saveProjectAction->setEnabled(projectAvailable);
+    _saveProjectAsAction->setEnabled(projectAvailable);
+    _closeProjectAction->setEnabled(projectAvailable);
+
+    // View
+    _viewMenu->setEnabled(projectAvailable);
+
+    // Scenarios
+    _scenariosMenu->setEnabled(projectAvailable);
+
+    // Environments
+    _environmentsMenu->setEnabled(projectAvailable);
+
 	_ui.inventoryWidget->setProject(project);
 	_ui.logMessagesWidget->setProject(project);
     _ui.environmentsWidget->setProject(project);
 }
 
-#include "aboutwidget.h"
-#include <QDialog>
-#include <QSizePolicy>
 
 void MainWindow::onAbout()
 {
@@ -260,7 +234,7 @@ void MainWindow::onContactSupport()
 
 }
 
-#include <QDesktopServices>
+
 
 void MainWindow::onWebsite()
 {
@@ -292,6 +266,9 @@ void MainWindow::openScenario(view::SceneGraph* sceneGraph)
 
 	sceneGraphWidget->setAttribute(Qt::WA_DeleteOnClose, false);
 	sceneGraphWidget->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, false);
+
+    sceneGraph->setBackgroundType((view::SceneGraph::BackgroundType)_settingsManager->getEntry("bgType", 0).toInt());
+    sceneGraph->setEdgeType((view::SceneGraph::EdgeType)_settingsManager->getEntry("edgeType", 0).toInt());
 
 	sceneGraphWidget->setWindowIcon(QIcon(":/ui/test_case"));
 	auto window = _ui.mdiArea->addSubWindow(sceneGraphWidget);
@@ -338,9 +315,6 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 	event->accept();
 }
 
-#include <view/Node.h>
-#include <view/SceneGraph.h>
-
 QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
 {
 	auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
@@ -354,8 +328,6 @@ QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
 	uiValue.setProperty("scenes", scenesValue);
 	return uiValue;
 }
-
-#include <QJSValueIterator>
 
 bool MainWindow::loadFromJSValue(const QJSValue& v)
 {
@@ -401,7 +373,8 @@ void MainWindow::onOpenProject()
 void MainWindow::updateRecentProjectsList()
 {
 	auto recentProjects = _settingsManager->enumRecentProjects();
-	auto menu = _openProject->menu();
+    //auto menu = _openProject->menu();
+    auto menu = _recentProjectsMenu;
 	auto actions = menu->actions();
 
 	for (auto action : actions)
@@ -412,12 +385,12 @@ void MainWindow::updateRecentProjectsList()
 
 	// add an open project action
     for (const auto& prj : recentProjects)
-	{
-		auto action = menu->addAction(QIcon(":/ui/network"), prj);
+    {        
+        auto action = menu->addAction(QIcon(":/ui/network"), prj);
         connect(action, &QAction::triggered, this, [=]()
 			{
 				openProject(prj);
-			});
+            });
 	}
 
 	if (recentProjects.size() > 0)
@@ -447,8 +420,6 @@ void MainWindow::updateRecentProjectsList()
 	}
 }
 
-#include <QMessageBox>
-
 int MainWindow::onCloseProject()
 {
 	int button = -999;
@@ -475,8 +446,7 @@ int MainWindow::onCloseProject()
 
 	setWindowTitle("RequestFlow");
 
-	_project.reset();
-	_scenariosGroup->setEnabled(false);
+    _project.reset();
 
 	qDeleteAll(_ui.mdiArea->subWindowList());
 	_ui.mdiArea->closeAllSubWindows();
@@ -486,7 +456,7 @@ int MainWindow::onCloseProject()
 	_ui.environmentsWidget->update();
 	_ui.scenariosWidget->update();
 
-	setProject(nullptr);
+    setProject(nullptr);
 	return button;
 }
 
@@ -512,8 +482,31 @@ void MainWindow::onSaveProject()
 			QTextStream out(&fp);
 			out << handler.evaluate(projectValue);
 			fp.close();
-		}
-	}
+        }
+    }
+}
+
+void MainWindow::onSaveProjectAs()
+{
+    if (_project != nullptr)
+    {
+        QString path = QFileDialog::getSaveFileName(this, "Save project As ...", _project->getPath(), "RQFL Project (*.rqfl)");
+        if (path.isEmpty()) return;
+
+        QFile fp(path);
+        if (fp.open(QIODevice::WriteOnly))
+        {
+            model::PersistenceHandler handler;
+            _project->setPath(path);
+            auto projectValue = _project->saveToJSValue(&handler);
+            auto uiValue = savetoJSValue(&handler);
+            projectValue.setProperty("ui", uiValue);
+
+            QTextStream out(&fp);
+            out << handler.evaluate(projectValue);
+            fp.close();
+        }
+    }
 }
 
 void MainWindow::onImportSwagger()
@@ -583,4 +576,187 @@ void MainWindow::onActivateScene(model::Graph* scene)
 	{
 		_subwindowsMap[scene->getIdentifier()]->showMaximized();
 	}
+}
+
+#include <view/Edge.h>
+#include <QActionGroup>
+
+void MainWindow::setupMenuBar()
+{
+    // File menu
+    {
+        _fileMenu = menuBar()->addMenu("File");
+        _newProjectAction = _fileMenu->addAction(QIcon(), "New...", [=](){onNewProject();}, QKeySequence("Ctrl+N"));
+        _openProjectAction = _fileMenu->addAction(QIcon(), "Open...", [=](){onOpenProject();}, QKeySequence("Ctrl+O"));
+        _openProjectAction->setMenu(new QMenu);
+
+        _recentProjectsMenu = _openProjectAction->menu();
+        updateRecentProjectsList();
+
+        _saveProjectAction = _fileMenu->addAction(QIcon(), "Save", [=](){onSaveProject();}, QKeySequence("Ctrl+S"));
+        _saveProjectAsAction =  _fileMenu->addAction(QIcon(), "Save As...", [=](){onSaveProject();}, QKeySequence("Ctrl+Shift+S"));
+        _fileMenu->addSeparator();
+        _settingsAction = _fileMenu->addAction(QIcon(), "Settings...", [=](){});
+        _fileMenu->addSeparator();
+        _closeProjectAction = _fileMenu->addAction(QIcon(), "Close Project", [=](){ onCloseProject(); });
+        _fileMenu->addSeparator();
+        _quitProjectAction = _fileMenu->addAction(QIcon(), "Quit", [=](){close();}, QKeySequence("Ctrl+Q"));
+
+        _saveProjectAction->setEnabled(false);
+        _saveProjectAsAction->setEnabled(false);
+    }
+
+    // Scenario menu
+    {
+        _scenariosMenu = menuBar()->addMenu("Scenario");
+        _createScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/test_case"), "Create Scenario...", this, [=]()
+                                                          {
+                                                              auto name = QInputDialog::getText(this, "Create Scenario", "Name :");
+                                                              if (!name.isEmpty())
+                                                              {
+                                                                  createScenario(name);
+                                                              }
+                                                          });
+        //_createScenarioAction->setEnabled(false);
+
+        _cloneScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/test_case"), "Clone Scenario...", this, [=]()
+                                                         {
+                                                         });
+        _cloneScenarioAction->setEnabled(false);
+    }
+
+    // Environment menu
+    {
+        _environmentsMenu = menuBar()->addMenu("Environment");
+        _environmentConfigAction = _environmentsMenu->addAction(QIcon(), "Configure...", [=](){});
+        _environmentsMenu->addSeparator();
+        _importSwaggerAction = _environmentsMenu->addAction(QIcon(":/ui/swagger"), "Swagger Import...", [=](){onImportSwagger();});
+    }
+
+    // View menu
+    {
+        _viewMenu = menuBar()->addMenu("View");
+        _centerOnAction = _viewMenu->addAction(QIcon(), "Center on scene", [=](){});
+        _centerOnAction->setEnabled(false);
+        _viewMenu->addSeparator();
+        _switchThemeAction = _viewMenu->addAction(QIcon(), "Switch theme...", [=]()
+                                                  {
+                                                      qDebug() << "clicked on " << _viewMenu;
+                                                  });
+        _switchThemeAction->setEnabled(false);
+
+        _viewMenu->addSeparator();
+
+        auto setScenesBg = [=](view::SceneGraph::BackgroundType bgType)
+        {
+            _settingsManager->setEntry("bgType", bgType);
+            for(auto subWindow : _ui.mdiArea->subWindowList())
+            {
+                auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+                if(sceneGraphWidget!=nullptr)
+                {
+                    sceneGraphWidget->getSceneGraph()->setBackgroundType(bgType);
+                    sceneGraphWidget->getSceneGraph()->update();
+                }
+            }
+        };
+
+        auto setEdgesStyle = [=](view::SceneGraph::EdgeType edgeType)
+        {
+            _settingsManager->setEntry("edgeType", edgeType);
+            for(auto subWindow : _ui.mdiArea->subWindowList())
+            {
+                auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+                if(sceneGraphWidget!=nullptr)
+                {
+                    sceneGraphWidget->getSceneGraph()->setEdgeType(edgeType);
+                    sceneGraphWidget->getSceneGraph()->update();
+                }
+            }
+        };
+
+        auto backgroundMenu = _viewMenu->addMenu("Background");
+        auto solidColorAction = backgroundMenu->addAction(QIcon(), "Solid Color", [=]()
+                                  {
+                                    setScenesBg(view::SceneGraph::BackgroundType::SOLID);
+                                  });
+        auto crossesAction = backgroundMenu->addAction(QIcon(), "Crosses", [=]()
+                                  {
+                                    setScenesBg(view::SceneGraph::BackgroundType::CROSSES);
+                                  });
+        auto gridAction = backgroundMenu->addAction(QIcon(), "Grid", [=]()
+                                  {
+                                    setScenesBg(view::SceneGraph::BackgroundType::GRID);
+                                  });
+
+        solidColorAction->setCheckable(true);
+        crossesAction->setCheckable(true);
+        gridAction->setCheckable(true);
+
+        auto backgroundTypeActionGroup = new QActionGroup(backgroundMenu);
+        backgroundTypeActionGroup->addAction(solidColorAction);
+        backgroundTypeActionGroup->addAction(crossesAction);
+        backgroundTypeActionGroup->addAction(gridAction);
+
+        switch(_settingsManager->getEntry("bgType", 0).toInt())
+        {
+        case 0:
+            solidColorAction->setChecked(true);
+            solidColorAction->trigger();
+            break;
+        case 1:
+            crossesAction->setChecked(true);
+            crossesAction->trigger();
+            break;
+        case 2:
+            gridAction->setChecked(true);
+            gridAction->trigger();
+            break;
+        }
+
+        auto edgeStyleMenu = _viewMenu->addMenu("Edge Style");
+        auto curvesAction = edgeStyleMenu->addAction(QIcon(), "Curves", [=]()
+                                  {
+                                     setEdgesStyle(view::SceneGraph::EdgeType::CURVES);
+                                  });
+        auto linesAction = edgeStyleMenu->addAction(QIcon(), "Lines", [=]()
+                                  {
+                                      setEdgesStyle(view::SceneGraph::EdgeType::LINES);
+                                  });
+
+        curvesAction->setCheckable(true);
+        linesAction->setCheckable(true);
+
+        auto edgeTypeActionGroup = new QActionGroup(edgeStyleMenu);
+        edgeTypeActionGroup->addAction(curvesAction);
+        edgeTypeActionGroup->addAction(linesAction);
+
+        switch(_settingsManager->getEntry("edgeType", 0).toInt())
+        {
+        case 0:
+            curvesAction->setChecked(true);
+            curvesAction->trigger();
+            break;
+        case 1:
+            linesAction->setChecked(true);
+            linesAction->trigger();
+            break;
+        }
+
+        //_centerOnAction->setEnabled(false);
+        //_switchThemeAction->setEnabled(false);
+    }
+
+    // Help menu
+    {
+        _helpMenu = menuBar()->addMenu("Help");
+        _helpMenu->addAction(QIcon(), "Contact Support...", [=](){onContactSupport();});
+        _helpMenu->addAction(QIcon(), "RequestFlow website", [=](){onWebsite();});
+        _helpMenu->addAction(QIcon(), "@requestflow on Twitter", [=](){onTwitter();});
+        _helpMenu->addSeparator();
+        auto activateAction = _helpMenu->addAction(QIcon(), "Activate", [=](){onActivateLicense();});
+        activateAction->setEnabled(false); // TODO: create activation page
+        _helpMenu->addSeparator();
+        _helpMenu->addAction(QIcon(), "About", [=](){onAbout();});
+    }
 }

@@ -31,6 +31,7 @@ private slots:
     void onOpenProject();
     int onCloseProject();
     void onSaveProject();
+    void onSaveProjectAs();
     void onImportSwagger();
     void onCurrentEnvironmentChanged(model::Environment* environment);
     void onSubWindowActivated(QMdiSubWindow* subWindow);
@@ -73,25 +74,41 @@ private:
     //////////////////////////////////////////////
     /// \brief Menus
     //////////////////////////////////////////////
-    /*
-    QAction* _newProject = nullptr;
-    QAction* _openProject= nullptr;
-    QAction* _closeProject = nullptr;
-    QAction* _quitProject = nullptr;
-    QAction* _settings = nullptr;
 
-    QAction* _createScenario = nullptr;
-    QAction* _environmentConfig = nullptr;
+    // File
+    QMenu* _fileMenu = nullptr;
+    QAction* _newProjectAction = nullptr;
+    QAction* _openProjectAction= nullptr;
+    QAction* _saveProjectAction= nullptr;
+    QAction* _saveProjectAsAction= nullptr;
+    QAction* _closeProjectAction = nullptr;
+    QAction* _quitProjectAction = nullptr;
+    QAction* _settingsAction = nullptr;
+    QMenu* _recentProjectsMenu = nullptr;
+
+    // Scenarios
+    QMenu* _scenariosMenu = nullptr;
+    QAction* _createScenarioAction = nullptr;
+    QAction* _cloneScenarioAction = nullptr;
+
+    // Environments
+    QMenu* _environmentsMenu = nullptr;
+    QAction* _environmentConfigAction = nullptr;
+    QAction* _importSwaggerAction = nullptr;
+
+    // View
+    QMenu* _viewMenu = nullptr;
+    QAction* _switchThemeAction = nullptr;
+    QAction* _centerOnAction = nullptr;
+
+    // About
+    QMenu* _helpMenu = nullptr;
+
     //*/
     //////////////////////////////////////////////
 
-
     bool _dblClinkInitiated = false;
     std::chrono::steady_clock::time_point _timeStamp;
-
-    ActionToolBar* _toolbar = nullptr;
-    QToolButton* _newProject, * _openProject, * _closeProject, * _saveProject, *_swaggerImport;
-    ActionGroup* _scenariosGroup = nullptr;
 
     model::Environment* _activeEnvironment = nullptr;
     model::Graph* _activeGraph = nullptr;

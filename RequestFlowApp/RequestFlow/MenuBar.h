@@ -1,5 +1,4 @@
-#ifndef MENUBAR_H
-#define MENUBAR_H
+#pragma once
 
 #include "MainWindow.h"
 
@@ -11,5 +10,3 @@ public:
 private:
     QMainWindow* _parent= nullptr;
 };
-
-#endif // MENUBAR_H
