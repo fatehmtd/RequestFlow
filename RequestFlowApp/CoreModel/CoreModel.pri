@@ -4,6 +4,8 @@
 
 
 HEADERS += ./coremodel_global.h \
+    $$PWD/customjsengine.h \
+    $$PWD/model/externalnode.h \
     ./model/Graph.h \
     ./model/Node.h \
     ./model/Edge.h \
@@ -26,6 +28,8 @@ HEADERS += ./coremodel_global.h \
     ./model/AssertionNode.h \
     ./model/MessageLogger.h
 SOURCES += ./model/Graph.cpp \
+    $$PWD/customjsengine.cpp \
+    $$PWD/model/externalnode.cpp \
     ./model/Node.cpp \
     ./model/Edge.cpp \
     ./model/Slot.cpp \
@@ -47,3 +51,5 @@ SOURCES += ./model/Graph.cpp \
     ./model/AssertionNode.cpp \
     ./model/MessageLogger.cpp
 RESOURCES += Resource.qrc
+
+DISTFILES +=

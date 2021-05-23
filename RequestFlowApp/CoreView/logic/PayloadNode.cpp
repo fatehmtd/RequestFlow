@@ -23,6 +23,72 @@ model::Message logic::PayloadNode::composeMessage() const
 	return message;
 }
 
+int getNextDelimiterIndex(int offset, int minGap, const QStringList& delimiters, const QString& data)
+{
+    while(true)
+    {
+        // get the next delimiter index
+        int furthest = -1;
+        for(const auto& delim : delimiters)
+        {
+            int index = data.indexOf(delim, offset);
+            if(index > furthest)
+                furthest = index;
+        }
+        if(furthest == -1) return -1;
+        if(furthest-offset >= minGap) return furthest;
+        offset = furthest+1;
+    }
+    return -1;
+}
+
+extern void customDivideText(const QString& data, QTextCursor textCursor, int minChunkLen)
+{
+    textCursor.movePosition(QTextCursor::MoveOperation::Start, QTextCursor::MoveMode::MoveAnchor);
+    textCursor.movePosition(QTextCursor::MoveOperation::End, QTextCursor::MoveMode::KeepAnchor);
+    textCursor.removeSelectedText();
+
+    if(true)
+    {
+        textCursor.beginEditBlock();
+        textCursor.insertText(data);
+        textCursor.endEditBlock();
+    }
+    else
+    {
+        const int totalLen = data.size();
+
+        QStringList delimiters;
+        delimiters << "}" << "]" << "\n";
+
+        textCursor.beginEditBlock();
+        int offset = 0;
+        bool keepGoing = true;
+        while(keepGoing)
+        {
+            // get the next delimiter index
+            int furthest = getNextDelimiterIndex(offset, minChunkLen, delimiters, data);
+
+            // if index is -1 then no further delimiters found, then almost or already at the end of the file
+            if(furthest == -1 || furthest >= (totalLen-1))
+            {
+                furthest = totalLen-1;
+                keepGoing = false;
+            }
+
+            if(furthest!= offset)
+            {
+                auto substring = data.mid(offset, furthest);
+                textCursor.insertBlock();
+                textCursor.insertText(substring);
+                offset = furthest+1;
+            }
+        }
+        textCursor.endEditBlock();
+    }
+}
+
+
 void logic::PayloadNode::fillFromMessage(const model::Message& message)
 {	
 	_ui.tableWidget_path->setRowCount(0);
@@ -49,13 +115,17 @@ void logic::PayloadNode::fillFromMessage(const model::Message& message)
 		}
 	}
 
-	_ui.plainTextEdit_body->setPlainText(message.getBody());
+    //_ui.plainTextEdit_body->setPlainText(message.getBody());
+    customDivideText(message.getBody(), _ui.plainTextEdit_body->textCursor(), 1000);
 }
 
 void logic::PayloadNode::clearUI()
 {
 
 }
+
+#include <QFileDialog>
+#include <QGraphicsView>
 
 void logic::PayloadNode::setupUi()
 {
@@ -66,6 +136,26 @@ void logic::PayloadNode::setupUi()
 
 	_ui.tableWidget_path->setRowCount(50);
 	_ui.tableWidget_query->setRowCount(50);
+
+    auto payloadNode = dynamic_cast<model::PayloadNode*>(getModelNode());
+
+    _ui.groupBox_loadFromFile->setChecked(payloadNode->getLoadFromFile());
+    _ui.lineEdit_filePath->setText(payloadNode->getFilePath());
+
+    connect(_ui.groupBox_loadFromFile, &QGroupBox::toggled, payloadNode, &model::PayloadNode::setLoadFromFile);
+    connect(_ui.lineEdit_filePath, &QLineEdit::textChanged, payloadNode, &model::PayloadNode::setFilePath);
+
+    connect(_ui.pushButton_browse, &QPushButton::clicked, this, [=]()
+    {
+        auto pwidget = getSceneGraph()->views().first();
+        auto fileName = QFileDialog::getOpenFileName(pwidget, "Open file location", payloadNode->getFilePath(), "JSON File (*.json);; All Files (*.*);");
+        if(!fileName.isEmpty())
+        {
+            _ui.lineEdit_filePath->setText(fileName);
+            model::Message message = payloadNode->loadMessageFromFile(payloadNode->getFilePath());
+            fillFromMessage(message);
+        }
+    });
 
 	auto message = dynamic_cast<model::PayloadNode*>(getModelNode())->getMessage();
 
@@ -79,9 +169,17 @@ void logic::PayloadNode::setupUi()
 	setSize(10, 10);
 }
 
-void logic::PayloadNode::prepareAndSend() const
+void logic::PayloadNode::prepareAndSend()
 {
-	dynamic_cast<model::PayloadNode*>(getModelNode())->setMessage(composeMessage());
+    auto payloadNode = dynamic_cast<model::PayloadNode*>(getModelNode());
+
+    if(payloadNode->getLoadFromFile())
+    {
+        model::Message message = payloadNode->loadMessageFromFile(payloadNode->getFilePath());
+        fillFromMessage(message);
+    }
+
+    payloadNode->setMessage(composeMessage());
 	_node->evaluate();
 }
 

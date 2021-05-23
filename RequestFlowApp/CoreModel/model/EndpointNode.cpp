@@ -36,8 +36,16 @@ model::EndpointNode::~EndpointNode()
 
 void model::EndpointNode::createModel()
 {
-	addInputSlot("Input", Slot::CUSTOM);
-	addOutputSlot("Output", Slot::CUSTOM);
+    addInputSlot("Input", Slot::CUSTOM);
+    addOutputSlot("Output", Slot::CUSTOM);
+}
+
+int model::EndpointNode::HttpMethodFromString(const QString &string)
+{
+    QStringList methods;
+    methods << "get" << "post" << "put" << "del" << "patch";
+    int index = methods.lastIndexOf(string.toLower());
+    return index;
 }
 
 model::InputSlot* model::EndpointNode::getInputSlot() const

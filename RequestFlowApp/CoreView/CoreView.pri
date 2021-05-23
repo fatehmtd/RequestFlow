@@ -3,7 +3,10 @@
 # ------------------------------------------------------
 
 HEADERS += ./coreview_global.h \
-    ./CoreView.h \
+    $$PWD/externalnodeselectiondialog.h \
+    $$PWD/logic/externalnode.h \
+    $$PWD/singlelinetextedit.h \
+    $$PWD/viewernodewidget.h \
     ./view/Colors.h \
     ./view/ConnectionEdge.h \
     ./view/Edge.h \
@@ -20,8 +23,11 @@ HEADERS += ./coreview_global.h \
     ./logic/ScriptNode.h \
     ./logic/ViewerNode.h \
     ./InteractionsHandler.h
-SOURCES += ./CoreView.cpp \
-    ./view/ConnectionEdge.cpp \
+SOURCES += ./view/ConnectionEdge.cpp \
+    $$PWD/externalnodeselectiondialog.cpp \
+    $$PWD/logic/externalnode.cpp \
+    $$PWD/singlelinetextedit.cpp \
+    $$PWD/viewernodewidget.cpp \
     ./view/Edge.cpp \
     ./view/Node.cpp \
     ./view/ContentWidget.cpp \
@@ -37,6 +43,9 @@ SOURCES += ./CoreView.cpp \
     ./logic/ViewerNode.cpp \
     ./InteractionsHandler.cpp
 FORMS += ./ui/DelayNodeUi.ui \
+    $$PWD/externalnodeselectiondialog.ui \
+    $$PWD/ui/AssertNodeUi.ui \
+    $$PWD/ui/ExternalNodeUi.ui \
     ./ui/EndpointNodeUi.ui \
     ./ui/PayloadNodeUi.ui \
     ./ui/ScriptNodeUi.ui \

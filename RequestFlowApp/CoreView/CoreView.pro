@@ -17,3 +17,12 @@ else:unix: LIBS += -L$$OUT_PWD/../CoreModel/ -lCoreModel
 
 
 include(CoreView.pri)
+
+FORMS += \
+    largepayloadinfowidget.ui
+
+HEADERS += \
+    largepayloadinfowidget.h
+
+SOURCES += \
+    largepayloadinfowidget.cpp

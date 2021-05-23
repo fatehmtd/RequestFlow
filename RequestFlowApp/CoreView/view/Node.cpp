@@ -348,7 +348,19 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		backgroundPath.addRoundedRect(0, 10, w, headerHeight, 0, 0);
 		painter->setPen(pen);
 		painter->setBrush(backgroundBrush);
-		painter->drawPath(backgroundPath);
+        painter->drawPath(backgroundPath);
+
+        // pattern
+        /*
+        backgroundBrush.setColor(QColor(155, 155, 155));
+        backgroundBrush.setStyle(Qt::BrushStyle::Dense3Pattern);
+        backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);
+        backgroundPath.addRoundedRect(0, 10, w, headerHeight, 0, 0);
+
+        painter->setBrush(backgroundBrush);
+        painter->drawPath(backgroundPath);
+        //*/
+
 	}
 
 	// Outline

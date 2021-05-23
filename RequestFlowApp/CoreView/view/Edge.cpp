@@ -67,18 +67,16 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	painter->drawPath(path);
 }
 
-#include <QDebug>
-
-QVariant view::Edge::itemChange(GraphicsItemChange change, const QVariant& value)
-{
-    qDebug() << change << value;
-    return QGraphicsItem::itemChange(change, value);
-}
-
 QPainterPath view::Edge::buildPath() const
 {
-    //return buildPathSegmented();
-    return buildPathCubic();
+    auto sg = dynamic_cast<view::SceneGraph*>(scene());
+    switch(sg->getEdgeType())
+    {
+    case view::SceneGraph::EdgeType::CURVES:
+        return buildPathCubic();
+    default:
+        return buildPathSegmented();
+    }
 }
 
 QPainterPath view::Edge::buildPathCubic() const

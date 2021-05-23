@@ -1,0 +1,39 @@
+class AssertClass {
+    true(value, msg="Assertion failed -> Expected true") {
+        if(!value) {
+            throw msg;
+        }
+    }
+
+    false(value, msg="Assertion failed -> Expected false") {
+        if(value) {
+            throw msg;
+        }
+    }
+
+    equals(a, b, msg="Assertion failed -> Expected equals") {
+        if(a != b ) {
+            throw msg + " : " + a + "!=" +b;
+        }
+    }
+
+    not_equals(a, b, msg="Assertion failed -> Expected not_equals") {
+        if(a == b ) {
+            throw msg + " : " + a + "==" +b;
+        }
+    }
+
+    contains_element(value, container, msg="Assertion failed -> contains_element") {
+        if(!container.includes(value)) {
+            throw msg + " : " + "\""+value+"\"" + " not found in " + "["+container+"]";
+        }
+    }
+
+    contains_string(token, str, msg="Assertion failed -> contains_string") {
+        if(!str.includes(token)) {
+            throw msg + " : " + "\"" + token + "\"" + " not found in " + "\"" + str + "\"";
+        }
+    }
+}
+
+Assert = new AssertClass();

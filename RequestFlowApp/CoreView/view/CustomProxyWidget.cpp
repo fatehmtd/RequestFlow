@@ -39,6 +39,7 @@ void view::CustomProxyWidget::paint(QPainter* painter, const QStyleOptionGraphic
 
 bool view::CustomProxyWidget::eventFilter(QObject* object, QEvent* event)
 {
+    /*
 	bool isupdate = false;
 	switch (event->type())
 	{
@@ -68,6 +69,6 @@ bool view::CustomProxyWidget::eventFilter(QObject* object, QEvent* event)
 	_refreshNeeded = true;
 
 	//qDebug() << "updated! " << event;
-
+//*/
 	return QGraphicsProxyWidget::eventFilter(object, event);
 }

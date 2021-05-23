@@ -43,6 +43,8 @@ bool model::Document::loadFromJSValue(const QJSValue& v)
 	return true;
 }
 
+#include "EndpointNode.h"
+
 bool model::Document::importFromSwagger(const QString& path)
 {
 	//TODO: refactor and clean
@@ -56,12 +58,6 @@ bool model::Document::importFromSwagger(const QString& path)
 		if (rootValue.isError()) return false;
 
 		setName(rootValue.property("info").property("title").toString());
-
-		QList<QString> httpMethodsMap;
-		httpMethodsMap << "get";
-		httpMethodsMap << "post";
-		httpMethodsMap << "put";
-		httpMethodsMap << "delete";
 
 		QList<QString> parameterLocationList;
 		parameterLocationList << "path";
@@ -79,16 +75,31 @@ bool model::Document::importFromSwagger(const QString& path)
 				auto jsPath = urlsIterator.value();
 				QString url(urlsIterator.name());
 				QJSValueIterator methodsIterator(jsPath);
+
 				// methods
 				while (methodsIterator.hasNext())
 				{
 					if (!methodsIterator.next()) break;
 					auto jsMethod = methodsIterator.value();
 
+                    QString httpMethodStr = methodsIterator.name();
+
+                    int httpMethod = model::EndpointNode::HttpMethodFromString(httpMethodStr);
+
+                    if(httpMethod < 0)
+                    {
+                        qDebug() << "*** Invalid http method " << httpMethodStr << ", skipping entry : " << url;
+                        continue;
+                    }
+
 					auto entry = new EndpointEntry(this);
 					entry->setUrl(url);
-					entry->setHttpMethod(httpMethodsMap.indexOf(methodsIterator.name()));
+                    entry->setHttpMethod(httpMethod);
 					auto operationId = jsMethod.property("operationId").toString();
+                    if(operationId.toLower() == "undefined")
+                    {
+                        operationId = "";
+                    }
 					entry->setIdentifier(operationId);
 
 					// accepts
@@ -143,14 +154,16 @@ bool model::Document::importFromSwagger(const QString& path)
 								queryList << name;
 								break;
 							default: // body, formData
+                                //TODO: implement support for body and formData param location
+                                qDebug() << __FUNCTION__ << " unsupported param location : " << location;
 								break;
 							}
 						}
 						entry->setQueryParams(queryList);
 						entry->setPathParams(pathList);
-					}
+                    }
 				}
-			}
+            }
 		}
 
 		return true;
