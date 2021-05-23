@@ -53,6 +53,26 @@ QString view::SettingsManager::getLastOpenedLocation() const
     return recentProjectsList.isEmpty() ? "" : recentProjectsList.first().toString();
 }
 
+void view::SettingsManager::setBackgroundType(uint type)
+{
+    setEntry("backgroundType", type);
+}
+
+uint view::SettingsManager::getBackgroundType() const
+{
+    return getEntry("backgroundType", 0).toUInt();
+}
+
+void view::SettingsManager::setEdgesStyle(uint style)
+{
+    setEntry("edgeStyle", style);
+}
+
+uint view::SettingsManager::getEdgesStyle() const
+{
+    return getEntry("edgeStyle", 0).toUInt();
+}
+
 void view::SettingsManager::setEntry(const QString &name, const QVariant &value)
 {
     _settings->setValue(name, value);

@@ -16,6 +16,9 @@
 #include <QMap>
 #include <chrono>
 
+#include "EnvironmentsWidget.h"
+#include "ScenariosWidget.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -43,6 +46,7 @@ private:
     void setupRibbonBar();
     void setupEnvironmentsWidget();
     void setupSceneGraph();
+    void setupCentralTitleBar();
     void openProject(const QString& path);
     void setProject(model::Project* project);
 
@@ -57,6 +61,7 @@ private:
     void openScenario(view::SceneGraph* sceneGraph);
     void cloneScenario(view::SceneGraph* sceneGraph, QString newName);
     void deleteScenario(view::SceneGraph* sceneGraph);
+    void deleteActiveScenario();
 
     void keyPressEvent(QKeyEvent* event) override;
 
@@ -90,6 +95,7 @@ private:
     QMenu* _scenariosMenu = nullptr;
     QAction* _createScenarioAction = nullptr;
     QAction* _cloneScenarioAction = nullptr;
+    QAction* _deleteScenarioAction = nullptr;
 
     // Environments
     QMenu* _environmentsMenu = nullptr;
@@ -116,6 +122,10 @@ private:
     std::unique_ptr<model::Project> _project;
     QMap<QString, QMdiSubWindow*> _subwindowsMap;
     view::SettingsManager* _settingsManager = nullptr;
+
+
+    EnvironmentsWidget* _environmentsWidget = nullptr;
+    ScenariosWidget* _scenariosWidget = nullptr;
 
     //////////////////////////////////////////////////
 

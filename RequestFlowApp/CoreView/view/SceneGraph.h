@@ -54,7 +54,7 @@ namespace view
         enum BackgroundType
         {
             SOLID,
-            POINTS,
+            DOTS,
             CROSSES,
             GRID
         };
@@ -64,7 +64,6 @@ namespace view
             CURVES,
             LINES
         };
-
 
         inline void setBackgroundType(BackgroundType bgType);
         inline int getBackgroundType() const;
@@ -76,7 +75,7 @@ namespace view
 		Node* createVisualNodeForModelNode(model::Node* node);
 
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
-		void drawPointsBackground(QPainter* painter, const QRectF& rect);
+        void drawDotsBackground(QPainter* painter, const QRectF& rect);
 		void drawGridBackground(QPainter* painter, const QRectF& rect);
 		void drawCrossBackground(QPainter* painter, const QRectF& rect);
 

@@ -8,72 +8,7 @@
 #include <QAbstractItemModel>
 #include <QStringListModel>
 
-class EnvironmentsModel : public QAbstractItemModel
-{
-public:
-	EnvironmentsModel(QObject* parent) : QAbstractItemModel(parent), _envIcon(QIcon((":/ui/environment"))) {}
-
-	QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override
-	{
-		if (!hasIndex(row, column, parent)) return QModelIndex();
-
-		return createIndex(row, column, _project->getEnvironments().at(row));
-	}
-
-	QModelIndex parent(const QModelIndex& child) const override
-	{
-		return QModelIndex();
-	}
-
-	int rowCount(const QModelIndex& parent = QModelIndex()) const override
-	{
-		if (_project == nullptr) return 0;
-		return _project->getEnvironments().size();
-	}
-
-	int columnCount(const QModelIndex& parent = QModelIndex()) const override
-	{
-		return 1;
-	}
-
-	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override
-	{
-		if (!index.isValid()) return QVariant();
-
-		auto env = reinterpret_cast<model::Environment*>(index.internalPointer());
-		switch (role)
-		{
-		case Qt::DecorationRole:
-			return _envIcon;
-		case Qt::EditRole:
-		case Qt::DisplayRole:
-			return QVariant(env->getName());
-		}
-
-		return QVariant();
-	}
-
-	void setProject(model::Project* project)
-	{
-		beginResetModel();
-		_project = project;
-		endResetModel();
-	}
-
-	void beginResetModel()
-	{
-		QAbstractItemModel::beginResetModel();
-	}
-
-	void endResetModel()
-	{
-		QAbstractItemModel::endResetModel();
-	}
-
-private:
-	model::Project* _project = nullptr;
-	QIcon _envIcon;
-};
+#include "environmentsmodel.h"
 
 EnvironmentsWidget::EnvironmentsWidget(QWidget* parent) : QWidget(parent)
 {

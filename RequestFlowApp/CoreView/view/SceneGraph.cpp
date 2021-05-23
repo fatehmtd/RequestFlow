@@ -214,8 +214,8 @@ void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
     case SOLID:
         painter->fillRect(rect, QColor("#A8A8A8"));
         break;
-    case POINTS:
-        drawPointsBackground(painter, rect);
+    case DOTS:
+        drawDotsBackground(painter, rect);
         break;
     case CROSSES:
         drawCrossBackground(painter, rect);
@@ -228,7 +228,7 @@ void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 
 #include <math.h>
 
-void view::SceneGraph::drawPointsBackground(QPainter* painter, const QRectF& rect)
+void view::SceneGraph::drawDotsBackground(QPainter* painter, const QRectF& rect)
 {
 	const int left = floor(rect.left());
 	const int right = ceil(rect.right());
@@ -316,7 +316,7 @@ void view::SceneGraph::drawCrossBackground(QPainter* painter, const QRectF& rect
 	const int left = floor(rect.left());
 	const int right = ceil(rect.right());
 	const int top = floor(rect.top());
-	const int bottom = ceil(rect.bottom());
+	const int bottom = ceil(rect.bottom());    
 
 	// points	 
 	const int firstLeft = left - (left % _cellSize);
@@ -325,7 +325,7 @@ void view::SceneGraph::drawCrossBackground(QPainter* painter, const QRectF& rect
 	//QVector<QPointF> points(count);
 	QVector<QLine> lines(count * 2);
 
-	float halfLen = 3;
+    float halfLen = 5;
 
 	int index = 0;
 	for (int i = firstLeft; i < right; i += _cellSize)
@@ -357,12 +357,12 @@ void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 void view::SceneGraph::setupUi()
 {
     setItemIndexMethod(ItemIndexMethod::BspTreeIndex);
-	_cellSize = 40; // in pixels
-	_blockSize = 10; // in cells
+    _cellSize = 80; // in pixels
+    _blockSize = 4; // in cells
 
 	//_background = QColor(140, 140, 140);
-	_background = QColor("#F4F3F4");
-	_background = QColor("#A0A0A0");
+    _background = QColor("#F4F3F4");
+    //_background = QColor("#A0A0A0");
 	_lightGrid = QColor(200, 200, 200);
 	_darkGrid = QColor(160, 160, 160);
 	//*/
@@ -376,7 +376,7 @@ void view::SceneGraph::setupUi()
 	const int hgridSize = gridSize >> 1;
 
 	setSceneRect(QRectF(-hgridSize, -hgridSize, gridSize, gridSize));
-	setBackgroundBrush(QBrush(_background));
+    setBackgroundBrush(QBrush(_background));
 
 	_connectionEdge = new ConnectionEdge();
 	addItem(_connectionEdge);

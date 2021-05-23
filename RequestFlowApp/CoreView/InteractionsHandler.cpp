@@ -200,8 +200,8 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 	}
 
 	if (!availableActions.isEmpty())
-	{
-		qSort(availableActions);
+    {
+        std::sort(availableActions.begin(), availableActions.end());
 
 		int prevOrder = -1;
 		if (availableActions.size() > 0)
@@ -245,11 +245,10 @@ void view::InteractionsHandler::registerCommonActions()
 			_sceneGraph->getModelGraph()->cancel();
 		}, QIcon(":/BleachUI/stop"));
 
-	registerEmptySpaceAction("Execute", [=](const QPointF& p)
-		{
-			_sceneGraph->getModelGraph()->start();
-		}, QIcon(":/BleachUI/play"));
-
+    registerEmptySpaceAction("Execute", [=](const QPointF& p)
+        {
+            _sceneGraph->getModelGraph()->start();
+        }, QIcon(":/BleachUI/play"));
 
 	registerGenericAction("Delete",
 		[](QGraphicsItem* item)
@@ -333,8 +332,11 @@ void view::InteractionsHandler::registerCommonActions()
 			auto originalNode = dynamic_cast<view::Node*>(item);
 
 			auto newName = QInputDialog::getText(_sceneGraph->views()[0]->parentWidget(), "Rename Node", "New name :", QLineEdit::Normal, originalNode->getModelNode()->getName());
-			originalNode->setTitle(newName);
-			originalNode->update();
+            if(!newName.isEmpty())
+            {
+                originalNode->setTitle(newName);
+                originalNode->update();
+            }
 
 		}, QIcon(":/ui/pen"), 1);
 

@@ -58,14 +58,14 @@ bool model::Project::loadFromJSValue(const QJSValue& v)
 
 	loadChildren(v, "documents", [=](const QJSValue& value)
 		{
-			auto env = new model::Document(this);
-			env->loadFromJSValue(value);
+            auto document = new model::Document(this);
+            document->loadFromJSValue(value);
 		});
 
 	loadChildren(v, "graphs", [=](const QJSValue& value)
 		{
-			auto env = new model::Graph(this);
-			env->loadFromJSValue(value);
+            auto graph = new model::Graph(this);
+            graph->loadFromJSValue(value);
 		});
 
 

@@ -17,7 +17,7 @@ model::DelayNode::DelayNode(model::Graph* graph) : model::Node(graph, "Delay")
     connect(graph, &Graph::stopped, this, [=]()
     {
         _timer.stop();
-    });
+    }, Qt::ConnectionType::DirectConnection);
 }
 
 void model::DelayNode::createModel()

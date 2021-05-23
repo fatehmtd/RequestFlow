@@ -1,56 +1,12 @@
 #include "InventoryWidget.h"
 
-#define MEMBER_PTR_ROLE Qt::UserRole + 1
-//Q_DECLARE_METATYPE(model::Document*);
-//Q_DECLARE_METATYPE(model::EndpointEntry*);
-
+#include <QMenu>
+#include <QMessageBox>
 #include <QDebug>
 #include <QStringList>
 #include <QModelIndex>
 #include <QMimeData>
 #include <QDataStream>
-
-class CustomModel : public QStandardItemModel
-{
-public:
-	using QStandardItemModel::QStandardItemModel;
-
-	QStringList mimeTypes() const override
-	{
-		QStringList output;
-		output << "application/x-EndpointEntry";
-		return output;
-	}
-
-	QMimeData* mimeData(const QModelIndexList& indexes) const override
-	{
-		QMimeData* mime = new QMimeData();
-		QByteArray array;
-		QDataStream out(&array, QIODevice::WriteOnly);
-		QList<model::EndpointEntry*> endpoints;
-		for (const auto& index : indexes)
-		{
-			auto entry = index.data(MEMBER_PTR_ROLE).value<model::EndpointEntry*>();
-			if (entry)
-			{
-				endpoints << entry;
-			}
-		}
-		endpoints = endpoints.toSet().toList();
-		if (!endpoints.isEmpty())
-		{
-			out << endpoints.size();
-			for (const auto& endpoint : endpoints)
-			{
-                out << reinterpret_cast<quint64>(endpoint);
-			}
-			mime->setData("application/x-EndpointEntry", array);
-		}
-		return mime;
-	}
-private:
-	model::Project* _project = nullptr;
-};
 
 InventoryWidget::InventoryWidget(QWidget* parent)
 	: QWidget(parent)
@@ -61,23 +17,25 @@ InventoryWidget::InventoryWidget(QWidget* parent)
 	_ui.treeView->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 	_ui.treeView->setDragEnabled(true);
 	_ui.treeView->setDragDropMode(QAbstractItemView::DragDropMode::DragOnly);
+    _model = new InventoryItemModel(this);
+    _ui.treeView->setModel(_model);
 	setProject(nullptr);
+
+    connect(_ui.lineEdit, &QLineEdit::textEdited, this, &InventoryWidget::applyFilter);
 }
 
 InventoryWidget::~InventoryWidget()
 {
 }
 
-#include <QMenu>
-#include <QMessageBox>
-
-
 void InventoryWidget::onContextMenuRequested(const QPoint& p)
 {
     auto index = _ui.treeView->indexAt(p);
-    auto zeroIndex = _ui.treeView->model()->index(index.row(), 0, index.parent());
-    auto endpointEntry = zeroIndex.data(MEMBER_PTR_ROLE).value<model::EndpointEntry*>();
-    auto document = zeroIndex.data(MEMBER_PTR_ROLE).value<model::Document*>();
+    if(!index.isValid()) return;
+    auto inventoryItem = static_cast<InventoryItem*>(index.internalPointer());
+    if(inventoryItem->getType() != InventoryItem::Type::Document) return;
+
+    auto document = inventoryItem->getUserDataPtr<model::Document*>();
 
     if (document != nullptr)
     {
@@ -95,65 +53,77 @@ void InventoryWidget::onContextMenuRequested(const QPoint& p)
                 case QMessageBox::Cancel:
                     return;
                 }
+            });
 
-			});
-		menu->exec(mapToGlobal(p));
-		menu->deleteLater();
-	}
+        menu->exec(_ui.treeView->mapToGlobal(p));
+        menu->deleteLater();
+    }
+}
+
+void InventoryWidget::applyFilter(const QString &filter)
+{
+    _model->setFilter(filter);
+    _ui.treeView->collapseAll();
+
+    if(_timer == nullptr)
+    {
+        _timer = new QTimer(this);
+        _timer->setSingleShot(true);
+
+        connect(_timer, &QTimer::timeout, this, [=]()
+                {
+                    int rows = _model->rowCount();
+                    for(int i=0;i<rows;i++)
+                    {
+                        auto itemIndex = _model->index(i, 0, QModelIndex());
+                        _ui.treeView->expand(itemIndex);
+                    }
+                });
+    }
+
+    if(!filter.isEmpty())
+        _timer->start(300);
+}
+
+InventoryItem *InventoryWidget::createRootItem(model::Project *project)
+{
+    const QIcon icons[] = { QIcon(":/ui/get"), QIcon(":/ui/post") , QIcon(":/ui/put") , QIcon(":/ui/del"), QIcon(":/ui/patch") };
+    const QIcon swaggerIcon = QIcon(":/ui/swagger");
+
+    InventoryItem *rootItem = new InventoryItem();
+    auto documents = project->getDocuments();
+    std::for_each(documents.begin(), documents.end(), [=](const model::Document* document)
+                  {
+                      auto documentItem = new InventoryItem(InventoryItem::Type::Document, rootItem);
+                      documentItem->setData(document->getName());
+                      documentItem->setIcon(swaggerIcon);
+                      documentItem->setUserDataPtr((void*)document);
+
+                      auto endpoints = document->getEndpoints();
+
+                      std::for_each(endpoints.begin(), endpoints.end(), [=](const model::EndpointEntry* entry)
+                                    {
+                                        auto entryItem = new InventoryItem(InventoryItem::Type::Endpoint, documentItem);
+                                        entryItem->setIcon(icons[entry->getHttpMethod()]);
+                                        entryItem->setData(entry->getUrl());
+                                        entryItem->setUserDataPtr((void*)entry);
+                                    });
+                  });
+    return rootItem;
 }
 
 void InventoryWidget::setProject(model::Project* project)
 {
 	_project = project;
 
-	QStandardItemModel* model = new CustomModel(this);
-
-	//_ui.treeView->setHeaderHidden(true);
-	QStringList labels;
-	labels << "Location" << "Operation name";
-	model->setHorizontalHeaderLabels(labels);
-	model->horizontalHeaderItem(0)->setIcon(QIcon(":/ui/url"));
-	model->horizontalHeaderItem(1)->setIcon(QIcon(":/ui/hashtag"));
-
 	if (project != nullptr)
 	{
-		auto documents = project->getDocuments();
-
-		QIcon icons[] = { QIcon(":/ui/get"), QIcon(":/ui/post") , QIcon(":/ui/put") , QIcon(":/ui/del") };
-		QIcon swaggerIcon = QIcon(":/ui/swagger");
-
-		for (int i = 0; i < documents.size(); i++)
-		{
-			const auto& document = documents[i];
-			auto documentItem = new QStandardItem(document->getName());
-			documentItem->setData(swaggerIcon, Qt::ItemDataRole::DecorationRole);
-			documentItem->setData(QVariant::fromValue(document), MEMBER_PTR_ROLE);
-
-			auto endpoints = document->getEndpoints();
-
-			for (int j = 0; j < endpoints.size(); j++)
-			{
-				const auto& endpoint = endpoints[j];
-				
-				auto urlItem = new QStandardItem(endpoint->getUrl());
-				urlItem->setData(icons[endpoint->getHttpMethod()], Qt::ItemDataRole::DecorationRole);
-				auto operationIdItem = new QStandardItem(endpoint->getIdentifier());
-
-				urlItem->setData(QVariant::fromValue(endpoint), MEMBER_PTR_ROLE);
-				operationIdItem->setData(QVariant::fromValue(endpoint), MEMBER_PTR_ROLE);
-
-				QList<QStandardItem*> items;
-				items << urlItem << operationIdItem;
-
-				documentItem->appendRow(items);
-			}
-
-			QList<QStandardItem*> items;
-			items << documentItem << new QStandardItem();
-
-			model->appendRow(items);
-		}
+        _model->setRootItem(createRootItem(project));
 	}
-	_ui.treeView->setModel(model);
+    else
+    {
+        _model->setRootItem(nullptr);
+    }
+
 	_ui.treeView->update();
 }

@@ -28,7 +28,7 @@ void logic::DelayNode::setupUi()
 	setResizable(false);
 
 	setMinSize(QSize(100, 50));
-	setSize(100, 150);
+    setSize(100, 50);
 
 	_bgColor = view::colors::yellow;	
 }

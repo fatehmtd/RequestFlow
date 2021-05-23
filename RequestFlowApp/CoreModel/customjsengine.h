@@ -3,10 +3,11 @@
 #include <QJSValue>
 
 #include <QObject>
+#include "coremodel_global.h"
 
 namespace model
 {
-    class CustomJSEngine : public QJSEngine
+    class COREMODEL_EXPORT CustomJSEngine : public QJSEngine
     {
         Q_OBJECT
     public:

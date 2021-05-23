@@ -6,6 +6,7 @@ HEADERS += ./coreview_global.h \
     $$PWD/externalnodeselectiondialog.h \
     $$PWD/logic/externalnode.h \
     $$PWD/singlelinetextedit.h \
+    $$PWD/viewernodewidget.h \
     ./view/Colors.h \
     ./view/ConnectionEdge.h \
     ./view/Edge.h \
@@ -26,6 +27,7 @@ SOURCES += ./view/ConnectionEdge.cpp \
     $$PWD/externalnodeselectiondialog.cpp \
     $$PWD/logic/externalnode.cpp \
     $$PWD/singlelinetextedit.cpp \
+    $$PWD/viewernodewidget.cpp \
     ./view/Edge.cpp \
     ./view/Node.cpp \
     ./view/ContentWidget.cpp \

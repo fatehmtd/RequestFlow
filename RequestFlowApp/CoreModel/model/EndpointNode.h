@@ -41,9 +41,12 @@ namespace model
 			GET,
 			POST,
 			PUT,
-			DEL
+            DEL,
+            PATCH
 		};
         Q_ENUM(HttpMethod);
+
+        static int HttpMethodFromString(const QString& string);
 
         enum AuthorizationMethod
         {
