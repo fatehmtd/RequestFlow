@@ -71,7 +71,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::setupUi()
 {
     _ui.setupUi(this);
-    _scenariosWidget = new ScenariosWidget();
 	setWindowIcon(QIcon(":/ui/network"));
 	//setMinimumSize(1280, 800);
     setupMenuBar();
@@ -97,17 +96,12 @@ void MainWindow::setupRibbonBar()
 void MainWindow::setupEnvironmentsWidget()
 {
     _environmentsWidget = new EnvironmentsWidget();
-	//_ui.environmentsWidget->setProject(_sceneGraphWidget->getSceneGraph()->getModelGraph());
-    //_environmentsWidget->setEnabled(false);
-    connect(_environmentsWidget, &EnvironmentsWidget::currentEnvironmentChanged, this, &MainWindow::onCurrentEnvironmentChanged);
 }
 
 void MainWindow::setupSceneGraph()
 {
 	_ui.mdiArea->setTabsClosable(false);
-	connect(_ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::onSubWindowActivated);
-    connect(_scenariosWidget, &ScenariosWidget::sceneDeleted, this, &MainWindow::onSceneDeleted);
-    connect(_scenariosWidget, &ScenariosWidget::currentSceneChanged, this, &MainWindow::onActivateScene);
+    connect(_ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::onSubWindowActivated);
 
 	connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node)
 		{
@@ -192,8 +186,7 @@ void MainWindow::setProject(model::Project* project)
     _ui.dockWidgetContents->setEnabled(projectAvailable);
 
     _environmentsWidget->setEnabled(projectAvailable);
-	_ui.inventoryWidget->setEnabled(projectAvailable);
-    _scenariosWidget->setEnabled(projectAvailable);
+    _ui.inventoryWidget->setEnabled(projectAvailable);
     _ui.dockWidget_4->setVisible(projectAvailable);
     _ui.dockWidget_5->setVisible(projectAvailable);
 
@@ -224,8 +217,6 @@ void MainWindow::setProject(model::Project* project)
 				openScenario(sceneGraph);
 			}
 		}
-
-        _scenariosWidget->setProject(_project.get());
 	}
 
     // File
@@ -285,12 +276,13 @@ void MainWindow::createScenario(QString name)
 {
 	auto graph = new model::Graph(_project.get());
 	graph->setName(name);
-	openScenario(new view::SceneGraph(graph));
-    _scenariosWidget->updateScenariosList();
+    openScenario(new view::SceneGraph(graph));
 	_ui.logMessagesWidget->addMessageLogger(graph->getLogger());
 }
 
-void MainWindow::openScenario(view::SceneGraph* sceneGraph)
+#include <model/Environment.h>
+
+SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
 {
 	auto sceneGraphWidget = new SceneGraphWidget(this, sceneGraph);
 
@@ -303,9 +295,20 @@ void MainWindow::openScenario(view::SceneGraph* sceneGraph)
 	sceneGraphWidget->setWindowIcon(QIcon(":/ui/test_case"));
 	auto window = _ui.mdiArea->addSubWindow(sceneGraphWidget);
 
+    auto evaluateScenarioTitle = [](model::Graph* graph)
+    {
+        QString envName = "No Environment Selected";
+        if(graph->getActiveEnvironment()!=nullptr)
+        {
+            envName = graph->getActiveEnvironment()->getName();
+        }
+        return QString("%1 [Env: %2]").arg(graph->getName()).arg(envName);
+    };
+
     connect(window, &QMdiSubWindow::aboutToActivate, this, [=]()
             {
-                _ui.label_scenarioName->setText(sceneGraph->getModelGraph()->getName());
+                _ui.label_scenarioName->setText(evaluateScenarioTitle(sceneGraph->getModelGraph()));
+                window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
             });
 
 	_subwindowsMap.insert(sceneGraph->getModelGraph()->getIdentifier(), window);
@@ -321,8 +324,13 @@ void MainWindow::openScenario(view::SceneGraph* sceneGraph)
     auto sysMenu = new QMenu(window);
     sysMenu->addAction(QIcon(":/ui/duplicate"), "Clone Scenario", [=]()
                        {
-
+                           auto newName = QInputDialog::getText(this, "Clone Scenario", "New Scenario Name : ", QLineEdit::Normal, QString("%1 - Clone").arg(sceneGraphWidget->getSceneGraph()->getModelGraph()->getName()));
+                           if(!newName.isEmpty())
+                           {
+                               cloneScenario(sceneGraphWidget->getSceneGraph(), newName);
+                           }
                        });
+
     sysMenu->addAction(QIcon(":/ui/delete"), "Delete Scenario", [=]()
                        {
                             deleteScenario(sceneGraphWidget->getSceneGraph());
@@ -330,29 +338,68 @@ void MainWindow::openScenario(view::SceneGraph* sceneGraph)
     window->setSystemMenu(sysMenu);
     //window->setContextMenuPolicy(Qt::ContextMenuPolicy::NoContextMenu);
 
-	connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, &QMdiSubWindow::setWindowTitle);
+    connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, [=](const QString& str)
+            {
+                _ui.label_scenarioName->setText(evaluateScenarioTitle(sceneGraph->getModelGraph()));
+                window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
+            });
+
+    connect(sceneGraph->getModelGraph(), &model::Graph::activeEnvironmentChanged, window, [=]()
+            {
+                _ui.label_scenarioName->setText(evaluateScenarioTitle(sceneGraph->getModelGraph()));
+                window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
+            });
 	window->showMaximized();
+
+    return sceneGraphWidget;
 }
 
 void MainWindow::cloneScenario(view::SceneGraph* sceneGraph, QString newName)
 {
+    auto sgw = (SceneGraphWidget*)sceneGraph->views()[0];
+    model::PersistenceHandler persistenceHandler;
+    auto jsValue = sgw->saveToJSValue(&persistenceHandler);
+    auto newGraph = sceneGraph->getModelGraph()->clone();
+    newGraph->setName(newName);
+    auto newSceneGraph = new view::SceneGraph(newGraph);
+    auto newSGW = openScenario(newSceneGraph);
+    newSGW->loadFromJSValue(jsValue);
 }
 
 void MainWindow::deleteScenario(view::SceneGraph* sceneGraph)
-{    
-    delete sceneGraph->getModelGraph();
-    auto graphWidget = sceneGraph->views().first();
-    delete graphWidget->parent();
+{
+    auto choice = QMessageBox::warning(this, "Delete Scenarion", QString("You are about to delete (%1), proceed ?").arg(sceneGraph->getModelGraph()->getName()), QMessageBox::Yes, QMessageBox::Cancel);
+    if(choice == QMessageBox::Yes)
+    {
+        delete sceneGraph->getModelGraph();
+        auto graphWidget = sceneGraph->views().first();
+        delete graphWidget->parent();
+    }
 }
 
 void MainWindow::deleteActiveScenario()
 {
-    for(auto subWindow : _ui.mdiArea->subWindowList())
+
+    //for(auto subWindow : _ui.mdiArea->subWindowList())
     {
-        auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->window());
+        auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(_ui.mdiArea->activeSubWindow()->widget());
         if(sceneGraphWidget != nullptr)
         {
             deleteScenario(sceneGraphWidget->getSceneGraph());
+        }
+    }
+}
+
+void MainWindow::cloneActiveScenario()
+{
+
+    auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(_ui.mdiArea->activeSubWindow()->widget());
+    if(sceneGraphWidget != nullptr)
+    {
+        auto newName = QInputDialog::getText(this, "Clone Scenario", "New Scenario Name : ", QLineEdit::Normal, QString("%1 - Clone").arg(sceneGraphWidget->getSceneGraph()->getModelGraph()->getName()));
+        if(!newName.isEmpty())
+        {
+            cloneScenario(sceneGraphWidget->getSceneGraph(), newName);
         }
     }
 }
@@ -385,18 +432,20 @@ QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
 	auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
 	auto uiValue = handler->createJsValue();
 	auto scenesValue = handler->createJsValue();
-	for (auto sgw : sceneGraphWidgets)
-	{
-		auto sceneGraph = sgw->getSceneGraph();
-		scenesValue.setProperty(sceneGraph->getModelGraph()->getIdentifier(), sgw->saveToJSValue(handler));
-	}
+
+    std::for_each(sceneGraphWidgets.begin(), sceneGraphWidgets.end(), [=, &scenesValue](SceneGraphWidget* sgw)
+                  {
+                      auto sceneGraph = sgw->getSceneGraph();
+                      scenesValue.setProperty(sceneGraph->getModelGraph()->getIdentifier(), sgw->saveToJSValue(handler));
+                  });
+
 	uiValue.setProperty("scenes", scenesValue);
 	return uiValue;
 }
 
 bool MainWindow::loadFromJSValue(const QJSValue& v)
 {
-	auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
+    //auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
 
 	auto scenesValue = v.property("scenes");
 	QJSValueIterator it(scenesValue);
@@ -517,9 +566,7 @@ int MainWindow::onCloseProject()
 	_ui.mdiArea->closeAllSubWindows();
 
     _environmentsWidget->setProject(nullptr);
-    _scenariosWidget->setProject(nullptr);
     _environmentsWidget->update();
-    _scenariosWidget->update();
 
     setProject(nullptr);
 	return button;
@@ -595,28 +642,8 @@ void MainWindow::onImportSwagger()
 	}
 }
 
-void MainWindow::onCurrentEnvironmentChanged(model::Environment* environment)
-{
-	_activeEnvironment = environment;
-	if (_activeGraph != nullptr)
-	{
-		_activeGraph->setActiveEnvironment(_activeEnvironment);
-	}
-}
-
 void MainWindow::onSubWindowActivated(QMdiSubWindow* subWindow)
 {
-	_activeGraph = nullptr;
-
-	if (subWindow != nullptr)
-	{
-		auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
-		if (sceneGraphWidget != nullptr)
-		{
-			_activeGraph = sceneGraphWidget->getSceneGraph()->getModelGraph();
-            _activeGraph->setActiveEnvironment(_environmentsWidget->getActiveEnvironment());
-		}
-	}
 }
 
 void MainWindow::onNewProject()
@@ -651,22 +678,22 @@ void MainWindow::setupMenuBar()
     // File menu
     {
         _fileMenu = menuBar()->addMenu("File");
-        _newProjectAction = _fileMenu->addAction(QIcon(), "New...", [=](){onNewProject();}, QKeySequence("Ctrl+N"));
-        _openProjectAction = _fileMenu->addAction(QIcon(), "Open...", [=](){onOpenProject();}, QKeySequence("Ctrl+O"));
+        _newProjectAction = _fileMenu->addAction(QIcon(":/ui/new_file"), "New...", [=](){onNewProject();}, QKeySequence("Ctrl+N"));
+        _openProjectAction = _fileMenu->addAction(QIcon(":/ui/open_file"), "Open...", [=](){onOpenProject();}, QKeySequence("Ctrl+O"));
         _openProjectAction->setMenu(new QMenu);
 
         _recentProjectsMenu = _openProjectAction->menu();
         updateRecentProjectsList();
 
-        _saveProjectAction = _fileMenu->addAction(QIcon(), "Save", [=](){onSaveProject();}, QKeySequence("Ctrl+S"));
+        _saveProjectAction = _fileMenu->addAction(QIcon(":/ui/save_file"), "Save", [=](){onSaveProject();}, QKeySequence("Ctrl+S"));
         _saveProjectAsAction =  _fileMenu->addAction(QIcon(), "Save As...", [=](){onSaveProjectAs();}, QKeySequence("Ctrl+Shift+S"));
         _fileMenu->addSeparator();
         _settingsAction = _fileMenu->addAction(QIcon(), "Settings...", [=](){});
         _settingsAction->setEnabled(false); // TODO: implement a settings dialog
         _fileMenu->addSeparator();
-        _closeProjectAction = _fileMenu->addAction(QIcon(), "Close Project", [=](){ onCloseProject(); });
+        _closeProjectAction = _fileMenu->addAction(QIcon(":/ui/close_file"), "Close Project", [=](){ onCloseProject(); });
         _fileMenu->addSeparator();
-        _quitProjectAction = _fileMenu->addAction(QIcon(), "Quit", [=](){close();}, QKeySequence("Ctrl+Q"));
+        _quitProjectAction = _fileMenu->addAction(QIcon(":/ui/close"), "Quit", [=](){close();}, QKeySequence("Ctrl+Q"));
 
         _saveProjectAction->setEnabled(false);
         _saveProjectAsAction->setEnabled(false);
@@ -683,24 +710,32 @@ void MainWindow::setupMenuBar()
                                                                   createScenario(name);
                                                               }
                                                           });
-        //_createScenarioAction->setEnabled(false);
 
-        _cloneScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/test_case"), "Clone Scenario...", this, [=]()
+        _cloneScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/duplicate"), "Clone Scenario...", this, [=]()
                                                          {
+                                                             cloneActiveScenario();
                                                          });
-        _cloneScenarioAction->setEnabled(false);
 
-        _deleteScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/test_case"), "Delete Scenario", this, [=]()
+        _deleteScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/minus"), "Delete Scenario", this, [=]()
                                                          {
                                                               deleteActiveScenario();
                                                          });
-        _deleteScenarioAction->setEnabled(false);
     }
 
     // Environment menu
     {
         _environmentsMenu = menuBar()->addMenu("Environment");
-        _environmentConfigAction = _environmentsMenu->addAction(QIcon(), "Configure...", [=](){});
+        _environmentConfigAction = _environmentsMenu->addAction(QIcon(), "Configure...", [=]()
+                                                                {
+                                                                    QDialog dialog(this);
+                                                                    dialog.setWindowTitle("Environments");
+                                                                    auto layout = new QVBoxLayout(&dialog);
+                                                                    layout->setMargin(0);
+                                                                    auto environmentsWidget = new EnvironmentsWidget(&dialog);
+                                                                    layout->addWidget(environmentsWidget);
+                                                                    environmentsWidget->setProject(_project.get());
+                                                                    dialog.exec();
+                                                                });
         _environmentsMenu->addSeparator();
         _importSwaggerAction = _environmentsMenu->addAction(QIcon(":/ui/swagger"), "Swagger Import...", [=](){onImportSwagger();});
     }
@@ -708,6 +743,14 @@ void MainWindow::setupMenuBar()
     // View menu
     {
         _viewMenu = menuBar()->addMenu("View");
+
+        // TODO: implement messagelogger, inventory widgets menu items
+        //auto messageLoggerWidgetAction = _viewMenu->addAction("Message Logger");
+        //messageLoggerWidgetAction->setCheckable(true);
+        //auto inventoryWidgetAction = _viewMenu->addAction("Inventory");
+        //inventoryWidgetAction->setCheckable(true);
+        //_viewMenu->addSeparator();
+
         _centerOnAction = _viewMenu->addAction(QIcon(), "Center on scene", [=](){});
         _centerOnAction->setEnabled(false);
         _viewMenu->addSeparator();

@@ -68,6 +68,8 @@ void EnvironmentsWidget::setProject(model::Project* project)
 		_ui.comboBox_environments->setModel(_environmentsModel);
 		_ui.comboBox_environments->update();
 		_environmentsModel->setProject(project);
+
+        _ui.toolButton_remove->setEnabled(_project->getEnvironments().size() > 1);
 	}
 	else
 	{
@@ -119,13 +121,15 @@ void EnvironmentsWidget::onDeleteEnvironment()
 	auto envList = _project->getEnvironments();
 	if (envList.size() > 1)
 	{
-		if (QMessageBox::warning(this, QString("Delete (%1)").arg(_environment->getName()), "Proceed ?", QMessageBox::Yes, QMessageBox::Cancel)
+        if (QMessageBox::warning(this, QString("Delete Environment"), QString("Delete (%1) ?").arg(_environment->getName()), QMessageBox::Yes, QMessageBox::Cancel)
 			== QMessageBox::Yes)
 		{
 			_environmentsModel->beginResetModel();
 			delete _environment;
 			_environment = nullptr;
 			_environmentsModel->endResetModel();
+
+            _ui.toolButton_remove->setEnabled(_project->getEnvironments().size() > 1);
 		}
 	}
 }

@@ -283,14 +283,13 @@ QJSValue SceneGraphWidget::saveToJSValue(model::PersistenceHandler* handler) con
 	auto nodesList = getSceneGraph()->getNodes();
 	auto nodesValue = handler->createJsValue();
 
-	for (auto node : nodesList)
-	{
-		auto nodeValue = handler->createJsValue();
-		auto pos = node->scenePos();
-		nodeValue.setProperty("position", handler->createJsValue(node->scenePos()));
-		nodeValue.setProperty("size", handler->createJsValue(QPointF(node->width(), node->height())));
-		nodesValue.setProperty(node->getModelNode()->getIdentifier(), nodeValue);
-	}
+    std::for_each(nodesList.begin(), nodesList.end(), [=, &nodesValue](view::Node* node)
+                  {
+                      auto nodeValue = handler->createJsValue();
+                      nodeValue.setProperty("position", handler->createJsValue(node->scenePos()));
+                      nodeValue.setProperty("size", handler->createJsValue(QPointF(node->width(), node->height())));
+                      nodesValue.setProperty(node->getModelNode()->getIdentifier(), nodeValue);
+                  });
 
 	sceneValue.setProperty("nodes", nodesValue);
 

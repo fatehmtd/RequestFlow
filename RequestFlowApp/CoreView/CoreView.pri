@@ -4,6 +4,7 @@
 
 HEADERS += ./coreview_global.h \
     $$PWD/externalnodeselectiondialog.h \
+    $$PWD/largepayloadinfowidget.h \
     $$PWD/logic/externalnode.h \
     $$PWD/singlelinetextedit.h \
     $$PWD/viewernodewidget.h \
@@ -25,6 +26,7 @@ HEADERS += ./coreview_global.h \
     ./InteractionsHandler.h
 SOURCES += ./view/ConnectionEdge.cpp \
     $$PWD/externalnodeselectiondialog.cpp \
+    $$PWD/largepayloadinfowidget.cpp \
     $$PWD/logic/externalnode.cpp \
     $$PWD/singlelinetextedit.cpp \
     $$PWD/viewernodewidget.cpp \
@@ -44,6 +46,7 @@ SOURCES += ./view/ConnectionEdge.cpp \
     ./InteractionsHandler.cpp
 FORMS += ./ui/DelayNodeUi.ui \
     $$PWD/externalnodeselectiondialog.ui \
+    $$PWD/largepayloadinfowidget.ui \
     $$PWD/ui/AssertNodeUi.ui \
     $$PWD/ui/ExternalNodeUi.ui \
     ./ui/EndpointNodeUi.ui \

@@ -21,7 +21,20 @@ model::Graph::~Graph()
 
 model::Project* model::Graph::getProject() const
 {
-	return dynamic_cast<Project*>(parent());
+    return dynamic_cast<Project*>(parent());
+}
+
+model::Graph *model::Graph::clone() const
+{
+    PersistenceHandler handler;
+    auto jsValue = saveToJSValue(&handler);
+    auto newGraph = new Graph(getProject());
+    auto id = newGraph->getIdentifier();
+    newGraph->loadFromJSValue(jsValue);
+    newGraph->setIdentifier(id);
+
+    newGraph->prepareNodesInternals();
+    return newGraph;
 }
 
 QList<model::Node*> model::Graph::getNodes() const
@@ -55,20 +68,20 @@ QList<model::Edge*> model::Graph::findEdges(const Slot* slot) const
 			edge->getDestinationSlot() == slot)
 			edges << edge;
 	}
-	return std::move(edges);
+    return edges;
 }
 
 QList<model::Edge*> model::Graph::findEdges(const Node* node) const
 {
 	QList<Edge*> edgesList;
 
-	for (auto slot : node->getInputSlotsMap().values())
+    for (auto slot : node->getInputSlots())
 	{
 		auto list = findEdges(slot);
 		edgesList.append(list);
 	}
 
-	for (auto slot : node->getOutputSlotsMap().values())
+    for (auto slot : node->getOutputSlots())
 	{
 		auto list = findEdges(slot);
 		edgesList.append(list);
@@ -116,6 +129,7 @@ bool model::Graph::isRunning() const
 void model::Graph::setActiveEnvironment(Environment* env)
 {
 	_environment = env;
+    emit activeEnvironmentChanged();
 }
 
 model::Environment* model::Graph::getActiveEnvironment() const
@@ -128,6 +142,8 @@ QJSValue model::Graph::saveToJSValue(PersistenceHandler* persistenceHandler) con
 	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
 	saveChildren<Node*>(value, persistenceHandler, "nodes", getNodes());
 	saveChildren<Edge*>(value, persistenceHandler, "edges", getEdges());
+    QString activeEnv = getActiveEnvironment() == nullptr ? "" : getActiveEnvironment()->getIdentifier();
+    value.setProperty("activeEnvironment", persistenceHandler->createJsValue(activeEnv));
 	return value;
 }
 
@@ -155,6 +171,10 @@ bool model::Graph::loadFromJSValue(const QJSValue& v)
 			auto edge = new Edge(this);
 			edge->loadFromJSValue(value);
 		});
+
+    auto activeEnvId = v.property("activeEnvironment").toString();
+    setActiveEnvironment(getProject()->findChild<Environment*>(activeEnvId));
+
 	return true;
 }
 
@@ -334,7 +354,6 @@ model::Edge* model::Graph::connectSlots(OutputSlot* origin, InputSlot* destinati
 
 bool model::Graph::canConnectSlots(Slot* origin, Slot* destination) const
 {
-	//TODO: implement edge creation logic
 	if (origin->getDirection() == destination->getDirection()) return false; // fail when same type nodes
 	if (origin->getNode() == destination->getNode()) return false; // fail when the two slots belong to the same node
 	if (origin->getDataType() != destination->getDataType()) return false; // fail if different data types

@@ -11,6 +11,10 @@ model::EndpointNode::EndpointNode(model::Graph* graph) : model::Node(graph, "End
 	setContentType("application/json");
 	setHttpMethod(HttpMethod::GET);
 	setAuthMethod(AuthorizationMethod::BASIC_AUTH);
+    setBasicAuthUser("{{basic_auth_user}}");
+    setBasicAuthPassword("{{basic_auth_pwd}}");
+    setBearerToken("{{bearer_token}}");
+    setUrl("{{baseUrl}}");
 
 	_networkAccessManager = new QNetworkAccessManager(this);
 	connect(_networkAccessManager, &QNetworkAccessManager::finished, this, &model::EndpointNode::processResponse);
@@ -198,14 +202,21 @@ QNetworkRequest model::EndpointNode::prepareRequest()
 	switch (getAuthMethod())
 	{
 	case AuthorizationMethod::BASIC_AUTH:
-	{
-		auto token = QString("%1:%2").arg(getBasicAuthUser()).arg(getBasicAuthPassword()).toLocal8Bit().toBase64();
+    {
+        auto token = QString("%1:%2")
+                         .arg(getGraph()->getActiveEnvironment()->evaluate(getBasicAuthUser()))
+                         .arg(getGraph()->getActiveEnvironment()->evaluate(getBasicAuthPassword()))
+                         .toLocal8Bit()
+                         .toBase64();
+        qDebug() << __FUNCTION__ << token;
 		request.setRawHeader("Authorization", QString("Basic %1").arg(QString(token)).toLocal8Bit());
 	}
 	break;
 	case AuthorizationMethod::BEARER:
-	{
-		request.setRawHeader("Authorization", QString("Bearer %1").arg(getBearerToken()).toLocal8Bit());
+    {
+        auto token = QString("Bearer %1").arg(getGraph()->getActiveEnvironment()->evaluate(getBearerToken()));
+        request.setRawHeader("Authorization", token.toLocal8Bit());
+        qDebug() << __FUNCTION__ << token;
 	}
 	break;
 	}
@@ -394,6 +405,16 @@ bool model::EndpointNode::loadFromJSValue(const QJSValue& v)
 			});
 		setRejectedCodes(values);
 	}
+
+    if(getBasicAuthUser().isEmpty())
+        setBasicAuthUser("{{basic_auth_0user}}");
+    if(getBasicAuthPassword().isEmpty())
+        setBasicAuthPassword("{{basic_auth_pwd}}");
+    if(getBearerToken().isEmpty())
+        setBearerToken("{{bearer_token}}");
+    if(getUrl().isEmpty())
+        setUrl("{{baseUrl}}");
+
 	return true;
 }
 

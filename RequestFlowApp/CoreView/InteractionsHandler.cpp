@@ -25,16 +25,16 @@ view::InteractionsHandler::~InteractionsHandler()
 
 void view::InteractionsHandler::registerGenericAction(const QString& name,
 	std::function<bool(QGraphicsItem*)> filter,
-	std::function<void(const QPointF&)> func,
+    ExecFunc func,
 	QIcon icon, int order)
 {
 	ItemAction action = { order, name, func, filter, icon };
 	_itemActionsList << action;
 
-	qSort(_itemActionsList);
+    qSort(_itemActionsList);
 }
 
-void view::InteractionsHandler::registerNodeTypeAction(const QString& name, const QString& nodeType, std::function<void(const QPointF&)> func, QIcon icon, int order)
+void view::InteractionsHandler::registerNodeTypeAction(const QString& name, const QString& nodeType, ExecFunc func, QIcon icon, int order)
 {
 	registerGenericAction(name, [nodeType](QGraphicsItem* item)
 		{
@@ -44,7 +44,7 @@ void view::InteractionsHandler::registerNodeTypeAction(const QString& name, cons
 		}, func, icon, order);
 }
 
-void view::InteractionsHandler::registerNodeAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon, int order)
+void view::InteractionsHandler::registerNodeAction(const QString& name, ExecFunc func, QIcon icon, int order)
 {
 	registerGenericAction(name, [](QGraphicsItem* item)
 		{
@@ -53,7 +53,7 @@ void view::InteractionsHandler::registerNodeAction(const QString& name, std::fun
 		}, func, icon, order);
 }
 
-void view::InteractionsHandler::registerEdgeAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon, int order)
+void view::InteractionsHandler::registerEdgeAction(const QString& name, ExecFunc func, QIcon icon, int order)
 {
 	registerGenericAction(name, [](QGraphicsItem* item)
 		{
@@ -62,7 +62,7 @@ void view::InteractionsHandler::registerEdgeAction(const QString& name, std::fun
 		}, func, icon, order);
 }
 
-void view::InteractionsHandler::registerEmptySpaceAction(const QString& name, std::function<void(const QPointF&)> func, QIcon icon, int order)
+void view::InteractionsHandler::registerEmptySpaceAction(const QString& name, ExecFunc func, QIcon icon, int order)
 {
 	registerGenericAction(name, [](QGraphicsItem* item)
 		{
@@ -184,10 +184,11 @@ void view::InteractionsHandler::deleteInputSlot(Slot* slot)
 }
 
 #include <QMenu>
+#include <model/Project.h>
 
 QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 {
-	auto selectedItems = _sceneGraph->selectedItems();
+    auto selectedItems = _sceneGraph->selectedItems();
 
 	auto item = _sceneGraph->itemAt(p, QTransform());
 	QMenu* menu = new QMenu();
@@ -197,38 +198,65 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 	{
 		if (action.filter(item))
 			availableActions << action;
-	}
+    }
+
+    // Environments menu
+    if(selectedItems.isEmpty())
+    {
+        auto envMenu = menu->addMenu(QIcon(":/ui/environment"), "Active Environment");
+        auto environments = _sceneGraph->getModelGraph()->getProject()->getEnvironments();
+        if(_sceneGraph->getModelGraph()->getActiveEnvironment() == nullptr)
+        {
+            _sceneGraph->getModelGraph()->setActiveEnvironment(environments.at(0));
+        }
+        QHash<model::Environment*, QAction*> envActionMap;
+        qDebug() << _sceneGraph << _sceneGraph->getModelGraph()->getActiveEnvironment();
+        std::for_each(environments.begin(), environments.end(), [=, &envActionMap](model::Environment* environment)
+                      {
+                          auto action = envMenu->addAction(environment->getName(), this, [this, environment]()
+                                                                         {
+                                                                             _sceneGraph->getModelGraph()->setActiveEnvironment(environment);
+                                                                         });
+                          action->setCheckable(true);
+                          qDebug() << (_sceneGraph->getModelGraph()->getActiveEnvironment() == environment);
+                          action->setChecked(_sceneGraph->getModelGraph()->getActiveEnvironment() == environment);
+                          envActionMap[environment] = action;
+                      });
+
+        envMenu->setEnabled(!_sceneGraph->getModelGraph()->isRunning());
+        menu->addSeparator();
+    }
 
 	if (!availableActions.isEmpty())
     {
-        std::sort(availableActions.begin(), availableActions.end());
+        qSort(availableActions);
 
 		int prevOrder = -1;
 		if (availableActions.size() > 0)
 			prevOrder = availableActions[0].order;
 
-		for (const auto& action : availableActions)
-		{
-			if (prevOrder != action.order)
-				menu->addSeparator();
+        std::for_each(availableActions.begin(), availableActions.end(), [=, &prevOrder](const ItemAction &action)
+                      {
+                          if (prevOrder != action.order)
+                              menu->addSeparator();
 
-			auto qaction = menu->addAction(action.icon, action.name);
+                          auto qaction = menu->addAction(action.icon, action.name);
 
-			if (_sceneGraph->getModelGraph()->isRunning())
-			{
-				qaction->setEnabled(action.name == "Stop");
-			}
-			else
-			{
-				qaction->setEnabled(action.name != "Stop");
-			}
+                          if (_sceneGraph->getModelGraph()->isRunning())
+                          {
+                              qaction->setEnabled(action.name == "Stop");
+                          }
+                          else
+                          {
+                              qaction->setEnabled(action.name != "Stop");
+                          }
 
-			connect(qaction, &QAction::triggered, this, [=]()
-				{
-					action.func(p);
-				});
-			prevOrder = action.order;
-		}
+                          connect(qaction, &QAction::triggered, this, [=]()
+                                  {
+                                      action.func(p, qaction);
+                                  });
+                          prevOrder = action.order;
+                      });
 	}
 
 	return menu;
@@ -237,15 +265,24 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 #include <model/PersistenceHandler.h>
 #include <QInputDialog>
 #include <QGraphicsView>
+#include <QPixmap>
+#include <QColor>
+
+QIcon createColoredRect(QColor color)
+{
+    QPixmap pixmap(16, 16);
+    pixmap.fill(color);
+    return QIcon(pixmap);
+}
 
 void view::InteractionsHandler::registerCommonActions()
 {
-	registerEmptySpaceAction("Stop", [=](const QPointF& p)
+    registerEmptySpaceAction("Stop", [=](const QPointF& p, QAction* action)
 		{
 			_sceneGraph->getModelGraph()->cancel();
 		}, QIcon(":/BleachUI/stop"));
 
-    registerEmptySpaceAction("Execute", [=](const QPointF& p)
+    registerEmptySpaceAction("Execute", [=](const QPointF& p, QAction* action)
         {
             _sceneGraph->getModelGraph()->start();
         }, QIcon(":/BleachUI/play"));
@@ -257,7 +294,7 @@ void view::InteractionsHandler::registerCommonActions()
 			if (dynamic_cast<Edge*>(item)) return true;
 			return false;
 		},
-		[=](const QPointF& p)
+        [=](const QPointF& p, QAction* action)
 		{
 			auto item = _sceneGraph->itemAt(p, QTransform());
 			auto edge = dynamic_cast<Edge*>(item);
@@ -270,51 +307,51 @@ void view::InteractionsHandler::registerCommonActions()
 				auto node = dynamic_cast<Node*>(item);
 				deleteNode(node);
 			}
-		}, QIcon(":/BleachUI/delete"));
+        }, QIcon(":/ui/delete"));
 
-	registerEmptySpaceAction("Create Payload Node", [=](const QPointF& p)
+    registerEmptySpaceAction("New Payload Node", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createPayloadNode();
 			node->setPos(p);
-		}, QIcon(":/BleachUI/data"), 1);
+        }, createColoredRect(view::colors::byzantium), 1);
 
-	registerEmptySpaceAction("Create EndpointNode Node", [=](const QPointF& p)
+    registerEmptySpaceAction("New EndpointNode Node", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createEndpointNode();
 			node->setPos(p);
-		}, QIcon(":/BleachUI/transfer"), 1);
+        }, createColoredRect(view::colors::blue), 1);
 
-	registerEmptySpaceAction("Create Viewer Node", [=](const QPointF& p)
+    registerEmptySpaceAction("New Viewer Node", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createViewerNode();
 			node->setPos(p);
-		}, QIcon(":/BleachUI/view"), 1);
+        }, createColoredRect(view::colors::green), 1);
 
-	registerEmptySpaceAction("Create Delay Node", [=](const QPointF& p)
+    registerEmptySpaceAction("New Delay Node", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createDelayNode();
 			node->setPos(p);
-		}, QIcon(":/BleachUI/stopWatch"), 1);
+        }, createColoredRect(view::colors::yellow), 1);
 
-	registerEmptySpaceAction("Create Script Node", [=](const QPointF& p)
+    registerEmptySpaceAction("New Script Node", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createScriptNode();
 			node->setPos(p);
-		}, QIcon(":/BleachUI/menu"), 1);
+        }, createColoredRect(view::colors::charcoal), 1);
 
-	registerEmptySpaceAction("Create Assertion Node", [=](const QPointF& p)
+    registerEmptySpaceAction("New Assertion Node", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createAssertionNode();
 			node->setPos(p);
-		}, QIcon(":/ui/warning"), 1);
+        }, createColoredRect(view::colors::vividBurgundy), 1);
 
-    registerEmptySpaceAction("Create External Node", [=](const QPointF& p)
+    registerEmptySpaceAction("New External Node", [=](const QPointF& p, QAction* action)
         {
             auto node = createExternalNode();
             node->setPos(p);
-        }, QIcon(":/ui/"), 1);
+        }, createColoredRect(view::colors::lightGrey), 1);
 
-	registerNodeAction("Clone Node", [=](const QPointF& p)
+    registerNodeAction("Clone Node", [=](const QPointF& p, QAction* action)
 		{
 			auto item = _sceneGraph->itemAt(p, QTransform());
 			auto originalNode = dynamic_cast<view::Node*>(item);
@@ -326,7 +363,7 @@ void view::InteractionsHandler::registerCommonActions()
 			}
 		}, QIcon(":/BleachUI/copy"), 1);
 
-	registerNodeAction("Rename", [=](const QPointF& p)
+    registerNodeAction("Rename", [=](const QPointF& p, QAction* action)
 		{
 			auto item = _sceneGraph->itemAt(p, QTransform());
 			auto originalNode = dynamic_cast<view::Node*>(item);
@@ -340,7 +377,7 @@ void view::InteractionsHandler::registerCommonActions()
 
 		}, QIcon(":/ui/pen"), 1);
 
-	registerNodeTypeAction("Add input slot", "Script", [=](const QPointF& p)
+    registerNodeTypeAction("Add input slot", "Script", [=](const QPointF& p, QAction* action)
 		{
 			auto item = _sceneGraph->itemAt(p, QTransform());
 			auto node = dynamic_cast<logic::ScriptNode*>(item);
@@ -364,7 +401,7 @@ void view::InteractionsHandler::registerCommonActions()
 			}
 			return false;
 		},
-		[=](const QPointF& p)
+        [=](const QPointF& p, QAction* action)
 		{
 			auto item = _sceneGraph->itemAt(p, QTransform());
 			auto slot = dynamic_cast<Slot*>(item);

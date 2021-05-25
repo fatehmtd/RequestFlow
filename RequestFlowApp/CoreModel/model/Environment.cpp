@@ -5,6 +5,10 @@
 
 model::Environment::Environment(Project* parent) : IdentifiableEntity(parent)
 {
+    getEntries()["baseUrl"] = "http://localhost";
+    getEntries()["basic_auth_user"] = "admin";
+    getEntries()["basic_auth_pwd"] = "pwd";
+    getEntries()["bearer_token"] = "bearer-token";
 }
 
 model::Environment::Environment(const Environment& original) : IdentifiableEntity(original.getProject()), _entries(original.getEntries())
@@ -35,6 +39,7 @@ QString model::Environment::evaluate(QString workingUrl) const
 {
 	// TODO: implement an error handling mechanism
 	// extract {vars}
+    /*
 	{
 		QRegularExpression envVarPattern("{{([\\d\\w]+)}}");
 		auto it = envVarPattern.globalMatch(workingUrl);
@@ -44,6 +49,7 @@ QString model::Environment::evaluate(QString workingUrl) const
 			auto name = match.captured(1);
 		}
 	}
+    //*/
 
 	for (const auto& key : _entries.keys())
 	{
@@ -57,11 +63,12 @@ QString model::Environment::evaluate(QString workingUrl) const
 QJSValue model::Environment::saveToJSValue(PersistenceHandler* persistenceHandler) const
 {
 	auto value = PersistableEntity::saveToJSValue(persistenceHandler);
-	auto entriesValue = persistenceHandler->createJsValue();	
-	for(auto key : getEntries().keys())
-	{
-		entriesValue.setProperty(key, persistenceHandler->createJsValue(getEntries().value(key)));
-	}
+    auto entriesValue = persistenceHandler->createJsValue();
+
+    std::for_each(getEntries().keyBegin(), getEntries().keyEnd(), [=, &entriesValue](const QString& key)
+                  {
+                      entriesValue.setProperty(key, persistenceHandler->createJsValue(getEntries().value(key)));
+                  });
 	value.setProperty("entries", entriesValue);
 	return value;
 }

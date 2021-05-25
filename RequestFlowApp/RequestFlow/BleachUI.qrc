@@ -30,7 +30,7 @@
         <file>icons/tools.svg</file>
         <file>icons/trash.svg</file>
         <file>icons/wrench.svg</file>
-        <file>icons/delete_icon.svg</file>
+        <file alias="close">icons/delete_icon.svg</file>
         <file alias="new_file">icons/file_2.svg</file>
         <file alias="close_file">icons/file_close.svg</file>
         <file>icons/add_database_2.svg</file>

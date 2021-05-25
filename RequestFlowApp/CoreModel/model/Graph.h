@@ -27,6 +27,8 @@ namespace model
 
 		Project* getProject() const;
 
+        Graph* clone() const;
+
 		QList<Node*> getNodes() const;
 		QList<Edge*> getEdges() const;
 
@@ -80,6 +82,8 @@ namespace model
         void stopped();
 		void exceptionRaised(Node* node, QString reason);
 		void advanced();
+        void activeEnvironmentChanged();
+
 	private:
 		int computeExecutionPath();
 		void clear();

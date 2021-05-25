@@ -150,7 +150,7 @@ void logic::EndpointNode::initUI()
 			node->sendPayload();
 		});
 
-	setMinSize(QSize(280, 200));
+    setMinSize(QSize(500, 200));
 	setSize(300, 100);
 }
 

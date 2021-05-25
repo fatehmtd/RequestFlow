@@ -21,7 +21,10 @@ void model::ExternalNode::evaluate()
         if(_linkedNode != nullptr)
         {
             auto externalGraph = _linkedNode->getGraph();
-            externalGraph->setActiveEnvironment(getGraph()->getActiveEnvironment());
+            if(_linkedNode->getGraph()->getActiveEnvironment() == nullptr)
+            {
+                _linkedNode->getGraph()->setActiveEnvironment(getGraph()->getActiveEnvironment());
+            }
             externalGraph->start();
         }
         else

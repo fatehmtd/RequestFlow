@@ -15,7 +15,6 @@ HEADERS += ./resource.h \
     ./ActionGroup.h \
     ./ActionItem.h \
     ./ActionPage.h \
-    ./ScenariosWidget.h \
     ./InventoryWidget.h \
     ./GraphLogMessagesWidget.h \
     ./LogMessagesWidget.h \
@@ -32,7 +31,6 @@ SOURCES += ./main.cpp \
     ./ActionGroup.cpp \
     ./ActionItem.cpp \
     ./ActionPage.cpp \
-    ./ScenariosWidget.cpp \
     ./InventoryWidget.cpp \
     ./GraphLogMessagesWidget.cpp \
     ./LogMessagesWidget.cpp \

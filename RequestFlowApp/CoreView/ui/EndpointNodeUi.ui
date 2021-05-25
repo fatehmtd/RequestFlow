@@ -112,6 +112,11 @@
              <string>DEL</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>PATCH</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item row="1" column="1">
@@ -234,7 +239,7 @@
              <item row="1" column="1">
               <widget class="QLineEdit" name="lineEdit_baPwd">
                <property name="echoMode">
-                <enum>QLineEdit::PasswordEchoOnEdit</enum>
+                <enum>QLineEdit::Normal</enum>
                </property>
                <property name="placeholderText">
                 <string>admin</string>

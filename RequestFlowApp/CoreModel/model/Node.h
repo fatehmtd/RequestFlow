@@ -27,7 +27,7 @@ namespace model
 		QMap<QString, OutputSlot*> getOutputSlotsMap() const;
 
 		QList<InputSlot*> getInputSlots() const;
-		QList<OutputSlot*> getOutputSlots() const;
+        QList<OutputSlot*> getOutputSlots() const;
 
 		Graph* getGraph() const;
 
@@ -73,6 +73,6 @@ namespace model
 
 	protected:
 		QList<InputSlot*> _listOfReadySlots;
-		int _executionStatus=0;
+        int _executionStatus=0;
 	};
 }
