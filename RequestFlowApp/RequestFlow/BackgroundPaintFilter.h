@@ -7,6 +7,8 @@
 #include <QEvent>
 #include <QDebug>
 
+#include <math.h>
+
 class BackgroundPaintFilter : public QObject
 {
 protected:

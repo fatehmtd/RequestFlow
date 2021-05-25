@@ -65,11 +65,11 @@ namespace view
             LINES
         };
 
-        inline void setBackgroundType(BackgroundType bgType);
-        inline int getBackgroundType() const;
+        void setBackgroundType(BackgroundType bgType);
+        int getBackgroundType() const;
 
-        inline void setEdgeType(EdgeType type);
-        inline int getEdgeType() const;
+        void setEdgeType(EdgeType type);
+        int getEdgeType() const;
 
 	protected:
 		Node* createVisualNodeForModelNode(model::Node* node);
