@@ -6,7 +6,12 @@
 
 model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(parent)
 {
-	setType(typeName);
+    setType(typeName);
+    connect(parent, &Graph::preparingStartup, this, [this]()
+        {
+            clear();
+        }, Qt::ConnectionType::QueuedConnection);
+
 	connect(parent, &Graph::started, this, [this]() 
 		{
 			onGraphStart();
@@ -189,8 +194,6 @@ void model::Node::fail(const QString& reason)
 
 void model::Node::onGraphStart()
 {
-	clear();
-
 	// If the node has no input slots, proceed to evaluation when the graph execution starts
 	if (getInputSlotsMap().size() == 0)
 	{

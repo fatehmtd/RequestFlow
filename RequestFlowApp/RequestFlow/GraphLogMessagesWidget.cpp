@@ -4,18 +4,26 @@
 GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLogger* logger) : QWidget(parent), _messageLogger(logger)
 {
 	ui.setupUi(this);
-	connect(logger, &model::MessageLogger::cleared, this, &GraphLogMessagesWidget::onCleared, Qt::ConnectionType::DirectConnection);
-	connect(logger, &model::MessageLogger::updated, this, &GraphLogMessagesWidget::onUpdated, Qt::ConnectionType::DirectConnection);
-	connect(logger, &model::MessageLogger::logged, this, &GraphLogMessagesWidget::onLogged, Qt::ConnectionType::DirectConnection);
+    connect(logger, &model::MessageLogger::cleared, this, &GraphLogMessagesWidget::onCleared);
+    connect(logger, &model::MessageLogger::updated, this, &GraphLogMessagesWidget::onUpdated);
+    connect(logger, &model::MessageLogger::logged, this, &GraphLogMessagesWidget::onLogged);
 
 	connect(logger, &QObject::destroyed, this, &QObject::deleteLater);
 
-	ui.progressBar->setVisible(false);
     ui.progressBar->setFixedHeight(20);
+	ui.progressBar->setVisible(false);
+
 	auto graph = logger->getGraph();
 
-	connect(graph, &model::Graph::started, this, [=]()
-		{
+    connect(graph, &model::Graph::preparingStartup, this, [=]()
+            {
+                ui.progressBar->setRange(0, graph->getNodes().size()-1);
+                ui.progressBar->setValue(0);
+                ui.progressBar->setVisible(false);
+            });
+
+    connect(graph, &model::Graph::started, this, [=]()
+        {
 			ui.progressBar->setRange(0, graph->getNodes().size()-1);
 			ui.progressBar->setValue(0);
 			ui.progressBar->setVisible(true);
@@ -25,13 +33,13 @@ GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLo
 		{
 			ui.progressBar->setValue(ui.progressBar->value() + 1);
 		});
+
 	connect(graph, &model::Graph::stopped, this, [=]()
-		{
+        {
 			ui.progressBar->setVisible(false);
 		});
 
-	auto p = (LogMessagesWidget*)parent;
-	connect(this, &GraphLogMessagesWidget::senderSelected, p, &LogMessagesWidget::senderSelected);
+    connect(this, &GraphLogMessagesWidget::senderSelected, (LogMessagesWidget*)parent, &LogMessagesWidget::senderSelected);
 
 	connect(ui.tableWidget, &QTableWidget::itemSelectionChanged, this, [=]() 
 		{
@@ -43,8 +51,8 @@ GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLo
 				{
 					emit senderSelected(sender);
 				}
-			}
-		});
+            }
+        });
 }
 
 GraphLogMessagesWidget::~GraphLogMessagesWidget()
@@ -57,7 +65,7 @@ void GraphLogMessagesWidget::onUpdated()
 
 void GraphLogMessagesWidget::onCleared()
 {
-	//ui.progressBar->setVisible(true);
+    //ui.progressBar->setVisible(false);
 	ui.tableWidget->clearContents();
 	ui.tableWidget->setRowCount(0);
 }
@@ -66,6 +74,7 @@ void GraphLogMessagesWidget::onCleared()
 
 void GraphLogMessagesWidget::onLogged(const model::MessageLogger::Message& m)
 {
+    qDebug() << __FUNCTION__<< m.message;
 	int row = ui.tableWidget->rowCount();
 	ui.tableWidget->setRowCount(row + 1);
 

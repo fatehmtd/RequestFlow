@@ -51,13 +51,17 @@ namespace model
         enum State
         {
             IDLE,
-            PRESTART,
             STARTED,
-            FINISHED,
-            CANCELED
+            SUCCEEDED,
+            CANCELED,
+            FAILED,
+            STOPPED
         };
 
 		bool isRunning() const;
+        bool wasCanceled() const;
+        bool hasFailed() const;
+        bool hasSucceeded();
 
 		void setActiveEnvironment(Environment* env);
 		Environment* getActiveEnvironment() const;
@@ -78,9 +82,14 @@ namespace model
 		virtual void onNodeFailed(const QString& reason);
 		virtual void onNodeException(QString reason);
 	signals:
+        void preparingStartup();
 		void started();
         void stopped();
-		void exceptionRaised(Node* node, QString reason);
+        void canceled();
+        void failed(Node* node, QString reason);
+        void failed();
+        void succeeded();
+
 		void advanced();
         void activeEnvironmentChanged();
 
@@ -96,5 +105,6 @@ namespace model
 		MessageLogger* _messageLogger = nullptr;
 		QElapsedTimer _elapsedTimer;
 		bool _isRunning = false;
+        State _currentState, _finalExecutionState;
 	};
 }
