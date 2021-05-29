@@ -208,7 +208,6 @@ QNetworkRequest model::EndpointNode::prepareRequest()
                          .arg(getGraph()->getActiveEnvironment()->evaluate(getBasicAuthPassword()))
                          .toLocal8Bit()
                          .toBase64();
-        qDebug() << __FUNCTION__ << token;
 		request.setRawHeader("Authorization", QString("Basic %1").arg(QString(token)).toLocal8Bit());
 	}
 	break;
@@ -216,7 +215,6 @@ QNetworkRequest model::EndpointNode::prepareRequest()
     {
         auto token = QString("Bearer %1").arg(getGraph()->getActiveEnvironment()->evaluate(getBearerToken()));
         request.setRawHeader("Authorization", token.toLocal8Bit());
-        qDebug() << __FUNCTION__ << token;
 	}
 	break;
 	}

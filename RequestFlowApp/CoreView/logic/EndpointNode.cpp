@@ -107,8 +107,7 @@ void logic::EndpointNode::initUI()
 			int value = item->data(Qt::DisplayRole).toInt();
 
 			// validate the value
-			// check if already existing
-			//qDebug() << endpointNode->getAcceptedCodes().contains(value) << endpointNode->getRejectedCodes().contains(value);
+            // check if already existing
 			if (value < 100 || endpointNode->getAcceptedCodes().contains(value) || endpointNode->getRejectedCodes().contains(value))
 			{
 				_ui.tableWidget_rejectedCodes->blockSignals(true);
@@ -182,7 +181,7 @@ void logic::EndpointNode::onUrlTextChanged(const QString& rawUrl)
 	auto globalMatch = pattern.globalMatch(rawUrl);
 
     //QTextCursor textCursor(_ui.lineEdit_url);
-
+/*
 	while(globalMatch.hasNext())
 	{
 		auto match = globalMatch.next();
@@ -193,12 +192,9 @@ void logic::EndpointNode::onUrlTextChanged(const QString& rawUrl)
 			int l = m.size();
 			int index = rawUrl.indexOf(m);
 			//_ui.lineEdit_url->settext
-
-            //qDebug() << m << index;
-		}		
-		//qDebug() << match.capturedStart(;
+        }
 	}
-
+*/
 	QStringList queryStringList;
 
 	auto environment = getModelNode()->getGraph()->getActiveEnvironment();

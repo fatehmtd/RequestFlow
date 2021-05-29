@@ -67,8 +67,6 @@ bool view::CustomProxyWidget::eventFilter(QObject* object, QEvent* event)
 		//widget()->update();
 	}
 	_refreshNeeded = true;
-
-	//qDebug() << "updated! " << event;
 //*/
 	return QGraphicsProxyWidget::eventFilter(object, event);
 }

@@ -21,7 +21,6 @@ model::Project::~Project()
 QList<model::Graph*> model::Project::getGraphs() const
 {
     auto graphs = findChildren<model::Graph*>();
-    //qDebug() << __FUNCTION__ << graphs;
     return graphs;
 }
 
@@ -89,9 +88,5 @@ QString model::Project::getPath() const
 
 bool model::Project::eventFilter(QObject* watched, QEvent* event)
 {
-	if (dynamic_cast<Graph*>(watched))
-	{
-		qDebug() << watched << event;
-	}
 	return QObject::eventFilter(watched, event);
 }

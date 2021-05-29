@@ -51,8 +51,6 @@ model::InputSlot::InputSlot(Node* parent, QString name, int dataType) : Slot(par
 
 void model::InputSlot::onDataReceived()
 {
-    //qDebug() << getNode();
-    //qDebug() << __FUNCTION__ << getData().toVariant();
     emit dataReceived();
 }
 

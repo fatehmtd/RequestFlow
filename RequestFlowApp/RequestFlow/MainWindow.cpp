@@ -305,21 +305,14 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
         return QString("%1 [Env: %2]").arg(graph->getName()).arg(envName);
     };
 
-    connect(window, &QMdiSubWindow::aboutToActivate, this, [=]()
-            {
-                _ui.label_scenarioName->setText(evaluateScenarioTitle(sceneGraph->getModelGraph()));
-                window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
-            });
-
 	_subwindowsMap.insert(sceneGraph->getModelGraph()->getIdentifier(), window);
 
     window->installEventFilter(new CloseEventIgnoreEventFilter());
 
-    //window->setAttribute(Qt::WA_DeleteOnClose, false);
     window->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
     window->setWindowFlag(Qt::WindowType::WindowShadeButtonHint, true);
 	window->setWindowIcon(QIcon(":/ui/test_case"));
-	window->setWindowTitle(sceneGraph->getModelGraph()->getName());
+    window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
 
     auto sysMenu = new QMenu(window);
     sysMenu->addAction(QIcon(":/ui/duplicate"), "Clone Scenario", [=]()
@@ -336,19 +329,17 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
                             deleteScenario(sceneGraphWidget->getSceneGraph());
                        });
     window->setSystemMenu(sysMenu);
-    //window->setContextMenuPolicy(Qt::ContextMenuPolicy::NoContextMenu);
 
     connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, [=](const QString& str)
             {
-                _ui.label_scenarioName->setText(evaluateScenarioTitle(sceneGraph->getModelGraph()));
                 window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
             });
 
     connect(sceneGraph->getModelGraph(), &model::Graph::activeEnvironmentChanged, window, [=]()
             {
-                _ui.label_scenarioName->setText(evaluateScenarioTitle(sceneGraph->getModelGraph()));
                 window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
             });
+
 	window->showMaximized();
 
     return sceneGraphWidget;

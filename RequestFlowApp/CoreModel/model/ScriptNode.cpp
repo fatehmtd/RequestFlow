@@ -68,9 +68,7 @@ bool model::ScriptNode::executeScript()
 		if (fp.open(QIODevice::ReadOnly))
 		{
 			QTextStream data(&fp);
-			auto jsonPath = engine.evaluate(data.readAll());
-			//auto jsonPath = engine.importModule(":/js/jsonpath");
-			//qDebug() << jsonPath.toString();
+            auto jsonPath = engine.evaluate(data.readAll());
 			auto pathOfFunction = engine.evaluate("(function (path, obj) { return JSONPath.JSONPath(path, obj);})");
 			engine.globalObject().setProperty("pathOf", pathOfFunction);
 		}

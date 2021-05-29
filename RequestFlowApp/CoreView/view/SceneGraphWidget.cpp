@@ -75,8 +75,6 @@ void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 		setDragMode(QGraphicsView::RubberBandDrag);
 	}
 
-	// TODO: use this as the center of the view
-	//qDebug() << mapToScene(viewport()->rect()).boundingRect().center();
 	if (event->button() == Qt::MouseButton::MiddleButton)
 	{
 		mouseMiddleButtonPressed(event);
