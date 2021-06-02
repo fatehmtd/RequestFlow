@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     w.show();
 
 #ifndef _DEBUG
-    if(!showLicense(&w)) return 0;
+    //if(!showLicense(&w)) return 0;
 #endif
 
     return a.exec();

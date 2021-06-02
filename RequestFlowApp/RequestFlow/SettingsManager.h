@@ -30,6 +30,6 @@ namespace view
         QVariant getEntry(const QString& name, const QVariant& defaultValue = QVariant()) const;
 		//////////////////////////////////////////////////////////////////////////
 	protected:
-		std::unique_ptr<QSettings> _settings;
+        QSettings *_settings=nullptr;
 	};
 }

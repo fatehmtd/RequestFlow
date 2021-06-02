@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QDebug>
 #include "Colors.h"
+#include <math.h>
 
 view::Edge::Edge(SceneGraph* graph, model::Edge* edge) : _edge(edge)
 {

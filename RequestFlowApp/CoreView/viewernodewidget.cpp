@@ -360,17 +360,15 @@ void logic::ViewerNodeWidget::filter(const QString& filter)
     model::CustomJSEngine engine;
 
     auto bodyValue = engine.evaluate("(" + _message.getBody() + ")");
-    qDebug() << __LINE__ << bodyValue.isError() << bodyValue.toString();
     engine.globalObject().setProperty("_body", bodyValue);
     engine.globalObject().setProperty("_pathStr", engine.toScriptValue(filter));
 
     auto jsValue = engine.evaluate("pathOf(_pathStr, _body);");
-    qDebug() << __LINE__ << jsValue.isError();
     engine.globalObject().setProperty("_result", jsValue);
 
     auto txt = engine.fromScriptValue<QVariant>(engine.evaluate("JSON.stringify(_result);"));
 
-    QJsonDocument document = QJsonDocument::fromJson(_message.getBody().toUtf8());
+    QJsonDocument document = QJsonDocument::fromJson(txt.toString().toUtf8());
     //_ui.textEdit_json->setPlainText(document.toJson());
     //_ui.textEdit_json->clear();
     customDivideText(document.toJson(), _ui.textEdit_json->textCursor(), 10000);

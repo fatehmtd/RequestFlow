@@ -71,23 +71,41 @@ QList<model::Edge*> model::Graph::findEdges(const Slot* slot) const
     return edges;
 }
 
+#include <QSet>
+
 QList<model::Edge*> model::Graph::findEdges(const Node* node) const
 {
 	QList<Edge*> edgesList;
 
+    QSet<Edge*> edges;
+
     for (auto slot : node->getInputSlots())
 	{
 		auto list = findEdges(slot);
-		edgesList.append(list);
+        //edgesList.append(list);
+
+        std::for_each(list.begin(), list.end(), [&edges](Edge* edge)
+                      {
+                          edges.insert(edge);
+                      });
 	}
 
     for (auto slot : node->getOutputSlots())
 	{
 		auto list = findEdges(slot);
-		edgesList.append(list);
+        //edgesList.append(list);
+        std::for_each(list.begin(), list.end(), [&edges](Edge* edge)
+                      {
+                          edges.insert(edge);
+                      });
 	}
 
-	return edgesList.toSet().toList();
+    std::for_each(edges.begin(), edges.end(), [&edgesList](Edge* edge)
+                  {
+                      edgesList << edge;
+                  });
+
+    return edgesList;
 }
 
 int model::Graph::start()
@@ -98,12 +116,16 @@ int model::Graph::start()
 		return ALREADY_RUNNING;
 	}
 
+    _currentState = State::IDLE;
+    emit preparingStartup();
+
 	int result = computeExecutionPath();
 	_isRunning = false;
 	switch (result)
 	{
 	case ErrorCode::OK:
 		emit started();
+        _currentState = State::STARTED;
 		_elapsedTimer.start();
 		info("Starting execution...");
 		_isRunning = true;
@@ -123,7 +145,22 @@ int model::Graph::start()
 
 bool model::Graph::isRunning() const
 {
-	return _isRunning;
+    return _isRunning;
+}
+
+bool model::Graph::wasCanceled() const
+{
+    return _finalExecutionState == State::CANCELED;
+}
+
+bool model::Graph::hasFailed() const
+{
+    return _finalExecutionState == State::FAILED;
+}
+
+bool model::Graph::hasSucceeded()
+{
+    return _finalExecutionState == State::SUCCEEDED;
 }
 
 void model::Graph::setActiveEnvironment(Environment* env)
@@ -222,9 +259,10 @@ void model::Graph::cancel()
 	if (_isRunning)
 	{
 		emit stopped();
-		warn("Execution stopped by the user");
+        warn("Execution canceled by the user");
 	}
 	_isRunning = false;
+    _currentState = State::CANCELED;
 }
 
 void model::Graph::onNodeReady()
@@ -268,7 +306,7 @@ void model::Graph::onNodeException(QString reason)
 	if (node != nullptr)
 	{
 		_executionNodes[node] = -1;
-		emit exceptionRaised(node, reason);
+		emit failed(node, reason);
 	}
 
 	//error(reason);
@@ -327,10 +365,14 @@ void model::Graph::checkExecutionStatus()
 		if (numFails > 0)
 		{
 			error(QString("%1 Nodes failed").arg(numFails));
+            _finalExecutionState = State::FAILED;
+            emit failed();
 		}
 		else
 		{
 			info(QString("Execution successful, execution time :%1 ms").arg(_elapsedTimer.elapsed()));
+            _finalExecutionState = State::SUCCEEDED;
+            emit succeeded();
 		}
 		_isRunning = false;
 		emit stopped();

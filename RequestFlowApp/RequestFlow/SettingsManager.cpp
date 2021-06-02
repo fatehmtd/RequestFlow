@@ -1,6 +1,6 @@
 #include "SettingsManager.h"
 
-view::SettingsManager::SettingsManager(QObject* p) : QObject(p), _settings(std::make_unique<QSettings>("FBMZ", "RequestFlow"))
+view::SettingsManager::SettingsManager(QObject* p) : QObject(p), _settings(new QSettings("FBMZ", "RequestFlow", this))
 {
 
 }
@@ -60,7 +60,7 @@ void view::SettingsManager::setBackgroundType(uint type)
 
 uint view::SettingsManager::getBackgroundType() const
 {
-    return getEntry("backgroundType", 0).toUInt();
+    return getEntry("backgroundType", 3).toUInt();
 }
 
 void view::SettingsManager::setEdgesStyle(uint style)

@@ -16,9 +16,8 @@ view::ContentWidget::ContentWidget(QWidget* widget) : QWidget(widget)
 	//_layout->setSpacing(0);
 	setLayout(layout);
 	layout->addWidget(_progressBar);
-	setAttribute(Qt::WA_NoBackground, true);
-	setAutoFillBackground(true);
-	//qDebug() << qApp->styleSheet();
+    //setAttribute(Qt::WA_NoBackground, true);
+    setAutoFillBackground(true);
 	setStyleSheet("color: black; ");
 	disableProgressBar();
 }

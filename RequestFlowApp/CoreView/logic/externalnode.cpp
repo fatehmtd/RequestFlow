@@ -83,7 +83,8 @@ void logic::ExternalNode::setupUi()
     setMinSize(QSize(220, 200));
     setSize(220, 200);
 
-    _bgColor = view::colors::lightGrey;
+    //_bgColor = view::colors::lightGrey;
+    _bgColor = view::colors::nodes::external;
     //_ui.radioButton_alwaysExecute
 }
 

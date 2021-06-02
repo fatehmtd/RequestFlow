@@ -17,12 +17,10 @@ QJSValue model::PersistableEntity::saveToJSValue(PersistenceHandler* persistence
 
 bool model::PersistableEntity::loadFromJSValue(const QJSValue& value)
 {
-	//qDebug() << __FUNCTION__ << "-----------------------";
 	for (int i = 0; i < metaObject()->propertyCount(); i++)
 	{
 		auto prop = metaObject()->property(i);
-		auto v = value.property(QString(prop.name())).toVariant();
-		//qDebug() << prop.name() << prop.typeName() << v << prop.type() << prop.userType();
+        auto v = value.property(QString(prop.name())).toVariant();
 		setProperty(prop.name(), v);
 	}
 	return true;

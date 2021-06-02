@@ -15,16 +15,17 @@ void logic::AssertionNode::setupUi()
     _ui.setupUi(widget);
     getContentWidget()->layout()->addWidget(widget);
 
-	auto node = getModelNode<model::AssertionNode*>();    
-    _ui.textEdit->setPlainText(node->getScript());
-    _ui.textEdit->setPlaceholderText("// javascript");
+    auto node = getModelNode<model::AssertionNode*>();
+    _ui.plainTextEdit->setPlainText(node->getScript());
+    _ui.plainTextEdit->setPlaceholderText("// javascript");
 
-    connect(_ui.textEdit, &QTextEdit::textChanged, this, [=]()
+    connect(_ui.plainTextEdit, &QPlainTextEdit::textChanged, this, [=]()
 		{
-            node->setScript(_ui.textEdit->toPlainText());
+            node->setScript(_ui.plainTextEdit->toPlainText());
 		});
 
-	_bgColor = view::colors::vividBurgundy;
+    //_bgColor = view::colors::vividBurgundy;
+    _bgColor = view::colors::nodes::assertion;
 
 	connect(_node, &model::Node::ready, this, [=]()
 		{

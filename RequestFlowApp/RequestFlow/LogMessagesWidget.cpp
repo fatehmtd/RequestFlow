@@ -32,10 +32,20 @@ void LogMessagesWidget::addMessageLogger(model::MessageLogger* logger)
 	auto widget = new GraphLogMessagesWidget(this, logger);
 	ui.tabWidget->addTab(widget, QIcon(":/ui/test_case"), logger->getGraph()->getName());
 
-	connect(logger->getGraph(), &model::Graph::started, this, [=]() 
+    connect(logger->getGraph(), &model::Graph::started, this, [=]()
 		{
 			ui.tabWidget->setCurrentWidget(widget);
 		});
+
+    connect(logger->getGraph(), &model::Graph::preparingStartup, this, [=]()
+            {
+                ui.tabWidget->setCurrentWidget(widget);
+            });
+
+    connect(logger->getGraph(), &model::Graph::stopped, this, [=]()
+            {
+                ui.tabWidget->setCurrentWidget(widget);
+            });
 }
 
 void LogMessagesWidget::clearChildren()

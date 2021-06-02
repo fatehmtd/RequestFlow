@@ -7,19 +7,23 @@ namespace model
 	class Graph;
 	class InputSlot;
 	class OutputSlot;
+    class GroupNode;
 
 	class COREMODEL_EXPORT Node : public NotifiableEntity
 	{
 		Q_OBJECT
 	public:
-		Node(Graph* parent, const QString& typeName);
+        Node(Graph* graph, const QString& typeName);
 
+        // Slot query
 		InputSlot* getDestinationSlot(const QString& name) const;
 		OutputSlot* getOriginSlot(const QString& name) const;
 
 		InputSlot* getDestinationSlotByIdentifier(const QString& identifier) const;
 		OutputSlot* getOriginSlotByIdentifier(const QString& identifier) const;
 
+
+        // Slot management
 		InputSlot* addInputSlot(QString name, int dataType);
 		OutputSlot* addOutputSlot(QString name, int dataType);
 
@@ -29,16 +33,15 @@ namespace model
 		QList<InputSlot*> getInputSlots() const;
         QList<OutputSlot*> getOutputSlots() const;
 
+        // Misc
 		Graph* getGraph() const;
 
 		virtual void clear() override;
+        virtual void createModel() {};
+        virtual void prepareNodeInternals();
 
-		virtual void createModel() {};
-
-		QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const override;
-		bool loadFromJSValue(const QJSValue& v) override;
-
-		enum Status
+        // Execution
+        enum Status
 		{
 			IDLE,
 			READY,
@@ -48,9 +51,18 @@ namespace model
 
 		int getStatus() const;
 
-        virtual void prepareNodeInternals();
+        // Group management
+        GroupNode *getGroup() const;
+
+        // Persistence
+        QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const override;
+        bool loadFromJSValue(const QJSValue& v) override;
+    protected:
+        void setGroup(GroupNode* group);
+
 	private:
 		void setStatus(int status);
+
 	public slots:
 		virtual void evaluate();
 		virtual void fail(const QString& reason);
@@ -74,5 +86,6 @@ namespace model
 	protected:
 		QList<InputSlot*> _listOfReadySlots;
         int _executionStatus=0;
+        GroupNode* _group = nullptr;
 	};
 }

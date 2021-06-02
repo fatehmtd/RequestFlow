@@ -19,7 +19,6 @@ bool model::CustomJSEngine::injectJSPathLib()
     {
         QTextStream data(&fp);
         evaluate(data.readAll());
-        //qDebug() << __FUNCTION__ << v.toString();
         globalObject().setProperty("pathOf", evaluate("(function (path, obj) { return JSONPath.JSONPath(path, obj);})"));
         return true;
     }
@@ -32,7 +31,7 @@ bool model::CustomJSEngine::injectAssertionLib()
     if (fp.open(QIODevice::ReadOnly))
     {
         QTextStream data(&fp);
-        qDebug() << evaluate(QString("%1").arg(data.readAll())).toString();
+        evaluate(QString("%1").arg(data.readAll())).toString();
         return true;
     }
     return false;

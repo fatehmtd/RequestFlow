@@ -30,5 +30,6 @@ void logic::DelayNode::setupUi()
 	setMinSize(QSize(100, 50));
     setSize(100, 50);
 
-	_bgColor = view::colors::yellow;	
+    //_bgColor = view::colors::yellow;
+    _bgColor = view::colors::nodes::delay;
 }

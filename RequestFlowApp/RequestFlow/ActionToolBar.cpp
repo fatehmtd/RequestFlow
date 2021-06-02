@@ -48,7 +48,8 @@ void ActionToolBar::removePage(const QString& name)
 void ActionToolBar::init()
 {
 	// Determine default colors
-	QColor bg = qApp->palette().color(QPalette::Background);
+    //QColor bg = qApp->palette().color(QPalette::Background);
+    QColor bg = qApp->palette().color(QPalette::Base);
 	QColor mid = qApp->palette().color(QPalette::Mid); 
 
 	QString styleSheetText = QString(

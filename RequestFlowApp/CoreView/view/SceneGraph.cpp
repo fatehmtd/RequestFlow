@@ -381,7 +381,7 @@ void view::SceneGraph::setupUi()
 	_connectionEdge = new ConnectionEdge();
 	addItem(_connectionEdge);
 
-	connect(_modelGraph, &model::Graph::started, [=]()
+    connect(_modelGraph, &model::Graph::preparingStartup, [=]()
 		{
 			clearNodes();
 		});
@@ -534,8 +534,7 @@ view::Node* view::SceneGraph::cloneNode(Node* originalNode)
 {
 	model::PersistenceHandler handler;
 	auto modelNode = getModelGraph()->createNodeFromJSValue(originalNode->getModelNode()->saveToJSValue(&handler));
-	modelNode->setIdentifier(QUuid::createUuid().toString());
-	//qDebug() << originalNode->metaObject()->className();
+    modelNode->setIdentifier(QUuid::createUuid().toString());
 	auto node = createVisualNodeForModelNode(modelNode);
 	addItem(node);
 	return node;

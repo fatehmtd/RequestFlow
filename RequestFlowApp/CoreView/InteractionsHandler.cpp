@@ -31,7 +31,11 @@ void view::InteractionsHandler::registerGenericAction(const QString& name,
 	ItemAction action = { order, name, func, filter, icon };
 	_itemActionsList << action;
 
-    qSort(_itemActionsList);
+    std::sort(_itemActionsList.begin(), _itemActionsList.end(), [](const ItemAction & a, const ItemAction & b)
+              {
+                  return a.order > b.order;
+              });
+    //qSort(_itemActionsList);
 }
 
 void view::InteractionsHandler::registerNodeTypeAction(const QString& name, const QString& nodeType, ExecFunc func, QIcon icon, int order)
@@ -205,12 +209,13 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
     {
         auto envMenu = menu->addMenu(QIcon(":/ui/environment"), "Active Environment");
         auto environments = _sceneGraph->getModelGraph()->getProject()->getEnvironments();
+
         if(_sceneGraph->getModelGraph()->getActiveEnvironment() == nullptr)
         {
             _sceneGraph->getModelGraph()->setActiveEnvironment(environments.at(0));
         }
+
         QHash<model::Environment*, QAction*> envActionMap;
-        qDebug() << _sceneGraph << _sceneGraph->getModelGraph()->getActiveEnvironment();
         std::for_each(environments.begin(), environments.end(), [=, &envActionMap](model::Environment* environment)
                       {
                           auto action = envMenu->addAction(environment->getName(), this, [this, environment]()
@@ -218,7 +223,6 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
                                                                              _sceneGraph->getModelGraph()->setActiveEnvironment(environment);
                                                                          });
                           action->setCheckable(true);
-                          qDebug() << (_sceneGraph->getModelGraph()->getActiveEnvironment() == environment);
                           action->setChecked(_sceneGraph->getModelGraph()->getActiveEnvironment() == environment);
                           envActionMap[environment] = action;
                       });
@@ -229,7 +233,11 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 
 	if (!availableActions.isEmpty())
     {
-        qSort(availableActions);
+        //qSort(availableActions);
+        std::sort(availableActions.begin(), availableActions.end(), [](const ItemAction & a, const ItemAction & b)
+                  {
+                      return a.order > b.order;
+                  });
 
 		int prevOrder = -1;
 		if (availableActions.size() > 0)
@@ -309,43 +317,43 @@ void view::InteractionsHandler::registerCommonActions()
 			}
         }, QIcon(":/ui/delete"));
 
-    registerEmptySpaceAction("New Payload Node", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New Payload", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createPayloadNode();
 			node->setPos(p);
         }, createColoredRect(view::colors::byzantium), 1);
 
-    registerEmptySpaceAction("New EndpointNode Node", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New Endpoint", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createEndpointNode();
 			node->setPos(p);
         }, createColoredRect(view::colors::blue), 1);
 
-    registerEmptySpaceAction("New Viewer Node", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New Viewer", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createViewerNode();
 			node->setPos(p);
         }, createColoredRect(view::colors::green), 1);
 
-    registerEmptySpaceAction("New Delay Node", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New Delay", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createDelayNode();
 			node->setPos(p);
         }, createColoredRect(view::colors::yellow), 1);
 
-    registerEmptySpaceAction("New Script Node", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New Script", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createScriptNode();
 			node->setPos(p);
         }, createColoredRect(view::colors::charcoal), 1);
 
-    registerEmptySpaceAction("New Assertion Node", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New Assertion", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createAssertionNode();
 			node->setPos(p);
         }, createColoredRect(view::colors::vividBurgundy), 1);
 
-    registerEmptySpaceAction("New External Node", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New Link", [=](const QPointF& p, QAction* action)
         {
             auto node = createExternalNode();
             node->setPos(p);
@@ -369,7 +377,7 @@ void view::InteractionsHandler::registerCommonActions()
 			auto originalNode = dynamic_cast<view::Node*>(item);
 
 			auto newName = QInputDialog::getText(_sceneGraph->views()[0]->parentWidget(), "Rename Node", "New name :", QLineEdit::Normal, originalNode->getModelNode()->getName());
-            if(!newName.isEmpty())
+            //if(!newName.isEmpty())
             {
                 originalNode->setTitle(newName);
                 originalNode->update();
@@ -396,7 +404,7 @@ void view::InteractionsHandler::registerCommonActions()
 			auto slot = dynamic_cast<Slot*>(item);
 			if (slot != nullptr)
 			{
-				if (!slot->getModelSlot()->getDirection() == model::Slot::Direction::INPUT) return false;
+                if (slot->getModelSlot()->getDirection() != model::Slot::Direction::INPUT) return false;
 				return dynamic_cast<model::ScriptNode*>(slot->getNode()->getModelNode()) != nullptr;
 			}
 			return false;

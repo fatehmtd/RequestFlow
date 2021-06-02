@@ -3,7 +3,7 @@
 model::MessageLogger::MessageLogger(model::Graph *parent)
 	: QObject(parent)
 {
-	connect(parent, &Graph::started, this, &MessageLogger::clear, Qt::ConnectionType::QueuedConnection);
+    connect(parent, &Graph::preparingStartup, this, &MessageLogger::clear);
 }
 
 model::MessageLogger::~MessageLogger()
@@ -13,8 +13,7 @@ model::MessageLogger::~MessageLogger()
 void model::MessageLogger::log(const Message& message)
 {
 	_messagesList << message;
-	emit logged(message);
-	emit updated();
+    emit logged(message);
 }
 
 #include "IdentifiableEntity.h"

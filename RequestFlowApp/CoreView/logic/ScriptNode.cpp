@@ -34,13 +34,13 @@ void logic::ScriptNode::setupUi()
 			node->setScript(_ui.plainTextEdit->toPlainText());
 		});
 
-	_bgColor = view::colors::charcoal;
-	//_bgColor = view::colors::queenBlue;
+    //_bgColor = view::colors::charcoal;
+    _bgColor = view::colors::nodes::script;
 
-	connect(_node, &model::Node::ready, this, [=]()
-		{
-			getModelNode()->evaluate();
-		}, Qt::ConnectionType::QueuedConnection);
+    connect(_node, &model::Node::ready, this, [=]()
+        {
+            getModelNode()->evaluate();
+        }, Qt::ConnectionType::QueuedConnection);
 
 	setMinSize(QSize(300, 300));
 	setSize(300, 200);

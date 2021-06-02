@@ -153,8 +153,9 @@ QRectF view::Node::boundingRect() const
 
 void view::Node::setTitle(const QString& txt)
 {
-	_title->setPlainText(QString("%1 [%2]").arg(getModelNode()->getType()).arg(txt));
-	getModelNode()->setName(txt);
+    QString sanitizedName = txt.trimmed();
+    _title->setPlainText(QString("%1: %2").arg(getModelNode()->getType()).arg(sanitizedName.isEmpty() ? "Untitled" : sanitizedName));
+    getModelNode()->setName(sanitizedName);
 }
 
 QString view::Node::getTitle() const
@@ -218,8 +219,7 @@ float view::Node::getHeaderHeight() const
 float view::Node::getSlotsSectionHeight() const
 {
 	int numOutputSlots = 0, numInputSlots = 0;
-	const auto allChildren = childItems();
-	int index = 0;
+    const auto allChildren = childItems();
 	for (auto child : allChildren)
 	{
 		auto childSlot = dynamic_cast<Slot*>(child);
@@ -366,11 +366,10 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	// Outline
 	{
 		if (isSelected())
-		{
-			float halfedge = 0.5f * _edgeSize;
+        {
 			QPainterPath outlinePath;
-			outlinePath.addRoundedRect(halfedge, halfedge, w - _edgeSize, h - _edgeSize, _edgeSize, _edgeSize);
-			QPen pen(colors::orange, _edgeSize);
+            outlinePath.addRoundedRect(0, 0, w , h , _edgeSize, _edgeSize);
+            QPen pen(colors::orange, _edgeSize);
 			painter->setPen(pen);
 			painter->setBrush(Qt::BrushStyle::NoBrush);
 			painter->drawPath(outlinePath);
@@ -379,7 +378,7 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		{
 			QPainterPath outlinePath;
 			outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-			QPen pen(QColor("#4D4B4D"), 1.0f);
+            QPen pen(QColor("#4D4B4D"), _edgeSize*0.25f);
 			painter->setPen(pen);
 			painter->setBrush(Qt::BrushStyle::NoBrush);
 			painter->drawPath(outlinePath);
@@ -405,11 +404,9 @@ void view::Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 		// Outline Hover
 		if (_mouseHover && !isSelected())
 		{
-			QPainterPath outlinePath;
-			float outlineEdgeSize = _edgeSize * 0.8f;
-			float halfEdgeSize = 0.5f * outlineEdgeSize;
-			outlinePath.addRoundedRect(halfEdgeSize, halfEdgeSize, w - halfEdgeSize * 2.0, h - halfEdgeSize * 2.0, _edgeSize, _edgeSize);
-			QPen pen(QColor("#FFFFA637"), _edgeSize * 1.5, Qt::PenStyle::DashDotDotLine);
+            QPainterPath outlinePath;
+            outlinePath.addRoundedRect(0, 0, w, h , _edgeSize, _edgeSize);
+            QPen pen(QColor("#FFFFA637"), _edgeSize, Qt::PenStyle::DashDotDotLine);
 			painter->setPen(pen);
 			painter->setBrush(Qt::BrushStyle::NoBrush);
 			painter->drawPath(outlinePath);

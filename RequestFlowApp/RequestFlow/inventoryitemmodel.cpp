@@ -93,6 +93,10 @@ InventoryItem *InventoryItemModel::getItemFromModelIndex(const QModelIndex &inde
 QModelIndex InventoryItemModel::index(int row, int column, const QModelIndex &parent) const
 {
     InventoryItem* parentItem = parent.isValid() ? getItemFromModelIndex(parent) : _rootItem;
+    if(parentItem == nullptr)
+    {
+        parentItem = _rootItem;
+    }
     return createIndex(row, column, filterChildren(parentItem).at(row));
 }
 
@@ -150,6 +154,7 @@ QStringList InventoryItemModel::mimeTypes() const
 }
 
 #include <model/EndpointEntry.h>
+#include <QIODevice>
 
 QMimeData* InventoryItemModel::mimeData(const QModelIndexList& indexes) const
 {
