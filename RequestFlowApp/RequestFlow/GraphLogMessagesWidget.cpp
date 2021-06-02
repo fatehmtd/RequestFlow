@@ -102,9 +102,9 @@ void GraphLogMessagesWidget::onLogged(const model::MessageLogger::Message& m)
 
 		//if (node->getType() == "Endpoint")
 		{
-			messageItem->setData(Qt::BackgroundColorRole, color);
+            messageItem->setData(Qt::BackgroundRole, color);
 			messageItem->setData(Qt::ForegroundRole, QColor(255, 255, 255));
-			dateTimeItem->setData(Qt::BackgroundColorRole, color);
+            dateTimeItem->setData(Qt::BackgroundRole, color);
 			dateTimeItem->setData(Qt::ForegroundRole, QColor(255, 255, 255));
 			//typeItem->setData(Qt::BackgroundColorRole, color);
 			//typeItem->setData(Qt::ForegroundRole, QColor(255, 255, 255));

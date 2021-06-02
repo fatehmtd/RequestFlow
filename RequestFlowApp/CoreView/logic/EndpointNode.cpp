@@ -15,7 +15,7 @@ logic::EndpointNode::EndpointNode(model::EndpointNode* modelNode) : view::Node(m
 
 void logic::EndpointNode::clearUI()
 {
-    _ui.plainTextEdit_request->clear();
+    //_ui.plainTextEdit_request->clear();
 	_ui.plainTextEdit_response->clear();
 }
 
@@ -135,14 +135,15 @@ void logic::EndpointNode::initUI()
 	//_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black;");
 	//_ui.plainTextEdit_response->setBackgroundVisible(true);
 
-	_bgColor = view::colors::blue;
+    //_bgColor = view::colors::blue;
+    _bgColor = view::colors::nodes::endpoint;
 	connect(_node, &model::Node::ready, this, [=]()
 		{
 			auto node = dynamic_cast<model::EndpointNode*>(getModelNode());
 
 			node->info(QString("[Preparing] %1:%2").arg(node->getType()).arg(node->getName()));
 
-            _ui.plainTextEdit_request->setPlainText(node->getInputSlot()->getData().getBody());
+            //_ui.plainTextEdit_request->setPlainText(node->getInputSlot()->getData().getBody());
 
 			//TODO make the user agent dynamic
 			node->setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107");
@@ -175,13 +176,12 @@ void logic::EndpointNode::onHttpMethodChanged(int index)
 
 void logic::EndpointNode::onUrlTextChanged(const QString& rawUrl)
 {
-	QString workingUrl = rawUrl;	
+    QString workingUrl = rawUrl;
+/*
 	QRegularExpression pattern("({[\\w\\d]+})");
 
-	auto globalMatch = pattern.globalMatch(rawUrl);
+	auto globalMatch = pattern.globalMatch(rawUrl);    
 
-    //QTextCursor textCursor(_ui.lineEdit_url);
-/*
 	while(globalMatch.hasNext())
 	{
 		auto match = globalMatch.next();
@@ -194,9 +194,9 @@ void logic::EndpointNode::onUrlTextChanged(const QString& rawUrl)
 			//_ui.lineEdit_url->settext
         }
 	}
-*/
-	QStringList queryStringList;
 
+	QStringList queryStringList;
+*/
 	auto environment = getModelNode()->getGraph()->getActiveEnvironment();
 
 	if (environment != nullptr)

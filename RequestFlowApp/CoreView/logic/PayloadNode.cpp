@@ -18,8 +18,6 @@ model::Message logic::PayloadNode::composeMessage() const
 	message.setBody(_ui.plainTextEdit_body->toPlainText());
 	message.setPathVars(fillFromTable(_ui.tableWidget_path));
 	message.setQueryParams(fillFromTable(_ui.tableWidget_query));
-
-	//message.printMe();
 	return message;
 }
 
@@ -129,7 +127,8 @@ void logic::PayloadNode::clearUI()
 
 void logic::PayloadNode::setupUi()
 {
-	_bgColor = view::colors::byzantium;
+    //_bgColor = view::colors::byzantium;
+    _bgColor = view::colors::nodes::payload;
 
 	auto widget = new QWidget();
 	_ui.setupUi(widget);

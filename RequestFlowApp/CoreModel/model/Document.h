@@ -25,7 +25,7 @@ namespace model
 		QList<EndpointEntry*> getEndpoints() const;
 
 		QJSValue saveToJSValue(PersistenceHandler* handler) const override;
-		bool loadFromJSValue(const QJSValue& v);
+        bool loadFromJSValue(const QJSValue& v) override;
 
 		bool importFromSwagger(const QString& path);
 	};

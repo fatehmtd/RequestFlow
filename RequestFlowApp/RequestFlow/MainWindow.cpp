@@ -721,7 +721,8 @@ void MainWindow::setupMenuBar()
                                                                     QDialog dialog(this);
                                                                     dialog.setWindowTitle("Environments");
                                                                     auto layout = new QVBoxLayout(&dialog);
-                                                                    layout->setMargin(0);
+                                                                    //layout->setMargin(0);
+                                                                    layout->setSpacing(0);
                                                                     auto environmentsWidget = new EnvironmentsWidget(&dialog);
                                                                     layout->addWidget(environmentsWidget);
                                                                     environmentsWidget->setProject(_project.get());

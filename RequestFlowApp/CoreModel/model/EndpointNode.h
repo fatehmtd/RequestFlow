@@ -107,7 +107,7 @@ namespace model
         QMap<QString, QString>& getExtraHeaders();
 
         QJSValue saveToJSValue(PersistenceHandler* handler) const override;
-        bool loadFromJSValue(const QJSValue& v);
+        bool loadFromJSValue(const QJSValue& v) override;
         
 	private slots:
 		void processResponse(QNetworkReply* reply);

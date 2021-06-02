@@ -5,6 +5,7 @@
 TEMPLATE = subdirs
 SUBDIRS += RequestFlow/RequestFlow.pro \
     CoreModel/CoreModel.pro \
-    CoreView/CoreView.pro
+    CoreView/CoreView.pro \
+    ExecutionEngine
 DEPENDPATH += CoreModel/
 DEPENDPATH += CoreView/

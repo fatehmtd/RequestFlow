@@ -43,6 +43,9 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <property name="documentMode">
+      <bool>false</bool>
+     </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Connection</string>
@@ -804,44 +807,13 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>1</number>
+    <widget class="QPlainTextEdit" name="plainTextEdit_response">
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
-     <widget class="QWidget" name="tab_10">
-      <attribute name="title">
-       <string>Request</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
-        <widget class="QPlainTextEdit" name="plainTextEdit_request">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="placeholderText">
-          <string>Request...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_11">
-      <attribute name="title">
-       <string>Response</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_6">
-       <item row="0" column="0">
-        <widget class="QPlainTextEdit" name="plainTextEdit_response">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="placeholderText">
-          <string>Response...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+     <property name="placeholderText">
+      <string>Response...</string>
+     </property>
     </widget>
    </item>
   </layout>

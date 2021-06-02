@@ -42,5 +42,27 @@ namespace view
 			const QColor cyan("#28363A");
 			const QColor green("#1F3323");
 		}
+
+        namespace redesign
+        {
+            const QColor darkOrange("#E18F43");
+            const QColor darkGreen("#57B079");
+            const QColor lightBlue("#65ABF9");
+            const QColor purple("#9874F8");
+            const QColor red("#FB434F");
+            const QColor darkYellow("#E7D03F");
+            const QColor darkBlue("#287B9E");
+        }
+
+        namespace nodes
+        {
+            const QColor delay = redesign::darkOrange;
+            const QColor endpoint = redesign::darkGreen;
+            const QColor viewer = redesign::lightBlue;
+            const QColor script = redesign::purple;
+            const QColor external = redesign::red;
+            const QColor payload = redesign::darkYellow;
+            const QColor assertion = redesign::darkBlue;
+        }
 	}
 }

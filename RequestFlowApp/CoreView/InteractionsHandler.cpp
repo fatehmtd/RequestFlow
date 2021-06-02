@@ -31,7 +31,11 @@ void view::InteractionsHandler::registerGenericAction(const QString& name,
 	ItemAction action = { order, name, func, filter, icon };
 	_itemActionsList << action;
 
-    qSort(_itemActionsList);
+    std::sort(_itemActionsList.begin(), _itemActionsList.end(), [](const ItemAction & a, const ItemAction & b)
+              {
+                  return a.order > b.order;
+              });
+    //qSort(_itemActionsList);
 }
 
 void view::InteractionsHandler::registerNodeTypeAction(const QString& name, const QString& nodeType, ExecFunc func, QIcon icon, int order)
@@ -229,7 +233,11 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 
 	if (!availableActions.isEmpty())
     {
-        qSort(availableActions);
+        //qSort(availableActions);
+        std::sort(availableActions.begin(), availableActions.end(), [](const ItemAction & a, const ItemAction & b)
+                  {
+                      return a.order > b.order;
+                  });
 
 		int prevOrder = -1;
 		if (availableActions.size() > 0)
@@ -369,7 +377,7 @@ void view::InteractionsHandler::registerCommonActions()
 			auto originalNode = dynamic_cast<view::Node*>(item);
 
 			auto newName = QInputDialog::getText(_sceneGraph->views()[0]->parentWidget(), "Rename Node", "New name :", QLineEdit::Normal, originalNode->getModelNode()->getName());
-            if(!newName.isEmpty())
+            //if(!newName.isEmpty())
             {
                 originalNode->setTitle(newName);
                 originalNode->update();
@@ -396,7 +404,7 @@ void view::InteractionsHandler::registerCommonActions()
 			auto slot = dynamic_cast<Slot*>(item);
 			if (slot != nullptr)
 			{
-				if (!slot->getModelSlot()->getDirection() == model::Slot::Direction::INPUT) return false;
+                if (slot->getModelSlot()->getDirection() != model::Slot::Direction::INPUT) return false;
 				return dynamic_cast<model::ScriptNode*>(slot->getNode()->getModelNode()) != nullptr;
 			}
 			return false;

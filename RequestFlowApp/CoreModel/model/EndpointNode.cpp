@@ -405,13 +405,21 @@ bool model::EndpointNode::loadFromJSValue(const QJSValue& v)
 	}
 
     if(getBasicAuthUser().isEmpty())
+    {
         setBasicAuthUser("{{basic_auth_0user}}");
+    }
     if(getBasicAuthPassword().isEmpty())
+    {
         setBasicAuthPassword("{{basic_auth_pwd}}");
+    }
     if(getBearerToken().isEmpty())
+    {
         setBearerToken("{{bearer_token}}");
+    }
     if(getUrl().isEmpty())
+    {
         setUrl("{{baseUrl}}");
+    }
 
 	return true;
 }

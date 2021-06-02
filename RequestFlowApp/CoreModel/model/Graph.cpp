@@ -71,23 +71,41 @@ QList<model::Edge*> model::Graph::findEdges(const Slot* slot) const
     return edges;
 }
 
+#include <QSet>
+
 QList<model::Edge*> model::Graph::findEdges(const Node* node) const
 {
 	QList<Edge*> edgesList;
 
+    QSet<Edge*> edges;
+
     for (auto slot : node->getInputSlots())
 	{
 		auto list = findEdges(slot);
-		edgesList.append(list);
+        //edgesList.append(list);
+
+        std::for_each(list.begin(), list.end(), [&edges](Edge* edge)
+                      {
+                          edges.insert(edge);
+                      });
 	}
 
     for (auto slot : node->getOutputSlots())
 	{
 		auto list = findEdges(slot);
-		edgesList.append(list);
+        //edgesList.append(list);
+        std::for_each(list.begin(), list.end(), [&edges](Edge* edge)
+                      {
+                          edges.insert(edge);
+                      });
 	}
 
-	return edgesList.toSet().toList();
+    std::for_each(edges.begin(), edges.end(), [&edgesList](Edge* edge)
+                  {
+                      edgesList << edge;
+                  });
+
+    return edgesList;
 }
 
 int model::Graph::start()

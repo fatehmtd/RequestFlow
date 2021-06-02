@@ -43,8 +43,9 @@ void SceneGraphWidget::initUi()
 
     setRenderHint(QPainter::RenderHint::Antialiasing, true);
     setRenderHint(QPainter::RenderHint::LosslessImageRendering, false);
-    setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
+    setRenderHint(QPainter::RenderHint::TextAntialiasing, false);
     setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
+    setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, false);
 
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
@@ -134,7 +135,7 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
 	// always zoom in/out when ctrl is pressed
 	bool ctrlPressed = Qt::KeyboardModifier::ControlModifier & event->modifiers();
 
-	auto itemUnderCursor = _sceneGraph->itemAt(mapToScene(event->pos()), QTransform());
+    auto itemUnderCursor = _sceneGraph->itemAt(mapToScene(event->position().toPoint()), QTransform());
 
 	if (itemUnderCursor != nullptr && !ctrlPressed)
 	{
@@ -172,7 +173,7 @@ void SceneGraphWidget::mouseMiddleButtonPressed(QMouseEvent* event)
 	setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
 }
 
-void SceneGraphWidget::mouseMiddleButtonReleased(QMouseEvent* event)
+void SceneGraphWidget::mouseMiddleButtonReleased(QMouseEvent*)
 {
 	setDragMode(QGraphicsView::DragMode::NoDrag);
 }
@@ -238,7 +239,7 @@ void SceneGraphWidget::dropEvent(QDropEvent* event)
 		if (entry != nullptr)
 		{
 			auto node = _sceneGraph->getInteractionsHandler()->createEndpointNode(entry);			
-			node->setPos(mapToScene(event->pos()));
+            node->setPos(mapToScene(event->position().toPoint()));
 		}
 	}
 

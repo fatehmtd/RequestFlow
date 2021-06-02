@@ -182,6 +182,16 @@ void model::Node::prepareNodeInternals()
 
 }
 
+void model::Node::setGroup(GroupNode *group)
+{
+    _group = group;
+}
+
+model::GroupNode *model::Node::getGroup() const
+{
+    return _group;
+}
+
 void model::Node::setStatus(int status)
 {
 	_executionStatus = status;

@@ -19,12 +19,18 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Duration (ms) :</string>
+        <string>Duration :</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QSpinBox" name="spinBox">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="suffix">
+        <string> (msec)</string>
+       </property>
        <property name="minimum">
         <number>100</number>
        </property>

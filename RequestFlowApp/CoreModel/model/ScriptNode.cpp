@@ -18,6 +18,8 @@ model::ScriptNode::ScriptNode(model::Graph* graph) : Node(graph, "Script")
 	output << "Response.context = Request.context; // the current execution context, contains anything useful" << "\n";
 	//output << "Response.body = {\"firstName\" : \"James\", \"lastName\" : \"jamon\"};" << "\n";
 
+    //connect(this, &ScriptNode::ready, this, &ScriptNode::evaluate);
+
 	setScript(buffer);
 }
 

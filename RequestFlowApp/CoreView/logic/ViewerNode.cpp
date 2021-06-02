@@ -49,7 +49,9 @@ void logic::ViewerNode::setupUi()
             });
 
     _largePayloadInfoWidget->setVisible(false);
-	_bgColor = view::colors::green;
+
+    //_bgColor = view::colors::green;
+    _bgColor = view::colors::nodes::viewer;
 
     setMinSize(QSize(400, 300));
     setSize(300, 200);

@@ -119,6 +119,8 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 	}
 }
 
+#include <math.h>
+
 QPainterPath view::ConnectionEdge::buildPath() const
 {
 	if (_slotOrigin != nullptr)
@@ -127,7 +129,7 @@ QPainterPath view::ConnectionEdge::buildPath() const
 		auto originPosition = _destinationPos;
 
 		float dx = (originPosition.x() - destinationPosition.x());		
-		float thresh = abs(dx) * 0.5f;
+        float thresh = abs(dx) * 0.5f;
 		float cltrX = std::min(300.0f, std::max(thresh, 100.0f));
 
 		auto ctrlPointA = originPosition + QPointF(-cltrX, 0);
