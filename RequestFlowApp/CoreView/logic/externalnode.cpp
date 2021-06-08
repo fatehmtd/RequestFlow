@@ -80,11 +80,12 @@ void logic::ExternalNode::setupUi()
 
     ////////////////////////////////////////////////////////////////////////////////////////
 
-    setMinSize(QSize(220, 200));
+    setMinSize(QSize(500, 300));
     setSize(220, 200);
 
     //_bgColor = view::colors::lightGrey;
     _bgColor = view::colors::nodes::external;
+    setSvgIcon((":/nodes/external"));
     //_ui.radioButton_alwaysExecute
 }
 
@@ -96,7 +97,7 @@ model::ExternalNode *logic::ExternalNode::getExternalNode() const
 void logic::ExternalNode::setSelectedNode(model::Node *linkedNode)
 {
     _ui.lineEdit_externalGraph->setText(linkedNode->getGraph()->getName());
-    _ui.lineEdit_externalNode->setText(QString("%1[%2]").arg(linkedNode->getType()).arg(linkedNode->getName()));
+    _ui.lineEdit_externalNode->setText(QString("%1[%2]").arg(linkedNode->getType(), linkedNode->getName()));
 }
 
 void logic::ExternalNode::onDeltaDelayChanged(int value)

@@ -26,7 +26,7 @@ model::ViewerNode::ViewerNode(model::Graph* graph) : model::Node(graph, "Viewer"
 
 void model::ViewerNode::createModel()
 {
-	addInputSlot("in", model::Slot::DataType::CUSTOM);
+    addInputSlot("Input", model::Slot::DataType::CUSTOM);
 }
 
 model::InputSlot* model::ViewerNode::getInput() const

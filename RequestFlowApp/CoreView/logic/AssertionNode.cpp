@@ -26,6 +26,7 @@ void logic::AssertionNode::setupUi()
 
     //_bgColor = view::colors::vividBurgundy;
     _bgColor = view::colors::nodes::assertion;
+    setSvgIcon(":/nodes/assertion");
 
 	connect(_node, &model::Node::ready, this, [=]()
 		{

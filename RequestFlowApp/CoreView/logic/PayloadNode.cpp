@@ -129,6 +129,7 @@ void logic::PayloadNode::setupUi()
 {
     //_bgColor = view::colors::byzantium;
     _bgColor = view::colors::nodes::payload;
+    setSvgIcon((":/nodes/payload"));
 
 	auto widget = new QWidget();
 	_ui.setupUi(widget);

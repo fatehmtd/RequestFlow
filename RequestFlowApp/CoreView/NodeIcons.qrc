@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/nodes">
+        <file alias="delay">nodes/delay.svg</file>
+        <file alias="endpoint">nodes/endpoint.svg</file>
+        <file alias="payload">nodes/payload.svg</file>
+        <file alias="script">nodes/script.svg</file>
+        <file alias="viewer">nodes/viewer.svg</file>
+        <file alias="assertion">nodes/assertion.svg</file>
+        <file alias="external">nodes/external.svg</file>
+    </qresource>
+    <qresource prefix="/slots"/>
+    <qresource prefix="/slots/input">
+        <file alias="normal">slots/Frame 25.svg</file>
+        <file alias="connected">slots/Frame 26.svg</file>
+    </qresource>
+    <qresource prefix="/slots/output">
+        <file alias="normal">slots/Frame 21.svg</file>
+        <file alias="connected">slots/Frame 24.svg</file>
+        <file>slots/Frame 35.svg</file>
+    </qresource>
+</RCC>

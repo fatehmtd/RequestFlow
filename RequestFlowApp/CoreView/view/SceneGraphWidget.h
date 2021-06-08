@@ -21,11 +21,16 @@ public:
 	QPointF getCenter() const;
 	void setCenter(const QPointF& p);
 
+    void setCenterAnimated(const QPointF& p);
+    void setCenterAnimated(view::Node *node);
+
 	float getZoomLevel() const;
 	void setZoomLevel(float level);
 
 	QJSValue saveToJSValue(model::PersistenceHandler* handler) const;
 	bool loadFromJSValue(const QJSValue& v);
+
+    void findNodeDialog() const;
 
 protected:
 	void initUi();
@@ -38,8 +43,7 @@ protected:
 	virtual void mouseMiddleButtonPressed(QMouseEvent* event);
 	virtual void mouseMiddleButtonReleased(QMouseEvent* event);
 
-	void performZoom(QWheelEvent* event);
-	void setOGLBackend();
+    void performZoom(QWheelEvent* event);
 
 	void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;

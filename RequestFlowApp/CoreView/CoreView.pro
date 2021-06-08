@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 
-QT += core gui network uitools widgets qml #webchannel
+QT += core gui network widgets qml svg svgwidgets
 TEMPLATE = lib
 TARGET = CoreView
 CONFIG += c++11
@@ -37,7 +37,10 @@ HEADERS += ./coreview_global.h \
     ./logic/PayloadNode.h \
     ./logic/ScriptNode.h \
     ./logic/ViewerNode.h \
-    ./InteractionsHandler.h
+    ./InteractionsHandler.h \
+    customnodemodel.h \
+    minimap.h \
+    nodesearchdialog.h
 SOURCES += ./view/ConnectionEdge.cpp \
     $$PWD/externalnodeselectiondialog.cpp \
     $$PWD/largepayloadinfowidget.cpp \
@@ -56,7 +59,10 @@ SOURCES += ./view/ConnectionEdge.cpp \
     ./logic/PayloadNode.cpp \
     ./logic/ScriptNode.cpp \
     ./logic/ViewerNode.cpp \
-    ./InteractionsHandler.cpp
+    ./InteractionsHandler.cpp \
+    customnodemodel.cpp \
+    minimap.cpp \
+    nodesearchdialog.cpp
 FORMS += ./ui/DelayNodeUi.ui \
     $$PWD/externalnodeselectiondialog.ui \
     $$PWD/largepayloadinfowidget.ui \
@@ -65,4 +71,8 @@ FORMS += ./ui/DelayNodeUi.ui \
     ./ui/EndpointNodeUi.ui \
     ./ui/PayloadNodeUi.ui \
     ./ui/ScriptNodeUi.ui \
-    ./ui/ViewerNodeUi.ui
+    ./ui/ViewerNodeUi.ui \
+    nodesearchdialog.ui
+
+RESOURCES += \
+    NodeIcons.qrc

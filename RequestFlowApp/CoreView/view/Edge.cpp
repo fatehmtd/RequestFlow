@@ -50,10 +50,10 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     painter->setClipPath(shape());
     painter->setClipRect(option->exposedRect);
 
-	auto inPosition = _slotDestination->getBasePosition(true);
-	auto outPosition = _slotOrigin->getBasePosition(true);
+    //auto inPosition = _slotDestination->getBasePosition(true);
+    //auto outPosition = _slotOrigin->getBasePosition(true);
 
-	float dx = (outPosition.x() - inPosition.x());
+    //float dx = (outPosition.x() - inPosition.x());
 	//setZValue(dx < 20 ? 1 : -1);
 
 	auto path = buildPath();
@@ -82,8 +82,11 @@ QPainterPath view::Edge::buildPath() const
 
 QPainterPath view::Edge::buildPathCubic() const
 {
-	auto inPosition = _slotDestination->getBasePosition(true);
-	auto outPosition = _slotOrigin->getBasePosition(true);
+    //auto inPosition = _slotDestination->getBasePosition(true);
+    //auto outPosition = _slotOrigin->getBasePosition(true);
+
+    auto inPosition = _slotDestination->getCenterPosition();
+    auto outPosition = _slotOrigin->getCenterPosition();
 
 	float dx = (outPosition.x() - inPosition.x());
 
@@ -102,8 +105,11 @@ QPainterPath view::Edge::buildPathCubic() const
 
 QPainterPath view::Edge::buildPathSegmented() const
 {
-	auto destinationPos = _slotDestination->getBasePosition(true);
-	auto originPos = _slotOrigin->getBasePosition(true);
+    //auto destinationPos = _slotDestination->getBasePosition(true);
+    //auto originPos = _slotOrigin->getBasePosition(true);
+
+    auto destinationPos = _slotDestination->getCenterPosition();
+    auto originPos = _slotOrigin->getCenterPosition();
 
 	const float gap = 50;
 	float dx = (originPos.x() - destinationPos.x());

@@ -10,7 +10,7 @@ logic::DelayNode::DelayNode(model::DelayNode* modelNode) : view::Node(modelNode,
 {
 	setupUi();
 	_ui.spinBox->setValue(modelNode->getDelay());
-	connect(_ui.spinBox, SIGNAL(valueChanged(int)), modelNode, SLOT(setDelay(int)));
+	connect(_ui.spinBox, SIGNAL(valueChanged(int)), modelNode, SLOT(setDelay(int)));    
 }
 
 void logic::DelayNode::clearUI()
@@ -27,9 +27,10 @@ void logic::DelayNode::setupUi()
 
 	setResizable(false);
 
-	setMinSize(QSize(100, 50));
+    setMinSize(QSize(140, 70));
     setSize(100, 50);
 
     //_bgColor = view::colors::yellow;
     _bgColor = view::colors::nodes::delay;
+    setSvgIcon((":/nodes/delay"));
 }

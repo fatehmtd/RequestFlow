@@ -93,10 +93,7 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QTextEdit" name="textEdit_json">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
+         <widget class="QPlainTextEdit" name="plainTextEdit_json">
           <property name="placeholderText">
            <string>{...}</string>
           </property>
@@ -106,7 +103,7 @@
            <number>1</number>
           </property>
           <property name="editTriggers">
-           <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+           <set>QAbstractItemView::AllEditTriggers</set>
           </property>
           <property name="tabKeyNavigation">
            <bool>true</bool>
@@ -118,7 +115,7 @@
            <enum>QAbstractItemView::SingleSelection</enum>
           </property>
           <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectItems</enum>
+           <enum>QAbstractItemView::SelectRows</enum>
           </property>
           <property name="rootIsDecorated">
            <bool>true</bool>
@@ -184,8 +181,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme=":/ui/filter">
-           <normaloff>.</normaloff>.</iconset>
+          <iconset theme=":/ui/filter"/>
          </property>
         </widget>
        </item>

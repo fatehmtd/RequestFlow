@@ -12,6 +12,8 @@
 #include <model/Node.h>
 #include <model/Slot.h>
 
+#include "minimap.h"
+
 namespace view
 {
 	class InteractionsHandler;
@@ -51,12 +53,17 @@ namespace view
 
 		InteractionsHandler* getInteractionsHandler() const;
 
+        void deleteSelectedNodes() const;
+
+        // Visuals
+
         enum BackgroundType
         {
             SOLID,
             DOTS,
             CROSSES,
-            GRID
+            GRID,
+            QUADS
         };
 
         enum EdgeType
@@ -72,12 +79,15 @@ namespace view
         int getEdgeType() const;
 
 	protected:
-		Node* createVisualNodeForModelNode(model::Node* node);
+		Node* createGeometryForModel(model::Node* node);
 
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
-        void drawDotsBackground(QPainter* painter, const QRectF& rect);
-		void drawGridBackground(QPainter* painter, const QRectF& rect);
-		void drawCrossBackground(QPainter* painter, const QRectF& rect);
+        virtual void drawForeground(QPainter* painter, const QRectF& rect) override;
+
+        void drawDotsBackground(QPainter* painter, const QRectF& rect) const;
+        void drawGridBackground(QPainter* painter, const QRectF& rect) const;
+        void drawCrossBackground(QPainter* painter, const QRectF& rect) const;
+        void drawQuadsBackground(QPainter* painter, const QRectF& rect) const;
 
         virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
@@ -110,6 +120,8 @@ namespace view
 		ConnectionEdge* _connectionEdge = nullptr;
 
 		InteractionsHandler* _interactionsHandler = nullptr;
+
+        MiniMap *_miniMap = nullptr;
 
 		QMap<QString, std::function<void(view::Edge*)>> _edgesActions;
 		QMap<QString, std::function<void(view::Node*)>> _nodesActions;

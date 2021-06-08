@@ -36,12 +36,13 @@ void logic::ScriptNode::setupUi()
 
     //_bgColor = view::colors::charcoal;
     _bgColor = view::colors::nodes::script;
+    setSvgIcon((":/nodes/script"));
 
     connect(_node, &model::Node::ready, this, [=]()
         {
             getModelNode()->evaluate();
         }, Qt::ConnectionType::QueuedConnection);
 
-	setMinSize(QSize(300, 300));
+    setMinSize(QSize(400, 300));
 	setSize(300, 200);
 }

@@ -275,12 +275,56 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
 #include <QGraphicsView>
 #include <QPixmap>
 #include <QColor>
+#include <view/Colors.h>
 
-QIcon createColoredRect(QColor color)
+#include <QSvgRenderer>
+#include <QPainter>
+
+QIcon createColoredRect(QColor color, const QString & icon = "")
 {
-    QPixmap pixmap(16, 16);
-    pixmap.fill(color);
-    return QIcon(pixmap);
+    if(!icon.isEmpty())
+    {
+        int s = 64;
+        int padding = 4;
+        QImage outputImg(s, s, QImage::Format::Format_RGBA8888);
+        outputImg.fill(color);
+
+
+        QImage iconImage(s-2*padding, s-2*padding, QImage::Format::Format_RGBA8888);
+        iconImage.fill(color);
+        QPainter painter(&iconImage);
+
+        QSvgRenderer svgRenderer(icon);
+        svgRenderer.render(&painter);
+
+
+        const float inv255 = 1.0f/255.0f;
+        auto colorRgba = color.rgba();
+        //auto iconImage = QPixmap(icon).scaled(s-2*padding, s-2*padding, Qt::IgnoreAspectRatio, Qt::TransformationMode::SmoothTransformation).toImage();
+        //auto iconImage = srcIcon;
+        for(int j=0;j<iconImage.height();j++)
+        {
+            for(int i=0;i<iconImage.width();i++)
+            {
+                auto src = iconImage.pixel(i, j);
+
+                const float af = (float)qAlpha(src) * inv255;
+                //if(af <= 0.3f) continue;
+                const float r = qRed(src) * af + (1.0f-af)*qRed(colorRgba);
+                const float g = qGreen(src) * af + (1.0f-af)*qGreen(colorRgba);
+                const float b = qBlue(src) * af + (1.0f-af)*qBlue(colorRgba);
+
+                outputImg.setPixel(padding + i, padding + j, qRgba((int)r, (int)g, (int)b, qAlpha(src)));
+            }
+        }
+        return QIcon(QPixmap::fromImage(outputImg));
+    }
+    else
+    {
+        QPixmap pixmap(16, 16);
+        pixmap.fill(color);
+        return QIcon(pixmap);
+    }
 }
 
 void view::InteractionsHandler::registerCommonActions()
@@ -321,43 +365,43 @@ void view::InteractionsHandler::registerCommonActions()
 		{
 			auto node = createPayloadNode();
 			node->setPos(p);
-        }, createColoredRect(view::colors::byzantium), 1);
+        }, createColoredRect(view::colors::nodes::payload, ":/nodes/payload"), 1);
 
     registerEmptySpaceAction("New Endpoint", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createEndpointNode();
 			node->setPos(p);
-        }, createColoredRect(view::colors::blue), 1);
+        }, createColoredRect(view::colors::nodes::endpoint, ":/nodes/endpoint"), 1);
 
     registerEmptySpaceAction("New Viewer", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createViewerNode();
 			node->setPos(p);
-        }, createColoredRect(view::colors::green), 1);
+        }, createColoredRect(view::colors::nodes::viewer, ":/nodes/viewer"), 1);
 
     registerEmptySpaceAction("New Delay", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createDelayNode();
 			node->setPos(p);
-        }, createColoredRect(view::colors::yellow), 1);
+        }, createColoredRect(view::colors::nodes::delay, ":/nodes/delay"), 1);
 
     registerEmptySpaceAction("New Script", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createScriptNode();
 			node->setPos(p);
-        }, createColoredRect(view::colors::charcoal), 1);
+        }, createColoredRect(view::colors::nodes::script, ":/nodes/script"), 1);
 
     registerEmptySpaceAction("New Assertion", [=](const QPointF& p, QAction* action)
 		{
 			auto node = createAssertionNode();
 			node->setPos(p);
-        }, createColoredRect(view::colors::vividBurgundy), 1);
+        }, createColoredRect(view::colors::nodes::assertion, ":/nodes/assertion"), 1);
 
-    registerEmptySpaceAction("New Link", [=](const QPointF& p, QAction* action)
+    registerEmptySpaceAction("New External", [=](const QPointF& p, QAction* action)
         {
             auto node = createExternalNode();
             node->setPos(p);
-        }, createColoredRect(view::colors::lightGrey), 1);
+        }, createColoredRect(view::colors::nodes::external, ":/nodes/external"), 1);
 
     registerNodeAction("Clone Node", [=](const QPointF& p, QAction* action)
 		{

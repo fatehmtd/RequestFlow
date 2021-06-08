@@ -18,7 +18,8 @@ void view::ConnectionEdge::setOrigin(Slot* slot)
 {
 	_slotOrigin = slot;
 	if (slot != nullptr)
-		setOriginP(slot->getBasePosition(true));
+        //setOriginP(slot->getBasePosition(true));
+        setOriginP(slot->getCenterPosition());
 }
 
 void view::ConnectionEdge::setOriginP(const QPointF& position)
@@ -54,7 +55,8 @@ void view::ConnectionEdge::paint(QPainter* painter, const QStyleOptionGraphicsIt
 	if (_slotOrigin != nullptr)
 	{
 		auto destinationPosition = _destinationPos;
-		auto originPosition = _slotOrigin->getBasePosition(true);
+        //auto originPosition = _slotOrigin->getBasePosition(true);
+        auto originPosition = _slotOrigin->getCenterPosition();
 
 		QColor color = _noCandidateColor;
 		Qt::PenStyle style = Qt::PenStyle::DashDotDotLine;
@@ -125,7 +127,7 @@ QPainterPath view::ConnectionEdge::buildPath() const
 {
 	if (_slotOrigin != nullptr)
 	{
-		auto destinationPosition = _slotOrigin->getBasePosition(true);
+        auto destinationPosition = _slotOrigin->getCenterPosition();
 		auto originPosition = _destinationPos;
 
 		float dx = (originPosition.x() - destinationPosition.x());		

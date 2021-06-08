@@ -100,8 +100,7 @@ void MainWindow::setupEnvironmentsWidget()
 
 void MainWindow::setupSceneGraph()
 {
-	_ui.mdiArea->setTabsClosable(false);
-    connect(_ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::onSubWindowActivated);
+    _ui.mdiArea->setTabsClosable(false);
 
 	connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node)
 		{
@@ -116,20 +115,7 @@ void MainWindow::setupSceneGraph()
 
 						_ui.mdiArea->setActiveSubWindow(subWindow);
 
-						{
-							auto propAnimation = new QPropertyAnimation();
-							propAnimation->setTargetObject(sceneGraphWidget);
-							propAnimation->setDuration(200);
-							propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::InOutCubic));
-							propAnimation->setStartValue(sceneGraphWidget->getCenter());
-							propAnimation->setEndValue(nodeGr->pos() + QPointF(nodeGr->width() * 0.5f, nodeGr->height() * 0.5f));
-							propAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-							sceneGraphWidget->setZoomLevel(2);
-							connect(propAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& v)
-								{
-									sceneGraphWidget->centerOn(v.toPointF());
-								});
-						}
+                        sceneGraphWidget->setCenterAnimated(nodeGr);
 					}
 				}
             }
@@ -223,6 +209,9 @@ void MainWindow::setProject(model::Project* project)
     _saveProjectAction->setEnabled(projectAvailable);
     _saveProjectAsAction->setEnabled(projectAvailable);
     _closeProjectAction->setEnabled(projectAvailable);
+
+    // Edit
+    _editMenu->setEnabled(projectAvailable);
 
     // View
     _viewMenu->setEnabled(projectAvailable);
@@ -395,28 +384,6 @@ void MainWindow::cloneActiveScenario()
     }
 }
 
-void MainWindow::keyPressEvent(QKeyEvent* event)
-{
-	if (event->modifiers() & Qt::Modifier::SHIFT)
-	{
-		auto now = std::chrono::steady_clock::now();
-		if (!_dblClinkInitiated)
-		{
-			_dblClinkInitiated = true;
-		}
-		else
-		{
-			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - _timeStamp);
-			if (duration.count() < 300) // threshold
-			{
-				showNodeFilteringWidget();
-				_dblClinkInitiated = false;
-			}
-		}
-		_timeStamp = now;
-	}
-	event->accept();
-}
 
 QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
 {
@@ -455,18 +422,19 @@ bool MainWindow::loadFromJSValue(const QJSValue& v)
 	return true;
 }
 
-void MainWindow::showNodeFilteringWidget()
-{
-	//QMessageBox::information(this, "test", "test");
-}
-
 void MainWindow::openLastProject()
 {
 	auto recentProjects = _settingsManager->enumRecentProjects();
 	if (!recentProjects.isEmpty())
 	{
-		openProject(recentProjects.first());
-	}
+        openProject(recentProjects.first());
+    }
+}
+
+SceneGraphWidget *MainWindow::getActiveSceneGraphWidget() const
+{
+    if(_ui.mdiArea->activeSubWindow() == nullptr) return nullptr;
+    return dynamic_cast<SceneGraphWidget*>(_ui.mdiArea->activeSubWindow()->widget());
 }
 
 void MainWindow::onOpenProject()
@@ -633,10 +601,6 @@ void MainWindow::onImportSwagger()
 	}
 }
 
-void MainWindow::onSubWindowActivated(QMdiSubWindow* subWindow)
-{
-}
-
 void MainWindow::onNewProject()
 {
     if(onCloseProject() != -1)
@@ -669,25 +633,43 @@ void MainWindow::setupMenuBar()
     // File menu
     {
         _fileMenu = menuBar()->addMenu("File");
-        _newProjectAction = _fileMenu->addAction(QIcon(":/ui/new_file"), "New...", [=](){onNewProject();}, QKeySequence("Ctrl+N"));
-        _openProjectAction = _fileMenu->addAction(QIcon(":/ui/open_file"), "Open...", [=](){onOpenProject();}, QKeySequence("Ctrl+O"));
+        _newProjectAction = _fileMenu->addAction(QIcon(":/ui/new_file"), "New...", [=](){onNewProject();}, QKeySequence::New);
+        _openProjectAction = _fileMenu->addAction(QIcon(":/ui/open_file"), "Open...", [=](){onOpenProject();}, QKeySequence::Open);
         _openProjectAction->setMenu(new QMenu);
 
         _recentProjectsMenu = _openProjectAction->menu();
         updateRecentProjectsList();
 
-        _saveProjectAction = _fileMenu->addAction(QIcon(":/ui/save_file"), "Save", [=](){onSaveProject();}, QKeySequence("Ctrl+S"));
-        _saveProjectAsAction =  _fileMenu->addAction(QIcon(), "Save As...", [=](){onSaveProjectAs();}, QKeySequence("Ctrl+Shift+S"));
+        _saveProjectAction = _fileMenu->addAction(QIcon(":/ui/save_file"), "Save", [=](){onSaveProject();}, QKeySequence::Save);
+        _saveProjectAsAction =  _fileMenu->addAction(QIcon(), "Save As...", [=](){onSaveProjectAs();}, QKeySequence::SaveAs);
         _fileMenu->addSeparator();
         _settingsAction = _fileMenu->addAction(QIcon(), "Settings...", [=](){});
         _settingsAction->setEnabled(false); // TODO: implement a settings dialog
         _fileMenu->addSeparator();
         _closeProjectAction = _fileMenu->addAction(QIcon(":/ui/close_file"), "Close Project", [=](){ onCloseProject(); });
         _fileMenu->addSeparator();
-        _quitProjectAction = _fileMenu->addAction(QIcon(":/ui/close"), "Quit", [=](){close();}, QKeySequence("Ctrl+Q"));
+        _quitProjectAction = _fileMenu->addAction(QIcon(":/ui/close"), "Quit", [=](){close();}, QKeySequence::Quit);
 
         _saveProjectAction->setEnabled(false);
         _saveProjectAsAction->setEnabled(false);
+    }
+
+    // Edit menu
+    {
+        _editMenu = menuBar()->addMenu("Edit");
+        _undoAction = _editMenu->addAction(QIcon(), "Undo", [](){}, QKeySequence::Undo);
+        _redoAction = _editMenu->addAction(QIcon(), "Redo", [](){}, QKeySequence::Redo);
+
+        _undoAction->setEnabled(false);
+        _redoAction->setEnabled(false);
+
+        _editMenu->addSeparator();
+        _findNodeAction = _editMenu->addAction(QIcon(), "Find Node...", [=]()
+                                               {
+                auto sgw = getActiveSceneGraphWidget();
+                if(sgw != nullptr)
+                    sgw->findNodeDialog();
+            }, QKeySequence::Find);
     }
 
     // Scenario menu

@@ -137,6 +137,7 @@ void logic::EndpointNode::initUI()
 
     //_bgColor = view::colors::blue;
     _bgColor = view::colors::nodes::endpoint;
+    setSvgIcon((":/nodes/endpoint"));
 	connect(_node, &model::Node::ready, this, [=]()
 		{
 			auto node = dynamic_cast<model::EndpointNode*>(getModelNode());
@@ -150,7 +151,7 @@ void logic::EndpointNode::initUI()
 			node->sendPayload();
 		});
 
-    setMinSize(QSize(500, 200));
+    setMinSize(QSize(500, 375));
 	setSize(300, 100);
 }
 

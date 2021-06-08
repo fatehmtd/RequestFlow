@@ -1,7 +1,6 @@
 #include "SceneGraphWidget.h"
 #include <QVBoxLayout>
 #include <QDebug>
-#include <QOpenGLWidget>
 #include <QScrollBar>
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
@@ -12,6 +11,7 @@
 
 #include <model/Graph.h>
 #include <model/Environment.h>
+#include <QAction>
 
 SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph) : QGraphicsView(parent), _sceneGraph(sceneGraph)
 {
@@ -42,10 +42,10 @@ void SceneGraphWidget::initUi()
     //setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
     setRenderHint(QPainter::RenderHint::Antialiasing, true);
-    setRenderHint(QPainter::RenderHint::LosslessImageRendering, false);
-    setRenderHint(QPainter::RenderHint::TextAntialiasing, false);
+    setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
+    setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
     setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
-    setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, false);
+    setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, true);
 
 	setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 	setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
@@ -56,7 +56,7 @@ void SceneGraphWidget::initUi()
     setOptimizationFlags(QGraphicsView::OptimizationFlag::DontClipPainter);
     setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);*/
 
-	_zoomInFactor = 1.5f;
+    _zoomInFactor = 1.5f;
 	_zoomStep = 1;
 
 	_minZoomLevel = 1;
@@ -121,8 +121,11 @@ void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
 		{
 			auto node = dynamic_cast<QGraphicsProxyWidget*>(item);
 			if (node == nullptr) continue;
-			node->widget()->repaint();
+            node->widget()->repaint();
+            node->update();
 		}
+
+        update();
 	}
 	QGraphicsView::mouseMoveEvent(event);
 }
@@ -190,24 +193,6 @@ void SceneGraphWidget::performZoom(QWheelEvent* event)
 	}
 }
 
-void SceneGraphWidget::setOGLBackend()
-{
-	QSurfaceFormat surfaceFormat;
-    surfaceFormat.setSamples(8);
-	//surfaceFormat.setVersion(4, 2);
-	//surfaceFormat.setProfile(QSurfaceFormat::CompatibilityProfile);
-    surfaceFormat.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
-    surfaceFormat.setSwapInterval(1);
-
-	//QSurfaceFormat::setDefaultFormat(surfaceFormat);
-    surfaceFormat.setSwapBehavior(QSurfaceFormat::SwapBehavior::TripleBuffer);
-
-	auto glWidget = new QOpenGLWidget();
-    glWidget->setFormat(surfaceFormat);
-	setViewport(glWidget);
-	//*/
-}
-
 #include <QMimeData>
 
 void SceneGraphWidget::dragEnterEvent(QDragEnterEvent* event)
@@ -253,7 +238,32 @@ QPointF SceneGraphWidget::getCenter() const
 
 void SceneGraphWidget::setCenter(const QPointF& p)
 {
-	centerOn(p);
+    centerOn(p);
+}
+
+#include <QPropertyAnimation>
+
+void SceneGraphWidget::setCenterAnimated(const QPointF &p)
+{
+    auto propAnimation = new QPropertyAnimation();
+    propAnimation->setTargetObject(this);
+    propAnimation->setDuration(200);
+    propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::InOutCubic));
+    propAnimation->setStartValue(getCenter());
+    propAnimation->setEndValue(p);
+    propAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
+    setZoomLevel(2);
+
+    connect(propAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& v)
+            {
+                centerOn(v.toPointF());
+            });
+}
+
+void SceneGraphWidget::setCenterAnimated(view::Node *nodeGr)
+{
+    setCenterAnimated(nodeGr->pos() + QPointF(nodeGr->width() * 0.5f, nodeGr->height() * 0.5f));
 }
 
 float SceneGraphWidget::getZoomLevel() const
@@ -330,6 +340,14 @@ bool SceneGraphWidget::loadFromJSValue(const QJSValue& v)
 		}
 	}
 
-	return true;
+    return true;
+}
+
+#include "../nodesearchdialog.h"
+
+void SceneGraphWidget::findNodeDialog() const
+{
+    auto dlg = new view::NodeSearchDialog(const_cast<SceneGraphWidget*>(this));
+    dlg->exec();
 }
 
