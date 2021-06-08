@@ -52,6 +52,7 @@ void logic::ViewerNode::setupUi()
 
     //_bgColor = view::colors::green;
     _bgColor = view::colors::nodes::viewer;
+    setSvgIcon((":/nodes/viewer"));
 
     setMinSize(QSize(400, 300));
     setSize(300, 200);

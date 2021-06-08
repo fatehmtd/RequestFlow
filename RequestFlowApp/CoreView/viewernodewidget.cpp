@@ -18,7 +18,7 @@ logic::ViewerNodeWidget::ViewerNodeWidget(logic::ViewerNode* node, QWidget* pare
 void logic::ViewerNodeWidget::clear()
 {
     _ui.plainTextEdit_raw->clear();
-    _ui.textEdit_json->clear();
+    _ui.plainTextEdit_json->clear();
     _ui.treeView->reset();
     //_ui.treeWidget->clear();
     //_ui.treeView->clear();
@@ -292,7 +292,7 @@ int logic::CustomModel::rowCount(const QModelIndex& parent) const
 
 int logic::CustomModel::columnCount(const QModelIndex& parent) const
 {
-    return 2;
+    return 1;
 }
 
 QVariant logic::CustomModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -319,9 +319,9 @@ QVariant logic::CustomModel::data(const QModelIndex& index, int role) const
         switch (index.column())
         {
         case 0:
-            return item->getPath();
-        case 1:
-            return item->getValue();
+            return QString("%1 : %2").arg(item->getPath()).arg(item->getValue());
+        //case 1:
+            //return item->getValue();
         default:
             return QVariant();
         }
@@ -347,8 +347,6 @@ void logic::ViewerNodeWidget::setTreeModel(const QVariant& v)
     if (model != nullptr)
         delete model;
     model = new CustomModel(rootItem, this);
-    model->setHeaderData(0, Qt::Orientation::Horizontal, "Key");
-    model->setHeaderData(1, Qt::Orientation::Horizontal, "Value");
     _ui.treeView->setModel(model);
     _ui.treeView->update();
     _ui.treeView->expand(model->index(0, 0));
@@ -369,9 +367,9 @@ void logic::ViewerNodeWidget::filter(const QString& filter)
     auto txt = engine.fromScriptValue<QVariant>(engine.evaluate("JSON.stringify(_result);"));
 
     QJsonDocument document = QJsonDocument::fromJson(txt.toString().toUtf8());
-    //_ui.textEdit_json->setPlainText(document.toJson());
-    //_ui.textEdit_json->clear();
-    customDivideText(document.toJson(), _ui.textEdit_json->textCursor(), 10000);
+    //_ui.plainTextEdit_json->setPlainText(document.toJson());
+    //_ui.plainTextEdit_json->clear();
+    customDivideText(document.toJson(), _ui.plainTextEdit_json->textCursor(), 10000);
 
     auto value = engine.fromScriptValue<QVariant>(jsValue);
     setTreeModel(value);

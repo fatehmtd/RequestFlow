@@ -28,6 +28,8 @@ model::Node::Node(Graph* parent, const QString& typeName) : NotifiableEntity(par
 	connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
     //connect(this, &Node::failed, parent, &Graph::onNodeFailed, Qt::ConnectionType::QueuedConnection);
 	//connect(this, &Node::exceptionRaised, parent, &Graph::onNodeException, Qt::ConnectionType::QueuedConnection);
+
+    setName("Untitled");
 }
 
 model::InputSlot* model::Node::getDestinationSlot(const QString& name) const

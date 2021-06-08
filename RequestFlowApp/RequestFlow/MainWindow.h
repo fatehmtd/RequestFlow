@@ -35,7 +35,6 @@ private slots:
     void onSaveProject();
     void onSaveProjectAs();
     void onImportSwagger();
-    void onSubWindowActivated(QMdiSubWindow* subWindow);
 
 private:
     void closeEvent(QCloseEvent* event) override;
@@ -62,16 +61,16 @@ private:
     void deleteActiveScenario();
     void cloneActiveScenario();
 
-    void keyPressEvent(QKeyEvent* event) override;
-
     void updateRecentProjectsList();
 
     QJSValue savetoJSValue(model::PersistenceHandler* handler) const;
     bool loadFromJSValue(const QJSValue& v);
 
-    void showNodeFilteringWidget();
-
     void openLastProject();
+
+private:
+    SceneGraphWidget *getActiveSceneGraphWidget() const;
+
 private:
     Ui::MainWindowClass _ui;
 
@@ -89,6 +88,12 @@ private:
     QAction* _quitProjectAction = nullptr;
     QAction* _settingsAction = nullptr;
     QMenu* _recentProjectsMenu = nullptr;
+
+    // Edit
+    QMenu *_editMenu = nullptr;
+    QAction *_undoAction = nullptr;
+    QAction *_redoAction = nullptr;
+    QAction *_findNodeAction = nullptr;
 
     // Scenarios
     QMenu* _scenariosMenu = nullptr;
@@ -109,7 +114,6 @@ private:
     // About
     QMenu* _helpMenu = nullptr;
 
-    //*/
     //////////////////////////////////////////////
 
     bool _dblClinkInitiated = false;

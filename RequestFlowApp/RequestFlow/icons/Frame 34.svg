@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   fill="none"
+   version="1.1"
+   id="svg30"
+   sodipodi:docname="Frame 34.svg"
+   inkscape:export-filename="D:\developpement\libs\BleachUICpp\RequestFlowApp\RequestFlow\icons\network.png"
+   inkscape:export-xdpi="86"
+   inkscape:export-ydpi="86"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs34" />
+  <sodipodi:namedview
+     id="namedview32"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     showgrid="false"
+     inkscape:zoom="0.82226563"
+     inkscape:cx="178.16627"
+     inkscape:cy="315.59145"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg30" />
+  <path
+     d="M 305.47585,253.5677 H 432.65084"
+     stroke="#ffffff"
+     stroke-width="17.2397"
+     id="path2" />
+  <path
+     d="M 73.186853,253.5677 H 199.06414"
+     stroke="#ffffff"
+     stroke-width="17.2397"
+     id="path4" />
+  <path
+     d="M 282.11718,45.935076 H 440.43705"
+     stroke="#ffffff"
+     stroke-width="12.3141"
+     id="path6" />
+  <path
+     d="M 253.5677,73.186853 V 201.65955"
+     stroke="#ffffff"
+     stroke-width="17.2397"
+     id="path8" />
+  <path
+     d="M 253.5677,305.47585 V 430.05542"
+     stroke="#ffffff"
+     stroke-width="17.2397"
+     id="path10" />
+  <path
+     d="m 222.4228,45.935076 h -23.35866 c -86.00403,0 -155.724471,69.720434 -155.724471,155.724474 v 27.25177"
+     stroke="#ffffff"
+     stroke-width="17.2397"
+     stroke-dasharray="20, 20"
+     id="path12" />
+  <path
+     d="M 218.5297,288.6057 106.92716,398.91052"
+     stroke="#ffffff"
+     stroke-width="17.2397"
+     stroke-dasharray="20, 20"
+     id="path14" />
+  <circle
+     cx="453.29532"
+     cy="52.542366"
+     fill="#a292f8"
+     id="circle16"
+     r="47.399841"
+     style="stroke-width:2.15455" />
+  <circle
+     cx="451.4711"
+     cy="253.56769"
+     fill="#79b5f9"
+     id="circle18"
+     r="63.417259"
+     style="stroke-width:1.9818" />
+  <circle
+     cx="253.56769"
+     cy="55.664284"
+     fill="#4da679"
+     id="circle20"
+     r="53.688042"
+     style="stroke-width:1.67776" />
+  <circle
+     cx="253.5677"
+     cy="249.91924"
+     fill="#e7d03f"
+     id="circle22"
+     r="81.585114"
+     style="stroke-width:1.7736" />
+  <circle
+     cx="259.04034"
+     cy="443.56613"
+     fill="#287b9e"
+     id="circle24"
+     r="70.106094"
+     style="stroke-width:2.19083" />
+  <circle
+     cx="66.609657"
+     cy="251.13536"
+     fill="#fb434f"
+     id="circle26"
+     r="62.201107"
+     style="stroke-width:1.94379" />
+  <circle
+     cx="87.461601"
+     cy="405.07996"
+     fill="#e3a343"
+     id="circle28"
+     r="63.417259"
+     style="stroke-width:1.9818" />
+</svg>

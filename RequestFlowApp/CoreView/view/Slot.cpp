@@ -9,7 +9,8 @@
 #include "Colors.h"
 #include <model/Slot.h>
 
-view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsObject(parent), _slot(slot)
+
+view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsSvgItem(parent), _slot(slot)
 {
 	_size = 20;
 	setFlag(GraphicsItemFlag::ItemIsSelectable);
@@ -18,11 +19,23 @@ view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsObject(parent), _sl
 	setAcceptHoverEvents(true);
 	QFont font;
 	font.setPointSize(12);
-	//font.setBold(true);
+    //font.setBold(true);
 	_title = new QGraphicsTextItem(this);
 	_title->setFont(font);
-	_title->setPlainText(slot->getName());
-	_title->setDefaultTextColor(Qt::white);
+    _title->setPlainText(slot->getName());
+    //_title->setDefaultTextColor(QColor(128, 128, 128));
+    _title->setDefaultTextColor(Qt::white);
+    //setZValue(-100);
+
+    //_icon = new QGraphicsSvgItem(slot->getDirection() == model::Slot::INPUT ? ":/slots/input/normal" : ":/slots/output/normal", this);
+    //_icon->setFlag(GraphicsItemFlag::ItemIsSelectable);
+    //_icon->setAcceptTouchEvents(false);
+    //_icon->setAcceptHoverEvents(false);
+    //_icon->setVisible(false);
+    //_icon->setAcceptedMouseButtons(false);
+
+    auto renderer = new QSvgRenderer(QString(slot->getDirection() == model::Slot::INPUT ? ":/slots/input/normal" : ":/slots/output/normal"), parent);
+    setSharedRenderer(renderer);
 }
 
 view::Slot::~Slot() 
@@ -33,52 +46,61 @@ bool view::Slot::isInput() const
 {
 	return _slot->getDirection() == model::Slot::Direction::INPUT;
 }
-
+/*
 QRectF view::Slot::boundingRect() const
 {
-	const float halfSize = (float)_size * 0.5f;
+    return QGraphicsSvgItem::boundingRect();
+    const float halfSize = (float)_size * 0.85f;
 	auto basePos = getBasePosition();
 	return QRectF(basePos.x() - halfSize, basePos.y() - halfSize, _size, _size);
 }
-
+*/
 #include <QStyleOptionGraphicsItem>
 
 void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-	QPainterPath path, outline;
-	QPen pen(QColor("#4D4B4D"));
-	QBrush brush(isInput() ? colors::green : colors::red);
-	//QBrush brush(QColor("#4D4B4D"));
+    float textSpace = 14;
 
-	path.setFillRule(Qt::FillRule::WindingFill);
-	painter->setPen(pen);
-	painter->setBrush(brush);
+    auto basePos = getBasePosition();
 
-	const float halfSize = _size * 0.5f;
-	float textSpace = 18;
+    auto finalPosition = basePos;
 
-	auto basePos = getBasePosition();
+    finalPosition += QPointF(-10, -10);
 
-	auto textRect = _title->boundingRect();
+    auto textRect = _title->boundingRect();
 
-	float outlineSize = _size * 1.1f;
-	float outlineHalfSize = outlineSize * 0.5f;
+    float textX = isInput() ? (boundingRect().width() + textSpace) : (-(textSpace + textRect.width()));
+    _title->setPos(textX, -8);
 
-	float textX = isInput() ? textSpace : (basePos.x() - (textRect.width() + textSpace));
-	_title->setPos(textX, basePos.y() - textRect.height() * 0.5f);
+    setPos(finalPosition);
+    QGraphicsSvgItem::paint(painter, option, widget);
+/*
+    const float halfSize = _size * 0.5f;
+    float outlineSize = _size * 1.1f;
+    //float outlineHalfSize = outlineSize * 0.5f;
+    QPainterPath path, outline;
+    QPen pen(QColor("#4D4B4D"));
+    QBrush brush(isInput() ? colors::green : colors::red);
+    //QBrush brush(QColor("#4D4B4D"));
 
-	path.addEllipse(basePos, halfSize, halfSize);
-	outline.addEllipse(basePos, outlineSize * 0.5f, outlineSize * 0.5f);
+    path.setFillRule(Qt::FillRule::WindingFill);
+    painter->setPen(pen);
+    painter->setBrush(brush);
+    path.addEllipse(basePos, halfSize, halfSize);
+    outline.addEllipse(basePos, outlineSize * 0.5f, outlineSize * 0.5f);
 
-	painter->drawPath(path.simplified());
+    painter->drawPath(path.simplified());
 
-	if (_mouseHovering)
-	{
-		painter->setBrush(Qt::BrushStyle::NoBrush);
-		QPen pen(brush.color(), 5.0f);
-		painter->setPen(pen);
-		painter->drawPath(outline.simplified());
-	}
+    if (_mouseHovering)
+    {
+        painter->setBrush(Qt::BrushStyle::NoBrush);
+        QPen pen(brush.color(), 5.0f);
+        painter->setPen(pen);
+        painter->drawPath(outline.simplified());
+    }
+
+    _icon->paint(painter, option, widget);
+    //*/
 }
 
 void view::Slot::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
@@ -102,15 +124,20 @@ void view::Slot::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 QPointF view::Slot::getBasePosition(bool global) const
 {
 	auto node = dynamic_cast<Node*>(parentItem());
-	float horizontalSpacing = 5.0f;
+    float horizontalSpacing = 10.0f;
 	const int index = node->getSlotIndex(this);
-	const float x = isInput() ? (0 - horizontalSpacing) : (node->boundingRect().width() + horizontalSpacing);
-	const float y = node->getHeaderHeight() * 1.0f + index * node->getSlotHeight();
+    const float x = isInput() ? (0 - horizontalSpacing) : (node->width() + horizontalSpacing);
+    const float y = node->getHeaderHeight() * 1.0f + 5 + index * node->getSlotHeight();
 	//_title->boundingRect().height()
 
 	auto p = QPointF(x, y);
 
-	return global ? (p + scenePos()) : p;
+    return global ? (p + scenePos()) : p;
+}
+
+QPointF view::Slot::getCenterPosition() const
+{
+    return scenePos() + QPointF(10, 10);
 }
 
 bool view::Slot::acceptConnection(Slot* origin) const
@@ -131,6 +158,6 @@ view::Node* view::Slot::getNode() const
 void view::Slot::setName(const QString& name)
 {
 	_title->setPlainText(name);
-	getModelSlot()->setName(name);
-	update();
+    getModelSlot()->setName(name);
+    update();
 }

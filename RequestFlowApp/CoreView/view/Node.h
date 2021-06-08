@@ -1,10 +1,13 @@
 #pragma once
 #include "coreview_global.h"
 
+#include <QGraphicsSvgItem>
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsObject>
 #include <QGraphicsWidget>
+#include <QGraphicsPixmapItem>
+#include <QIcon>
 #include <QPixmap>
 #include <QObject>
 #include <QJSValue>
@@ -15,7 +18,7 @@
 
 #include "SceneGraph.h"
 
-namespace model
+namespace modelr
 {
 	class PersistenceHandler;
 }
@@ -62,7 +65,14 @@ namespace view
 		float getContentHeight() const;
 
 		void setMinSize(QSize size);
+        void setMinSize(int w, int h);
 		QSize getMinSize() const;
+
+        void setMaxSize(QSize size);
+        void setMaxSize(int w, int h);
+        QSize getMaxSize() const;
+
+        void setSvgIcon(QString path);
 
 		virtual void clearUI();
 
@@ -111,6 +121,7 @@ namespace view
 	protected:
 		model::Node* _node = nullptr;
 		QGraphicsTextItem* _title = nullptr;
+        QGraphicsSvgItem* _icon = nullptr;
 		ContentWidget* _contentWidget = nullptr;
 		QSize _size;
 		int _padding;
@@ -127,6 +138,7 @@ namespace view
 		QPointF _topLeftCorner, _bottomRightCorner;
 		bool _firstTimeResize = true;
 		QSize _minSize;
+        QSize _maxSize;
 		bool _isResizable = true;
 		QPixmap _pixmap;
 		bool _painted = false;
