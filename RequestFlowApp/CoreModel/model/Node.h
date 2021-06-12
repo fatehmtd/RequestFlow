@@ -22,16 +22,15 @@ namespace model
 		InputSlot* getDestinationSlotByIdentifier(const QString& identifier) const;
 		OutputSlot* getOriginSlotByIdentifier(const QString& identifier) const;
 
-
         // Slot management
 		InputSlot* addInputSlot(QString name, int dataType);
 		OutputSlot* addOutputSlot(QString name, int dataType);
 
-		QMap<QString, InputSlot*> getInputSlotsMap() const;
-		QMap<QString, OutputSlot*> getOutputSlotsMap() const;
+        virtual QMap<QString, InputSlot*> getInputSlotsMap() const;
+        virtual QMap<QString, OutputSlot*> getOutputSlotsMap() const;
 
-		QList<InputSlot*> getInputSlots() const;
-        QList<OutputSlot*> getOutputSlots() const;
+        virtual QList<InputSlot*> getInputSlots() const;
+        virtual QList<OutputSlot*> getOutputSlots() const;
 
         // Misc
 		Graph* getGraph() const;

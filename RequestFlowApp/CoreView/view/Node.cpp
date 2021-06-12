@@ -12,6 +12,9 @@
 view::Node::Node(model::Node *modelNode, QString nodeType) : _node(modelNode), _nodeType(nodeType)
 {
     _bgColor = colors::light::purple;
+
+    setMaxSize(1000, 1000);
+
     setupUi();
     setupUIForModel();
     setupContentWidget();
@@ -194,8 +197,8 @@ void view::Node::setSize(int w, int h)
         float tempW = std::max(w, minSize.width());
 
         // manual fixed min width, height
-        tempH = std::max(tempH, (float) _minSize.height());
-        tempW = std::max(tempW, (float) _minSize.width());
+        tempH = std::min((float)_maxSize.height(), std::max(tempH, (float) _minSize.height()));
+        tempW = std::min((float)_maxSize.width(), std::max(tempW, (float) _minSize.width()));
 
         int top = headerSizeY - spacing;
         int bottom = tempH - (top + spacing) - _edgeSize;
@@ -205,8 +208,8 @@ void view::Node::setSize(int w, int h)
 
         _contentWidget->setGeometry(_edgeSize, top, tempW - 2 * _edgeSize, bottom);
     } else {
-        h = std::max((int) headerSizeY, h);
-        w = std::max(_minSize.width(), w);
+        h = std::min(_maxSize.height(), std::max((int) headerSizeY, h));
+        w = std::min(_maxSize.width(), std::max(_minSize.width(), w));
     }
 
     _firstTimeResize = true;
@@ -573,10 +576,13 @@ void view::Node::doResize(QGraphicsSceneMouseEvent *event)
 
     setSize(w, h);
 
-    //update();
-    for (auto child : childItems()) {
+    for (auto child : childItems())
+    {
         child->update();
     }
+    update();
+
+    scene()->update();
 }
 
 int view::Node::computeGripCorner(const QPointF &p)

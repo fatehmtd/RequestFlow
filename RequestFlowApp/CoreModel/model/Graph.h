@@ -32,6 +32,9 @@ namespace model
 		QList<Node*> getNodes() const;
 		QList<Edge*> getEdges() const;
 
+        QList<Node*> getNodeParents(Node* node) const;
+        bool checkIsParent(Node* child, Node* parent) const;
+
 		Edge* findEdge(const InputSlot* destination, const OutputSlot* origin) const;
 		QList<Edge*> findEdges(const Slot* slot) const;
 		QList<Edge*> findEdges(const Node* node) const;

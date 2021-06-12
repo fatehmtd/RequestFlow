@@ -82,6 +82,7 @@ private:
     QMenu* _fileMenu = nullptr;
     QAction* _newProjectAction = nullptr;
     QAction* _openProjectAction= nullptr;
+    QAction* _recentProjectsAction= nullptr;
     QAction* _saveProjectAction= nullptr;
     QAction* _saveProjectAsAction= nullptr;
     QAction* _closeProjectAction = nullptr;

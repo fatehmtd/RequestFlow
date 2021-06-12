@@ -4,7 +4,7 @@
 #include <QAbstractItemModel>
 #include <QFile>
 #include <QTextStream>
-#include <model/../customjsengine.h>
+#include <model/../CustomJSEngine.h>
 #include <QJsonDocument>
 #include "logic/ViewerNode.h"
 
@@ -67,7 +67,6 @@ void logic::ViewerNodeWidget::setupUi()
                 }
             });
 }
-
 
 namespace logic
 {
@@ -321,7 +320,7 @@ QVariant logic::CustomModel::data(const QModelIndex& index, int role) const
         case 0:
             return QString("%1 : %2").arg(item->getPath()).arg(item->getValue());
         //case 1:
-            //return item->getValue();
+        //return item->getValue();
         default:
             return QVariant();
         }

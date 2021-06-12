@@ -2,7 +2,7 @@
 #define EXTERNALNODE_H
 
 #include "../view/Node.h"
-#include <model/externalnode.h>
+#include <model/ExternalNode.h>
 #include "ui_ExternalNodeUi.h"
 
 

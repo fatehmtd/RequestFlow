@@ -44,7 +44,32 @@ QList<model::Node*> model::Graph::getNodes() const
 
 QList<model::Edge*> model::Graph::getEdges() const
 {
-	return findChildren<Edge*>();
+    return findChildren<Edge*>();
+}
+
+QList<model::Node *> model::Graph::getNodeParents(Node *node) const
+{
+    QList<Node*> parentsNodes;
+    for(auto slot : node->getInputSlots())
+    {
+        for(auto edge : findEdges(slot))
+        {
+            auto parentNode = edge->getOriginSlot()->getNode();
+            parentsNodes << parentNode;
+        }
+    }
+    return parentsNodes;
+}
+
+bool model::Graph::checkIsParent(Node *child, Node *parent) const
+{
+    auto parentsList = getNodeParents(child);
+    if(parentsList.contains(parent)) return true;
+    for(auto p : parentsList)
+    {
+        if(checkIsParent(p, parent)) return true;
+    }
+    return false;
 }
 
 model::Edge* model::Graph::findEdge(const InputSlot* destination, const OutputSlot* origin) const
@@ -190,7 +215,7 @@ QJSValue model::Graph::saveToJSValue(PersistenceHandler* persistenceHandler) con
 #include "ScriptNode.h"
 #include "DelayNode.h"
 #include "AssertionNode.h"
-#include "externalnode.h"
+#include "ExternalNode.h"
 #include <QMetaMethod>
 #include <QDebug>
 
@@ -399,6 +424,10 @@ bool model::Graph::canConnectSlots(Slot* origin, Slot* destination) const
 	if (origin->getDirection() == destination->getDirection()) return false; // fail when same type nodes
 	if (origin->getNode() == destination->getNode()) return false; // fail when the two slots belong to the same node
 	if (origin->getDataType() != destination->getDataType()) return false; // fail if different data types
+
+    // force DAG (Directed Acyclic Graph)
+    if(checkIsParent(origin->getNode(), destination->getNode()) ||
+        checkIsParent(destination->getNode(), origin->getNode())) return false;
 
 	auto edgesDestination = findEdges(destination);
 	if (!edgesDestination.isEmpty()) return false; // fail when the destination slot is already connected

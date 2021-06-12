@@ -1,5 +1,5 @@
-#include "nodesearchdialog.h"
-#include "ui_nodesearchdialog.h"
+#include "NodeSearchDialog.h"
+#include "ui_NodeSearchDialog.h"
 
 view::NodeSearchDialog::NodeSearchDialog(SceneGraphWidget* sgw) :
       QDialog(sgw->parentWidget()),

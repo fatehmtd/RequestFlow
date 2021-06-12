@@ -12,9 +12,9 @@ CONFIG += c++11
 DEFINES += COREMODEL_LIB
 
 HEADERS += ./coremodel_global.h \
-    $$PWD/customjsengine.h \
-    $$PWD/model/GroupNode.h \
-    $$PWD/model/externalnode.h \
+    ./CustomJSEngine.h \
+    ./model/GroupNode.h \
+    ./model/ExternalNode.h \
     ./model/Graph.h \
     ./model/Node.h \
     ./model/Edge.h \
@@ -37,9 +37,9 @@ HEADERS += ./coremodel_global.h \
     ./model/AssertionNode.h \
     ./model/MessageLogger.h
 SOURCES += ./model/Graph.cpp \
-    $$PWD/customjsengine.cpp \
-    $$PWD/model/GroupNode.cpp \
-    $$PWD/model/externalnode.cpp \
+    ./CustomJSEngine.cpp \
+    ./model/GroupNode.cpp \
+    ./model/ExternalNode.cpp \
     ./model/Node.cpp \
     ./model/Edge.cpp \
     ./model/Slot.cpp \

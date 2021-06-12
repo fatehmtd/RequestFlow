@@ -1,4 +1,4 @@
-#include "customjsengine.h"
+#include "CustomJSEngine.h"
 
 #include <QFile>
 #include <QTextStream>

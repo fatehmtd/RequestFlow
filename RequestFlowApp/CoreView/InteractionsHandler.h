@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QMenu>
 #include <QList>
+#include <QHash>
 #include <functional>
 #include <QGraphicsItem>
 
@@ -51,8 +52,13 @@ namespace view
 			int order;			
 			QString name;
             ExecFunc func;
-			std::function<bool(QGraphicsItem*)> filter;
+
+            std::function<bool(QGraphicsItem*)> filter;
+            //std::function<bool(void)> visibilityFilter;
+
 			QIcon icon;
+
+            //QHash<QString, ItemAction> _childrenMap;
 
 			bool operator < (const ItemAction& ia) const
 			{

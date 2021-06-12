@@ -13,12 +13,11 @@ RC_ICONS = $$PWD/icons/network.ico
 win32: LIBS += User32.lib
 
 HEADERS += ./resource.h \
-    $$PWD/BackgroundPaintFilter.h \
-    $$PWD/MenuBar.h \
-    $$PWD/aboutwidget.h \
-    $$PWD/environmentsmodel.h \
-    $$PWD/inventoryitem.h \
-    $$PWD/inventoryitemmodel.h \
+    ./BackgroundPaintFilter.h \
+    ./AboutWidget.h \
+    ./EnvironmentsModel.h \
+    ./InventoryItem.h \
+    ./InventoryItemModel.h \
     ./MainWindow.h \
     ./EnvironmentsWidget.h \
     ./ActionToolBar.h \
@@ -28,13 +27,14 @@ HEADERS += ./resource.h \
     ./InventoryWidget.h \
     ./GraphLogMessagesWidget.h \
     ./LogMessagesWidget.h \
-    ./SettingsManager.h
+    ./SettingsManager.h \
+    AppSettingDialog.h
 SOURCES += ./main.cpp \
-    $$PWD/MenuBar.cpp \
-    $$PWD/aboutwidget.cpp \
-    $$PWD/environmentsmodel.cpp \
-    $$PWD/inventoryitem.cpp \
-    $$PWD/inventoryitemmodel.cpp \
+    ./MenuBar.cpp \
+    ./AboutWidget.cpp \
+    ./EnvironmentsModel.cpp \
+    ./InventoryItem.cpp \
+    ./InventoryItemModel.cpp \
     ./MainWindow.cpp \
     ./EnvironmentsWidget.cpp \
     ./ActionToolBar.cpp \
@@ -44,9 +44,10 @@ SOURCES += ./main.cpp \
     ./InventoryWidget.cpp \
     ./GraphLogMessagesWidget.cpp \
     ./LogMessagesWidget.cpp \
-    ./SettingsManager.cpp
+    ./SettingsManager.cpp \
+    AppSettingDialog.cpp
 FORMS += ./ui/ActionGroup.ui \
-    $$PWD/aboutwidget.ui \
+    ./ui/AboutWidget.ui \
     ./ui/ActionPage.ui \
     ./ui/DelayNodeUi.ui \
     ./ui/EndpointNodeUi.ui \
@@ -59,7 +60,8 @@ FORMS += ./ui/ActionGroup.ui \
     ./ui/PayloadNodeUi.ui \
     ./ui/ScenariosWidget.ui \
     ./ui/ScriptNodeUi.ui \
-    ./ui/ViewerNodeUi.ui
+    ./ui/ViewerNodeUi.ui \
+    ./ui/AppSettingDialog.ui
 RESOURCES += BleachUI.qrc
 
 DISTFILES += \

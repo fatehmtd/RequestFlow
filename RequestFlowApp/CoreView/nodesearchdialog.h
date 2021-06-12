@@ -6,7 +6,7 @@
 #include "view/Node.h"
 #include "view/SceneGraphWidget.h"
 #include "view/SceneGraph.h"
-#include "customnodemodel.h"
+#include "CustomNodeModel.h"
 
 namespace Ui {
 class NodeSearchDialog;

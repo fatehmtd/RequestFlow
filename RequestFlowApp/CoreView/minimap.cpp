@@ -16,14 +16,14 @@ view::MiniMap::MiniMap()
 
 #include "view/SceneGraphWidget.h"
 
-void view::MiniMap::paint(QPainter *painter)
+void view::MiniMap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPainterPath backgroundPath;
     //auto bgColor = colors::light::purple;
     auto bgColor = QColor("#F0F0F0");
     QPen pen(bgColor);
 
-    qDebug() << __FUNCTION__ << _coords << _size;
+    //qDebug() << __FUNCTION__ << _coords << _size;
 
     QBrush backgroundBrush(bgColor);
     backgroundPath.setFillRule(Qt::FillRule::WindingFill);
@@ -31,6 +31,11 @@ void view::MiniMap::paint(QPainter *painter)
     painter->setPen(pen);
     painter->setBrush(backgroundBrush);
     painter->drawPath(backgroundPath);
+}
+
+QRectF view::MiniMap::boundingRect() const
+{
+    return QRectF(0, 0, _size.width(), _size.height());
 }
 
 

@@ -4,7 +4,7 @@
 
 namespace view
 {
-    class MiniMap
+    class MiniMap : public QGraphicsObject
     {
     public:
         MiniMap();
@@ -26,7 +26,9 @@ namespace view
         Anchor anchor() const;
         void setAnchor(Anchor newAnchor);
 
-        void paint(QPainter *painter);
+    protected:
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        QRectF boundingRect() const;
 
     private:
         QPointF _coords;

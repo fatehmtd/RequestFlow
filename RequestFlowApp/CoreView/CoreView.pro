@@ -18,10 +18,10 @@ else:unix: LIBS += -L$$OUT_PWD/../CoreModel/ -lCoreModel
 
 
 HEADERS += ./coreview_global.h \
-    $$PWD/externalnodeselectiondialog.h \
-    $$PWD/largepayloadinfowidget.h \
-    $$PWD/logic/externalnode.h \
-    $$PWD/viewernodewidget.h \
+    $$PWD/ExternalNodeSelectionDialog.h \
+    $$PWD/LargePayloadInfoWidget.h \
+    $$PWD/logic/Externalnode.h \
+    $$PWD/ViewerNodeWidget.h \
     ./view/Colors.h \
     ./view/ConnectionEdge.h \
     ./view/Edge.h \
@@ -38,14 +38,15 @@ HEADERS += ./coreview_global.h \
     ./logic/ScriptNode.h \
     ./logic/ViewerNode.h \
     ./InteractionsHandler.h \
-    customnodemodel.h \
-    minimap.h \
-    nodesearchdialog.h
+    CustomNodeModel.h \
+    MiniMap.h \
+    NodeSearchDialog.h \
+    view/GroupNode.h
 SOURCES += ./view/ConnectionEdge.cpp \
-    $$PWD/externalnodeselectiondialog.cpp \
-    $$PWD/largepayloadinfowidget.cpp \
-    $$PWD/logic/externalnode.cpp \
-    $$PWD/viewernodewidget.cpp \
+    $$PWD/ExternalNodeSelectionDialog.cpp \
+    $$PWD/LargePayloadInfoWidget.cpp \
+    $$PWD/logic/Externalnode.cpp \
+    $$PWD/ViewerNodeWidget.cpp \
     ./view/Edge.cpp \
     ./view/Node.cpp \
     ./view/ContentWidget.cpp \
@@ -60,9 +61,10 @@ SOURCES += ./view/ConnectionEdge.cpp \
     ./logic/ScriptNode.cpp \
     ./logic/ViewerNode.cpp \
     ./InteractionsHandler.cpp \
-    customnodemodel.cpp \
-    minimap.cpp \
-    nodesearchdialog.cpp
+    CustomNodeModel.cpp \
+    MiniMap.cpp \
+    NodeSearchDialog.cpp \
+    view/GroupNode.cpp
 FORMS += ./ui/DelayNodeUi.ui \
     $$PWD/externalnodeselectiondialog.ui \
     $$PWD/largepayloadinfowidget.ui \
@@ -72,7 +74,7 @@ FORMS += ./ui/DelayNodeUi.ui \
     ./ui/PayloadNodeUi.ui \
     ./ui/ScriptNodeUi.ui \
     ./ui/ViewerNodeUi.ui \
-    nodesearchdialog.ui
+    NodeSearchDialog.ui
 
 RESOURCES += \
     NodeIcons.qrc

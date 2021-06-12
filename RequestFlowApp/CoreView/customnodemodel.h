@@ -32,4 +32,3 @@ private:
     QList<model::Node*> _filteredNodes;
     QString _filter;
 };
-

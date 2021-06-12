@@ -2,7 +2,7 @@
 #include <QAbstractItemModel>
 #include <QMimeData>
 #include <QList>
-#include "inventoryitem.h"
+#include "InventoryItem.h"
 
 class InventoryItemModel : public QAbstractItemModel
 {

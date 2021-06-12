@@ -24,7 +24,7 @@ QString model::AssertionNode::getScript() const
 	return _script;
 }
 
-#include "customjsengine.h"
+#include "CustomJSEngine.h"
 
 void model::AssertionNode::evaluate()
 {

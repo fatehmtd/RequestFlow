@@ -53,6 +53,27 @@ QString view::SettingsManager::getLastOpenedLocation() const
     return recentProjectsList.isEmpty() ? "" : recentProjectsList.first().toString();
 }
 
+bool view::SettingsManager::addEditorEntry(QString name, QString path)
+{
+    emit editorEntryAdded(name);
+    return false;
+}
+
+void view::SettingsManager::removeEditorEntry(QString name)
+{
+    emit editorEntryRemoved(name);
+}
+
+view::SettingsManager::EditorEntry view::SettingsManager::getEditorEntry(QString name) const
+{
+    return EditorEntry();
+}
+
+QList<view::SettingsManager::EditorEntry> view::SettingsManager::getEditorEntries() const
+{
+    return QList<EditorEntry>();
+}
+
 void view::SettingsManager::setBackgroundType(uint type)
 {
     setEntry("backgroundType", type);
@@ -76,6 +97,7 @@ uint view::SettingsManager::getEdgesStyle() const
 void view::SettingsManager::setEntry(const QString &name, const QVariant &value)
 {
     _settings->setValue(name, value);
+    emit entrySet(name);
 }
 
 QVariant view::SettingsManager::getEntry(const QString &name, const QVariant &defaultValue) const
