@@ -343,7 +343,7 @@ bool SceneGraphWidget::loadFromJSValue(const QJSValue& v)
     return true;
 }
 
-#include "../nodesearchdialog.h"
+#include "../NodeSearchDialog.h"
 
 void SceneGraphWidget::findNodeDialog() const
 {

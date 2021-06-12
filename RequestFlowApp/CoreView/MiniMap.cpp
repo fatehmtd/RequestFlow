@@ -1,4 +1,4 @@
-#include "minimap.h"
+#include "MiniMap.h"
 
 view::MiniMap::MiniMap()
 {

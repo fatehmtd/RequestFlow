@@ -9,7 +9,7 @@
 #include <QJSValue>
 #include <QJSValueIterator>
 #include <QJsonDocument>
-#include <QTextStream>r
+#include <QTextStream>
 
 #include <QGraphicsView>
 #include <QGraphicsWidget>
@@ -74,7 +74,7 @@ view::Edge *view::SceneGraph::findbyModel(model::Edge *edge) const
 #include "logic/PayloadNode.h"
 #include "logic/ScriptNode.h"
 #include "logic/ViewerNode.h"
-#include "logic/externalnode.h"
+#include "logic/ExternalNode.h"
 #include <functional>
 
 void view::SceneGraph::createGraphiNodesForModel()

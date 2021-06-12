@@ -1,5 +1,5 @@
-#include "appsettingdialog.h"
-#include "ui_appsettingdialog.h"
+#include "AppSettingDialog.h"
+#include "ui_AppSettingDialog.h"
 #include <QDebug>
 
 AppSettingDialog::AppSettingDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AppSettingDialog)

@@ -18,10 +18,10 @@ else:unix: LIBS += -L$$OUT_PWD/../CoreModel/ -lCoreModel
 
 
 HEADERS += ./coreview_global.h \
-    $$PWD/ExternalNodeSelectionDialog.h \
-    $$PWD/LargePayloadInfoWidget.h \
-    $$PWD/logic/Externalnode.h \
-    $$PWD/ViewerNodeWidget.h \
+    ./ExternalNodeSelectionDialog.h \
+    ./LargePayloadInfoWidget.h \
+    ./logic/ExternalNode.h \
+    ./ViewerNodeWidget.h \
     ./view/Colors.h \
     ./view/ConnectionEdge.h \
     ./view/Edge.h \
@@ -43,10 +43,10 @@ HEADERS += ./coreview_global.h \
     NodeSearchDialog.h \
     view/GroupNode.h
 SOURCES += ./view/ConnectionEdge.cpp \
-    $$PWD/ExternalNodeSelectionDialog.cpp \
-    $$PWD/LargePayloadInfoWidget.cpp \
-    $$PWD/logic/Externalnode.cpp \
-    $$PWD/ViewerNodeWidget.cpp \
+    ./ExternalNodeSelectionDialog.cpp \
+    ./LargePayloadInfoWidget.cpp \
+    ./logic/ExternalNode.cpp \
+    ./ViewerNodeWidget.cpp \
     ./view/Edge.cpp \
     ./view/Node.cpp \
     ./view/ContentWidget.cpp \

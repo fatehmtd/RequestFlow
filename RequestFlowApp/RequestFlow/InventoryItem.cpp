@@ -1,4 +1,4 @@
-#include "inventoryitem.h"
+#include "InventoryItem.h"
 
 InventoryItem::InventoryItem(int type, InventoryItem *parent) : QObject(parent), _type(type)
 {

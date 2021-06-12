@@ -8,7 +8,7 @@
 #include <QAbstractItemModel>
 #include <QStringListModel>
 
-#include "environmentsmodel.h"
+#include "EnvironmentsModel.h"
 
 EnvironmentsWidget::EnvironmentsWidget(QWidget* parent) : QWidget(parent)
 {

@@ -1,5 +1,5 @@
-#include "aboutwidget.h"
-#include "ui_aboutwidget.h"
+#include "AboutWidget.h"
+#include "ui_AboutWidget.h"
 #include <QPixmap>
 #include <QImage>
 

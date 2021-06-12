@@ -1,11 +1,11 @@
-#include "externalnodeselectiondialog.h"
-#include "ui_externalnodeselectiondialog.h"
+#include "ExternalNodeSelectionDialog.h"
+#include "ui_ExternalNodeSelectionDialog.h"
 
 #include <QDebug>
 #include <model/Graph.h>
 #include <QAbstractItemModel>
 
-#include "customnodemodel.h"
+#include "CustomNodeModel.h"
 
 class CustomGraphModel : public QAbstractItemModel
 {

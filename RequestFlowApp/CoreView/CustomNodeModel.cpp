@@ -1,4 +1,4 @@
-#include "customnodemodel.h"
+#include "CustomNodeModel.h"
 
 CustomNodeModel::CustomNodeModel(model::Graph *graph, const QString &filter, QObject *parent)
     : QAbstractItemModel(parent), _graph(graph)

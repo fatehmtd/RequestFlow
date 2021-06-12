@@ -1,4 +1,4 @@
-#include "environmentsmodel.h"
+#include "EnvironmentsModel.h"
 
 
 EnvironmentsModel::EnvironmentsModel(QObject* parent) : QAbstractItemModel(parent), _envIcon(QIcon((":/ui/environment")))

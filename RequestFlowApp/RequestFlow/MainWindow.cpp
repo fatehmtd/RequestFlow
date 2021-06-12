@@ -24,7 +24,7 @@
 #include <model/Document.h>
 #include "view/Node.h"
 #include <QPropertyAnimation>
-#include "aboutwidget.h"
+#include "AboutWidget.h"
 #include <QDialog>
 #include <QSizePolicy>
 #include <QDesktopServices>

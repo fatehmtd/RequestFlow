@@ -1,4 +1,4 @@
-#include "inventoryitemmodel.h"
+#include "InventoryItemModel.h"
 
 InventoryItemModel::InventoryItemModel(QObject *parent)
     : QAbstractItemModel(parent)

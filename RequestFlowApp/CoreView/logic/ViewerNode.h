@@ -4,7 +4,7 @@
 #include <QTextEdit>
 
 #include <model/ViewerNode.h>
-#include "largepayloadinfowidget.h"
+#include "LargePayloadInfoWidget.h"
 
 namespace logic
 {

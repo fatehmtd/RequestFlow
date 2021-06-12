@@ -1,4 +1,4 @@
-#include "viewernodewidget.h"
+#include "ViewerNodeWidget.h"
 #include <QFileDialog>
 #include <QGraphicsView>
 #include <QAbstractItemModel>

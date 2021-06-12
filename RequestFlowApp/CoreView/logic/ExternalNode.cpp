@@ -1,5 +1,5 @@
-#include "externalnode.h"
-#include "externalnodeselectiondialog.h"
+#include "ExternalNode.h"
+#include "ExternalNodeSelectionDialog.h"
 
 #include <QFileDialog>
 

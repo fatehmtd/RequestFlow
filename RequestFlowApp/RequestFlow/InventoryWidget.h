@@ -9,7 +9,7 @@
 #include <model/Project.h>
 #include <QTimer>
 
-#include "inventoryitemmodel.h"
+#include "InventoryItemModel.h"
 
 
 class InventoryWidget : public QWidget

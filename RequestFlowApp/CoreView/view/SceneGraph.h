@@ -12,7 +12,7 @@
 #include <model/Node.h>
 #include <model/Slot.h>
 
-#include "minimap.h"
+#include "MiniMap.h"
 
 namespace view
 {

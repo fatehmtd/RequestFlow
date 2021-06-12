@@ -12,7 +12,7 @@
 #include "logic/DelayNode.h"
 #include "logic/ScriptNode.h"
 #include "logic/AssertionNode.h"
-#include "logic/externalnode.h"
+#include "logic/ExternalNode.h"
 
 view::InteractionsHandler::InteractionsHandler(SceneGraph* scene) : QObject(scene), _sceneGraph(scene)
 {

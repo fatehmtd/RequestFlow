@@ -9,3 +9,4 @@ SUBDIRS += RequestFlow/RequestFlow.pro \
     ExecutionEngine
 DEPENDPATH += CoreModel/
 DEPENDPATH += CoreView/
+DEPENDPATH += ExecutionEngine/

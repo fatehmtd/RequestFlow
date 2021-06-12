@@ -1,5 +1,5 @@
-#include "largepayloadinfowidget.h"
-#include "ui_largepayloadinfowidget.h"
+#include "LargePayloadInfoWidget.h"
+#include "ui_LargePayloadInfoWidget.h"
 
 LargePayloadInfoWidget::LargePayloadInfoWidget(QWidget *parent) :
     QWidget(parent),

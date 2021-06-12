@@ -10,7 +10,7 @@
 #include <QJSEngine>
 #include <QFileDialog>
 #include <QGraphicsView>
-#include "../viewernodewidget.h"
+#include "../ViewerNodeWidget.h"
 #include <QDialog>
 
 logic::ViewerNode::ViewerNode(model::ViewerNode* modelNode) : view::Node(modelNode, "Viewer")

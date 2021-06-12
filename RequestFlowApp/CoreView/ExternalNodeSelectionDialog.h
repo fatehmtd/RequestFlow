@@ -2,7 +2,7 @@
 
 #include <model/Project.h>
 #include <QDialog>
-#include "ui_externalnodeselectiondialog.h"
+#include "ui_ExternalNodeSelectionDialog.h"
 #include <model/Node.h>
 
 
