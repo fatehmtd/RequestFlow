@@ -27,7 +27,6 @@ HEADERS += ./coreview_global.h \
     ./view/Edge.h \
     ./view/Node.h \
     ./view/ContentWidget.h \
-    ./view/CustomProxyWidget.h \
     ./view/SceneGraph.h \
     ./view/Slot.h \
     ./view/SceneGraphWidget.h \
@@ -50,7 +49,6 @@ SOURCES += ./view/ConnectionEdge.cpp \
     ./view/Edge.cpp \
     ./view/Node.cpp \
     ./view/ContentWidget.cpp \
-    ./view/CustomProxyWidget.cpp \
     ./view/SceneGraph.cpp \
     ./view/Slot.cpp \
     ./view/SceneGraphWidget.cpp \

@@ -78,6 +78,11 @@ namespace view
         void setEdgeType(EdgeType type);
         int getEdgeType() const;
 
+        MiniMap *getMiniMap() const;
+
+
+        void customUpdate();
+
 	protected:
 		Node* createGeometryForModel(model::Node* node);
 

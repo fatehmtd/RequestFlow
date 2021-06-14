@@ -21,8 +21,8 @@ public:
 	QPointF getCenter() const;
 	void setCenter(const QPointF& p);
 
-    void setCenterAnimated(const QPointF& p);
-    void setCenterAnimated(view::Node *node);
+    void setCenterAnimated(const QPointF& p, bool resetZoom=true);
+    void setCenterAnimated(view::Node *node, bool resetZoom=true);
 
 	float getZoomLevel() const;
 	void setZoomLevel(float level);
@@ -34,6 +34,8 @@ public:
 
 protected:
 	void initUi();
+
+    void setupViewport(QWidget *widget) override;
 
 	virtual void mousePressEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;

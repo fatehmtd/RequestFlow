@@ -24,6 +24,22 @@
 #include "Node.h"
 #include "Slot.h"
 
+#include "logic/AssertionNode.h"
+#include "logic/DelayNode.h"
+#include "logic/EndpointNode.h"
+#include "logic/PayloadNode.h"
+#include "logic/ScriptNode.h"
+#include "logic/ViewerNode.h"
+#include "logic/ExternalNode.h"
+
+#include "SceneGraphWidget.h"
+
+#include <model/EndpointEntry.h>
+#include <QMimeData>
+#include <QStandardItem>
+#include <math.h>
+#include <functional>
+
 view::SceneGraph::SceneGraph(model::Graph *modelGraph, QObject *parent)
     : QGraphicsScene(parent), _modelGraph(modelGraph)
 {
@@ -67,15 +83,6 @@ view::Edge *view::SceneGraph::findbyModel(model::Edge *edge) const
     }
     return nullptr;
 }
-
-#include "logic/AssertionNode.h"
-#include "logic/DelayNode.h"
-#include "logic/EndpointNode.h"
-#include "logic/PayloadNode.h"
-#include "logic/ScriptNode.h"
-#include "logic/ViewerNode.h"
-#include "logic/ExternalNode.h"
-#include <functional>
 
 void view::SceneGraph::createGraphiNodesForModel()
 {
@@ -218,22 +225,10 @@ void view::SceneGraph::drawBackground(QPainter *painter, const QRectF &rect)
     }
 }
 
-#include "SceneGraphWidget.h"
-
 void view::SceneGraph::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    //painter->fillRect(rect, QColor("#A8A8A833"));
-    auto sgw = (SceneGraphWidget *) views().first();
-    auto customRect = sgw->mapToScene(sgw->viewport()->rect()).boundingRect();
-    _miniMap->setCoords(customRect.bottomRight()
-                        - QPointF(_miniMap->size().width(), _miniMap->size().height()));
-
-    //painter->setClipRect(_miniMap->coords().x(), _miniMap->coords().y(), _miniMap->size().width(), _miniMap->size().height());
-    //painter->setClipRect(customRect);
-    //_miniMap->paint(painter);
+    customUpdate();
 }
-
-#include <math.h>
 
 void view::SceneGraph::drawDotsBackground(QPainter *painter, const QRectF &rect) const
 {
@@ -398,7 +393,7 @@ void view::SceneGraph::setupUi()
     _darkGrid = colors::lightGrey;
     //*/
 
-    const int gridSize = 1 << 18;
+    const int gridSize = 1 << 14;
     const int hgridSize = gridSize >> 1;
 
     setSceneRect(QRectF(-hgridSize, -hgridSize, gridSize, gridSize));
@@ -410,7 +405,7 @@ void view::SceneGraph::setupUi()
     connect(_modelGraph, &model::Graph::preparingStartup, [=]() { clearNodes(); });
 
     _miniMap = new MiniMap();
-    //addItem(_miniMap);
+    addItem(_miniMap);
 }
 
 void view::SceneGraph::createEdge()
@@ -426,10 +421,6 @@ void view::SceneGraph::createEdge()
         }
     }
 }
-
-#include <model/EndpointEntry.h>
-#include <QMimeData>
-#include <QStandardItem>
 
 void view::SceneGraph::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
@@ -583,4 +574,16 @@ void view::SceneGraph::setEdgeType(view::SceneGraph::EdgeType type)
 int view::SceneGraph::getEdgeType() const
 {
     return _edgeType;
+}
+
+view::MiniMap *view::SceneGraph::getMiniMap() const
+{
+    return _miniMap;
+}
+
+void view::SceneGraph::customUpdate()
+{
+    auto sgw = dynamic_cast<SceneGraphWidget*>(views().first());
+    auto customRect = sgw->mapToScene(sgw->viewport()->rect()).boundingRect();
+    getMiniMap()->setParentViewport(customRect);
 }

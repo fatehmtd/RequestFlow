@@ -12,13 +12,22 @@
 #include <model/Graph.h>
 #include <model/Environment.h>
 #include <QAction>
+#include <QMimeData>
+
+#include <QDataStream>
+#include <model/EndpointEntry.h>
+
+#include "InteractionsHandler.h"
+#include <QPropertyAnimation>
+#include <QJSValueIterator>
+#include "../NodeSearchDialog.h"
 
 SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph) : QGraphicsView(parent), _sceneGraph(sceneGraph)
 {
     initUi();
     setScene(_sceneGraph);
     setObjectName(sceneGraph->getModelGraph()->getIdentifier());
-    _rubberBand = new QRubberBand(QRubberBand::Shape::Rectangle, this);
+    _rubberBand = new QRubberBand(QRubberBand::Shape::Line, this);
 }
 
 SceneGraphWidget::~SceneGraphWidget()
@@ -35,11 +44,12 @@ view::SceneGraph* SceneGraphWidget::getSceneGraph() const
 
 void SceneGraphWidget::initUi()
 {
-    //setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+    setFocusPolicy(Qt::FocusPolicy::ClickFocus);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    //setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+    //TODO: test other flags
+    setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
     setRenderHint(QPainter::RenderHint::Antialiasing, true);
     setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
@@ -50,12 +60,6 @@ void SceneGraphWidget::initUi()
     setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
     setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 
-    /*
-    setOptimizationFlags(QGraphicsView::DontSavePainterState);
-    setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
-    setOptimizationFlags(QGraphicsView::OptimizationFlag::DontClipPainter);
-    setCacheMode(QGraphicsView::CacheModeFlag::CacheNone);*/
-
     _zoomInFactor = 1.5f;
     _zoomStep = 1;
 
@@ -65,8 +69,13 @@ void SceneGraphWidget::initUi()
 
     _zoomLevel = _defaultZoomLevel;
 
-    //setOGLBackend();
-    setAcceptDrops(true);
+    setAcceptDrops(true);   
+}
+
+void SceneGraphWidget::setupViewport(QWidget *widget)
+{
+    QGraphicsView::setupViewport(widget);
+    _sceneGraph->customUpdate();
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
@@ -115,17 +124,7 @@ void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() - delta.x());
         verticalScrollBar()->setValue(verticalScrollBar()->value() - delta.y());
 
-        auto items = _sceneGraph->items(viewport()->rect());
-
-        for (auto item : items)
-        {
-            auto node = dynamic_cast<QGraphicsProxyWidget*>(item);
-            if (node == nullptr) continue;
-            node->widget()->repaint();
-            node->update();
-        }
-
-        update();
+        _sceneGraph->customUpdate();
     }
     QGraphicsView::mouseMoveEvent(event);
 }
@@ -160,14 +159,7 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
         performZoom(event);
     }
 
-    auto items = _sceneGraph->items(viewport()->rect());
-
-    for (auto item : items)
-    {
-        auto node = dynamic_cast<QGraphicsProxyWidget*>(item);
-        if (node == nullptr) continue;
-        node->widget()->repaint();
-    }
+    _sceneGraph->customUpdate();
 }
 
 void SceneGraphWidget::mouseMiddleButtonPressed(QMouseEvent* event)
@@ -193,8 +185,6 @@ void SceneGraphWidget::performZoom(QWheelEvent* event)
     }
 }
 
-#include <QMimeData>
-
 void SceneGraphWidget::dragEnterEvent(QDragEnterEvent* event)
 {
     if (event->mimeData()->hasFormat("application/x-EndpointEntry"))
@@ -202,11 +192,6 @@ void SceneGraphWidget::dragEnterEvent(QDragEnterEvent* event)
         event->acceptProposedAction();
     }
 }
-
-#include <QDataStream>
-#include <model/EndpointEntry.h>
-
-#include "InteractionsHandler.h"
 
 void SceneGraphWidget::dropEvent(QDropEvent* event)
 {
@@ -239,11 +224,10 @@ QPointF SceneGraphWidget::getCenter() const
 void SceneGraphWidget::setCenter(const QPointF& p)
 {
     centerOn(p);
+    _sceneGraph->customUpdate();
 }
 
-#include <QPropertyAnimation>
-
-void SceneGraphWidget::setCenterAnimated(const QPointF &p)
+void SceneGraphWidget::setCenterAnimated(const QPointF &p, bool resetZoom)
 {
     auto propAnimation = new QPropertyAnimation();
     propAnimation->setTargetObject(this);
@@ -253,17 +237,19 @@ void SceneGraphWidget::setCenterAnimated(const QPointF &p)
     propAnimation->setEndValue(p);
     propAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-    setZoomLevel(2);
+    if(resetZoom)
+        setZoomLevel(2);
 
     connect(propAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& v)
             {
                 centerOn(v.toPointF());
+                _sceneGraph->customUpdate();
             });
 }
 
-void SceneGraphWidget::setCenterAnimated(view::Node *nodeGr)
+void SceneGraphWidget::setCenterAnimated(view::Node *nodeGr, bool resetZoom)
 {
-    setCenterAnimated(nodeGr->pos() + QPointF(nodeGr->width() * 0.5f, nodeGr->height() * 0.5f));
+    setCenterAnimated(nodeGr->pos() + QPointF(nodeGr->width() * 0.5f, nodeGr->height() * 0.5f), resetZoom);
 }
 
 float SceneGraphWidget::getZoomLevel() const
@@ -305,8 +291,6 @@ QJSValue SceneGraphWidget::saveToJSValue(model::PersistenceHandler* handler) con
     return sceneValue;
 }
 
-#include <QJSValueIterator>
-
 bool SceneGraphWidget::loadFromJSValue(const QJSValue& v)
 {
     auto valueToPoint = [](const QJSValue& v)
@@ -342,8 +326,6 @@ bool SceneGraphWidget::loadFromJSValue(const QJSValue& v)
 
     return true;
 }
-
-#include "../NodeSearchDialog.h"
 
 void SceneGraphWidget::findNodeDialog() const
 {

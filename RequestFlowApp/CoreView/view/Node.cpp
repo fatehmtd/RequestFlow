@@ -1,6 +1,6 @@
 #include "Node.h"
 #include "Colors.h"
-#include "CustomProxyWidget.h"
+#include <QGraphicsProxyWidget.h>
 #include "Slot.h"
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
@@ -112,7 +112,7 @@ void view::Node::setupUi()
 void view::Node::setupContentWidget()
 {
     ////////////////////////////
-    auto proxyWidget = new CustomProxyWidget(this);
+    auto proxyWidget = new QGraphicsProxyWidget(this);
     _contentWidget = new ContentWidget(nullptr);
     proxyWidget->setWidget(_contentWidget);
 
@@ -308,6 +308,11 @@ view::SceneGraph *view::Node::getSceneGraph() const
 QString view::Node::getNodeType() const
 {
     return _nodeType;
+}
+
+QColor view::Node::getBackgroundColor() const
+{
+    return _bgColor;
 }
 
 void view::Node::onGraphStarted()

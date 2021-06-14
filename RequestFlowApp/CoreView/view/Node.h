@@ -82,6 +82,8 @@ namespace view
 		view::SceneGraph* getSceneGraph() const;
 
 		QString getNodeType() const;
+
+        QColor getBackgroundColor() const;
 	private slots:
 		void onGraphStarted();
 		void onGraphFinished();
