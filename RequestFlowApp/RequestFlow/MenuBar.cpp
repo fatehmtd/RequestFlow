@@ -22,6 +22,7 @@
 
 void MainWindow::setupMenuBar()
 {
+    //menuBar()->set
     // File menu
     {
         _fileMenu = menuBar()->addMenu("File");
@@ -29,13 +30,13 @@ void MainWindow::setupMenuBar()
         _openProjectAction = _fileMenu->addAction(QIcon(":/ui/open_file"), "Open...", [=](){onOpenProject();}, QKeySequence::Open);
         //_openProjectAction->setMenu(new QMenu);
 
-        _recentProjectsMenu = _fileMenu->addMenu("Recent projects...");
+        _recentProjectsMenu = _fileMenu->addMenu(QIcon(":/ui/history"), "Recent projects...");
         updateRecentProjectsList();
 
         _saveProjectAction = _fileMenu->addAction(QIcon(":/ui/save_file"), "Save", [=](){onSaveProject();}, QKeySequence::Save);
         _saveProjectAsAction =  _fileMenu->addAction(QIcon(), "Save As...", [=](){onSaveProjectAs();}, QKeySequence::SaveAs);
         _fileMenu->addSeparator();
-        _settingsAction = _fileMenu->addAction(QIcon(), "Settings...", [=]()
+        _settingsAction = _fileMenu->addAction(QIcon(":/ui/settings"), "Settings...", [=]()
                                                {
                                                    auto dlg = AppSettingDialog(this);
                                                    dlg.exec();
@@ -53,14 +54,14 @@ void MainWindow::setupMenuBar()
     // Edit menu
     {
         _editMenu = menuBar()->addMenu("Edit");
-        _undoAction = _editMenu->addAction(QIcon(), "Undo", [](){}, QKeySequence::Undo);
-        _redoAction = _editMenu->addAction(QIcon(), "Redo", [](){}, QKeySequence::Redo);
+        _undoAction = _editMenu->addAction(QIcon(":/ui/undo"), "Undo", [](){}, QKeySequence::Undo);
+        _redoAction = _editMenu->addAction(QIcon(":/ui/redo"), "Redo", [](){}, QKeySequence::Redo);
 
         _undoAction->setEnabled(false);
         _redoAction->setEnabled(false);
 
         _editMenu->addSeparator();
-        _findNodeAction = _editMenu->addAction(QIcon(), "Find Node...", [=]()
+        _findNodeAction = _editMenu->addAction(QIcon(":/ui/search"), "Find Node...", [=]()
             {
                 auto sgw = getActiveSceneGraphWidget();
                 if(sgw != nullptr)
@@ -114,6 +115,46 @@ void MainWindow::setupMenuBar()
     {
         _viewMenu = menuBar()->addMenu("View");
 
+        _viewMenu->addSection("Custonm Section");
+        _miniMapAction = _viewMenu->addAction(QIcon(":/minimap/minimap"), "Mini Map");
+        _miniMapAction->setCheckable(true);
+        _miniMapAction->setChecked(_settingsManager->getMiniMapStatus());;
+
+        _miniMapLocationMenu = _viewMenu->addMenu("Mini Map Location...");
+
+        connect(_miniMapAction, &QAction::toggled, this, [=](bool b)
+                {
+                    setMiniMapStatus(b);
+                });
+
+        {
+            _miniMapLocationMenu->addAction(QIcon(":/minimap/top-left"), "Top Left", [=]()
+                                            {
+                                                setMiniMapLocation(view::MiniMap::Anchor::TOP_LEFT);
+                                            });
+            _miniMapLocationMenu->addAction(QIcon(":/minimap/top-right"), "Top Right", [=]()
+                                            {
+                                                setMiniMapLocation(view::MiniMap::Anchor::TOP_RIGHT);
+                                            });
+            _miniMapLocationMenu->addAction(QIcon(":/minimap/bottom-left"), "Bottom Left", [=]()
+                                            {
+                                                setMiniMapLocation(view::MiniMap::Anchor::BOTTOM_LEFT);
+                                            });
+            _miniMapLocationMenu->addAction(QIcon(":/minimap/bottom-right"), "Bottom Right", [=]()
+                                            {
+                                                setMiniMapLocation(view::MiniMap::Anchor::BOTTOM_RIGHT);
+                                            });
+
+            auto actionGroup = new QActionGroup(_miniMapLocationMenu);
+            for(auto action : _miniMapLocationMenu->actions())
+            {
+                action->setCheckable(true);
+                actionGroup->addAction(action);
+            }
+
+            _miniMapLocationMenu->actions().at(_settingsManager->getMiniMapLocation())->setChecked(true);
+        }
+
         // TODO: implement messagelogger, inventory widgets menu items
         //auto messageLoggerWidgetAction = _viewMenu->addAction("Message Logger");
         //messageLoggerWidgetAction->setCheckable(true);
@@ -121,6 +162,7 @@ void MainWindow::setupMenuBar()
         //inventoryWidgetAction->setCheckable(true);
         //_viewMenu->addSeparator();
 
+        _viewMenu->addSeparator();
         _centerOnAction = _viewMenu->addAction(QIcon(), "Center on scene", [=](){});
         _centerOnAction->setEnabled(false);
         _viewMenu->addSeparator();
@@ -241,14 +283,14 @@ void MainWindow::setupMenuBar()
     // Help menu
     {
         _helpMenu = menuBar()->addMenu("Help");
-        _helpMenu->addAction(QIcon(), "Contact Support...", [=](){onContactSupport();});
-        _helpMenu->addAction(QIcon(), "RequestFlow website", [=](){onWebsite();});
-        _helpMenu->addAction(QIcon(), "@requestflow on Twitter", [=](){onTwitter();});
+        _helpMenu->addAction(QIcon(":/ui/contact"), "Contact Support...", [=](){onContactSupport();});
+        _helpMenu->addAction(QIcon(":/ui/external_link"), "RequestFlow website", [=](){onWebsite();});
+        _helpMenu->addAction(QIcon(":/ui/twitter"), "@requestflow on Twitter", [=](){onTwitter();});
         _helpMenu->addSeparator();
-        auto activateAction = _helpMenu->addAction(QIcon(), "Activate", [=](){onActivateLicense();});
+        auto activateAction = _helpMenu->addAction(QIcon(":/ui/unlock"), "Activate", [=](){onActivateLicense();});
         activateAction->setEnabled(false); // TODO: create activation page
         _helpMenu->addSeparator();
-        _helpMenu->addAction(QIcon(), "About", [=](){onAbout();});
+        _helpMenu->addAction(QIcon(":/ui/information"), "About", [=](){onAbout();});
     }
 }
 

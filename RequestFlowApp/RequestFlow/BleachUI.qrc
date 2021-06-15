@@ -1,16 +1,15 @@
 <RCC>
     <qresource prefix="/BleachUI">
         <file alias="menu">icons/menu.png</file>
-        <file alias="play">icons/play.png</file>
         <file alias="view">icons/view.png</file>
         <file alias="stopWatch">icons/stopwatch.png</file>
         <file alias="delete">icons/clear.png</file>
-        <file alias="stop">icons/stop.png</file>
         <file alias="data">icons/data.png</file>
         <file alias="transfer">icons/transfer.png</file>
         <file alias="save">icons/loading.png</file>
         <file alias="load">icons/open.png</file>
-        <file alias="copy">icons/copy.png</file>
+        <file alias="play">icons/play.svg</file>
+        <file alias="stop">icons/stop.svg</file>
     </qresource>
     <qresource prefix="/ui">
         <file>icons/statistics.svg</file>
@@ -30,8 +29,6 @@
         <file>icons/tools.svg</file>
         <file>icons/trash.svg</file>
         <file>icons/wrench.svg</file>
-        <file alias="close">icons/delete_icon.svg</file>
-        <file alias="new_file">icons/file_2.svg</file>
         <file alias="close_file">icons/file_close.svg</file>
         <file>icons/add_database_2.svg</file>
         <file>icons/add_folder_2.svg</file>
@@ -40,12 +37,9 @@
         <file>icons/create_new_2.svg</file>
         <file>icons/engineering_1.svg</file>
         <file>icons/information_1.svg</file>
-        <file alias="open_file">icons/live_folder_2.svg</file>
         <file>icons/monitor_1.svg</file>
         <file>icons/save_2.svg</file>
         <file alias="export">icons/export.svg</file>
-        <file alias="save_file">icons/file_save.svg</file>
-        <file alias="test_case">icons/blueprint.svg</file>
         <file alias="requestflow_bg">icons/requestflow_bg.png</file>
         <file alias="environment">icons/server.svg</file>
         <file alias="swagger">icons/swagger.png</file>
@@ -67,8 +61,30 @@
         <file alias="afilterir-">icons/air-filter.svg</file>
         <file alias="filter">icons/right-arrow.svg</file>
         <file alias="pen">icons/pen.svg</file>
+        <file alias="settings">icons/settings.svg</file>
+        <file alias="new_file">icons/new_file.svg</file>
+        <file alias="save_file">icons/save_file.svg</file>
+        <file alias="history">icons/history.svg</file>
+        <file alias="test_case">icons/scenario.svg</file>
+        <file alias="open_file">icons/open_file.svg</file>
+        <file alias="close">icons/quit.svg</file>
+        <file alias="search">icons/search.svg</file>
+        <file alias="redo">icons/redo.svg</file>
+        <file alias="undo">icons/undo.svg</file>
+        <file alias="twitter">icons/twitter.svg</file>
+        <file alias="contact">icons/contact.svg</file>
+        <file alias="information">icons/information.svg</file>
+        <file alias="external_link">icons/external_link.svg</file>
+        <file alias="unlock">icons/unlock.svg</file>
     </qresource>
     <qresource prefix="/misc">
         <file>license.txt</file>
+    </qresource>
+    <qresource prefix="/minimap">
+        <file alias="bottom-left">icons/minimap-bottom-left.svg</file>
+        <file alias="bottom-right">icons/minimap-bottom-right.svg</file>
+        <file alias="top-left">icons/minimap-top-left.svg</file>
+        <file alias="top-right">icons/minimap-top-right.svg</file>
+        <file alias="minimap">icons/minimap.svg</file>
     </qresource>
 </RCC>

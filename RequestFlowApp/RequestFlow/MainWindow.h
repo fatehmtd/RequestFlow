@@ -68,6 +68,9 @@ private:
 
     void openLastProject();
 
+    void setMiniMapLocation(int location);
+    void setMiniMapStatus(bool status);
+
 private:
     SceneGraphWidget *getActiveSceneGraphWidget() const;
 
@@ -109,6 +112,8 @@ private:
 
     // View
     QMenu* _viewMenu = nullptr;
+    QAction * _miniMapAction = nullptr;
+    QMenu* _miniMapLocationMenu = nullptr;
     QAction* _switchThemeAction = nullptr;
     QAction* _centerOnAction = nullptr;
 

@@ -10,7 +10,7 @@ TARGET = RequestFlow
 
 RC_ICONS = $$PWD/icons/network.ico
 
-#win32: LIBS += User32.lib
+win32: LIBS += User32.lib
 
 HEADERS += ./resource.h \
     ./BackgroundPaintFilter.h \
@@ -28,7 +28,8 @@ HEADERS += ./resource.h \
     ./GraphLogMessagesWidget.h \
     ./LogMessagesWidget.h \
     ./SettingsManager.h \
-    AppSettingDialog.h
+    AppSettingDialog.h \
+    StartupDialog.h
 SOURCES += ./main.cpp \
     ./MenuBar.cpp \
     ./AboutWidget.cpp \
@@ -45,7 +46,8 @@ SOURCES += ./main.cpp \
     ./GraphLogMessagesWidget.cpp \
     ./LogMessagesWidget.cpp \
     ./SettingsManager.cpp \
-    AppSettingDialog.cpp
+    AppSettingDialog.cpp \
+    StartupDialog.cpp
 FORMS += ./ui/ActionGroup.ui \
     ./ui/AboutWidget.ui \
     ./ui/ActionPage.ui \
@@ -61,7 +63,8 @@ FORMS += ./ui/ActionGroup.ui \
     ./ui/ScenariosWidget.ui \
     ./ui/ScriptNodeUi.ui \
     ./ui/ViewerNodeUi.ui \
-    ./ui/AppSettingDialog.ui
+    ./ui/AppSettingDialog.ui \
+    StartupDialog.ui
 RESOURCES += BleachUI.qrc
 
 DISTFILES += \

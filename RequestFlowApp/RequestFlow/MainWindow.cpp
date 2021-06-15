@@ -52,8 +52,8 @@ public:
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
-	_settingsManager = new view::SettingsManager(this);
-	setupUi();
+    _settingsManager = new view::SettingsManager(this);
+    setupUi();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -71,15 +71,15 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::setupUi()
 {
     _ui.setupUi(this);
-	setWindowIcon(QIcon(":/ui/network"));
-	//setMinimumSize(1280, 800);
+    setWindowIcon(QIcon(":/ui/network"));
+    //setMinimumSize(1280, 800);
     setupMenuBar();
     setupRibbonBar();
-	setupSceneGraph();
-	setupEnvironmentsWidget();
+    setupSceneGraph();
+    setupEnvironmentsWidget();
     setupCentralTitleBar();
 
-	// enable the background image
+    // enable the background image
     _ui.mdiArea->viewport()->installEventFilter(new BackgroundPaintFilter(this));
     //openLastProject();
 
@@ -88,7 +88,7 @@ void MainWindow::setupUi()
 
 void MainWindow::setupRibbonBar()
 {
-	_ui.dockWidget->setTitleBarWidget(new QWidget());
+    _ui.dockWidget->setTitleBarWidget(new QWidget());
     _ui.dockWidget->setFixedHeight(64);
     //_ui.dockWidget->setVisible(false);
 }
@@ -102,23 +102,23 @@ void MainWindow::setupSceneGraph()
 {
     _ui.mdiArea->setTabsClosable(false);
 
-	connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node)
-		{
-			for (auto subWindow : _ui.mdiArea->subWindowList())
-			{
-				auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
-				if (sceneGraphWidget != nullptr)
-				{
-					if (sceneGraphWidget->getSceneGraph()->getModelGraph() == node->getGraph())
-					{
-						auto nodeGr = sceneGraphWidget->getSceneGraph()->findbyModel(node);
+    connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node)
+            {
+                for (auto subWindow : _ui.mdiArea->subWindowList())
+                {
+                    auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+                    if (sceneGraphWidget != nullptr)
+                    {
+                        if (sceneGraphWidget->getSceneGraph()->getModelGraph() == node->getGraph())
+                        {
+                            auto nodeGr = sceneGraphWidget->getSceneGraph()->findbyModel(node);
 
-						_ui.mdiArea->setActiveSubWindow(subWindow);
+                            _ui.mdiArea->setActiveSubWindow(subWindow);
 
-                        sceneGraphWidget->setCenterAnimated(nodeGr);
-					}
-				}
-            }
+                            sceneGraphWidget->setCenterAnimated(nodeGr);
+                        }
+                    }
+                }
             });
 }
 
@@ -134,41 +134,41 @@ void MainWindow::setupCentralTitleBar()
 
 void MainWindow::openProject(const QString& fileName)
 {
-	if (!fileName.isEmpty())
-	{
-		QFile fp(fileName);
-		if (fp.open(QIODevice::ReadOnly))
-		{
-			model::PersistenceHandler handler;
-			QString contents(QString("(%1)").arg(QString(QJsonDocument::fromJson(fp.readAll()).toJson(QJsonDocument::JsonFormat::Compact))));
+    if (!fileName.isEmpty())
+    {
+        QFile fp(fileName);
+        if (fp.open(QIODevice::ReadOnly))
+        {
+            model::PersistenceHandler handler;
+            QString contents(QString("(%1)").arg(QString(QJsonDocument::fromJson(fp.readAll()).toJson(QJsonDocument::JsonFormat::Compact))));
 
-			auto projectValue = handler.evaluate(contents);
+            auto projectValue = handler.evaluate(contents);
 
-			if (!projectValue.isError())
-			{
-				onCloseProject();
+            if (!projectValue.isError())
+            {
+                onCloseProject();
 
-				auto project = new model::Project(nullptr);
-				project->setPath(fileName);
-				project->loadFromJSValue(projectValue);
+                auto project = new model::Project(nullptr);
+                project->setPath(fileName);
+                project->loadFromJSValue(projectValue);
 
-				setWindowTitle(QString("RequestFlow - %1").arg(fileName));
+                setWindowTitle(QString("RequestFlow - %1").arg(fileName));
 
-				setProject(project);
+                setProject(project);
 
-				loadFromJSValue(projectValue.property("ui"));
+                loadFromJSValue(projectValue.property("ui"));
 
-				_settingsManager->addRecentProject(fileName);
-			}
+                _settingsManager->addRecentProject(fileName);
+            }
 
-			updateRecentProjectsList();
-		}
-	}
+            updateRecentProjectsList();
+        }
+    }
 }
 
 void MainWindow::setProject(model::Project* project)
 {
-	bool projectAvailable = project != nullptr;
+    bool projectAvailable = project != nullptr;
     _ui.dockWidgetContents->setEnabled(projectAvailable);
 
     _environmentsWidget->setEnabled(projectAvailable);
@@ -177,33 +177,33 @@ void MainWindow::setProject(model::Project* project)
     _ui.dockWidget_5->setVisible(projectAvailable);
 
     // fill default objects if the project is empty
-	if (projectAvailable)
-	{
-		_project.reset(project);
+    if (projectAvailable)
+    {
+        _project.reset(project);
 
-		if (project->getEnvironments().isEmpty())
-		{
-			auto environment = new model::Environment(project);
-			environment->setName(QString("Default environment"));
-			environment->getEntries().insert("baseUrl", "http://localhost");
-		}
+        if (project->getEnvironments().isEmpty())
+        {
+            auto environment = new model::Environment(project);
+            environment->setName(QString("Default environment"));
+            environment->getEntries().insert("baseUrl", "http://localhost");
+        }
 
-		if (project->getGraphs().isEmpty())
-		{
-			auto graph = new model::Graph(_project.get());
-			graph->setName("Default scenario");
-			auto sceneGraph = new view::SceneGraph(graph);
-			openScenario(sceneGraph);
-		}
-		else
-		{
-			for (auto modelGraph : _project->getGraphs())
-			{
-				auto sceneGraph = new view::SceneGraph(modelGraph);
-				openScenario(sceneGraph);
-			}
-		}
-	}
+        if (project->getGraphs().isEmpty())
+        {
+            auto graph = new model::Graph(_project.get());
+            graph->setName("Default scenario");
+            auto sceneGraph = new view::SceneGraph(graph);
+            openScenario(sceneGraph);
+        }
+        else
+        {
+            for (auto modelGraph : _project->getGraphs())
+            {
+                auto sceneGraph = new view::SceneGraph(modelGraph);
+                openScenario(sceneGraph);
+            }
+        }
+    }
 
     // File
     _saveProjectAction->setEnabled(projectAvailable);
@@ -222,8 +222,8 @@ void MainWindow::setProject(model::Project* project)
     // Environments
     _environmentsMenu->setEnabled(projectAvailable);
 
-	_ui.inventoryWidget->setProject(project);
-	_ui.logMessagesWidget->setProject(project);
+    _ui.inventoryWidget->setProject(project);
+    _ui.logMessagesWidget->setProject(project);
     _environmentsWidget->setProject(project);
 }
 
@@ -263,26 +263,30 @@ void MainWindow::onTwitter()
 
 void MainWindow::createScenario(QString name)
 {
-	auto graph = new model::Graph(_project.get());
-	graph->setName(name);
+    auto graph = new model::Graph(_project.get());
+    graph->setName(name);
     openScenario(new view::SceneGraph(graph));
-	_ui.logMessagesWidget->addMessageLogger(graph->getLogger());
+    _ui.logMessagesWidget->addMessageLogger(graph->getLogger());
 }
 
 #include <model/Environment.h>
 
 SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
 {
-	auto sceneGraphWidget = new SceneGraphWidget(this, sceneGraph);
+    auto sceneGraphWidget = new SceneGraphWidget(this, sceneGraph);
 
-	sceneGraphWidget->setAttribute(Qt::WA_DeleteOnClose, false);
-	sceneGraphWidget->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, false);
+    sceneGraphWidget->setAttribute(Qt::WA_DeleteOnClose, false);
+    sceneGraphWidget->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, false);
 
     sceneGraph->setBackgroundType((view::SceneGraph::BackgroundType)_settingsManager->getBackgroundType());
     sceneGraph->setEdgeType((view::SceneGraph::EdgeType)_settingsManager->getEdgesStyle());
 
-	sceneGraphWidget->setWindowIcon(QIcon(":/ui/test_case"));
-	auto window = _ui.mdiArea->addSubWindow(sceneGraphWidget);
+    sceneGraphWidget->setWindowIcon(QIcon(":/ui/test_case"));
+    auto window = _ui.mdiArea->addSubWindow(sceneGraphWidget);
+
+    // MiniMap
+    setMiniMapLocation(_settingsManager->getMiniMapLocation());
+    setMiniMapStatus(_settingsManager->getMiniMapStatus());
 
     auto evaluateScenarioTitle = [](model::Graph* graph)
     {
@@ -294,13 +298,13 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
         return QString("%1 [Env: %2]").arg(graph->getName()).arg(envName);
     };
 
-	_subwindowsMap.insert(sceneGraph->getModelGraph()->getIdentifier(), window);
+    _subwindowsMap.insert(sceneGraph->getModelGraph()->getIdentifier(), window);
 
     window->installEventFilter(new CloseEventIgnoreEventFilter());
 
     window->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
     window->setWindowFlag(Qt::WindowType::WindowShadeButtonHint, true);
-	window->setWindowIcon(QIcon(":/ui/test_case"));
+    window->setWindowIcon(QIcon(":/ui/test_case"));
     window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
 
     auto sysMenu = new QMenu(window);
@@ -315,7 +319,7 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
 
     sysMenu->addAction(QIcon(":/ui/delete"), "Delete Scenario", [=]()
                        {
-                            deleteScenario(sceneGraphWidget->getSceneGraph());
+                           deleteScenario(sceneGraphWidget->getSceneGraph());
                        });
     window->setSystemMenu(sysMenu);
 
@@ -329,7 +333,7 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
                 window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
             });
 
-	window->showMaximized();
+    window->showMaximized();
 
     return sceneGraphWidget;
 }
@@ -387,9 +391,9 @@ void MainWindow::cloneActiveScenario()
 
 QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
 {
-	auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
-	auto uiValue = handler->createJsValue();
-	auto scenesValue = handler->createJsValue();
+    auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
+    auto uiValue = handler->createJsValue();
+    auto scenesValue = handler->createJsValue();
 
     std::for_each(sceneGraphWidgets.begin(), sceneGraphWidgets.end(), [=, &scenesValue](SceneGraphWidget* sgw)
                   {
@@ -397,38 +401,65 @@ QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
                       scenesValue.setProperty(sceneGraph->getModelGraph()->getIdentifier(), sgw->saveToJSValue(handler));
                   });
 
-	uiValue.setProperty("scenes", scenesValue);
-	return uiValue;
+    uiValue.setProperty("scenes", scenesValue);
+    return uiValue;
 }
 
 bool MainWindow::loadFromJSValue(const QJSValue& v)
 {
     //auto sceneGraphWidgets = findChildren<SceneGraphWidget*>();
 
-	auto scenesValue = v.property("scenes");
-	QJSValueIterator it(scenesValue);
-	while (it.hasNext())
-	{
-		it.next();
-		auto sceneId = it.name();
-		auto sceneValue = it.value();
-		auto sgw = findChild<SceneGraphWidget*>(sceneId);
-		if (sgw != nullptr)
-		{
-			sgw->loadFromJSValue(sceneValue);
-		}
-	}
+    auto scenesValue = v.property("scenes");
+    QJSValueIterator it(scenesValue);
+    while (it.hasNext())
+    {
+        it.next();
+        auto sceneId = it.name();
+        auto sceneValue = it.value();
+        auto sgw = findChild<SceneGraphWidget*>(sceneId);
+        if (sgw != nullptr)
+        {
+            sgw->loadFromJSValue(sceneValue);
+        }
+    }
 
-	return true;
+    return true;
 }
 
 void MainWindow::openLastProject()
 {
-	auto recentProjects = _settingsManager->enumRecentProjects();
-	if (!recentProjects.isEmpty())
-	{
+    auto recentProjects = _settingsManager->enumRecentProjects();
+    if (!recentProjects.isEmpty())
+    {
         openProject(recentProjects.first());
     }
+}
+
+void MainWindow::setMiniMapLocation(int location)
+{
+    _settingsManager->setMiniMapLocation(location);
+    for(auto subWindow : _ui.mdiArea->subWindowList())
+    {
+        auto sgw = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+        if(sgw != nullptr)
+        {
+            sgw->getSceneGraph()->getMiniMap()->setAnchor(location);
+        }
+    }
+}
+
+void MainWindow::setMiniMapStatus(bool status)
+{
+    _settingsManager->setMiniMapStatus(status);
+    for(auto subWindow : _ui.mdiArea->subWindowList())
+    {
+        auto sgw = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+        if(sgw != nullptr)
+        {
+            sgw->getSceneGraph()->getMiniMap()->setVisible(status);
+        }
+    }
+    _miniMapAction->setChecked(status);
 }
 
 SceneGraphWidget *MainWindow::getActiveSceneGraphWidget() const
@@ -439,120 +470,120 @@ SceneGraphWidget *MainWindow::getActiveSceneGraphWidget() const
 
 void MainWindow::onOpenProject()
 {
-	auto fileName = QFileDialog::getOpenFileName(this, "Open project", _settingsManager->getLastOpenedLocation(), "RQFL Project (*.rqfl)");
-	openProject(fileName);
+    auto fileName = QFileDialog::getOpenFileName(this, "Open project", _settingsManager->getLastOpenedLocation(), "RQFL Project (*.rqfl)");
+    openProject(fileName);
 }
 
 void MainWindow::updateRecentProjectsList()
 {
-	auto recentProjects = _settingsManager->enumRecentProjects();
+    auto recentProjects = _settingsManager->enumRecentProjects();
     //auto menu = _openProject->menu();
     auto menu = _recentProjectsMenu;
-	auto actions = menu->actions();
+    auto actions = menu->actions();
 
-	for (auto action : actions)
-	{
-		menu->removeAction(action);
-		delete action;
-	}
+    for (auto action : actions)
+    {
+        menu->removeAction(action);
+        delete action;
+    }
 
-	// add an open project action
+    // add an open project action
     for (const auto& prj : recentProjects)
     {        
         auto action = menu->addAction(QIcon(":/ui/network"), prj);
         connect(action, &QAction::triggered, this, [=]()
-			{
-				openProject(prj);
-            });
-	}
+                {
+                    openProject(prj);
+                });
+    }
 
-	if (recentProjects.size() > 0)
-	{
-		menu->addSeparator();
-		auto action = menu->addAction("Clear recent projects list");
-		auto font = action->font();
-		font.setBold(true);
-		action->setFont(font);
-		action->setIcon(QIcon(":/ui/broom"));
+    if (recentProjects.size() > 0)
+    {
+        menu->addSeparator();
+        auto action = menu->addAction("Clear recent projects list");
+        auto font = action->font();
+        font.setBold(true);
+        action->setFont(font);
+        action->setIcon(QIcon(":/ui/broom"));
         connect(action, &QAction::triggered, this, [=]()
-			{
-				if (QMessageBox::warning(this,
-					"Warning",
-					"Clear recent projects list",
-					QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Yes)
-				{
-					_settingsManager->clearRecentProjects();
-					updateRecentProjectsList();
-				}
-            });
-	}
-	else
-	{
-		auto action = menu->addAction("Empty list");
-		action->setEnabled(false);
-	}
+                {
+                    if (QMessageBox::warning(this,
+                                             "Warning",
+                                             "Clear recent projects list",
+                                             QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Yes)
+                    {
+                        _settingsManager->clearRecentProjects();
+                        updateRecentProjectsList();
+                    }
+                });
+    }
+    else
+    {
+        auto action = menu->addAction("Empty list");
+        action->setEnabled(false);
+    }
 }
 
 int MainWindow::onCloseProject()
 {
-	int button = -999;
-	if (_project != nullptr)
-	{
-		button = QMessageBox::information(this, "Save", "Save the project before closing it?",
-			QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
-		switch (button)
-		{
-		case QMessageBox::StandardButton::Yes:
-			onSaveProject();
-			break;
-		case QMessageBox::No:
-			break;
-		case QMessageBox::Cancel:
-			return -1;
-		}
+    int button = -999;
+    if (_project != nullptr)
+    {
+        button = QMessageBox::information(this, "Save", "Save the project before closing it?",
+                                          QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
+        switch (button)
+        {
+        case QMessageBox::StandardButton::Yes:
+            onSaveProject();
+            break;
+        case QMessageBox::No:
+            break;
+        case QMessageBox::Cancel:
+            return -1;
+        }
 
         for(auto graph : _project->getGraphs())
         {
             graph->cancel();
         }
-	}
+    }
 
-	setWindowTitle("RequestFlow");
+    setWindowTitle("RequestFlow");
 
     _project.reset();
 
-	qDeleteAll(_ui.mdiArea->subWindowList());
-	_ui.mdiArea->closeAllSubWindows();
+    qDeleteAll(_ui.mdiArea->subWindowList());
+    _ui.mdiArea->closeAllSubWindows();
 
     _environmentsWidget->setProject(nullptr);
     _environmentsWidget->update();
 
     setProject(nullptr);
-	return button;
+    return button;
 }
 
 void MainWindow::onSaveProject()
 {
-	if (_project != nullptr)
-	{
-		QString path = _project->getPath();
-		if (path.isEmpty())
-		{
-			path = QFileDialog::getSaveFileName(this, "Save project", "", "RQFL Project (*.rqfl)");
-			if (path.isEmpty()) return;
-		}
-		QFile fp(path);
-		if (fp.open(QIODevice::WriteOnly))
-		{
-			model::PersistenceHandler handler;
-			_project->setPath(path);
-			auto projectValue = _project->saveToJSValue(&handler);
-			auto uiValue = savetoJSValue(&handler);
-			projectValue.setProperty("ui", uiValue);
+    if (_project != nullptr)
+    {
+        QString path = _project->getPath();
+        if (path.isEmpty())
+        {
+            path = QFileDialog::getSaveFileName(this, "Save project", "", "RQFL Project (*.rqfl)");
+            if (path.isEmpty()) return;
+        }
+        QFile fp(path);
+        if (fp.open(QIODevice::WriteOnly))
+        {
+            model::PersistenceHandler handler;
+            _project->setPath(path);
+            auto projectValue = _project->saveToJSValue(&handler);
+            auto uiValue = savetoJSValue(&handler);
+            projectValue.setProperty("ui", uiValue);
 
-			QTextStream out(&fp);
-			out << handler.evaluate(projectValue);
-			fp.close();
+            QTextStream out(&fp);
+            out << handler.evaluate(projectValue);
+            fp.close();
         }
     }
 }
@@ -582,23 +613,23 @@ void MainWindow::onSaveProjectAs()
 
 void MainWindow::onImportSwagger()
 {
-	if (_project)
-	{
-		auto fileName = QFileDialog::getOpenFileName(this, "Import swagger file", "", "JSON (*.json)");
+    if (_project)
+    {
+        auto fileName = QFileDialog::getOpenFileName(this, "Import swagger file", "", "JSON (*.json)");
 
-		if (!fileName.isEmpty())
-		{
-			auto document = new model::Document(_project.get());
-			if (!document->importFromSwagger(fileName))
-			{
-				delete document;
-			}
-			else
-			{
-				_ui.inventoryWidget->setProject(_project.get());
-			}
-		}
-	}
+        if (!fileName.isEmpty())
+        {
+            auto document = new model::Document(_project.get());
+            if (!document->importFromSwagger(fileName))
+            {
+                delete document;
+            }
+            else
+            {
+                _ui.inventoryWidget->setProject(_project.get());
+            }
+        }
+    }
 }
 
 void MainWindow::onNewProject()
@@ -611,16 +642,16 @@ void MainWindow::onNewProject()
 
 void MainWindow::onSceneDeleted(QString identifier)
 {
-	if (_subwindowsMap.contains(identifier))
-	{
-		delete _subwindowsMap.take(identifier);
-	}
+    if (_subwindowsMap.contains(identifier))
+    {
+        delete _subwindowsMap.take(identifier);
+    }
 }
 
 void MainWindow::onActivateScene(model::Graph* scene)
 {
-	if (_subwindowsMap.contains(scene->getIdentifier()))
-	{
-		_subwindowsMap[scene->getIdentifier()]->showMaximized();
-	}
+    if (_subwindowsMap.contains(scene->getIdentifier()))
+    {
+        _subwindowsMap[scene->getIdentifier()]->showMaximized();
+    }
 }

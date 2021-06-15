@@ -94,6 +94,26 @@ uint view::SettingsManager::getEdgesStyle() const
     return getEntry("edgeStyle", 0).toUInt();
 }
 
+void view::SettingsManager::setMiniMapLocation(int location)
+{
+    setEntry("MiniMapLocation", location);
+}
+
+int view::SettingsManager::getMiniMapLocation() const
+{
+    return getEntry("MiniMapLocation", 0).toInt();
+}
+
+void view::SettingsManager::setMiniMapStatus(bool status)
+{
+    setEntry("MiniMapStatus", status);
+}
+
+bool view::SettingsManager::getMiniMapStatus() const
+{
+    return getEntry("MiniMapStatus", true).toBool();
+}
+
 void view::SettingsManager::setEntry(const QString &name, const QVariant &value)
 {
     _settings->setValue(name, value);

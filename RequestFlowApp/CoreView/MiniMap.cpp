@@ -2,7 +2,7 @@
 
 view::MiniMap::MiniMap()
 {
-    _anchor = Anchor::BOTTOM_LEFT;
+    _anchor = Anchor::TOP_RIGHT;
     _coords = QPointF(0, 0);
     _size = QSize(192, 192);
     setZValue(100);
@@ -184,12 +184,12 @@ void view::MiniMap::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-view::MiniMap::Anchor view::MiniMap::getAnchor() const
+int view::MiniMap::getAnchor() const
 {
     return _anchor;
 }
 
-void view::MiniMap::setAnchor(Anchor newAnchor)
+void view::MiniMap::setAnchor(int newAnchor)
 {
     _anchor = newAnchor;
 }
@@ -219,7 +219,6 @@ void view::MiniMap::setSize(const QSize &newSize)
 {
     _size = newSize;
 }
-
 
 QPointF view::MiniMap::getCoords() const
 {

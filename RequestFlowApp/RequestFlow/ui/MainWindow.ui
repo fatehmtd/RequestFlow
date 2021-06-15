@@ -13,6 +13,15 @@
   <property name="windowTitle">
    <string>RequestFlow</string>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>32</width>
+    <height>32</height>
+   </size>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonTextUnderIcon</enum>
+  </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
@@ -178,7 +187,8 @@ border-right: 2px solid black;
              <string>clone</string>
             </property>
             <property name="icon">
-             <iconset theme=":/ui/duplicate"/>
+             <iconset theme=":/ui/duplicate">
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="autoRaise">
              <bool>true</bool>
@@ -197,7 +207,8 @@ border-right: 2px solid black;
              <string>delete</string>
             </property>
             <property name="icon">
-             <iconset theme=":/ui/delete"/>
+             <iconset theme=":/ui/delete">
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="autoRaise">
              <bool>true</bool>
@@ -296,7 +307,8 @@ border-right: 2px solid black;
         <string>New</string>
        </property>
        <property name="icon">
-        <iconset theme=":/ui/test_case"/>
+        <iconset theme=":/ui/test_case">
+         <normaloff>.</normaloff>.</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -324,7 +336,8 @@ border-right: 2px solid black;
         <string>Clone</string>
        </property>
        <property name="icon">
-        <iconset theme=":/ui/duplicate"/>
+        <iconset theme=":/ui/duplicate">
+         <normaloff>.</normaloff>.</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -352,7 +365,8 @@ border-right: 2px solid black;
         <string>Delete</string>
        </property>
        <property name="icon">
-        <iconset theme=":/ui/delete"/>
+        <iconset theme=":/ui/delete">
+         <normaloff>.</normaloff>.</iconset>
        </property>
        <property name="iconSize">
         <size>

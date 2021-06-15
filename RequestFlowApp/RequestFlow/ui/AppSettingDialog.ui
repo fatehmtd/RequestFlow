@@ -35,7 +35,13 @@
          <property name="text">
           <string>No proxy</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
          <property name="checked">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
           <bool>true</bool>
          </property>
         </widget>
@@ -47,6 +53,9 @@
          </property>
          <property name="checked">
           <bool>false</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QGraphicsObject>
+#include "coreview_global.h"
 
 namespace view
 {
-    class MiniMap : public QGraphicsObject
+    class COREVIEW_EXPORT MiniMap : public QGraphicsObject
     {
     public:
         MiniMap();
@@ -23,8 +24,8 @@ namespace view
         const QSize &getSize() const;
         void setSize(const QSize &newSize);
 
-        Anchor getAnchor() const;
-        void setAnchor(Anchor newAnchor);
+        int getAnchor() const;
+        void setAnchor(int newAnchor);
 
         void setGap(float g);
         float getGap() const;
@@ -46,7 +47,7 @@ namespace view
         QSize _size;
         float _gap = 0.0f;
         float _invScale = 1.0f;
-        Anchor _anchor;
+        int _anchor;
         QRectF _parentViewport;
 
         bool _mousePressed = false;

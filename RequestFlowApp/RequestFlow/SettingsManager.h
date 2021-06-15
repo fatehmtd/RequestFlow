@@ -45,6 +45,14 @@ namespace view
         void setEdgesStyle(uint style);
         uint getEdgesStyle() const;
 
+        ///////////////////////////////////////////////////////////////////////
+        /// MiniMap
+        ///
+        void setMiniMapLocation(int location);
+        int getMiniMapLocation() const;
+
+        void setMiniMapStatus(bool status);
+        bool getMiniMapStatus() const;
 
         //////////////////////////////////////////////////////////////////////
         /// Generic set/get entries
