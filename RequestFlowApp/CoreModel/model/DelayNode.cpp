@@ -22,8 +22,8 @@ model::DelayNode::DelayNode(model::Graph* graph) : model::Node(graph, "Delay")
 
 void model::DelayNode::createModel()
 {
-	addInputSlot("input", Slot::DataType::CUSTOM);
-	addOutputSlot("output", Slot::DataType::CUSTOM);
+    addInputSlot("Input", Slot::DataType::CUSTOM);
+    addOutputSlot("Output", Slot::DataType::CUSTOM);
 }
 
 void model::DelayNode::setDelay(int duration)

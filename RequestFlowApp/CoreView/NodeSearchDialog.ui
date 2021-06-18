@@ -17,14 +17,18 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Node Search ...</string>
+   <string>Find Node</string>
   </property>
   <property name="modal">
    <bool>true</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="2">
-    <widget class="QListView" name="listView"/>
+    <widget class="QListView" name="listView">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="0" column="0">
     <widget class="QLineEdit" name="lineEdit">
@@ -40,6 +44,15 @@
     <widget class="QToolButton" name="toolButton">
      <property name="text">
       <string>Search...</string>
+     </property>
+     <property name="icon">
+      <iconset theme=":/ui/search"/>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextBesideIcon</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>false</bool>
      </property>
     </widget>
    </item>

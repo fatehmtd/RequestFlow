@@ -45,8 +45,9 @@ void logic::EndpointNode::initUI()
 	_ui.tabWidget_authentication->setCurrentIndex(endpointNode->getAuthMethod());
 	_ui.lineEdit_baUser->setText(endpointNode->getBasicAuthUser());
 	_ui.lineEdit_baPwd->setText(endpointNode->getBasicAuthPassword());
-	_ui.lineEdit_bearerToken->setText(endpointNode->getBearerToken());
-	
+    _ui.lineEdit_bearerToken->setText(endpointNode->getBearerToken());
+
+    // Http codes
 	{
 		_ui.tableWidget_acceptedCodes->clearContents();
 		auto codes = endpointNode->getAcceptedCodes();
@@ -64,6 +65,21 @@ void logic::EndpointNode::initUI()
 		}
 	}
 
+    // Extra headers
+    {
+        _ui.tableWidget_extraHeaders->clearContents();
+        auto extraHeaders = endpointNode->getExtraHeaders();
+        int index = 0;
+        for(auto key : extraHeaders.keys())
+        {
+            auto value = extraHeaders[key];
+            if(value.isEmpty()) continue;
+            _ui.tableWidget_extraHeaders->setItem(index, 0, new QTableWidgetItem(key));
+            _ui.tableWidget_extraHeaders->setItem(index, 1, new QTableWidgetItem(value));
+            index++;
+        }
+    }
+
 	// connect signals
 	connect(_ui.lineEdit_url, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setUrl);
 	connect(_ui.lineEdit_baUser, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBasicAuthUser);
@@ -73,6 +89,37 @@ void logic::EndpointNode::initUI()
 	connect(_ui.spinBox_timeout, SIGNAL(valueChanged(int)), this, SLOT(onTimeoutChanged(int)));
 	connect(_ui.comboBox_method, SIGNAL(currentIndexChanged(int)), this, SLOT(onHttpMethodChanged(int)));
 	connect(_ui.comboBox_contentType, SIGNAL(currentTextChanged(const QString&)), this, SLOT(onContentTypeChanged(const QString&)));
+
+    connect(_ui.tableWidget_extraHeaders, &QTableWidget::itemChanged, this, [=](QTableWidgetItem* item)
+        {/*
+                QString value = item->data(Qt::DisplayRole).toString();
+
+                // validate the value
+                // check if already existing
+
+                if (endpointNode->getExtraHeaders().contains(value))
+                {
+                    _ui.tableWidget_extraHeaders->blockSignals(true);
+                    item->setData(Qt::DisplayRole, ""); // clear the cell
+                    _ui.tableWidget_extraHeaders->blockSignals(false);
+                }*/
+                //else // set the values in the model
+                {
+                    QMap<QString, QString> values;
+                    for (auto i = 0; i < _ui.tableWidget_extraHeaders->rowCount(); i++)
+                    {
+                        auto itemKey = _ui.tableWidget_extraHeaders->item(i, 0);
+                        if (itemKey == nullptr) continue;
+                        auto itemValue = _ui.tableWidget_extraHeaders->item(i, 1);
+                        if (itemValue == nullptr) continue;
+                        auto key = itemKey->data(Qt::DisplayRole).toString();
+                        if(key.isEmpty()) continue;
+                        auto value = itemValue->data(Qt::DisplayRole).toString();
+                        values[key] = value;
+                    }
+                    endpointNode->setExtraHeaders(values);
+                }
+            });
 
 	connect(_ui.tableWidget_acceptedCodes, &QTableWidget::itemChanged, this, [=](QTableWidgetItem* item) 
 		{
@@ -129,7 +176,8 @@ void logic::EndpointNode::initUI()
 			}
 		});
 
-	connect(endpointNode, &model::EndpointNode::consoleLogChanged, _ui.plainTextEdit_response, &QPlainTextEdit::setPlainText);
+    connect(endpointNode, &model::EndpointNode::consoleResponseLogChanged, _ui.plainTextEdit_response, &QPlainTextEdit::setPlainText);
+    connect(endpointNode, &model::EndpointNode::consoleRequestLogChanged, _ui.plainTextEdit_request, &QPlainTextEdit::setPlainText);
 
 	//_ui.plainTextEdit_response->setPalette(QPalette(Qt::black));
 	//_ui.plainTextEdit_response->setStyleSheet("color: white; background-color: black;");

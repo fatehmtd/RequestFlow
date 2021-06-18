@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="24"
-   height="24"
-   viewBox="0 0 6.3499999 6.3500002"
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg5"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
@@ -24,16 +24,15 @@
      inkscape:document-units="mm"
      showgrid="false"
      units="px"
-     inkscape:zoom="22.627417"
-     inkscape:cx="8.1883251"
-     inkscape:cy="12.034422"
+     inkscape:zoom="19.628841"
+     inkscape:cx="8.7880889"
+     inkscape:cy="17.703541"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
-     inkscape:rotation="1" />
+     inkscape:current-layer="g3585" />
   <defs
      id="defs2" />
   <g
@@ -41,13 +40,13 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:none;fill-opacity:0.737069;stroke:#000000;stroke-width:0.0824431;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:none;fill-opacity:0.737069;stroke:#000000;stroke-width:0.52916667;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect846"
-       width="5.4373364"
-       height="5.4373364"
-       x="0.43207586"
-       y="0.47836161"
-       ry="0.34733984" />
+       width="6.8811798"
+       height="6.8811798"
+       x="0.79274327"
+       y="0.79274344"
+       ry="0" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -67,7 +66,7 @@
      inkscape:groupmode="layer"
      id="g3593"
      inkscape:label="Top right"
-     style="display:inline">
+     style="display:none">
     <rect
        style="fill:none;fill-opacity:0.737069;stroke:#000000;stroke-width:0.0798276;stroke-linejoin:round;stroke-opacity:1"
        id="rect3591"
@@ -95,14 +94,14 @@
      inkscape:groupmode="layer"
      id="g3585"
      inkscape:label="Bottom right"
-     style="display:none">
+     style="display:inline">
     <rect
-       style="fill:none;fill-opacity:0.737069;stroke:#000000;stroke-width:0.0798276;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#838383;fill-opacity:0.459207;stroke:#000000;stroke-width:0.529167;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3583"
-       width="1.316209"
-       height="1.316209"
-       x="4.2376852"
-       y="4.2839708"
-       ry="0.084080108" />
+       height="3.1686833"
+       x="4.4979167"
+       y="0.79375017"
+       ry="0"
+       width="3.1686826" />
   </g>
 </svg>

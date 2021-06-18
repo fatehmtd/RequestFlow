@@ -37,7 +37,10 @@ HEADERS += ./coreview_global.h \
     ./logic/ScriptNode.h \
     ./logic/ViewerNode.h \
     ./InteractionsHandler.h \
+    CoreViewUtils.h \
+    CustomJSONModel.h \
     CustomNodeModel.h \
+    GenericJSONItem.h \
     MiniMap.h \
     NodeSearchDialog.h \
     view/GroupNode.h
@@ -59,7 +62,10 @@ SOURCES += ./view/ConnectionEdge.cpp \
     ./logic/ScriptNode.cpp \
     ./logic/ViewerNode.cpp \
     ./InteractionsHandler.cpp \
+    CoreViewUtils.cpp \
+    CustomJSONModel.cpp \
     CustomNodeModel.cpp \
+    GenericJSONItem.cpp \
     MiniMap.cpp \
     NodeSearchDialog.cpp \
     view/GroupNode.cpp

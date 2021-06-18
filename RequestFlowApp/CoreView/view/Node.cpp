@@ -82,7 +82,7 @@ void view::Node::setupUi()
     _minSize.setWidth(200);
     _minSize.setHeight(200);
 
-    _edgeSize = 5;
+    _edgeSize = 10;
 
     setAcceptHoverEvents(true);
 
@@ -101,10 +101,7 @@ void view::Node::setupUi()
     _title->setDefaultTextColor(Qt::white);
     _title->setPos(44, 8);
 
-    _icon = new QGraphicsSvgItem(this);
-    QPixmap pixmap(24, 24);
-    pixmap.fill(QColor(255, 255, 255, 100));
-    //_icon->setPixmap(pixmap);
+    _icon = new QGraphicsSvgItem(this);    
     _icon->setPos(18, 12);
     //_icon->setTransformationMode(Qt::TransformationMode::SmoothTransformation);
 }

@@ -1,64 +1,26 @@
 <RCC>
     <qresource prefix="/BleachUI">
-        <file alias="menu">icons/menu.png</file>
-        <file alias="view">icons/view.png</file>
-        <file alias="stopWatch">icons/stopwatch.png</file>
-        <file alias="delete">icons/clear.png</file>
-        <file alias="data">icons/data.png</file>
-        <file alias="transfer">icons/transfer.png</file>
-        <file alias="save">icons/loading.png</file>
-        <file alias="load">icons/open.png</file>
         <file alias="play">icons/play.svg</file>
         <file alias="stop">icons/stop.svg</file>
     </qresource>
     <qresource prefix="/ui">
-        <file>icons/statistics.svg</file>
-        <file alias="import">icons/import.svg</file>
-        <file alias="delete">icons/delete.svg</file>
-        <file>icons/pause.svg</file>
         <file>icons/play.svg</file>
         <file alias="duplicate">icons/duplicate.svg</file>
-        <file>icons/desk-lamp.svg</file>
-        <file>icons/desk.svg</file>
         <file alias="broom">icons/broom.svg</file>
         <file alias="minus">icons/minus.svg</file>
         <file alias="plus">icons/plus.svg</file>
-        <file>icons/selective.svg</file>
-        <file>icons/folder.svg</file>
-        <file>icons/screen.svg</file>
-        <file>icons/tools.svg</file>
-        <file>icons/trash.svg</file>
-        <file>icons/wrench.svg</file>
         <file alias="close_file">icons/file_close.svg</file>
-        <file>icons/add_database_2.svg</file>
-        <file>icons/add_folder_2.svg</file>
-        <file>icons/add_link_2.svg</file>
-        <file alias="project">icons/briefcase_1.svg</file>
-        <file>icons/create_new_2.svg</file>
-        <file>icons/engineering_1.svg</file>
-        <file>icons/information_1.svg</file>
-        <file>icons/monitor_1.svg</file>
-        <file>icons/save_2.svg</file>
-        <file alias="export">icons/export.svg</file>
         <file alias="requestflow_bg">icons/requestflow_bg.png</file>
         <file alias="environment">icons/server.svg</file>
         <file alias="swagger">icons/swagger.png</file>
-        <file alias="warning">icons/warning.svg</file>
         <file alias="get">icons/get.svg</file>
         <file alias="post">icons/post.svg</file>
         <file alias="del">icons/del.svg</file>
         <file alias="put">icons/put.svg</file>
-        <file alias="url">icons/web-search-engine.svg</file>
         <file alias="hashtag">icons/hastag.svg</file>
         <file alias="network">icons/network.png</file>
         <file alias="{}">icons/curly_brakets.svg</file>
         <file alias="[]">icons/brackets.svg</file>
-        <file alias="warningyellow">icons/warning (1).svg</file>
-        <file alias="info">icons/information (1).svg</file>
-        <file alias="debug">icons/debugging.svg</file>
-        <file alias="error">icons/no-entry.svg</file>
-        <file alias="ok">icons/tick.svg</file>
-        <file alias="afilterir-">icons/air-filter.svg</file>
         <file alias="filter">icons/right-arrow.svg</file>
         <file alias="pen">icons/pen.svg</file>
         <file alias="settings">icons/settings.svg</file>
@@ -76,6 +38,9 @@
         <file alias="information">icons/information.svg</file>
         <file alias="external_link">icons/external_link.svg</file>
         <file alias="unlock">icons/unlock.svg</file>
+        <file alias="edge_curve">icons/edge_curve.svg</file>
+        <file alias="edge_line">icons/edge_line.svg</file>
+        <file alias="delete">icons/delete.svg</file>
     </qresource>
     <qresource prefix="/misc">
         <file>license.txt</file>

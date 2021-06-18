@@ -165,7 +165,6 @@ QMimeData* InventoryItemModel::mimeData(const QModelIndexList& indexes) const
 
     std::for_each(indexes.begin(), indexes.end(), [=, &endpoints](const QModelIndex& index)
                   {
-                      qDebug() << __FUNCTION__ << index;
                       auto inventoryItem = getItemFromModelIndex(index);
                       if(inventoryItem->getType() == InventoryItem::Type::Endpoint)
                       {

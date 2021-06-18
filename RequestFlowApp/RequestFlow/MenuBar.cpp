@@ -95,7 +95,7 @@ void MainWindow::setupMenuBar()
     // Environment menu
     {
         _environmentsMenu = menuBar()->addMenu("Environment");
-        _environmentConfigAction = _environmentsMenu->addAction(QIcon(), "Configure...", [=]()
+        _environmentConfigAction = _environmentsMenu->addAction(QIcon(":/ui/environment"), "Configure...", [=]()
                                                                 {
                                                                     QDialog dialog(this);
                                                                     dialog.setWindowTitle("Environments");
@@ -252,11 +252,11 @@ void MainWindow::setupMenuBar()
         }
 
         auto edgeStyleMenu = _viewMenu->addMenu("Edge Style");
-        auto curvesAction = edgeStyleMenu->addAction(QIcon(), "Curves", [=]()
+        auto curvesAction = edgeStyleMenu->addAction(QIcon(":/ui/edge_curve"), "Curves", [=]()
                                                      {
                                                          setEdgesStyle(view::SceneGraph::EdgeType::CURVES);
                                                      });
-        auto linesAction = edgeStyleMenu->addAction(QIcon(), "Lines", [=]()
+        auto linesAction = edgeStyleMenu->addAction(QIcon(":/ui/edge_line"), "Lines", [=]()
                                                     {
                                                         setEdgesStyle(view::SceneGraph::EdgeType::LINES);
                                                     });

@@ -10,7 +10,7 @@ TARGET = RequestFlow
 
 RC_ICONS = $$PWD/icons/network.ico
 
-win32: LIBS += User32.lib
+#win32: LIBS += User32.lib
 
 HEADERS += ./resource.h \
     ./BackgroundPaintFilter.h \

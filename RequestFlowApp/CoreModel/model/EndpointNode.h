@@ -47,6 +47,7 @@ namespace model
         Q_ENUM(HttpMethod);
 
         static int HttpMethodFromString(const QString& string);
+        static QString HttpMethodStr(int method);
 
         enum AuthorizationMethod
         {
@@ -69,8 +70,11 @@ namespace model
 		void setContentType(const QString& contentType);
 		QString getContentType() const;
 
-		void setConsoleLog(const QString& log);
-		QString getConsoleLog() const;
+        void setConsoleResponseLog(const QString& log);
+        QString getConsoleResponseLog() const;
+
+        void setConsoleRequestLog(const QString& log);
+        QString getConsoleRequestLog() const;
 
 		void setHttpMethod(int method);
 		int getHttpMethod() const;
@@ -118,7 +122,8 @@ namespace model
         void timeoutChanged(int);  
         void urlChanged(QString);
         void contentTypeChanged(QString);
-        void consoleLogChanged(QString);
+        void consoleResponseLogChanged(QString);
+        void consoleRequestLogChanged(QString);
         void userAgentChanged(QString);
 
     private:
@@ -131,6 +136,7 @@ namespace model
 		QNetworkReply* sendPost(QNetworkRequest request);
 		QNetworkReply* sendDel(QNetworkRequest request);
 		QNetworkReply* sendPut(QNetworkRequest request);
+        QNetworkReply *sendPatch(QNetworkRequest request);
 
         void onErrorOccurred(QNetworkReply::NetworkError error);
 
@@ -148,7 +154,8 @@ namespace model
 
         QString _url;
         QString _contentType;
-        QString _consoleLog;
+        QString _consoleResponseLog;
+        QString _consoleRequestLog;
         QString _userAgent;
         QList<unsigned int> _acceptedCodes, _rejectedCodes;
         QNetworkAccessManager* _networkAccessManager = nullptr;

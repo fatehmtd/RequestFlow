@@ -10,7 +10,7 @@ model::PayloadNode::PayloadNode(model::Graph* graph) : model::Node(graph, "Paylo
 
 void model::PayloadNode::createModel()
 {
-	addOutputSlot("output", Slot::CUSTOM);
+    addOutputSlot("Output", Slot::CUSTOM);
 }
 
 void model::PayloadNode::setMessage(const model::Message& message)

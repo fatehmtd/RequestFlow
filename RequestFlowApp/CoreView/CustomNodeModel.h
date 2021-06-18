@@ -27,6 +27,8 @@ public:
 private:
     QList<model::Node*> filterNodes(const QString& filter = "");
 
+    QColor getNodeColor(model::Node* node) const;
+
 private:
     model::Graph* _graph = nullptr;
     QList<model::Node*> _filteredNodes;

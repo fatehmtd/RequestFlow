@@ -1,5 +1,6 @@
 #include "GraphLogMessagesWidget.h"
 #include "LogMessagesWidget.h"
+#include "view/Colors.h"
 
 GraphLogMessagesWidget::GraphLogMessagesWidget(QWidget* parent, model::MessageLogger* logger) : QWidget(parent), _messageLogger(logger)
 {
@@ -70,11 +71,8 @@ void GraphLogMessagesWidget::onCleared()
 	ui.tableWidget->setRowCount(0);
 }
 
-#include "view/Colors.h"
-
 void GraphLogMessagesWidget::onLogged(const model::MessageLogger::Message& m)
 {
-    qDebug() << __FUNCTION__<< m.message;
 	int row = ui.tableWidget->rowCount();
 	ui.tableWidget->setRowCount(row + 1);
 

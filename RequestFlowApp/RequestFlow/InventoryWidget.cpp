@@ -85,9 +85,17 @@ void InventoryWidget::applyFilter(const QString &filter)
         _timer->start(300);
 }
 
+#include <CoreViewUtils.h>
+
 InventoryItem *InventoryWidget::createRootItem(model::Project *project)
 {
-    const QIcon icons[] = { QIcon(":/ui/get"), QIcon(":/ui/post") , QIcon(":/ui/put") , QIcon(":/ui/del"), QIcon(":/ui/patch") };
+    static const QIcon icons[] = {
+        view::SVGRenderer::getInstance()->renderToIcon(":/ui/get"),
+        view::SVGRenderer::getInstance()->renderToIcon(":/ui/post") ,
+        view::SVGRenderer::getInstance()->renderToIcon(":/ui/put") ,
+        view::SVGRenderer::getInstance()->renderToIcon(":/ui/del"),
+        view::SVGRenderer::getInstance()->renderToIcon(":/ui/patch") };
+
     const QIcon swaggerIcon = QIcon(":/ui/swagger");
 
     InventoryItem *rootItem = new InventoryItem();

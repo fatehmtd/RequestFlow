@@ -12,32 +12,6 @@ namespace logic
 
     static constexpr int THRESHOLD = 10000;
 
-    class AbstractItem;
-
-    class COREVIEW_EXPORT CustomModel : public QAbstractItemModel
-    {
-        Q_OBJECT
-    public:
-        CustomModel(AbstractItem* rootItem, QObject* parent);
-
-        virtual ~CustomModel();
-
-        QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
-
-        QModelIndex parent(const QModelIndex& child) const override;
-
-        int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-
-        int columnCount(const QModelIndex& parent = QModelIndex()) const override;
-
-        QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-
-        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    private:
-        AbstractItem* _root = nullptr;
-    };
-
-
     class ViewerNodeWidget : public QWidget
     {
         Q_OBJECT

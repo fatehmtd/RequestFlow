@@ -22,8 +22,14 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLineEdit" name="lineEdit">
+     <property name="frame">
+      <bool>true</bool>
+     </property>
      <property name="placeholderText">
       <string>Filter...</string>
+     </property>
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -40,6 +46,12 @@
      </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
      <attribute name="headerVisible">
       <bool>false</bool>

@@ -1,4 +1,7 @@
 #include "CustomNodeModel.h"
+#include <QColor>
+#include "view/Colors.h"
+#include <QHash>
 
 CustomNodeModel::CustomNodeModel(model::Graph *graph, const QString &filter, QObject *parent)
     : QAbstractItemModel(parent), _graph(graph)
@@ -20,6 +23,24 @@ QList<model::Node *> CustomNodeModel::filterNodes(const QString &filter)
         }
     }
     return nodes;
+}
+
+
+QColor CustomNodeModel::getNodeColor(model::Node* node) const
+{
+    static QHash<QString, QColor> colorsMap;
+    if(colorsMap.isEmpty())
+    {
+        colorsMap["Assert"] = view::colors::nodes::assertion;
+        colorsMap["Payload"] = view::colors::nodes::payload;
+        colorsMap["Endpoint"] = view::colors::nodes::endpoint;
+        colorsMap["Delay"] = view::colors::nodes::delay;
+        colorsMap["Script"] = view::colors::nodes::script;
+        colorsMap["Viewer"] = view::colors::nodes::viewer;
+        colorsMap["External"] = view::colors::nodes::external;
+    }
+
+    return colorsMap[node->getType()];
 }
 
 QModelIndex CustomNodeModel::index(int row, int column, const QModelIndex &parent) const
@@ -51,6 +72,8 @@ QVariant CustomNodeModel::data(const QModelIndex &index, int role) const
 
     switch(role)
     {
+    case Qt::DecorationRole:
+        return getNodeColor(node);
     case Qt::DisplayRole:
     {
         QString sanitizedName = node->getName().isEmpty() ? "Untitled" : node->getName();

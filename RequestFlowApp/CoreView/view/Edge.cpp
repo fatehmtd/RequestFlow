@@ -22,7 +22,7 @@ view::Edge::Edge(SceneGraph* graph, model::Edge* edge) : _edge(edge)
 	setZValue(-1);
 	setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
 	setAcceptHoverEvents(true);
-	_thickness = 7.0f;
+    _thickness = 9.0f;
 
 	_idleColor = QColor("#4D4B4D");
 	_successColor = colors::blue;
@@ -61,11 +61,11 @@ void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
 	//QPen pen(isSelected() ? colors::orange : (_mouseHovering ? colors::orange : QColor("#4D4B4D")), _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
 	auto currentColor = (isSelected() || _mouseHovering) ? _hoverColor : evalColor();
-	QPen pen(currentColor, _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
-	
+    QPen pen(currentColor, _thickness, _mouseHovering ? Qt::PenStyle::DotLine : Qt::PenStyle::SolidLine);
+
 	painter->setPen(pen);
 	painter->setBrush(Qt::BrushStyle::NoBrush);
-	painter->drawPath(path);
+    painter->drawPath(path);
 }
 
 QPainterPath view::Edge::buildPath() const
@@ -152,7 +152,7 @@ QRectF view::Edge::boundingRect() const
     auto v = s->views()[0];
     auto r = v->sceneRect();
 
-    return r.normalized();
+    return s->sceneRect().normalized();
     //return buildPath().boundingRect().normalized();
     /*
     //TODO: fix this workaround to render using the proper boundingRect

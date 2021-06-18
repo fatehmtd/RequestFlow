@@ -74,7 +74,7 @@ void EnvironmentsWidget::setProject(model::Project* project)
 	else
 	{
 		_environmentsModel->setProject(project);
-		_ui.comboBox_environments->setModel(nullptr);
+        //_ui.comboBox_environments->setModel(nullptr);
 		_ui.comboBox_environments->clear();
 		_ui.tableWidget_entries->clearContents();
 	}

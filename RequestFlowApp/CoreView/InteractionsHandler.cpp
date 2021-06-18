@@ -284,11 +284,10 @@ QIcon createColoredRect(QColor color, const QString & icon = "")
 {
     if(!icon.isEmpty())
     {
-        int s = 64;
-        int padding = 4;
+        int s = 128;
+        int padding = 8;
         QImage outputImg(s, s, QImage::Format::Format_RGBA8888);
         outputImg.fill(color);
-
 
         QImage iconImage(s-2*padding, s-2*padding, QImage::Format::Format_RGBA8888);
         iconImage.fill(color);
@@ -310,9 +309,9 @@ QIcon createColoredRect(QColor color, const QString & icon = "")
 
                 const float af = (float)qAlpha(src) * inv255;
                 //if(af <= 0.3f) continue;
-                const float r = qRed(src) * af + (1.0f-af)*qRed(colorRgba);
-                const float g = qGreen(src) * af + (1.0f-af)*qGreen(colorRgba);
-                const float b = qBlue(src) * af + (1.0f-af)*qBlue(colorRgba);
+                const float r = (qRed(src) * af + (1.0f-af)*qRed(colorRgba));
+                const float g = (qGreen(src) * af + (1.0f-af)*qGreen(colorRgba));
+                const float b = (qBlue(src) * af + (1.0f-af)*qBlue(colorRgba));
 
                 outputImg.setPixel(padding + i, padding + j, qRgba((int)r, (int)g, (int)b, qAlpha(src)));
             }
@@ -403,7 +402,7 @@ void view::InteractionsHandler::registerCommonActions()
             node->setPos(p);
         }, createColoredRect(view::colors::nodes::external, ":/nodes/external"), 1);
 
-    registerNodeAction("Clone Node", [=](const QPointF& p, QAction* action)
+    registerNodeAction("Duplicate", [=](const QPointF& p, QAction* action)
 		{
 			auto item = _sceneGraph->itemAt(p, QTransform());
 			auto originalNode = dynamic_cast<view::Node*>(item);
@@ -413,15 +412,17 @@ void view::InteractionsHandler::registerCommonActions()
 			{
 				node->setPos(p);
 			}
-		}, QIcon(":/BleachUI/copy"), 1);
+        }, QIcon(":/ui/duplicate"), 1);
 
     registerNodeAction("Rename", [=](const QPointF& p, QAction* action)
 		{
 			auto item = _sceneGraph->itemAt(p, QTransform());
 			auto originalNode = dynamic_cast<view::Node*>(item);
 
-			auto newName = QInputDialog::getText(_sceneGraph->views()[0]->parentWidget(), "Rename Node", "New name :", QLineEdit::Normal, originalNode->getModelNode()->getName());
+            bool okSelected = false;
+            auto newName = QInputDialog::getText(_sceneGraph->views()[0]->parentWidget(), "Rename Node", "New name :", QLineEdit::Normal, originalNode->getModelNode()->getName(), &okSelected);
             //if(!newName.isEmpty())
+            if(okSelected)
             {
                 originalNode->setTitle(newName);
                 originalNode->update();

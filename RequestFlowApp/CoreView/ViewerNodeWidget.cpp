@@ -68,136 +68,9 @@ void logic::ViewerNodeWidget::setupUi()
             });
 }
 
-namespace logic
-{
-class AbstractItem
-{
-public:
-    AbstractItem(const QString& path, const QString& value, int type, AbstractItem* parent)
-        : _path(path), _value(value), _type(type), _parent(parent)
-    {
-        switch (type)
-        {
-        case QVariant::Type::Map:
-        {
-            _decoration = QIcon(":/ui/{}");
-            _foreground = QColor(0, 0, 255);
-            break;
-        }
-        case QVariant::Type::List:
-        {
-            _decoration = QIcon(":/ui/[]");
-            _foreground = QColor(0, 0, 255);
-            break;
-        }
-        case QVariant::Type::String:
-        {
-            _foreground = QColor("#AC0D8A");
-            break;
-        }
-        case QVariant::Type::Bool:
-        {
-            _foreground = QColor("#002CF5");
-            break;
-        }
-        case QVariant::Type::Int:
-        case QVariant::Type::UInt:
-        case QVariant::Type::LongLong:
-        case QVariant::Type::ULongLong:
-        case QVariant::Type::Double:
-        {
-            _foreground = QColor("#00875C");
-            break;
-        }
-        }
-    }
+#include "CustomJSONModel.h"
 
-    ~AbstractItem()
-    {
-        qDeleteAll(_children);
-    }
-
-    AbstractItem* getParent() const
-    {
-        return _parent;
-    }
-
-    QList<AbstractItem*> getChildren() const
-    {
-        return _children;
-    }
-
-    void setPath(const QString& path)
-    {
-        _path = path;
-    }
-
-    QString getPath() const { return _path; }
-
-    void setValue(const QString& value)
-    {
-        _value = value;
-    }
-
-    QString getValue() const { return _value; }
-
-    int row() const
-    {
-        if (_parent != nullptr)
-        {
-            return _parent->_children.indexOf(const_cast<AbstractItem*>(this));
-        }
-        return 0;
-    }
-
-    AbstractItem* addChild(const QString& path, const QString& value, int type)
-    {
-        auto item = new AbstractItem(path, value, type, this);
-        _children << item;
-        ++_numChildren;
-        return item;
-    }
-
-    void setModelIndex(QModelIndex index)
-    {
-        _modelIndex = index;
-    }
-
-    QModelIndex getModelIndex() const
-    {
-        return _modelIndex;
-    }
-
-    int getNumChildren() const
-    {
-        return _numChildren;
-    }
-
-    int getType() const
-    {
-        return _type;
-    }
-
-    QVariant getForeground() const {
-        return _foreground;
-    }
-
-    QVariant getDecoration() const {
-        return _decoration;
-    }
-private:
-    QString _path, _value;
-    int _type;
-    AbstractItem* _parent = nullptr;
-    QList<AbstractItem*> _children;
-
-    QVariant _foreground, _decoration;
-
-    QModelIndex _modelIndex;
-    int _numChildren = 0;
-};
-
-void createItems(QString name, const QVariant& v, AbstractItem* parent)
+void createItems(QString name, const QVariant& v, logic::GenericJSONItem* parent)
 {
     auto item = parent->addChild(name, "", v.type());
 
@@ -230,122 +103,17 @@ void createItems(QString name, const QVariant& v, AbstractItem* parent)
         break;
     }
 }
-}
 
-logic::CustomModel::CustomModel(AbstractItem* rootItem, QObject* parent) : _root(rootItem), QAbstractItemModel(parent)
-{
-
-}
-
-logic::CustomModel::~CustomModel()
-{
-    if (_root != nullptr)
-        delete _root;
-}
-
-QModelIndex logic::CustomModel::index(int row, int column, const QModelIndex& parent) const
-{
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-
-    AbstractItem* parentItem = nullptr;
-
-    if (!parent.isValid())
-        parentItem = _root;
-    else
-        parentItem = static_cast<AbstractItem*>(parent.internalPointer());
-
-    auto item = parentItem->getChildren()[row];
-
-    auto modelIndex = createIndex(row, column, item);
-    return modelIndex;
-}
-
-QModelIndex logic::CustomModel::parent(const QModelIndex& child) const
-{
-    if (!child.isValid())
-        return QModelIndex();
-
-    auto childItem = static_cast<AbstractItem*>(child.internalPointer());
-
-    auto parentItem = childItem->getParent();
-
-    if (parentItem == nullptr)
-        return QModelIndex();
-
-    auto modelIndex = createIndex(parentItem->row(), 0, parentItem);
-    return modelIndex;
-}
-
-int logic::CustomModel::rowCount(const QModelIndex& parent) const
-{
-    AbstractItem* parentItem = nullptr;
-
-    if (!parent.isValid())
-        parentItem = _root;
-    else
-        parentItem = static_cast<AbstractItem*>(parent.internalPointer());
-
-    return parentItem->getNumChildren();
-}
-
-int logic::CustomModel::columnCount(const QModelIndex& parent) const
-{
-    return 1;
-}
-
-QVariant logic::CustomModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (role == Qt::DisplayRole)
-    {
-        if (section == 0) return "Key";
-        else return "Value";
-    }
-    return QAbstractItemModel::headerData(section, orientation, role);
-}
-
-QVariant logic::CustomModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid()) return QVariant();
-
-    auto item = static_cast<AbstractItem*>(index.internalPointer());
-
-    switch (role)
-    {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-    {
-        switch (index.column())
-        {
-        case 0:
-            return QString("%1 : %2").arg(item->getPath()).arg(item->getValue());
-        //case 1:
-        //return item->getValue();
-        default:
-            return QVariant();
-        }
-    }
-    case Qt::ForegroundRole:
-    {
-        return item->getForeground();
-    }
-    case Qt::DecorationRole:
-    {
-        return item->getDecoration();
-    }
-    }
-    return QVariant();
-}
 
 void logic::ViewerNodeWidget::setTreeModel(const QVariant& v)
 {
-    auto rootItem = new AbstractItem("root/", "root/", -1, nullptr);
+    auto rootItem = new GenericJSONItem("root/", "root/", -1, nullptr);
     createItems("/", v, rootItem);
 
     auto model = _ui.treeView->model();
     if (model != nullptr)
         delete model;
-    model = new CustomModel(rootItem, this);
+    model = new CustomJSONModel(rootItem, this);
     _ui.treeView->setModel(model);
     _ui.treeView->update();
     _ui.treeView->expand(model->index(0, 0));

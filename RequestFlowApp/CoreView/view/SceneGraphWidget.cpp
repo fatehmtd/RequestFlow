@@ -21,6 +21,7 @@
 #include <QPropertyAnimation>
 #include <QJSValueIterator>
 #include "../NodeSearchDialog.h"
+#include <QTimer>
 
 SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph) : QGraphicsView(parent), _sceneGraph(sceneGraph)
 {
@@ -35,13 +36,6 @@ SceneGraphWidget::~SceneGraphWidget()
 
 }
 
-view::SceneGraph* SceneGraphWidget::getSceneGraph() const
-{
-    return _sceneGraph;
-}
-
-#include <QTimer>
-
 void SceneGraphWidget::initUi()
 {
     setFocusPolicy(Qt::FocusPolicy::ClickFocus);
@@ -49,13 +43,13 @@ void SceneGraphWidget::initUi()
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     //TODO: test other flags
-    setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+    //setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
     setRenderHint(QPainter::RenderHint::Antialiasing, true);
-    setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
+    setRenderHint(QPainter::RenderHint::LosslessImageRendering, false);
     setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
     setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
-    setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, true);
+    setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, false);
 
     setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
     setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
@@ -70,6 +64,11 @@ void SceneGraphWidget::initUi()
     _zoomLevel = _defaultZoomLevel;
 
     setAcceptDrops(true);   
+}
+
+view::SceneGraph* SceneGraphWidget::getSceneGraph() const
+{
+    return _sceneGraph;
 }
 
 void SceneGraphWidget::setupViewport(QWidget *widget)
