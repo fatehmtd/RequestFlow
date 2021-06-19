@@ -1,6 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <g>
-        <path fill="none" d="M0 0h24v24H0z"/>
-        <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>
-    </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="delete.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     id="namedview10"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="70.166667"
+     inkscape:cx="8.1887902"
+     inkscape:cy="11.609038"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g6">
+    <sodipodi:guide
+       position="12.032562,13.196649"
+       orientation="1,0"
+       id="guide966" />
+    <sodipodi:guide
+       position="13.695917,12.050529"
+       orientation="0,-1"
+       id="guide968" />
+  </sodipodi:namedview>
+  <g
+     id="g6">
+    <path
+       fill="none"
+       d="M0 0h24v24H0z"
+       id="path2" />
+    <path
+       d="m 12.032562,10.019287 6.611409,-6.6114091 1.888591,1.8885922 -6.611408,6.6114079 6.611408,6.611409 -1.888591,1.888591 L 12.032562,13.796469 5.421154,20.407878 3.5325617,18.519287 10.14397,11.907878 3.5325617,5.2964701 5.421154,3.4078779 Z"
+       id="path4"
+       style="stroke-width:1.33564" />
+  </g>
 </svg>

@@ -40,7 +40,7 @@ void InventoryWidget::onContextMenuRequested(const QPoint& p)
     if (document != nullptr)
     {
         auto menu = new QMenu(this);
-        menu->addAction(QIcon(":/BleachUI/delete"), "Delete document", [=]()
+        menu->addAction(QIcon(":/ui/delete"), "Delete document", [=]()
             {
                 int button = QMessageBox::warning(this, "Delete Document", QString("Confirm the deletion of {%1} ?").arg(document->getName()),
                     QMessageBox::Yes, QMessageBox::Cancel);
@@ -115,6 +115,7 @@ InventoryItem *InventoryWidget::createRootItem(model::Project *project)
                                         entryItem->setIcon(icons[entry->getHttpMethod()]);
                                         entryItem->setData(entry->getUrl());
                                         entryItem->setUserDataPtr((void*)entry);
+                                        entryItem->setColCount(2);
                                     });
                   });
     return rootItem;

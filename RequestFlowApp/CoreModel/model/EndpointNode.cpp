@@ -335,14 +335,14 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
     }
 }
 
-void model::EndpointNode::setExpectedPayload(QString& format)
+void model::EndpointNode::setPayloadModel(QString& format)
 {
-    _expectedPayload = format;
+    _payloadModel = format;
 }
 
-QString model::EndpointNode::getExpectedPayload() const
+QString model::EndpointNode::getPayloadModel() const
 {
-    return _expectedPayload;
+    return _payloadModel;
 }
 
 void model::EndpointNode::setAcceptedCodes(const QList<unsigned int>& codes)

@@ -33,12 +33,16 @@ public:
     void setUserDataPtr(void* ptr);
     void *getUserDataPtr() const;
 
+    int getColCount() const;
+    void setColCount(int c);
+
     template<typename T>
     T getUserDataPtr() const
     {
         return reinterpret_cast<T>(getUserDataPtr());
     }
 private:
+    int _colCount = 1;
     int _type;
     QIcon _icon;
     QString _data;

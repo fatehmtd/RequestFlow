@@ -159,8 +159,7 @@ QStringList InventoryItemModel::mimeTypes() const
 QMimeData* InventoryItemModel::mimeData(const QModelIndexList& indexes) const
 {
     QMimeData* mime = new QMimeData();
-    QByteArray array;
-    QDataStream outputStream(&array, QIODevice::WriteOnly);
+
     QList<model::EndpointEntry*> endpoints;
 
     std::for_each(indexes.begin(), indexes.end(), [=, &endpoints](const QModelIndex& index)
@@ -178,7 +177,9 @@ QMimeData* InventoryItemModel::mimeData(const QModelIndexList& indexes) const
 
     if (!endpoints.isEmpty())
     {
-        outputStream << endpoints.size();
+        QByteArray array;
+        QDataStream outputStream(&array, QIODevice::WriteOnly);
+        outputStream << (unsigned int)endpoints.size();
 
         std::for_each(endpoints.begin(), endpoints.end(), [=, &outputStream](const model::EndpointEntry* endpoint)
                       {

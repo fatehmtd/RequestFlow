@@ -29,6 +29,15 @@ SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph
     setScene(_sceneGraph);
     setObjectName(sceneGraph->getModelGraph()->getIdentifier());
     _rubberBand = new QRubberBand(QRubberBand::Shape::Line, this);
+    viewport()->grabGesture(Qt::GestureType::PanGesture);
+    connect(verticalScrollBar(), &QScrollBar::valueChanged, this, [=](int value)
+            {
+                _sceneGraph->customUpdate();
+        }, Qt::ConnectionType::DirectConnection);
+    connect(horizontalScrollBar(), &QScrollBar::valueChanged, this, [=](int value)
+            {
+                _sceneGraph->customUpdate();
+            }, Qt::ConnectionType::DirectConnection);
 }
 
 SceneGraphWidget::~SceneGraphWidget()
@@ -39,8 +48,8 @@ SceneGraphWidget::~SceneGraphWidget()
 void SceneGraphWidget::initUi()
 {
     setFocusPolicy(Qt::FocusPolicy::ClickFocus);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     //TODO: test other flags
     //setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
@@ -58,7 +67,7 @@ void SceneGraphWidget::initUi()
     _zoomStep = 1;
 
     _minZoomLevel = 1;
-    _maxZoomLevel = 5;
+    _maxZoomLevel = 7;
     _defaultZoomLevel = 2;
 
     _zoomLevel = _defaultZoomLevel;
@@ -75,6 +84,22 @@ void SceneGraphWidget::setupViewport(QWidget *widget)
 {
     QGraphicsView::setupViewport(widget);
     _sceneGraph->customUpdate();
+}
+
+#include <QGesture>
+
+bool SceneGraphWidget::event(QEvent *event)
+{
+    if(event->type() == QEvent::Type::Gesture)
+    {
+        auto gesture = (QGesture*)event;
+        if(gesture->gestureType() == Qt::GestureType::PanGesture)
+        {
+            auto panGesture = dynamic_cast<QPanGesture*>(gesture);
+            qDebug() << panGesture;
+        }
+    }
+    return QGraphicsView::event(event);
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
@@ -111,7 +136,6 @@ void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
 {
-
     if (_sceneGraph == nullptr) return;
     if (dragMode() == DragMode::ScrollHandDrag)
     {
@@ -193,17 +217,17 @@ void SceneGraphWidget::dragEnterEvent(QDragEnterEvent* event)
 }
 
 void SceneGraphWidget::dropEvent(QDropEvent* event)
-{
+{    
     auto mime = event->mimeData();
     auto byteArray = mime->data("application/x-EndpointEntry");
-    QDataStream in(&byteArray, QIODevice::ReadOnly);
+    QDataStream inputStream(&byteArray, QIODevice::ReadOnly);
 
-    int count = 0;
-    in >> count;
-    for (int i = 0; i < count; i++)
+    unsigned int count = 0;
+    inputStream >> count;
+    for (unsigned int i = 0; i < count; i++)
     {
         quint64 ptr = 0;
-        in >> ptr;
+        inputStream >> ptr;
         auto entry = dynamic_cast<model::EndpointEntry*>(reinterpret_cast<QObject*>(ptr));
         if (entry != nullptr)
         {

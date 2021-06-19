@@ -26,7 +26,7 @@ namespace model
         Q_PROPERTY(QString baPwd MEMBER _baPwd READ getBasicAuthPassword WRITE setBasicAuthPassword)
         //Q_PROPERTY(QString consoleLog MEMBER _consoleLog READ getConsoleLog WRITE setConsoleLog NOTIFY consoleLogChanged)
         Q_PROPERTY(QString userAgent MEMBER _userAgent READ getUserAgent WRITE setUserAgent NOTIFY userAgentChanged)
-        Q_PROPERTY(QString expectedPayload MEMBER _expectedPayload READ getExpectedPayload WRITE setExpectedPayload)
+        Q_PROPERTY(QString payloadModel MEMBER _payloadModel READ getPayloadModel WRITE setPayloadModel)
         //Q_PROPERTY(QMap<QString, QString> extraHeaders MEMBER _extraHeaders READ getExtraHeaders WRITE setExtraHeaders)
         //Q_PROPERTY(QList<unsigned int> acceptedCodes MEMBER _acceptedCodes READ getAcceptedCodes WRITE setAcceptedCodes)
         //Q_PROPERTY(QList<unsigned int> rejectedCodes MEMBER _rejectedCodes READ getRejectedCodes WRITE setRejectedCodes)
@@ -84,8 +84,8 @@ namespace model
 
 		void sendPayload();
 
-        void setExpectedPayload(QString& format);
-        QString getExpectedPayload() const;
+        void setPayloadModel(QString& format);
+        QString getPayloadModel() const;
 
         void setAcceptedCodes(const QList<unsigned int>& codes);
         QList<unsigned int> getAcceptedCodes() const;
@@ -150,7 +150,7 @@ namespace model
         QString _baUser, _baPwd;
         QString _bearerToken;
 
-        QString _expectedPayload;
+        QString _payloadModel;
 
         QString _url;
         QString _contentType;

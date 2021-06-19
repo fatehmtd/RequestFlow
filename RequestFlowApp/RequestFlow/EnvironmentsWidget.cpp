@@ -16,7 +16,7 @@ EnvironmentsWidget::EnvironmentsWidget(QWidget* parent) : QWidget(parent)
 	_environmentsModel = new EnvironmentsModel(this);
 	setWindowIcon(QIcon(":/ui/environment"));
 
-	auto cloneAction = new QAction(QIcon(":/BleachUI/copy"), "Clone");
+    auto cloneAction = new QAction(QIcon(":/ui/duplicate"), "Duplicate");
 	connect(cloneAction, &QAction::triggered, this, &EnvironmentsWidget::onCloneEnvironment);
 	_ui.toolButton_add->addAction(cloneAction);
 	_ui.toolButton_add->setPopupMode(QToolButton::ToolButtonPopupMode::MenuButtonPopup);
@@ -26,7 +26,7 @@ EnvironmentsWidget::EnvironmentsWidget(QWidget* parent) : QWidget(parent)
 
 	_ui.tableWidget_entries->setRowCount(100);
 
-	_ui.comboBox_environments->setIconSize(QSize(16, 16));
+    //_ui.comboBox_environments->setIconSize(QSize(16, 16));
 
 	connect(_ui.comboBox_environments, SIGNAL(currentIndexChanged(int)), this, SLOT(onSelectCurrentEnvironmentIndex(int)));
 

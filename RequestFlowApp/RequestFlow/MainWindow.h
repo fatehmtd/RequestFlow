@@ -129,7 +129,7 @@ private:
     QMap<QString, QMdiSubWindow*> _subwindowsMap;
     view::SettingsManager* _settingsManager = nullptr;
 
-    EnvironmentsWidget* _environmentsWidget = nullptr;
+    //EnvironmentsWidget* _environmentsWidget = nullptr;
 
     //////////////////////////////////////////////////
 

@@ -790,7 +790,7 @@
         </widget>
         <widget class="QWidget" name="tab_9">
          <attribute name="title">
-          <string>Expected payload</string>
+          <string>Payload Model</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_17">
           <item row="0" column="0">

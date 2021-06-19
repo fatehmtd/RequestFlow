@@ -83,8 +83,18 @@ view::Node* view::InteractionsHandler::createEndpointNode(const model::EndpointE
 
 	if (entry != nullptr)
 	{
+        auto url = _sceneGraph->getModelGraph()->getActiveEnvironment()->evaluate(entry->getUrl()).toLower();
+        // validate and sanitize url
+        if(!(url.startsWith("http://") || url.startsWith("https://")))
+        {
+            url = QString("{{baseUrl}}%1").arg(entry->getUrl());
+        }
+        else
+        {
+            url = entry->getUrl();
+        }
 		nodeModel->setHttpMethod(entry->getHttpMethod());
-		nodeModel->setUrl(entry->getUrl());
+        nodeModel->setUrl(url);
 	}
 
 	auto grNodeC = new logic::EndpointNode(nodeModel);
@@ -205,7 +215,7 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
     }
 
     // Environments menu
-    if(selectedItems.isEmpty())
+    if(selectedItems.isEmpty() && item == nullptr)
     {
         auto envMenu = menu->addMenu(QIcon(":/ui/environment"), "Active Environment");
         auto environments = _sceneGraph->getModelGraph()->getProject()->getEnvironments();
@@ -358,6 +368,7 @@ void view::InteractionsHandler::registerCommonActions()
 				auto node = dynamic_cast<Node*>(item);
 				deleteNode(node);
 			}
+            _sceneGraph->update();
         }, QIcon(":/ui/delete"));
 
     registerEmptySpaceAction("New Payload", [=](const QPointF& p, QAction* action)
@@ -441,9 +452,9 @@ void view::InteractionsHandler::registerCommonActions()
 			renameInputSlots(slot->getNode());
 			//_sceneGraph->addItem(slot);
 			node->setSize(node->width(), node->height());
-		}, QIcon(":/BleachUI/copy"), 1);
+        }, QIcon(":/ui/slot"), 2);
 
-	registerGenericAction("Delete",
+    registerGenericAction("Delete Slot",
 		[](QGraphicsItem* item)
 		{
 			auto slot = dynamic_cast<Slot*>(item);
@@ -462,7 +473,7 @@ void view::InteractionsHandler::registerCommonActions()
 			deleteInputSlot(slot);
 			renameInputSlots(node);
 			node->setSize(node->width(), node->height());
-		}, QIcon(":/BleachUI/delete"));
+        }, QIcon(":/ui/delete"));
 }
 
 void view::InteractionsHandler::renameInputSlots(view::Node* node) const

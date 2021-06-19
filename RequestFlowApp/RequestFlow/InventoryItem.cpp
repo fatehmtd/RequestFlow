@@ -2,7 +2,7 @@
 
 InventoryItem::InventoryItem(int type, InventoryItem *parent) : QObject(parent), _type(type)
 {
-
+    setColCount(5);
 }
 
 InventoryItem *InventoryItem::getParent() const
@@ -64,4 +64,14 @@ void InventoryItem::setUserDataPtr(void *ptr)
 void *InventoryItem::getUserDataPtr() const
 {
     return _dataPtr;
+}
+
+int InventoryItem::getColCount() const
+{
+    return _colCount;
+}
+
+void InventoryItem::setColCount(int c)
+{
+    _colCount = c;
 }

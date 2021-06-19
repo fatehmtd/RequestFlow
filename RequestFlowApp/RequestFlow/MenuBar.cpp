@@ -28,6 +28,7 @@ void MainWindow::setupMenuBar()
         _fileMenu = menuBar()->addMenu("File");
         _newProjectAction = _fileMenu->addAction(QIcon(":/ui/new_file"), "New...", [=](){onNewProject();}, QKeySequence::New);
         _openProjectAction = _fileMenu->addAction(QIcon(":/ui/open_file"), "Open...", [=](){onOpenProject();}, QKeySequence::Open);
+        _fileMenu->addAction(QIcon(":/ui/open_file"), "**Open Sample Project", [=](){openProject("./samples/sample-project.rqfl");});
         //_openProjectAction->setMenu(new QMenu);
 
         _recentProjectsMenu = _fileMenu->addMenu(QIcon(":/ui/history"), "Recent projects...");
@@ -95,6 +96,7 @@ void MainWindow::setupMenuBar()
     // Environment menu
     {
         _environmentsMenu = menuBar()->addMenu("Environment");
+        /*
         _environmentConfigAction = _environmentsMenu->addAction(QIcon(":/ui/environment"), "Configure...", [=]()
                                                                 {
                                                                     QDialog dialog(this);
@@ -108,6 +110,7 @@ void MainWindow::setupMenuBar()
                                                                     dialog.exec();
                                                                 });
         _environmentsMenu->addSeparator();
+        //*/
         _importSwaggerAction = _environmentsMenu->addAction(QIcon(":/ui/swagger"), "Swagger Import...", [=](){onImportSwagger();});
     }
 

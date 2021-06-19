@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-
+#include <QGraphicsView>
 #include <model/Node.h>
 #include <model/Slot.h>
 
@@ -522,11 +522,19 @@ void view::Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 QVariant view::Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    if (change == QGraphicsItem::ItemPositionChange) {
+    switch(change)
+    {
+    case QGraphicsItem::ItemPositionChange:
+    {
         auto p = value.toPointF();
         auto delta = p - _topLeftCorner;
         _topLeftCorner = p;
         _bottomRightCorner += delta;
+        scene()->update();
+        break;
+    }
+    default:
+        break;
     }
     return QGraphicsObject::itemChange(change, value);
 }
@@ -583,7 +591,6 @@ void view::Node::doResize(QGraphicsSceneMouseEvent *event)
         child->update();
     }
     update();
-
     scene()->update();
 }
 

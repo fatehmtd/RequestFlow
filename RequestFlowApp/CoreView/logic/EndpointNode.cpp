@@ -41,7 +41,7 @@ void logic::EndpointNode::initUI()
 	}
 	_ui.comboBox_method->setCurrentIndex(endpointNode->getHttpMethod());
 	_ui.spinBox_timeout->setValue(endpointNode->getTimeout());
-	_ui.plainTextEdit_expectedPayload->setPlainText(endpointNode->getExpectedPayload());
+    _ui.plainTextEdit_payloadModel->setPlainText(endpointNode->getPayloadModel());
 	_ui.tabWidget_authentication->setCurrentIndex(endpointNode->getAuthMethod());
 	_ui.lineEdit_baUser->setText(endpointNode->getBasicAuthUser());
 	_ui.lineEdit_baPwd->setText(endpointNode->getBasicAuthPassword());

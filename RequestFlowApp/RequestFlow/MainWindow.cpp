@@ -87,15 +87,11 @@ void MainWindow::setupUi()
 }
 
 void MainWindow::setupRibbonBar()
-{
-    _ui.dockWidget->setTitleBarWidget(new QWidget());
-    _ui.dockWidget->setFixedHeight(64);
-    //_ui.dockWidget->setVisible(false);
-}
+{}
 
 void MainWindow::setupEnvironmentsWidget()
 {
-    _environmentsWidget = new EnvironmentsWidget();
+    //_environmentsWidget = new EnvironmentsWidget();
 }
 
 void MainWindow::setupSceneGraph()
@@ -124,12 +120,12 @@ void MainWindow::setupSceneGraph()
 
 void MainWindow::setupCentralTitleBar()
 {
-    QPixmap pixmap(":/ui/test_case");
-    _ui.label_scenarioIcon->setPixmap(pixmap.scaledToWidth(24));
+    //QPixmap pixmap(":/ui/test_case");
+    //_ui.label_scenarioIcon->setPixmap(pixmap.scaledToWidth(24));
     //_ui.label_scenarioIcon->setVisible(false);
     //_ui.toolButton_clone->setVisible(false);
     //_ui.toolButton_delete->setVisible(false);
-    _ui.dockWidget->setVisible(false);
+    //_ui.dockWidget->setVisible(false);
 }
 
 void MainWindow::openProject(const QString& fileName)
@@ -169,12 +165,12 @@ void MainWindow::openProject(const QString& fileName)
 void MainWindow::setProject(model::Project* project)
 {
     bool projectAvailable = project != nullptr;
-    _ui.dockWidgetContents->setEnabled(projectAvailable);
 
-    _environmentsWidget->setEnabled(projectAvailable);
+    _ui.environmentsWidget->setEnabled(projectAvailable);
     _ui.inventoryWidget->setEnabled(projectAvailable);
-    _ui.dockWidget_4->setVisible(projectAvailable);
-    _ui.dockWidget_5->setVisible(projectAvailable);
+    _ui.dockWidget_inventory->setVisible(projectAvailable);
+    _ui.dockWidget_environments->setVisible(projectAvailable);
+    _ui.dockWidget_logs->setVisible(projectAvailable);
 
     // fill default objects if the project is empty
     if (projectAvailable)
@@ -224,7 +220,7 @@ void MainWindow::setProject(model::Project* project)
 
     _ui.inventoryWidget->setProject(project);
     _ui.logMessagesWidget->setProject(project);
-    _environmentsWidget->setProject(project);
+    _ui.environmentsWidget->setProject(project);
 }
 
 
@@ -555,8 +551,8 @@ int MainWindow::onCloseProject()
     qDeleteAll(_ui.mdiArea->subWindowList());
     _ui.mdiArea->closeAllSubWindows();
 
-    _environmentsWidget->setProject(nullptr);
-    _environmentsWidget->update();
+    _ui.environmentsWidget->setProject(nullptr);
+    _ui.environmentsWidget->update();
 
     setProject(nullptr);
     return button;
