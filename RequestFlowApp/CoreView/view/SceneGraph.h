@@ -25,6 +25,7 @@ namespace view
 
 	class COREVIEW_EXPORT SceneGraph : public QGraphicsScene
 	{
+        Q_OBJECT
 	public:
 		SceneGraph(model::Graph* modelGraph, QObject* parent = nullptr);
 
@@ -32,7 +33,7 @@ namespace view
 		Node* findbyModel(model::Node* node) const;
 		Edge* findbyModel(model::Edge* edge) const;
 
-		void createGraphiNodesForModel();
+		void createGeometricNodesForModel();
 
 		QList<Node*> getNodes() const;
 		QList<Edge*> getEdges() const;
@@ -53,7 +54,9 @@ namespace view
 
 		InteractionsHandler* getInteractionsHandler() const;
 
-        void deleteSelectedNodes() const;
+        void deleteSelectedItems() const;
+        void duplicateSelectedItems() const;
+        void renameSelectedNode() const;
 
         // Visuals
 
@@ -72,6 +75,8 @@ namespace view
             LINES
         };
 
+        QRectF computeBoundingRect(const QList<view::Node*> & nodes, qreal padding=0) const;
+
         void setBackgroundType(BackgroundType bgType);
         int getBackgroundType() const;
 
@@ -80,10 +85,19 @@ namespace view
 
         MiniMap *getMiniMap() const;
 
-
+        void addItem(QGraphicsItem *item);
         void customUpdate();
 
-	protected:
+
+        QImage takeScreenShotSvg(QRectF rect, qreal multiplier = 4.0f);
+        QImage takeScreenShot(QRectF rect, qreal multiplier = 4.0f);
+        QImage takeScreenShot(qreal padding=20, qreal multiplier=2.0f);
+
+    signals:
+        void nodeDoubleClicked(view::Node*);
+
+	protected:        
+
 		Node* createGeometryForModel(model::Node* node);
 
 		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;

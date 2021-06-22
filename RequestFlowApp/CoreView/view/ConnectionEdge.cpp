@@ -6,6 +6,10 @@
 #include <QPainter>
 #include <QDebug>
 
+QColor view::ConnectionEdge::_noCandidateColor = QColor("#FFFFA637");
+QColor view::ConnectionEdge::_notEligibleColor = QColor("#FF0000");
+QColor view::ConnectionEdge::_eligibleColor = QColor("#00FF00");
+
 view::ConnectionEdge::ConnectionEdge()
 {
 	_thickness = 7.0f;

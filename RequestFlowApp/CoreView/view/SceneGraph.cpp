@@ -15,6 +15,8 @@
 #include <QGraphicsWidget>
 #include <QMetaObject>
 
+#include <QSvgGenerator>
+
 #include <QMenu>
 
 #include "Colors.h"
@@ -45,7 +47,7 @@ view::SceneGraph::SceneGraph(model::Graph *modelGraph, QObject *parent)
 {
     _interactionsHandler = new InteractionsHandler(this);
     setupUi();
-    createGraphiNodesForModel();
+    createGeometricNodesForModel();
 }
 
 view::Slot *view::SceneGraph::findbyModel(model::Slot *slot) const
@@ -84,7 +86,7 @@ view::Edge *view::SceneGraph::findbyModel(model::Edge *edge) const
     return nullptr;
 }
 
-void view::SceneGraph::createGraphiNodesForModel()
+void view::SceneGraph::createGeometricNodesForModel()
 {
     for (auto modelNode : getModelGraph()->getNodes()) {
         auto node = createGeometryForModel(modelNode);
@@ -223,6 +225,39 @@ void view::SceneGraph::drawBackground(QPainter *painter, const QRectF &rect)
         drawQuadsBackground(painter, rect);
         break;
     }
+
+
+    {/*
+        auto nodes = getNodes();
+        if(!nodes.isEmpty())
+        {
+            auto rect = computeBoundingRect(nodes, 100);
+            int left = rect.x();
+            int right = left + rect.width();
+            int top = rect.y();
+            int bottom = top + rect.height();
+
+        // points
+        int _cellSize = 10;
+        const int firstLeft = left - ((int)left % _cellSize);
+        const int firstTop = top - ((int)top % _cellSize);
+        int count = (1 + (right - firstLeft) / _cellSize) * (1 + (bottom - firstTop) / _cellSize);
+        QVector<QPointF> points(count);
+
+        int index = 0;
+        for (int i = firstLeft; i < right; i += _cellSize) {
+            for (int j = firstTop; j < bottom; j += _cellSize) {
+                points[index++] = QPointF(i, j);
+            }
+        }
+
+        QPen pen(QBrush(QColor("#AA0000")), 4.0f);
+        //pen.setStyle(Qt::PenStyle::DashLine);
+        painter->setPen(pen);
+        painter->drawPoints(points.data(), points.size());
+    }*/
+
+}
 }
 
 void view::SceneGraph::drawForeground(QPainter *painter, const QRectF &rect)
@@ -251,6 +286,7 @@ void view::SceneGraph::drawDotsBackground(QPainter *painter, const QRectF &rect)
     }
 
     QPen pen(QBrush(QColor("#E4E3E4")), 4.0f);
+    painter->fillRect(rect, backgroundBrush());
     //pen.setStyle(Qt::PenStyle::DashLine);
     painter->setPen(pen);
     painter->drawPoints(points.data(), points.size());
@@ -302,6 +338,7 @@ void view::SceneGraph::drawGridBackground(QPainter *painter, const QRectF &rect)
         }
 
         QPen pen(QBrush(_darkGrid), 1.0f);
+        painter->fillRect(rect, backgroundBrush());
         painter->setPen(pen);
         painter->drawLines(_lines);
     }
@@ -333,6 +370,7 @@ void view::SceneGraph::drawCrossBackground(QPainter *painter, const QRectF &rect
 
     QPen pen(QBrush(QColor("#E4E3E4")), 2.0f);
     //pen.setStyle(Qt::PenStyle::DashLine);
+    painter->fillRect(rect, backgroundBrush());
     painter->setPen(pen);
     painter->drawLines(lines.data(), lines.size());
 }
@@ -343,7 +381,7 @@ void view::SceneGraph::drawQuadsBackground(QPainter *painter, const QRectF &rect
     const int right = ceil(rect.right());
     const int top = floor(rect.top());
     const int bottom = ceil(rect.bottom());
-
+    painter->fillRect(rect, backgroundBrush());
     // cells
     {
         QList<QRect> _rectList;
@@ -431,21 +469,42 @@ void view::SceneGraph::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void view::SceneGraph::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
 {
-    event->acceptProposedAction();
+    if(getModelGraph()->isRunning())
+    {
+        event->ignore();
+    }
+    else
+    {
+        event->acceptProposedAction();
+    }
     //return;
     //QGraphicsScene::dragMoveEvent(event);
 }
 
 void view::SceneGraph::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
-    event->acceptProposedAction();
+    if(getModelGraph()->isRunning())
+    {
+        event->ignore();
+    }
+    else
+    {
+        event->acceptProposedAction();
+    }
     //return;
     //QGraphicsScene::dragLeaveEvent(event);
 }
 
 void view::SceneGraph::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-    event->acceptProposedAction();
+    if(getModelGraph()->isRunning())
+    {
+        event->ignore();
+    }
+    else
+    {
+        event->acceptProposedAction();
+    }
     //return;
     //QGraphicsScene::dropEvent(event);
 }
@@ -551,9 +610,41 @@ view::InteractionsHandler *view::SceneGraph::getInteractionsHandler() const
     return _interactionsHandler;
 }
 
-void view::SceneGraph::deleteSelectedNodes() const
+void view::SceneGraph::deleteSelectedItems() const
 {
+    qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
+}
 
+void view::SceneGraph::duplicateSelectedItems() const
+{
+    qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
+}
+
+void view::SceneGraph::renameSelectedNode() const
+{
+    qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
+}
+
+QRectF view::SceneGraph::computeBoundingRect(const QList<Node *> &nodes, qreal padding) const
+{
+    if(nodes.isEmpty()) return QRectF();
+    auto firstNode = nodes.at(0);
+    auto firstNodePos = firstNode->pos();
+    qreal left = firstNodePos.x();
+    qreal right = firstNodePos.x() + firstNode->width();
+    qreal top = firstNode->y();
+    qreal bottom = top + firstNode->height();
+
+    for(auto node : nodes)
+    {
+        left = std::min(left, node->pos().x());
+        right = std::max(right, node->pos().x() + node->width());
+
+        top = std::min(top, node->pos().y());
+        bottom = std::max(bottom, node->pos().y() + node->height());
+    }
+
+    return QRect(left-padding, top-padding, (right-left)+2*padding, (bottom-top)+2*padding);
 }
 
 void view::SceneGraph::setBackgroundType(view::SceneGraph::BackgroundType bgType)
@@ -587,3 +678,62 @@ void view::SceneGraph::customUpdate()
     auto customRect = sgw->mapToScene(sgw->viewport()->rect()).boundingRect();
     getMiniMap()->setParentViewport(customRect);
 }
+
+QImage view::SceneGraph::takeScreenShotSvg(QRectF rect, qreal multiplier)
+{
+    QRect outputRect(0, 0, rect.width(), rect.height());
+    QSvgGenerator generator;
+    generator.setFileName(QString("./%1.svg").arg(getModelGraph()->getName().replace(" ", "_")));
+    generator.setSize(QSize(rect.width(), rect.height()));
+    generator.setViewBox(QRectF(0, 0, rect.width(), rect.width()));
+    //generator.setResolution(100);
+
+    QPainter painter(&generator);
+    painter.setRenderHint(QPainter::RenderHint::Antialiasing);
+    painter.setRenderHint(QPainter::RenderHint::LosslessImageRendering);
+    painter.setRenderHint(QPainter::RenderHint::SmoothPixmapTransform);
+    painter.setRenderHint(QPainter::RenderHint::TextAntialiasing);
+    render(&painter, outputRect, rect);
+
+    return QImage();
+}
+
+#include <QPixmap>
+
+QImage view::SceneGraph::takeScreenShot(QRectF rect, qreal multiplier)
+{
+    QRect outputRect(0, 0, rect.width()*multiplier, rect.height()*multiplier);
+    QImage img(outputRect.width(), outputRect.height(), QImage::Format::Format_RGB888);
+    img.fill(qRgb(0, 0, 0));
+    QPainter painter(&img);
+    painter.setRenderHint(QPainter::RenderHint::Antialiasing);
+    painter.setRenderHint(QPainter::RenderHint::LosslessImageRendering);
+    painter.setRenderHint(QPainter::RenderHint::SmoothPixmapTransform);
+    painter.setRenderHint(QPainter::RenderHint::TextAntialiasing);
+    render(&painter, outputRect, rect);
+    return img;
+}
+
+QImage view::SceneGraph::takeScreenShot(qreal padding, qreal multiplier)
+{
+    return takeScreenShot(computeBoundingRect(getNodes(), padding), multiplier);
+}
+
+void view::SceneGraph::addItem(QGraphicsItem *item)
+{
+    QGraphicsScene::addItem(item);
+
+    // Support for double click focus
+    auto node = dynamic_cast<view::Node*>(item);
+    if(node != nullptr)
+    {
+        connect(node, &view::Node::doubleClicked, this, [=]()
+                {
+                    takeScreenShotSvg(computeBoundingRect(getNodes(), 20), 3);
+                    takeScreenShot().save(QString("./%1.png").arg(getModelGraph()->getName().replace(" ", "_")));
+                    //emit nodeDoubleClicked(node);
+                });
+    }
+}
+
+

@@ -84,9 +84,13 @@ namespace view
 		QString getNodeType() const;
 
         QColor getBackgroundColor() const;
+
 	private slots:
 		void onGraphStarted();
-		void onGraphFinished();
+        void onGraphFinished();
+
+    signals:
+        void doubleClicked();
 
 	protected:
 		enum Handle
@@ -119,6 +123,8 @@ namespace view
 	private:
 		int computeGripCorner(const QPointF& cursorPos);
 		void handleResize(const QPointF& pos);
+
+        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
 	protected:
 		model::Node* _node = nullptr;

@@ -20,7 +20,7 @@ view::Node::Node(model::Node *modelNode, QString nodeType) : _node(modelNode), _
     setupContentWidget();
 
     connect(modelNode->getGraph(), &model::Graph::started, this, &view::Node::onGraphStarted);
-    connect(modelNode->getGraph(), &model::Graph::stopped, this, &view::Node::onGraphFinished);
+    connect(modelNode->getGraph(), &model::Graph::stopped, this, &view::Node::onGraphFinished);    
 
     //connect(modelNode, &model::Node::evaluated, this, [=]() { update(); });
     //connect(modelNode, &model::Node::ready, this, [=]() { update(); });
@@ -103,6 +103,7 @@ void view::Node::setupUi()
 
     _icon = new QGraphicsSvgItem(this);    
     _icon->setPos(18, 12);
+    _icon->setCacheMode(QGraphicsSvgItem::CacheMode::NoCache);
     //_icon->setTransformationMode(Qt::TransformationMode::SmoothTransformation);
 }
 
@@ -352,6 +353,7 @@ void view::Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     int w = rect.width(), h = rect.height();
 
     // Shadow
+    if(false)
     {
         float outlineSize = _edgeSize * 3.0f;
         QPainterPath outlinePath;
@@ -646,4 +648,10 @@ void view::Node::handleResize(const QPointF &pos)
         setCursor(Qt::CursorShape::ArrowCursor);
         break;
     }
+}
+
+void view::Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->ignore();
+    emit doubleClicked();
 }

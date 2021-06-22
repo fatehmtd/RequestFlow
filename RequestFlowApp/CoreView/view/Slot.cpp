@@ -36,6 +36,7 @@ view::Slot::Slot(Node* parent, model::Slot* slot) : QGraphicsSvgItem(parent), _s
 
     auto renderer = new QSvgRenderer(QString(slot->getDirection() == model::Slot::INPUT ? ":/slots/input/normal" : ":/slots/output/normal"), parent);
     setSharedRenderer(renderer);
+    setCacheMode(CacheMode::NoCache);
 }
 
 view::Slot::~Slot() 

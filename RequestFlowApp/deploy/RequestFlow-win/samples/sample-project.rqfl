@@ -1,0 +1,2935 @@
+{
+    "documents": [
+        {
+            "endpoints": [
+                {
+                    "consumptionTypes": [
+                        "multipart/form-data"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 1,
+                    "identifier": "uploadFile",
+                    "name": "",
+                    "objectName": "uploadFile",
+                    "pathParams": [
+                        "petId"
+                    ],
+                    "productTypes": [
+                        "application/json"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/pet/{petId}/uploadImage"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 1,
+                    "identifier": "addPet",
+                    "name": "",
+                    "objectName": "addPet",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/pet"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 2,
+                    "identifier": "updatePet",
+                    "name": "",
+                    "objectName": "updatePet",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/pet"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "findPetsByStatus",
+                    "name": "",
+                    "objectName": "findPetsByStatus",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                        "status"
+                    ],
+                    "url": "/pet/findByStatus"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "findPetsByTags",
+                    "name": "",
+                    "objectName": "findPetsByTags",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                        "tags"
+                    ],
+                    "url": "/pet/findByTags"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "getPetById",
+                    "name": "",
+                    "objectName": "getPetById",
+                    "pathParams": [
+                        "petId"
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/pet/{petId}"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/x-www-form-urlencoded"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 1,
+                    "identifier": "updatePetWithForm",
+                    "name": "",
+                    "objectName": "updatePetWithForm",
+                    "pathParams": [
+                        "petId"
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/pet/{petId}"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/json"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 1,
+                    "identifier": "placeOrder",
+                    "name": "",
+                    "objectName": "placeOrder",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/store/order"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "getOrderById",
+                    "name": "",
+                    "objectName": "getOrderById",
+                    "pathParams": [
+                        "orderId"
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/store/order/{orderId}"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "getInventory",
+                    "name": "",
+                    "objectName": "getInventory",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/store/inventory"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/json"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 1,
+                    "identifier": "createUsersWithArrayInput",
+                    "name": "",
+                    "objectName": "createUsersWithArrayInput",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/user/createWithArray"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/json"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 1,
+                    "identifier": "createUsersWithListInput",
+                    "name": "",
+                    "objectName": "createUsersWithListInput",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/user/createWithList"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "getUserByName",
+                    "name": "",
+                    "objectName": "getUserByName",
+                    "pathParams": [
+                        "username"
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/user/{username}"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/json"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 2,
+                    "identifier": "updateUser",
+                    "name": "",
+                    "objectName": "updateUser",
+                    "pathParams": [
+                        "username"
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/user/{username}"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "loginUser",
+                    "name": "",
+                    "objectName": "loginUser",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                        "username",
+                        "password"
+                    ],
+                    "url": "/user/login"
+                },
+                {
+                    "consumptionTypes": [
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 0,
+                    "identifier": "logoutUser",
+                    "name": "",
+                    "objectName": "logoutUser",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/user/logout"
+                },
+                {
+                    "consumptionTypes": [
+                        "application/json"
+                    ],
+                    "entityType": "EndpointEntry",
+                    "httpMethod": 1,
+                    "identifier": "createUser",
+                    "name": "",
+                    "objectName": "createUser",
+                    "pathParams": [
+                    ],
+                    "productTypes": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "queryParams": [
+                    ],
+                    "url": "/user"
+                }
+            ],
+            "entityType": "Document",
+            "identifier": "{17c8afb9-d5b5-4f8c-841f-3eebf24cb828}",
+            "name": "Swagger Petstore",
+            "objectName": "{17c8afb9-d5b5-4f8c-841f-3eebf24cb828}"
+        }
+    ],
+    "entityType": "Project",
+    "environments": [
+        {
+            "entityType": "",
+            "entries": {
+                "baseUrl": "https://jsonplaceholder.typicode.com",
+                "basic_auth_pwd": "ttt",
+                "basic_auth_user": "fff",
+                "bearer_token": "bearer-token-value",
+                "delay": "10"
+            },
+            "identifier": "{bb9afdbd-a6d1-42de-bc25-3b75913cfe5d}",
+            "name": "Default environment",
+            "objectName": "{bb9afdbd-a6d1-42de-bc25-3b75913cfe5d}"
+        },
+        {
+            "entityType": "",
+            "entries": {
+                "baseUrl": "https://jsonplaceholder.typicode.com",
+                "basic_auth_pwd": "pwd",
+                "basic_auth_user": "admin",
+                "bearer_token": "bearer-token",
+                "delay": "10"
+            },
+            "identifier": "{c2254897-b425-4da6-b7a0-791f0af5b744}",
+            "name": "Default environment (Clone)",
+            "objectName": "{c2254897-b425-4da6-b7a0-791f0af5b744}"
+        },
+        {
+            "entityType": "",
+            "entries": {
+                "baseUrl": "http://localhost",
+                "basic_auth_pwd": "pwd",
+                "basic_auth_user": "admin",
+                "bearer_token": "bearer-token",
+                "sdfsdf": "sdfsdfsdfsdfsdfsdf"
+            },
+            "identifier": "{ca2c2145-4184-4915-bf74-47591014bfcc}",
+            "name": "test",
+            "objectName": "{ca2c2145-4184-4915-bf74-47591014bfcc}"
+        },
+        {
+            "entityType": "",
+            "entries": {
+                "baseUrl": "https://proxy-orbit1.p.rapidapi.com/v1/",
+                "basic_auth_pwd": "pwd",
+                "basic_auth_user": "admin",
+                "bearer_token": "bearer-token",
+                "header_test": "123456"
+            },
+            "identifier": "{d98c4e75-adf6-41e4-b40a-e73cb7e666c3}",
+            "name": "rapidapi_env",
+            "objectName": "{d98c4e75-adf6-41e4-b40a-e73cb7e666c3}"
+        }
+    ],
+    "graphs": [
+        {
+            "activeEnvironment": "{bb9afdbd-a6d1-42de-bc25-3b75913cfe5d}",
+            "edges": [
+                {
+                    "destination": {
+                        "node": "{b3d211f6-0eb3-46e9-b93e-6997b676b2c4}",
+                        "slot": "{3805194f-e781-41e8-b97a-12fe26b41523}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{dae53def-faeb-428d-82b3-bfe6a836e876}",
+                    "name": "",
+                    "objectName": "{dae53def-faeb-428d-82b3-bfe6a836e876}",
+                    "origin": {
+                        "node": "{24786b91-c395-4d35-ab10-5b4759302e0e}",
+                        "slot": "{5a65daf6-4e50-4e69-b743-64de674582e4}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{b9da9949-590f-4866-8f5a-f0bc54e9ebc3}",
+                        "slot": "{e062d00c-2f3f-416a-a440-f59cb63646ed}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{8acdd8eb-689d-478e-80a1-070782b39a1c}",
+                    "name": "",
+                    "objectName": "{8acdd8eb-689d-478e-80a1-070782b39a1c}",
+                    "origin": {
+                        "node": "{29b8ed4f-8831-47dc-8bee-5091779c0281}",
+                        "slot": "{d24e7d17-e93f-4a32-a597-d164bc2105b2}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{8b89fee1-ff81-461f-aba4-bd200f180ce2}",
+                        "slot": "{6b6aea02-6ce0-4dfa-8b0d-19260573d1e4}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{107cdbbb-3e06-42e3-bdf7-f334e46e62bd}",
+                    "name": "",
+                    "objectName": "{107cdbbb-3e06-42e3-bdf7-f334e46e62bd}",
+                    "origin": {
+                        "node": "{35eaaa4f-e025-4f66-8eb6-59eb6e53a1eb}",
+                        "slot": "{9c9df0cb-5d54-466c-9a2f-0f2b5f9b60ad}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{1b35cfe2-960b-48c5-96d4-498de35a1820}",
+                        "slot": "{845cb600-0b9b-4750-ac39-9517e9b69c36}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{390762df-a58a-4f2a-bc20-205ff6e6a0df}",
+                    "name": "",
+                    "objectName": "{390762df-a58a-4f2a-bc20-205ff6e6a0df}",
+                    "origin": {
+                        "node": "{8b89fee1-ff81-461f-aba4-bd200f180ce2}",
+                        "slot": "{51ee3f10-abef-409d-a14f-ee19977db812}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{164a824f-e7db-4252-8061-fc023a9a6db7}",
+                        "slot": "{d0e7ecc3-d072-4b3b-8a4d-e6800105a7cb}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{a12039b8-d5af-44ab-9aa9-faf0b914b75a}",
+                    "name": "",
+                    "objectName": "{a12039b8-d5af-44ab-9aa9-faf0b914b75a}",
+                    "origin": {
+                        "node": "{4abfb179-ec01-497c-8dd4-a36394390800}",
+                        "slot": "{671058db-2952-488a-83a4-1e465af6bc11}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{29b8ed4f-8831-47dc-8bee-5091779c0281}",
+                        "slot": "{91b060f9-5006-49dd-88df-a45cc350dec5}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{bf422f31-c5fd-400a-b25b-47bb10f56c8b}",
+                    "name": "",
+                    "objectName": "{bf422f31-c5fd-400a-b25b-47bb10f56c8b}",
+                    "origin": {
+                        "node": "{e29efea4-bb26-4cc7-aba0-d5fac20183e1}",
+                        "slot": "{df60455f-b37a-41eb-a5dc-c70776ee65cd}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{e29efea4-bb26-4cc7-aba0-d5fac20183e1}",
+                        "slot": "{fe311b7e-cbd0-4d8d-a6b7-1b0f7f9aad43}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{70c161ac-5272-4eb9-8f09-056cbd7ce3e5}",
+                    "name": "",
+                    "objectName": "{70c161ac-5272-4eb9-8f09-056cbd7ce3e5}",
+                    "origin": {
+                        "node": "{35eaaa4f-e025-4f66-8eb6-59eb6e53a1eb}",
+                        "slot": "{9c9df0cb-5d54-466c-9a2f-0f2b5f9b60ad}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{24786b91-c395-4d35-ab10-5b4759302e0e}",
+                        "slot": "{df1d048a-5115-47ae-bd79-e93b6042f32c}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{87ec5586-6154-46a6-8e53-c01cfc3cfabc}",
+                    "name": "",
+                    "objectName": "{87ec5586-6154-46a6-8e53-c01cfc3cfabc}",
+                    "origin": {
+                        "node": "{29b8ed4f-8831-47dc-8bee-5091779c0281}",
+                        "slot": "{d24e7d17-e93f-4a32-a597-d164bc2105b2}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{29b8ed4f-8831-47dc-8bee-5091779c0281}",
+                        "slot": "{ff597d14-6075-4b14-a497-76cf51246755}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{113428bc-943c-47ab-aa9a-26420324e1e7}",
+                    "name": "",
+                    "objectName": "{113428bc-943c-47ab-aa9a-26420324e1e7}",
+                    "origin": {
+                        "node": "{874be0e0-bc5d-45f6-b87d-0b53b0c22727}",
+                        "slot": "{f7f83017-0b4e-4759-8828-c1716d96df4c}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{4abfb179-ec01-497c-8dd4-a36394390800}",
+                        "slot": "{499fa75e-4ca4-4690-8d93-38feeee6f15c}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{8e21d687-0f6f-4d7e-b581-785e747a74c2}",
+                    "name": "",
+                    "objectName": "{8e21d687-0f6f-4d7e-b581-785e747a74c2}",
+                    "origin": {
+                        "node": "{35eaaa4f-e025-4f66-8eb6-59eb6e53a1eb}",
+                        "slot": "{9c9df0cb-5d54-466c-9a2f-0f2b5f9b60ad}"
+                    }
+                }
+            ],
+            "entityType": "Graph",
+            "identifier": "{65ea2f85-07ae-46d9-b86a-6ecf9f6ab625}",
+            "name": "Default scenario",
+            "nodes": [
+                {
+                    "entityType": "Script",
+                    "identifier": "{29b8ed4f-8831-47dc-8bee-5091779c0281}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{91b060f9-5006-49dd-88df-a45cc350dec5}",
+                            "name": "Input 0",
+                            "objectName": "{91b060f9-5006-49dd-88df-a45cc350dec5}"
+                        },
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{ff597d14-6075-4b14-a497-76cf51246755}",
+                            "name": "Input 1",
+                            "objectName": "{ff597d14-6075-4b14-a497-76cf51246755}"
+                        }
+                    ],
+                    "name": "merger script",
+                    "objectName": "{29b8ed4f-8831-47dc-8bee-5091779c0281}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{d24e7d17-e93f-4a32-a597-d164bc2105b2}",
+                            "name": "Output",
+                            "objectName": "{d24e7d17-e93f-4a32-a597-d164bc2105b2}"
+                        }
+                    ],
+                    "script": "Response.body = [Request0.body, Request1.body]; // the body of the request\nResponse.query = Request.query; // the query parameters ex : ?key=value\nResponse.path = Request.path; // the path variables ex: http://website/customers/:id\nResponse.context = Request.context; // the current execution context, contains anything useful"
+                },
+                {
+                    "entityType": "Payload",
+                    "filePath": "",
+                    "identifier": "{874be0e0-bc5d-45f6-b87d-0b53b0c22727}",
+                    "inputSlots": [
+                    ],
+                    "loadFromFileStatus": false,
+                    "message": {
+                        "body": {
+                            "basePath": "/v2",
+                            "definitions": {
+                                "ApiResponse": {
+                                    "properties": {
+                                        "code": {
+                                            "format": "int32",
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "Category": {
+                                    "properties": {
+                                        "id": {
+                                            "format": "int64",
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "xml": {
+                                        "name": "Category"
+                                    }
+                                },
+                                "Order": {
+                                    "properties": {
+                                        "complete": {
+                                            "type": "boolean"
+                                        },
+                                        "id": {
+                                            "format": "int64",
+                                            "type": "integer"
+                                        },
+                                        "petId": {
+                                            "format": "int64",
+                                            "type": "integer"
+                                        },
+                                        "quantity": {
+                                            "format": "int32",
+                                            "type": "integer"
+                                        },
+                                        "shipDate": {
+                                            "format": "date-time",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "Order Status",
+                                            "enum": [
+                                                "placed",
+                                                "approved",
+                                                "delivered"
+                                            ],
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "xml": {
+                                        "name": "Order"
+                                    }
+                                },
+                                "Pet": {
+                                    "properties": {
+                                        "category": {
+                                            "$ref": "#/definitions/Category"
+                                        },
+                                        "id": {
+                                            "format": "int64",
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "example": "doggie",
+                                            "type": "string"
+                                        },
+                                        "photoUrls": {
+                                            "items": {
+                                                "type": "string",
+                                                "xml": {
+                                                    "name": "photoUrl"
+                                                }
+                                            },
+                                            "type": "array",
+                                            "xml": {
+                                                "wrapped": true
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "pet status in the store",
+                                            "enum": [
+                                                "available",
+                                                "pending",
+                                                "sold"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        "tags": {
+                                            "items": {
+                                                "$ref": "#/definitions/Tag",
+                                                "xml": {
+                                                    "name": "tag"
+                                                }
+                                            },
+                                            "type": "array",
+                                            "xml": {
+                                                "wrapped": true
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "photoUrls"
+                                    ],
+                                    "type": "object",
+                                    "xml": {
+                                        "name": "Pet"
+                                    }
+                                },
+                                "Tag": {
+                                    "properties": {
+                                        "id": {
+                                            "format": "int64",
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "xml": {
+                                        "name": "Tag"
+                                    }
+                                },
+                                "User": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "firstName": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "format": "int64",
+                                            "type": "integer"
+                                        },
+                                        "lastName": {
+                                            "type": "string"
+                                        },
+                                        "password": {
+                                            "type": "string"
+                                        },
+                                        "phone": {
+                                            "type": "string"
+                                        },
+                                        "userStatus": {
+                                            "description": "User Status",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        },
+                                        "username": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "xml": {
+                                        "name": "User"
+                                    }
+                                }
+                            },
+                            "externalDocs": {
+                                "description": "Find out more about Swagger",
+                                "url": "http://swagger.io"
+                            },
+                            "host": "petstore.swagger.io",
+                            "info": {
+                                "contact": {
+                                    "email": "apiteam@swagger.io"
+                                },
+                                "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+                                "license": {
+                                    "name": "Apache 2.0",
+                                    "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+                                },
+                                "termsOfService": "http://swagger.io/terms/",
+                                "title": "Swagger Petstore",
+                                "version": "1.0.5"
+                            },
+                            "paths": {
+                                "/pet": {
+                                    "post": {
+                                        "consumes": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "description": "",
+                                        "operationId": "addPet",
+                                        "parameters": [
+                                            {
+                                                "description": "Pet object that needs to be added to the store",
+                                                "in": "body",
+                                                "name": "body",
+                                                "required": true,
+                                                "schema": {
+                                                    "$ref": "#/definitions/Pet"
+                                                }
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "405": {
+                                                "description": "Invalid input"
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "petstore_auth": [
+                                                    "write:pets",
+                                                    "read:pets"
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Add a new pet to the store",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    },
+                                    "put": {
+                                        "consumes": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "description": "",
+                                        "operationId": "updatePet",
+                                        "parameters": [
+                                            {
+                                                "description": "Pet object that needs to be added to the store",
+                                                "in": "body",
+                                                "name": "body",
+                                                "required": true,
+                                                "schema": {
+                                                    "$ref": "#/definitions/Pet"
+                                                }
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "400": {
+                                                "description": "Invalid ID supplied"
+                                            },
+                                            "404": {
+                                                "description": "Pet not found"
+                                            },
+                                            "405": {
+                                                "description": "Validation exception"
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "petstore_auth": [
+                                                    "write:pets",
+                                                    "read:pets"
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Update an existing pet",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    }
+                                },
+                                "/pet/findByStatus": {
+                                    "get": {
+                                        "description": "Multiple status values can be provided with comma separated strings",
+                                        "operationId": "findPetsByStatus",
+                                        "parameters": [
+                                            {
+                                                "collectionFormat": "multi",
+                                                "description": "Status values that need to be considered for filter",
+                                                "in": "query",
+                                                "items": {
+                                                    "default": "available",
+                                                    "enum": [
+                                                        "available",
+                                                        "pending",
+                                                        "sold"
+                                                    ],
+                                                    "type": "string"
+                                                },
+                                                "name": "status",
+                                                "required": true,
+                                                "type": "array"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "items": {
+                                                        "$ref": "#/definitions/Pet"
+                                                    },
+                                                    "type": "array"
+                                                }
+                                            },
+                                            "400": {
+                                                "description": "Invalid status value"
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "petstore_auth": [
+                                                    "write:pets",
+                                                    "read:pets"
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Finds Pets by status",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    }
+                                },
+                                "/pet/findByTags": {
+                                    "get": {
+                                        "deprecated": true,
+                                        "description": "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
+                                        "operationId": "findPetsByTags",
+                                        "parameters": [
+                                            {
+                                                "collectionFormat": "multi",
+                                                "description": "Tags to filter by",
+                                                "in": "query",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "name": "tags",
+                                                "required": true,
+                                                "type": "array"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "items": {
+                                                        "$ref": "#/definitions/Pet"
+                                                    },
+                                                    "type": "array"
+                                                }
+                                            },
+                                            "400": {
+                                                "description": "Invalid tag value"
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "petstore_auth": [
+                                                    "write:pets",
+                                                    "read:pets"
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Finds Pets by tags",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    }
+                                },
+                                "/pet/{petId}": {
+                                    "delete": {
+                                        "description": "",
+                                        "operationId": "deletePet",
+                                        "parameters": [
+                                            {
+                                                "in": "header",
+                                                "name": "api_key",
+                                                "required": false,
+                                                "type": "string"
+                                            },
+                                            {
+                                                "description": "Pet id to delete",
+                                                "format": "int64",
+                                                "in": "path",
+                                                "name": "petId",
+                                                "required": true,
+                                                "type": "integer"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "400": {
+                                                "description": "Invalid ID supplied"
+                                            },
+                                            "404": {
+                                                "description": "Pet not found"
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "petstore_auth": [
+                                                    "write:pets",
+                                                    "read:pets"
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Deletes a pet",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    },
+                                    "get": {
+                                        "description": "Returns a single pet",
+                                        "operationId": "getPetById",
+                                        "parameters": [
+                                            {
+                                                "description": "ID of pet to return",
+                                                "format": "int64",
+                                                "in": "path",
+                                                "name": "petId",
+                                                "required": true,
+                                                "type": "integer"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "$ref": "#/definitions/Pet"
+                                                }
+                                            },
+                                            "400": {
+                                                "description": "Invalid ID supplied"
+                                            },
+                                            "404": {
+                                                "description": "Pet not found"
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "api_key": [
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Find pet by ID",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    },
+                                    "post": {
+                                        "consumes": [
+                                            "application/x-www-form-urlencoded"
+                                        ],
+                                        "description": "",
+                                        "operationId": "updatePetWithForm",
+                                        "parameters": [
+                                            {
+                                                "description": "ID of pet that needs to be updated",
+                                                "format": "int64",
+                                                "in": "path",
+                                                "name": "petId",
+                                                "required": true,
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "description": "Updated name of the pet",
+                                                "in": "formData",
+                                                "name": "name",
+                                                "required": false,
+                                                "type": "string"
+                                            },
+                                            {
+                                                "description": "Updated status of the pet",
+                                                "in": "formData",
+                                                "name": "status",
+                                                "required": false,
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "405": {
+                                                "description": "Invalid input"
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "petstore_auth": [
+                                                    "write:pets",
+                                                    "read:pets"
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Updates a pet in the store with form data",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    }
+                                },
+                                "/pet/{petId}/uploadImage": {
+                                    "post": {
+                                        "consumes": [
+                                            "multipart/form-data"
+                                        ],
+                                        "description": "",
+                                        "operationId": "uploadFile",
+                                        "parameters": [
+                                            {
+                                                "description": "ID of pet to update",
+                                                "format": "int64",
+                                                "in": "path",
+                                                "name": "petId",
+                                                "required": true,
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "description": "Additional data to pass to server",
+                                                "in": "formData",
+                                                "name": "additionalMetadata",
+                                                "required": false,
+                                                "type": "string"
+                                            },
+                                            {
+                                                "description": "file to upload",
+                                                "in": "formData",
+                                                "name": "file",
+                                                "required": false,
+                                                "type": "file"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "$ref": "#/definitions/ApiResponse"
+                                                }
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "petstore_auth": [
+                                                    "write:pets",
+                                                    "read:pets"
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "uploads an image",
+                                        "tags": [
+                                            "pet"
+                                        ]
+                                    }
+                                },
+                                "/store/inventory": {
+                                    "get": {
+                                        "description": "Returns a map of status codes to quantities",
+                                        "operationId": "getInventory",
+                                        "parameters": [
+                                        ],
+                                        "produces": [
+                                            "application/json"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "additionalProperties": {
+                                                        "format": "int32",
+                                                        "type": "integer"
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            }
+                                        },
+                                        "security": [
+                                            {
+                                                "api_key": [
+                                                ]
+                                            }
+                                        ],
+                                        "summary": "Returns pet inventories by status",
+                                        "tags": [
+                                            "store"
+                                        ]
+                                    }
+                                },
+                                "/store/order": {
+                                    "post": {
+                                        "consumes": [
+                                            "application/json"
+                                        ],
+                                        "description": "",
+                                        "operationId": "placeOrder",
+                                        "parameters": [
+                                            {
+                                                "description": "order placed for purchasing the pet",
+                                                "in": "body",
+                                                "name": "body",
+                                                "required": true,
+                                                "schema": {
+                                                    "$ref": "#/definitions/Order"
+                                                }
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "$ref": "#/definitions/Order"
+                                                }
+                                            },
+                                            "400": {
+                                                "description": "Invalid Order"
+                                            }
+                                        },
+                                        "summary": "Place an order for a pet",
+                                        "tags": [
+                                            "store"
+                                        ]
+                                    }
+                                },
+                                "/store/order/{orderId}": {
+                                    "delete": {
+                                        "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
+                                        "operationId": "deleteOrder",
+                                        "parameters": [
+                                            {
+                                                "description": "ID of the order that needs to be deleted",
+                                                "format": "int64",
+                                                "in": "path",
+                                                "minimum": 1,
+                                                "name": "orderId",
+                                                "required": true,
+                                                "type": "integer"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "400": {
+                                                "description": "Invalid ID supplied"
+                                            },
+                                            "404": {
+                                                "description": "Order not found"
+                                            }
+                                        },
+                                        "summary": "Delete purchase order by ID",
+                                        "tags": [
+                                            "store"
+                                        ]
+                                    },
+                                    "get": {
+                                        "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
+                                        "operationId": "getOrderById",
+                                        "parameters": [
+                                            {
+                                                "description": "ID of pet that needs to be fetched",
+                                                "format": "int64",
+                                                "in": "path",
+                                                "maximum": 10,
+                                                "minimum": 1,
+                                                "name": "orderId",
+                                                "required": true,
+                                                "type": "integer"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "$ref": "#/definitions/Order"
+                                                }
+                                            },
+                                            "400": {
+                                                "description": "Invalid ID supplied"
+                                            },
+                                            "404": {
+                                                "description": "Order not found"
+                                            }
+                                        },
+                                        "summary": "Find purchase order by ID",
+                                        "tags": [
+                                            "store"
+                                        ]
+                                    }
+                                },
+                                "/user": {
+                                    "post": {
+                                        "consumes": [
+                                            "application/json"
+                                        ],
+                                        "description": "This can only be done by the logged in user.",
+                                        "operationId": "createUser",
+                                        "parameters": [
+                                            {
+                                                "description": "Created user object",
+                                                "in": "body",
+                                                "name": "body",
+                                                "required": true,
+                                                "schema": {
+                                                    "$ref": "#/definitions/User"
+                                                }
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "default": {
+                                                "description": "successful operation"
+                                            }
+                                        },
+                                        "summary": "Create user",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    }
+                                },
+                                "/user/createWithArray": {
+                                    "post": {
+                                        "consumes": [
+                                            "application/json"
+                                        ],
+                                        "description": "",
+                                        "operationId": "createUsersWithArrayInput",
+                                        "parameters": [
+                                            {
+                                                "description": "List of user object",
+                                                "in": "body",
+                                                "name": "body",
+                                                "required": true,
+                                                "schema": {
+                                                    "items": {
+                                                        "$ref": "#/definitions/User"
+                                                    },
+                                                    "type": "array"
+                                                }
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "default": {
+                                                "description": "successful operation"
+                                            }
+                                        },
+                                        "summary": "Creates list of users with given input array",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    }
+                                },
+                                "/user/createWithList": {
+                                    "post": {
+                                        "consumes": [
+                                            "application/json"
+                                        ],
+                                        "description": "",
+                                        "operationId": "createUsersWithListInput",
+                                        "parameters": [
+                                            {
+                                                "description": "List of user object",
+                                                "in": "body",
+                                                "name": "body",
+                                                "required": true,
+                                                "schema": {
+                                                    "items": {
+                                                        "$ref": "#/definitions/User"
+                                                    },
+                                                    "type": "array"
+                                                }
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "default": {
+                                                "description": "successful operation"
+                                            }
+                                        },
+                                        "summary": "Creates list of users with given input array",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    }
+                                },
+                                "/user/login": {
+                                    "get": {
+                                        "description": "",
+                                        "operationId": "loginUser",
+                                        "parameters": [
+                                            {
+                                                "description": "The user name for login",
+                                                "in": "query",
+                                                "name": "username",
+                                                "required": true,
+                                                "type": "string"
+                                            },
+                                            {
+                                                "description": "The password for login in clear text",
+                                                "in": "query",
+                                                "name": "password",
+                                                "required": true,
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "headers": {
+                                                    "X-Expires-After": {
+                                                        "description": "date in UTC when token expires",
+                                                        "format": "date-time",
+                                                        "type": "string"
+                                                    },
+                                                    "X-Rate-Limit": {
+                                                        "description": "calls per hour allowed by the user",
+                                                        "format": "int32",
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "schema": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "400": {
+                                                "description": "Invalid username/password supplied"
+                                            }
+                                        },
+                                        "summary": "Logs user into the system",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    }
+                                },
+                                "/user/logout": {
+                                    "get": {
+                                        "description": "",
+                                        "operationId": "logoutUser",
+                                        "parameters": [
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "default": {
+                                                "description": "successful operation"
+                                            }
+                                        },
+                                        "summary": "Logs out current logged in user session",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    }
+                                },
+                                "/user/{username}": {
+                                    "delete": {
+                                        "description": "This can only be done by the logged in user.",
+                                        "operationId": "deleteUser",
+                                        "parameters": [
+                                            {
+                                                "description": "The name that needs to be deleted",
+                                                "in": "path",
+                                                "name": "username",
+                                                "required": true,
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "400": {
+                                                "description": "Invalid username supplied"
+                                            },
+                                            "404": {
+                                                "description": "User not found"
+                                            }
+                                        },
+                                        "summary": "Delete user",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    },
+                                    "get": {
+                                        "description": "",
+                                        "operationId": "getUserByName",
+                                        "parameters": [
+                                            {
+                                                "description": "The name that needs to be fetched. Use user1 for testing. ",
+                                                "in": "path",
+                                                "name": "username",
+                                                "required": true,
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "200": {
+                                                "description": "successful operation",
+                                                "schema": {
+                                                    "$ref": "#/definitions/User"
+                                                }
+                                            },
+                                            "400": {
+                                                "description": "Invalid username supplied"
+                                            },
+                                            "404": {
+                                                "description": "User not found"
+                                            }
+                                        },
+                                        "summary": "Get user by user name",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    },
+                                    "put": {
+                                        "consumes": [
+                                            "application/json"
+                                        ],
+                                        "description": "This can only be done by the logged in user.",
+                                        "operationId": "updateUser",
+                                        "parameters": [
+                                            {
+                                                "description": "name that need to be updated",
+                                                "in": "path",
+                                                "name": "username",
+                                                "required": true,
+                                                "type": "string"
+                                            },
+                                            {
+                                                "description": "Updated user object",
+                                                "in": "body",
+                                                "name": "body",
+                                                "required": true,
+                                                "schema": {
+                                                    "$ref": "#/definitions/User"
+                                                }
+                                            }
+                                        ],
+                                        "produces": [
+                                            "application/json",
+                                            "application/xml"
+                                        ],
+                                        "responses": {
+                                            "400": {
+                                                "description": "Invalid user supplied"
+                                            },
+                                            "404": {
+                                                "description": "User not found"
+                                            }
+                                        },
+                                        "summary": "Updated user",
+                                        "tags": [
+                                            "user"
+                                        ]
+                                    }
+                                }
+                            },
+                            "schemes": [
+                                "https",
+                                "http"
+                            ],
+                            "securityDefinitions": {
+                                "api_key": {
+                                    "in": "header",
+                                    "name": "api_key",
+                                    "type": "apiKey"
+                                },
+                                "petstore_auth": {
+                                    "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
+                                    "flow": "implicit",
+                                    "scopes": {
+                                        "read:pets": "read your pets",
+                                        "write:pets": "modify pets in your account"
+                                    },
+                                    "type": "oauth2"
+                                }
+                            },
+                            "swagger": "2.0",
+                            "tags": [
+                                {
+                                    "description": "Everything about your Pets",
+                                    "externalDocs": {
+                                        "description": "Find out more",
+                                        "url": "http://swagger.io"
+                                    },
+                                    "name": "pet"
+                                },
+                                {
+                                    "description": "Access to Petstore orders",
+                                    "name": "store"
+                                },
+                                {
+                                    "description": "Operations about user",
+                                    "externalDocs": {
+                                        "description": "Find out more about our store",
+                                        "url": "http://swagger.io"
+                                    },
+                                    "name": "user"
+                                }
+                            ]
+                        },
+                        "context": {
+                        },
+                        "path": {
+                        },
+                        "query": {
+                        }
+                    },
+                    "name": "Large payload",
+                    "objectName": "{874be0e0-bc5d-45f6-b87d-0b53b0c22727}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{f7f83017-0b4e-4759-8828-c1716d96df4c}",
+                            "name": "output",
+                            "objectName": "{f7f83017-0b4e-4759-8828-c1716d96df4c}"
+                        }
+                    ]
+                },
+                {
+                    "entityType": "Payload",
+                    "filePath": "",
+                    "identifier": "{35eaaa4f-e025-4f66-8eb6-59eb6e53a1eb}",
+                    "inputSlots": [
+                    ],
+                    "loadFromFileStatus": false,
+                    "message": {
+                        "body": {
+                            "fff": 9999
+                        },
+                        "context": {
+                        },
+                        "path": {
+                        },
+                        "query": {
+                        }
+                    },
+                    "name": "nothing interesting",
+                    "objectName": "{35eaaa4f-e025-4f66-8eb6-59eb6e53a1eb}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{9c9df0cb-5d54-466c-9a2f-0f2b5f9b60ad}",
+                            "name": "output",
+                            "objectName": "{9c9df0cb-5d54-466c-9a2f-0f2b5f9b60ad}"
+                        }
+                    ]
+                },
+                {
+                    "acceptedCodes": [
+                    ],
+                    "authMethod": 0,
+                    "baPwd": "{{basic_auth_pwd}}",
+                    "baUser": "{{basic_auth_0user}}",
+                    "bearerToken": "{{bearer_token}}",
+                    "contentType": "application/json",
+                    "entityType": "Endpoint",
+                    "extraHeaders": [
+                    ],
+                    "httpMethod": 0,
+                    "identifier": "{24786b91-c395-4d35-ab10-5b4759302e0e}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{df1d048a-5115-47ae-bd79-e93b6042f32c}",
+                            "name": "Input",
+                            "objectName": "{df1d048a-5115-47ae-bd79-e93b6042f32c}"
+                        }
+                    ],
+                    "name": "delay",
+                    "objectName": "{24786b91-c395-4d35-ab10-5b4759302e0e}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{5a65daf6-4e50-4e69-b743-64de674582e4}",
+                            "name": "Output",
+                            "objectName": "{5a65daf6-4e50-4e69-b743-64de674582e4}"
+                        }
+                    ],
+                    "payloadModel": "",
+                    "rejectedCodes": [
+                    ],
+                    "timeout": 30000,
+                    "url": "http://httpbin.org/delay/{{delay}}",
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107"
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "",
+                    "filter": "$",
+                    "identifier": "{b3d211f6-0eb3-46e9-b93e-6997b676b2c4}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{3805194f-e781-41e8-b97a-12fe26b41523}",
+                            "name": "in",
+                            "objectName": "{3805194f-e781-41e8-b97a-12fe26b41523}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{b3d211f6-0eb3-46e9-b93e-6997b676b2c4}",
+                    "outputSlots": [
+                    ]
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "",
+                    "filter": "$..paths",
+                    "identifier": "{b9da9949-590f-4866-8f5a-f0bc54e9ebc3}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{e062d00c-2f3f-416a-a440-f59cb63646ed}",
+                            "name": "in",
+                            "objectName": "{e062d00c-2f3f-416a-a440-f59cb63646ed}"
+                        }
+                    ],
+                    "name": "Filtered output",
+                    "objectName": "{b9da9949-590f-4866-8f5a-f0bc54e9ebc3}",
+                    "outputSlots": [
+                    ]
+                },
+                {
+                    "acceptedCodes": [
+                        200,
+                        402
+                    ],
+                    "authMethod": 1,
+                    "baPwd": "{{basic_auth_pwd}}",
+                    "baUser": "{{basic_auth_user}}",
+                    "bearerToken": "testtoken",
+                    "contentType": "application/json",
+                    "entityType": "Endpoint",
+                    "extraHeaders": [
+                    ],
+                    "httpMethod": 0,
+                    "identifier": "{8b89fee1-ff81-461f-aba4-bd200f180ce2}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{6b6aea02-6ce0-4dfa-8b0d-19260573d1e4}",
+                            "name": "Input",
+                            "objectName": "{6b6aea02-6ce0-4dfa-8b0d-19260573d1e4}"
+                        }
+                    ],
+                    "name": "basic-auth",
+                    "objectName": "{8b89fee1-ff81-461f-aba4-bd200f180ce2}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{51ee3f10-abef-409d-a14f-ee19977db812}",
+                            "name": "Output",
+                            "objectName": "{51ee3f10-abef-409d-a14f-ee19977db812}"
+                        }
+                    ],
+                    "payloadModel": "",
+                    "rejectedCodes": [
+                        1000,
+                        400,
+                        403,
+                        401
+                    ],
+                    "timeout": 30000,
+                    "url": "http://httpbin.org/basic-auth/fff/ttt",
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107"
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "",
+                    "filter": "$",
+                    "identifier": "{1b35cfe2-960b-48c5-96d4-498de35a1820}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{845cb600-0b9b-4750-ac39-9517e9b69c36}",
+                            "name": "in",
+                            "objectName": "{845cb600-0b9b-4750-ac39-9517e9b69c36}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{1b35cfe2-960b-48c5-96d4-498de35a1820}",
+                    "outputSlots": [
+                    ]
+                },
+                {
+                    "acceptedCodes": [
+                        200
+                    ],
+                    "authMethod": 2,
+                    "baPwd": "{{basic_auth_pwd}}",
+                    "baUser": "{{basic_auth_0user}}",
+                    "bearerToken": "{{bearer_token}}",
+                    "contentType": "application/json",
+                    "entityType": "Endpoint",
+                    "extraHeaders": [
+                    ],
+                    "httpMethod": 0,
+                    "identifier": "{4abfb179-ec01-497c-8dd4-a36394390800}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{499fa75e-4ca4-4690-8d93-38feeee6f15c}",
+                            "name": "Input",
+                            "objectName": "{499fa75e-4ca4-4690-8d93-38feeee6f15c}"
+                        }
+                    ],
+                    "name": "bearer",
+                    "objectName": "{4abfb179-ec01-497c-8dd4-a36394390800}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{671058db-2952-488a-83a4-1e465af6bc11}",
+                            "name": "Output",
+                            "objectName": "{671058db-2952-488a-83a4-1e465af6bc11}"
+                        }
+                    ],
+                    "payloadModel": "",
+                    "rejectedCodes": [
+                    ],
+                    "timeout": 30000,
+                    "url": "http://httpbin.org/bearer",
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107"
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "",
+                    "filter": "$",
+                    "identifier": "{164a824f-e7db-4252-8061-fc023a9a6db7}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{d0e7ecc3-d072-4b3b-8a4d-e6800105a7cb}",
+                            "name": "in",
+                            "objectName": "{d0e7ecc3-d072-4b3b-8a4d-e6800105a7cb}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{164a824f-e7db-4252-8061-fc023a9a6db7}",
+                    "outputSlots": [
+                    ]
+                },
+                {
+                    "delay": 5000,
+                    "entityType": "Delay",
+                    "identifier": "{e29efea4-bb26-4cc7-aba0-d5fac20183e1}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{fe311b7e-cbd0-4d8d-a6b7-1b0f7f9aad43}",
+                            "name": "input",
+                            "objectName": "{fe311b7e-cbd0-4d8d-a6b7-1b0f7f9aad43}"
+                        }
+                    ],
+                    "name": "10 sec delay",
+                    "objectName": "{e29efea4-bb26-4cc7-aba0-d5fac20183e1}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{df60455f-b37a-41eb-a5dc-c70776ee65cd}",
+                            "name": "output",
+                            "objectName": "{df60455f-b37a-41eb-a5dc-c70776ee65cd}"
+                        }
+                    ]
+                }
+            ],
+            "objectName": "{65ea2f85-07ae-46d9-b86a-6ecf9f6ab625}"
+        },
+        {
+            "activeEnvironment": "{bb9afdbd-a6d1-42de-bc25-3b75913cfe5d}",
+            "edges": [
+                {
+                    "destination": {
+                        "node": "{a3e71084-2553-4d56-8e53-3ae9d9b47060}",
+                        "slot": "{10f290ea-2ee0-4cf3-9875-d0ba1098a486}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{156b958e-1085-4a5b-b0a5-acd111c8634f}",
+                    "name": "",
+                    "objectName": "{156b958e-1085-4a5b-b0a5-acd111c8634f}",
+                    "origin": {
+                        "node": "{bad5dbd6-8d4b-42b4-a48d-2607efe92ef1}",
+                        "slot": "{abf5c7c6-d110-48bf-8e6b-8b52aad33f70}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{bad5dbd6-8d4b-42b4-a48d-2607efe92ef1}",
+                        "slot": "{565f3a1b-8a72-4bcf-9ecd-cef540322e53}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{19822d0c-79f7-4fc1-bfc0-cffee82bb174}",
+                    "name": "",
+                    "objectName": "{19822d0c-79f7-4fc1-bfc0-cffee82bb174}",
+                    "origin": {
+                        "node": "{ab2a9f78-bd3e-48f9-9d3f-7d1b93c42720}",
+                        "slot": "{e03f8dfa-2b7e-48a2-bb98-2a44ba8c1fc0}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{35dff287-423e-482d-a6e4-09461918c80a}",
+                        "slot": "{1d6506e9-29dc-4395-a180-3db34636116c}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{023f469a-42fe-44d6-bfae-9d9c408469a0}",
+                    "name": "",
+                    "objectName": "{023f469a-42fe-44d6-bfae-9d9c408469a0}",
+                    "origin": {
+                        "node": "{28aa0027-1959-4ec7-a75d-1fc40c5d5d33}",
+                        "slot": "{44918501-3edb-4cee-a8c9-6421495c8af7}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{126634fe-5525-45dd-8021-35b6b26be0e5}",
+                        "slot": "{13cbf892-e3bb-46f6-aaf9-828f1077a5f3}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{76feaf70-13f0-4824-9730-8b6063f546da}",
+                    "name": "",
+                    "objectName": "{76feaf70-13f0-4824-9730-8b6063f546da}",
+                    "origin": {
+                        "node": "{35dff287-423e-482d-a6e4-09461918c80a}",
+                        "slot": "{6897a7db-7e7e-49f9-b97b-0bc8de570979}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{28aa0027-1959-4ec7-a75d-1fc40c5d5d33}",
+                        "slot": "{88a8f406-c1a4-4adf-b427-8b3cbe1a161e}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{f0641794-cc51-4468-bf77-939efda1f6be}",
+                    "name": "",
+                    "objectName": "{f0641794-cc51-4468-bf77-939efda1f6be}",
+                    "origin": {
+                        "node": "{794580ad-b6e7-409e-bd29-df84b17da2fe}",
+                        "slot": "{c257b676-ddf2-4f7e-8012-0c75bd177253}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{45e6e91c-8d16-451f-ab89-8005ec6d32b7}",
+                        "slot": "{cad43bea-4124-4738-8864-af51ef9730d2}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{78199574-f867-468d-a989-07a0c733a13a}",
+                    "name": "",
+                    "objectName": "{78199574-f867-468d-a989-07a0c733a13a}",
+                    "origin": {
+                        "node": "{af94eed5-53a4-480b-8846-3d353595599b}",
+                        "slot": "{bd4049a1-5d09-4987-8df9-c0dcf83f716a}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{af94eed5-53a4-480b-8846-3d353595599b}",
+                        "slot": "{2ce8512e-74eb-478f-beb3-e38ae3dd0564}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{4b80503e-c5a1-4063-8671-50af1ab059bb}",
+                    "name": "",
+                    "objectName": "{4b80503e-c5a1-4063-8671-50af1ab059bb}",
+                    "origin": {
+                        "node": "{03a68085-92a6-425b-a2fe-e848b9071583}",
+                        "slot": "{845bd711-f8d5-4840-a04f-0595dd494f2a}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{ab2a9f78-bd3e-48f9-9d3f-7d1b93c42720}",
+                        "slot": "{6efdfada-b6f4-404e-ad3c-e6f7a8bd13f7}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{aa625b50-0d29-43a6-b65c-63171b93a1e2}",
+                    "name": "",
+                    "objectName": "{aa625b50-0d29-43a6-b65c-63171b93a1e2}",
+                    "origin": {
+                        "node": "{e8dc19b9-3a72-46bb-83eb-ced80fa69512}",
+                        "slot": "{1610f3fb-3ff5-4bc0-b6a1-d5199dba2d74}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{f869d46f-319f-4351-89fc-d898a1963580}",
+                        "slot": "{41f3c21a-83f3-49f4-9b6f-050d4620d817}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{719d5e76-d8e3-4f34-b860-669591038019}",
+                    "name": "",
+                    "objectName": "{719d5e76-d8e3-4f34-b860-669591038019}",
+                    "origin": {
+                        "node": "{e8dc19b9-3a72-46bb-83eb-ced80fa69512}",
+                        "slot": "{1610f3fb-3ff5-4bc0-b6a1-d5199dba2d74}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{2c49f8c5-09ce-4958-88bf-1e158f4a121a}",
+                        "slot": "{db0fcbca-3700-4cd4-92e1-439e6859fd80}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{d687b611-7f3b-4062-9f83-d4709eb6922b}",
+                    "name": "",
+                    "objectName": "{d687b611-7f3b-4062-9f83-d4709eb6922b}",
+                    "origin": {
+                        "node": "{f869d46f-319f-4351-89fc-d898a1963580}",
+                        "slot": "{ac474ec8-9ca6-4c3a-bc5b-72b423755f46}"
+                    }
+                }
+            ],
+            "entityType": "Graph",
+            "identifier": "{419d16a5-33ed-43aa-80bc-7af6b64448d7}",
+            "name": "test",
+            "nodes": [
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "d:/get-posts.json",
+                    "filter": "$",
+                    "identifier": "{a3e71084-2553-4d56-8e53-3ae9d9b47060}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{10f290ea-2ee0-4cf3-9875-d0ba1098a486}",
+                            "name": "in",
+                            "objectName": "{10f290ea-2ee0-4cf3-9875-d0ba1098a486}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{a3e71084-2553-4d56-8e53-3ae9d9b47060}",
+                    "outputSlots": [
+                    ]
+                },
+                {
+                    "entityType": "Payload",
+                    "filePath": "",
+                    "identifier": "{e8dc19b9-3a72-46bb-83eb-ced80fa69512}",
+                    "inputSlots": [
+                    ],
+                    "loadFromFileStatus": false,
+                    "message": {
+                        "body": {
+                            "bbb": 99,
+                            "ff": 55
+                        },
+                        "context": {
+                        },
+                        "path": {
+                            "postId": "5"
+                        },
+                        "query": {
+                        }
+                    },
+                    "name": "Main payload",
+                    "objectName": "{e8dc19b9-3a72-46bb-83eb-ced80fa69512}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{1610f3fb-3ff5-4bc0-b6a1-d5199dba2d74}",
+                            "name": "output",
+                            "objectName": "{1610f3fb-3ff5-4bc0-b6a1-d5199dba2d74}"
+                        }
+                    ]
+                },
+                {
+                    "acceptedCodes": [
+                        200
+                    ],
+                    "authMethod": 1,
+                    "baPwd": "{{basic_auth_pwd}}",
+                    "baUser": "{{basic_auth_0user}}",
+                    "bearerToken": "{{bearer_token}}",
+                    "contentType": "application/json",
+                    "entityType": "Endpoint",
+                    "extraHeaders": [
+                    ],
+                    "httpMethod": 0,
+                    "identifier": "{bad5dbd6-8d4b-42b4-a48d-2607efe92ef1}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{565f3a1b-8a72-4bcf-9ecd-cef540322e53}",
+                            "name": "Input",
+                            "objectName": "{565f3a1b-8a72-4bcf-9ecd-cef540322e53}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{bad5dbd6-8d4b-42b4-a48d-2607efe92ef1}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{abf5c7c6-d110-48bf-8e6b-8b52aad33f70}",
+                            "name": "Output",
+                            "objectName": "{abf5c7c6-d110-48bf-8e6b-8b52aad33f70}"
+                        }
+                    ],
+                    "payloadModel": "",
+                    "rejectedCodes": [
+                        404,
+                        401,
+                        500
+                    ],
+                    "timeout": 300000,
+                    "url": "{{baseUrl}}/posts/{postId}",
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107"
+                },
+                {
+                    "delay": 1000,
+                    "entityType": "Delay",
+                    "identifier": "{ab2a9f78-bd3e-48f9-9d3f-7d1b93c42720}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{6efdfada-b6f4-404e-ad3c-e6f7a8bd13f7}",
+                            "name": "input",
+                            "objectName": "{6efdfada-b6f4-404e-ad3c-e6f7a8bd13f7}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{ab2a9f78-bd3e-48f9-9d3f-7d1b93c42720}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{e03f8dfa-2b7e-48a2-bb98-2a44ba8c1fc0}",
+                            "name": "output",
+                            "objectName": "{e03f8dfa-2b7e-48a2-bb98-2a44ba8c1fc0}"
+                        }
+                    ]
+                },
+                {
+                    "delay": 1200,
+                    "entityType": "Delay",
+                    "identifier": "{28aa0027-1959-4ec7-a75d-1fc40c5d5d33}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{88a8f406-c1a4-4adf-b427-8b3cbe1a161e}",
+                            "name": "input",
+                            "objectName": "{88a8f406-c1a4-4adf-b427-8b3cbe1a161e}"
+                        }
+                    ],
+                    "name": "just a delay",
+                    "objectName": "{28aa0027-1959-4ec7-a75d-1fc40c5d5d33}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{44918501-3edb-4cee-a8c9-6421495c8af7}",
+                            "name": "output",
+                            "objectName": "{44918501-3edb-4cee-a8c9-6421495c8af7}"
+                        }
+                    ]
+                },
+                {
+                    "acceptedCodes": [
+                        200,
+                        400
+                    ],
+                    "authMethod": 1,
+                    "baPwd": "{{basic_auth_pwd}}",
+                    "baUser": "{{basic_auth_0user}}",
+                    "bearerToken": "{{bearer_token}}",
+                    "contentType": "application/json",
+                    "entityType": "Endpoint",
+                    "extraHeaders": [
+                    ],
+                    "httpMethod": 0,
+                    "identifier": "{35dff287-423e-482d-a6e4-09461918c80a}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{1d6506e9-29dc-4395-a180-3db34636116c}",
+                            "name": "Input",
+                            "objectName": "{1d6506e9-29dc-4395-a180-3db34636116c}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{35dff287-423e-482d-a6e4-09461918c80a}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{6897a7db-7e7e-49f9-b97b-0bc8de570979}",
+                            "name": "Output",
+                            "objectName": "{6897a7db-7e7e-49f9-b97b-0bc8de570979}"
+                        }
+                    ],
+                    "payloadModel": "",
+                    "rejectedCodes": [
+                        404,
+                        401,
+                        500
+                    ],
+                    "timeout": 3000,
+                    "url": "http://www.yahoo.jp",
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107"
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "",
+                    "filter": "$",
+                    "identifier": "{126634fe-5525-45dd-8021-35b6b26be0e5}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{13cbf892-e3bb-46f6-aaf9-828f1077a5f3}",
+                            "name": "in",
+                            "objectName": "{13cbf892-e3bb-46f6-aaf9-828f1077a5f3}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{126634fe-5525-45dd-8021-35b6b26be0e5}",
+                    "outputSlots": [
+                    ]
+                },
+                {
+                    "entityType": "Payload",
+                    "filePath": "D:/get-posts.json",
+                    "identifier": "{794580ad-b6e7-409e-bd29-df84b17da2fe}",
+                    "inputSlots": [
+                    ],
+                    "loadFromFileStatus": false,
+                    "message": {
+                        "body": {
+                            "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque",
+                            "id": 5,
+                            "title": "nesciunt quas odio",
+                            "userId": 1
+                        },
+                        "context": {
+                        },
+                        "path": {
+                            "postId": "5"
+                        },
+                        "query": {
+                        }
+                    },
+                    "name": "",
+                    "objectName": "{794580ad-b6e7-409e-bd29-df84b17da2fe}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{c257b676-ddf2-4f7e-8012-0c75bd177253}",
+                            "name": "output",
+                            "objectName": "{c257b676-ddf2-4f7e-8012-0c75bd177253}"
+                        }
+                    ]
+                },
+                {
+                    "customScript": "true",
+                    "deltaDelay": 25,
+                    "entityType": "External",
+                    "executionCondition": 0,
+                    "externalGraphId": "{65ea2f85-07ae-46d9-b86a-6ecf9f6ab625}",
+                    "externalNodeId": "{29b8ed4f-8831-47dc-8bee-5091779c0281}",
+                    "identifier": "{03a68085-92a6-425b-a2fe-e848b9071583}",
+                    "inputSlots": [
+                    ],
+                    "name": "Default scenario",
+                    "objectName": "{03a68085-92a6-425b-a2fe-e848b9071583}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{845bd711-f8d5-4840-a04f-0595dd494f2a}",
+                            "name": "Output",
+                            "objectName": "{845bd711-f8d5-4840-a04f-0595dd494f2a}"
+                        }
+                    ]
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "d:/awimbawe/bouyaya/yep-testing.json",
+                    "filter": "$.*",
+                    "identifier": "{45e6e91c-8d16-451f-ab89-8005ec6d32b7}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{cad43bea-4124-4738-8864-af51ef9730d2}",
+                            "name": "in",
+                            "objectName": "{cad43bea-4124-4738-8864-af51ef9730d2}"
+                        }
+                    ],
+                    "name": "",
+                    "objectName": "{45e6e91c-8d16-451f-ab89-8005ec6d32b7}",
+                    "outputSlots": [
+                    ]
+                },
+                {
+                    "delay": 1000,
+                    "entityType": "Delay",
+                    "identifier": "{af94eed5-53a4-480b-8846-3d353595599b}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{2ce8512e-74eb-478f-beb3-e38ae3dd0564}",
+                            "name": "input",
+                            "objectName": "{2ce8512e-74eb-478f-beb3-e38ae3dd0564}"
+                        }
+                    ],
+                    "name": "test",
+                    "objectName": "{af94eed5-53a4-480b-8846-3d353595599b}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{bd4049a1-5d09-4987-8df9-c0dcf83f716a}",
+                            "name": "output",
+                            "objectName": "{bd4049a1-5d09-4987-8df9-c0dcf83f716a}"
+                        }
+                    ]
+                },
+                {
+                    "acceptedCodes": [
+                        200
+                    ],
+                    "authMethod": 1,
+                    "baPwd": "{{basic_auth_pwd}}",
+                    "baUser": "{{basic_auth_user}}",
+                    "bearerToken": "{{bearer_token}}",
+                    "contentType": "application/json",
+                    "entityType": "Endpoint",
+                    "extraHeaders": [
+                    ],
+                    "httpMethod": 0,
+                    "identifier": "{f869d46f-319f-4351-89fc-d898a1963580}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{41f3c21a-83f3-49f4-9b6f-050d4620d817}",
+                            "name": "Input",
+                            "objectName": "{41f3c21a-83f3-49f4-9b6f-050d4620d817}"
+                        }
+                    ],
+                    "name": "Untitled",
+                    "objectName": "{f869d46f-319f-4351-89fc-d898a1963580}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{ac474ec8-9ca6-4c3a-bc5b-72b423755f46}",
+                            "name": "Output",
+                            "objectName": "{ac474ec8-9ca6-4c3a-bc5b-72b423755f46}"
+                        }
+                    ],
+                    "payloadModel": "",
+                    "rejectedCodes": [
+                        404,
+                        401,
+                        500
+                    ],
+                    "timeout": 3000,
+                    "url": "{{baseUrl}}/posts",
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107"
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "./{2c49f8c5-09ce-4958-88bf-1e158f4a121a}.json",
+                    "filter": "$",
+                    "identifier": "{2c49f8c5-09ce-4958-88bf-1e158f4a121a}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{db0fcbca-3700-4cd4-92e1-439e6859fd80}",
+                            "name": "Input",
+                            "objectName": "{db0fcbca-3700-4cd4-92e1-439e6859fd80}"
+                        }
+                    ],
+                    "name": "Untitled",
+                    "objectName": "{2c49f8c5-09ce-4958-88bf-1e158f4a121a}",
+                    "outputSlots": [
+                    ]
+                }
+            ],
+            "objectName": "{419d16a5-33ed-43aa-80bc-7af6b64448d7}"
+        },
+        {
+            "activeEnvironment": "{d98c4e75-adf6-41e4-b40a-e73cb7e666c3}",
+            "edges": [
+                {
+                    "destination": {
+                        "node": "{fd91fdda-96c0-4a09-849b-8c2361bc2e2e}",
+                        "slot": "{ea8d45c6-cb80-4ca2-89f8-93c23d6261f5}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{ef3eaabb-9023-43f5-8b2d-6467482f750b}",
+                    "name": "",
+                    "objectName": "{ef3eaabb-9023-43f5-8b2d-6467482f750b}",
+                    "origin": {
+                        "node": "{853304a1-0966-440f-98d5-187791f9b1e1}",
+                        "slot": "{95b0e358-9305-4d99-ac2c-74e4996ecba3}"
+                    }
+                },
+                {
+                    "destination": {
+                        "node": "{ff46d91b-cdc9-453d-85c1-56c541ecc0dd}",
+                        "slot": "{6e2d22d1-1a01-474a-a465-99ceded59518}"
+                    },
+                    "entityType": "Edge",
+                    "identifier": "{9cf682c5-7324-49b3-aa3a-39289c666aad}",
+                    "name": "",
+                    "objectName": "{9cf682c5-7324-49b3-aa3a-39289c666aad}",
+                    "origin": {
+                        "node": "{fd91fdda-96c0-4a09-849b-8c2361bc2e2e}",
+                        "slot": "{fc81d973-2cf6-4507-a036-3b7019914d2a}"
+                    }
+                }
+            ],
+            "entityType": "Graph",
+            "identifier": "{73fc0531-6dd6-483d-9193-f1245b6cc919}",
+            "name": "rapidapi",
+            "nodes": [
+                {
+                    "entityType": "Payload",
+                    "filePath": "",
+                    "identifier": "{853304a1-0966-440f-98d5-187791f9b1e1}",
+                    "inputSlots": [
+                    ],
+                    "loadFromFileStatus": false,
+                    "message": {
+                        "body": "",
+                        "context": {
+                        },
+                        "path": {
+                        },
+                        "query": {
+                        }
+                    },
+                    "name": "Untitled",
+                    "objectName": "{853304a1-0966-440f-98d5-187791f9b1e1}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{95b0e358-9305-4d99-ac2c-74e4996ecba3}",
+                            "name": "Output",
+                            "objectName": "{95b0e358-9305-4d99-ac2c-74e4996ecba3}"
+                        }
+                    ]
+                },
+                {
+                    "acceptedCodes": [
+                        200
+                    ],
+                    "authMethod": 0,
+                    "baPwd": "{{basic_auth_pwd}}",
+                    "baUser": "{{basic_auth_user}}",
+                    "bearerToken": "{{bearer_token}}",
+                    "contentType": "application/json",
+                    "entityType": "Endpoint",
+                    "extraHeaders": [
+                        {
+                            "custom_value": "{{header_test}}"
+                        },
+                        {
+                            "x-rapidapi-host": "proxy-orbit1.p.rapidapi.com"
+                        },
+                        {
+                            "x-rapidapi-key": "b076732490msh19340a3c42e1089p199ce2jsn5b8add8fcfd3"
+                        }
+                    ],
+                    "httpMethod": 0,
+                    "identifier": "{fd91fdda-96c0-4a09-849b-8c2361bc2e2e}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{ea8d45c6-cb80-4ca2-89f8-93c23d6261f5}",
+                            "name": "Input",
+                            "objectName": "{ea8d45c6-cb80-4ca2-89f8-93c23d6261f5}"
+                        }
+                    ],
+                    "name": "RapidApiEndpoint",
+                    "objectName": "{fd91fdda-96c0-4a09-849b-8c2361bc2e2e}",
+                    "outputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 1,
+                            "entityType": "OutputSlot",
+                            "identifier": "{fc81d973-2cf6-4507-a036-3b7019914d2a}",
+                            "name": "Output",
+                            "objectName": "{fc81d973-2cf6-4507-a036-3b7019914d2a}"
+                        }
+                    ],
+                    "payloadModel": "",
+                    "rejectedCodes": [
+                        404,
+                        401,
+                        500
+                    ],
+                    "timeout": 3000,
+                    "url": "{{baseUrl}}",
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 OPR/74.0.3911.107"
+                },
+                {
+                    "entityType": "Viewer",
+                    "exportToFileStatus": false,
+                    "filePath": "./{ff46d91b-cdc9-453d-85c1-56c541ecc0dd}.json",
+                    "filter": "$",
+                    "identifier": "{ff46d91b-cdc9-453d-85c1-56c541ecc0dd}",
+                    "inputSlots": [
+                        {
+                            "dataType": 99,
+                            "direction": 0,
+                            "entityType": "InputSlot",
+                            "identifier": "{6e2d22d1-1a01-474a-a465-99ceded59518}",
+                            "name": "Input",
+                            "objectName": "{6e2d22d1-1a01-474a-a465-99ceded59518}"
+                        }
+                    ],
+                    "name": "Untitled",
+                    "objectName": "{ff46d91b-cdc9-453d-85c1-56c541ecc0dd}",
+                    "outputSlots": [
+                    ]
+                }
+            ],
+            "objectName": "{73fc0531-6dd6-483d-9193-f1245b6cc919}"
+        }
+    ],
+    "identifier": "{44777fd3-cb92-4ea1-985b-e655bb6d2da6}",
+    "name": "",
+    "objectName": "{44777fd3-cb92-4ea1-985b-e655bb6d2da6}",
+    "ui": {
+        "scenes": {
+            "{419d16a5-33ed-43aa-80bc-7af6b64448d7}": {
+                "center": {
+                    "x": -327.7499902322893,
+                    "y": -531.7499841526155
+                },
+                "nodes": {
+                    "{03a68085-92a6-425b-a2fe-e848b9071583}": {
+                        "position": {
+                            "x": -1878.5813304327878,
+                            "y": -951.4999118559117
+                        },
+                        "size": {
+                            "x": 500,
+                            "y": 466
+                        }
+                    },
+                    "{126634fe-5525-45dd-8021-35b6b26be0e5}": {
+                        "position": {
+                            "x": 517.459944766854,
+                            "y": -1473.8779172041711
+                        },
+                        "size": {
+                            "x": 740,
+                            "y": 521
+                        }
+                    },
+                    "{28aa0027-1959-4ec7-a75d-1fc40c5d5d33}": {
+                        "position": {
+                            "x": -824.1649893202109,
+                            "y": -1353.2120032378186
+                        },
+                        "size": {
+                            "x": 271,
+                            "y": 171
+                        }
+                    },
+                    "{2c49f8c5-09ce-4958-88bf-1e158f4a121a}": {
+                        "position": {
+                            "x": -274.99998360872337,
+                            "y": 398.99997621774776
+                        },
+                        "size": {
+                            "x": 961,
+                            "y": 585
+                        }
+                    },
+                    "{35dff287-423e-482d-a6e4-09461918c80a}": {
+                        "position": {
+                            "x": -300.83154476253634,
+                            "y": -1466.6697888916551
+                        },
+                        "size": {
+                            "x": 500,
+                            "y": 375
+                        }
+                    },
+                    "{45e6e91c-8d16-451f-ab89-8005ec6d32b7}": {
+                        "position": {
+                            "x": -542.0401516258798,
+                            "y": -904.3773712624395
+                        },
+                        "size": {
+                            "x": 474,
+                            "y": 300
+                        }
+                    },
+                    "{794580ad-b6e7-409e-bd29-df84b17da2fe}": {
+                        "position": {
+                            "x": -1783.8729765027754,
+                            "y": -1470.1699757881959
+                        },
+                        "size": {
+                            "x": 480,
+                            "y": 308
+                        }
+                    },
+                    "{a3e71084-2553-4d56-8e53-3ae9d9b47060}": {
+                        "position": {
+                            "x": 186.12470013754069,
+                            "y": -234.4190313512736
+                        },
+                        "size": {
+                            "x": 639,
+                            "y": 544
+                        }
+                    },
+                    "{ab2a9f78-bd3e-48f9-9d3f-7d1b93c42720}": {
+                        "position": {
+                            "x": -1081.4150071947295,
+                            "y": -328.67094554291225
+                        },
+                        "size": {
+                            "x": 251,
+                            "y": 171
+                        }
+                    },
+                    "{af94eed5-53a4-480b-8846-3d353595599b}": {
+                        "position": {
+                            "x": -1149.6643974286394,
+                            "y": -833.8368998976368
+                        },
+                        "size": {
+                            "x": 271,
+                            "y": 155
+                        }
+                    },
+                    "{bad5dbd6-8d4b-42b4-a48d-2607efe92ef1}": {
+                        "position": {
+                            "x": -592.8317389952975,
+                            "y": -400.41982670456935
+                        },
+                        "size": {
+                            "x": 500,
+                            "y": 499
+                        }
+                    },
+                    "{e8dc19b9-3a72-46bb-83eb-ced80fa69512}": {
+                        "position": {
+                            "x": -1915.914972149176,
+                            "y": -59.87494614100689
+                        },
+                        "size": {
+                            "x": 539,
+                            "y": 432
+                        }
+                    },
+                    "{f869d46f-319f-4351-89fc-d898a1963580}": {
+                        "position": {
+                            "x": -1009.9999397993116,
+                            "y": 255.99998474121162
+                        },
+                        "size": {
+                            "x": 500,
+                            "y": 375
+                        }
+                    }
+                },
+                "zoom": 3
+            },
+            "{65ea2f85-07ae-46d9-b86a-6ecf9f6ab625}": {
+                "center": {
+                    "x": 40.499999698251486,
+                    "y": 273.37499796319753
+                },
+                "nodes": {
+                    "{164a824f-e7db-4252-8061-fc023a9a6db7}": {
+                        "position": {
+                            "x": -566.5007905621318,
+                            "y": -1338.3743644527888
+                        },
+                        "size": {
+                            "x": 694,
+                            "y": 558
+                        }
+                    },
+                    "{1b35cfe2-960b-48c5-96d4-498de35a1820}": {
+                        "position": {
+                            "x": -564.9988019599343,
+                            "y": -602.4997992194973
+                        },
+                        "size": {
+                            "x": 693,
+                            "y": 484
+                        }
+                    },
+                    "{24786b91-c395-4d35-ab10-5b4759302e0e}": {
+                        "position": {
+                            "x": 417.4161685355592,
+                            "y": 39.33664507603169
+                        },
+                        "size": {
+                            "x": 625,
+                            "y": 529
+                        }
+                    },
+                    "{29b8ed4f-8831-47dc-8bee-5091779c0281}": {
+                        "position": {
+                            "x": -575.2082483607271,
+                            "y": 369.2513655138216
+                        },
+                        "size": {
+                            "x": 649,
+                            "y": 361
+                        }
+                    },
+                    "{35eaaa4f-e025-4f66-8eb6-59eb6e53a1eb}": {
+                        "position": {
+                            "x": -2495.5394436380425,
+                            "y": -604.750164866536
+                        },
+                        "size": {
+                            "x": 480,
+                            "y": 300
+                        }
+                    },
+                    "{4abfb179-ec01-497c-8dd4-a36394390800}": {
+                        "position": {
+                            "x": -1574.8746226896249,
+                            "y": -1357.1211655414156
+                        },
+                        "size": {
+                            "x": 727,
+                            "y": 570
+                        }
+                    },
+                    "{874be0e0-bc5d-45f6-b87d-0b53b0c22727}": {
+                        "position": {
+                            "x": -1527.7488598739048,
+                            "y": 566.74924716384
+                        },
+                        "size": {
+                            "x": 570,
+                            "y": 395
+                        }
+                    },
+                    "{8b89fee1-ff81-461f-aba4-bd200f180ce2}": {
+                        "position": {
+                            "x": -1541.1239700834071,
+                            "y": -610.7499342560811
+                        },
+                        "size": {
+                            "x": 728,
+                            "y": 628
+                        }
+                    },
+                    "{b3d211f6-0eb3-46e9-b93e-6997b676b2c4}": {
+                        "position": {
+                            "x": 1282.498355804792,
+                            "y": 39.12418673410946
+                        },
+                        "size": {
+                            "x": 903,
+                            "y": 593
+                        }
+                    },
+                    "{b9da9949-590f-4866-8f5a-f0bc54e9ebc3}": {
+                        "position": {
+                            "x": 420.7497778934477,
+                            "y": 716.629712125051
+                        },
+                        "size": {
+                            "x": 720,
+                            "y": 521
+                        }
+                    },
+                    "{e29efea4-bb26-4cc7-aba0-d5fac20183e1}": {
+                        "position": {
+                            "x": -1533.9991893714819,
+                            "y": 232.91645856400095
+                        },
+                        "size": {
+                            "x": 271,
+                            "y": 176
+                        }
+                    }
+                },
+                "zoom": 6
+            },
+            "{73fc0531-6dd6-483d-9193-f1245b6cc919}": {
+                "center": {
+                    "x": 326.2499781232337,
+                    "y": -452.2499696742758
+                },
+                "nodes": {
+                    "{853304a1-0966-440f-98d5-187791f9b1e1}": {
+                        "position": {
+                            "x": -804.4999314935608,
+                            "y": -1011.9997339389037
+                        },
+                        "size": {
+                            "x": 480,
+                            "y": 300
+                        }
+                    },
+                    "{fd91fdda-96c0-4a09-849b-8c2361bc2e2e}": {
+                        "position": {
+                            "x": -170.99992873475514,
+                            "y": -1018.2496722854557
+                        },
+                        "size": {
+                            "x": 500,
+                            "y": 375
+                        }
+                    },
+                    "{ff46d91b-cdc9-453d-85c1-56c541ecc0dd}": {
+                        "position": {
+                            "x": 508.6669049431572,
+                            "y": -1055.9997487217531
+                        },
+                        "size": {
+                            "x": 787,
+                            "y": 677
+                        }
+                    }
+                },
+                "zoom": 4
+            }
+        }
+    }
+}

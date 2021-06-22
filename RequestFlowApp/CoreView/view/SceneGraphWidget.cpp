@@ -28,16 +28,25 @@ SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph
     initUi();
     setScene(_sceneGraph);
     setObjectName(sceneGraph->getModelGraph()->getIdentifier());
+    createShortcuts();
     _rubberBand = new QRubberBand(QRubberBand::Shape::Line, this);
     viewport()->grabGesture(Qt::GestureType::PanGesture);
+
     connect(verticalScrollBar(), &QScrollBar::valueChanged, this, [=](int value)
             {
                 _sceneGraph->customUpdate();
         }, Qt::ConnectionType::DirectConnection);
+
     connect(horizontalScrollBar(), &QScrollBar::valueChanged, this, [=](int value)
             {
                 _sceneGraph->customUpdate();
             }, Qt::ConnectionType::DirectConnection);
+
+    connect(_sceneGraph, &view::SceneGraph::nodeDoubleClicked, this, [=](view::Node* node)
+            {
+                setCenterAnimated(node, true);
+            });
+
 }
 
 SceneGraphWidget::~SceneGraphWidget()
@@ -239,6 +248,36 @@ void SceneGraphWidget::dropEvent(QDropEvent* event)
     event->acceptProposedAction();
 }
 
+void SceneGraphWidget::createShortcuts()
+{
+    auto deleteAction = new QAction(QIcon(), "delete", this);
+    deleteAction->setShortcutContext(Qt::ShortcutContext::WidgetWithChildrenShortcut);
+    deleteAction->setShortcut(QKeySequence(QKeySequence::StandardKey::Delete));
+    connect(deleteAction, &QAction::triggered, this, [=]()
+            {
+                _sceneGraph->deleteSelectedItems();
+            });
+    addAction(deleteAction);
+
+    auto duplicateAction = new QAction(QIcon(), "duplicate", this);
+    duplicateAction->setShortcutContext(Qt::ShortcutContext::WidgetWithChildrenShortcut);
+    duplicateAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_D));
+    connect(duplicateAction, &QAction::triggered, this, [=]()
+            {
+                _sceneGraph->duplicateSelectedItems();
+            });
+    addAction(duplicateAction);
+
+    auto renameAction = new QAction(QIcon(), "rename", this);
+    renameAction->setShortcutContext(Qt::ShortcutContext::WidgetWithChildrenShortcut);
+    renameAction->setShortcut(QKeySequence(Qt::Key::Key_F2));
+    connect(renameAction, &QAction::triggered, this, [=]()
+            {
+                _sceneGraph->renameSelectedNode();
+            });
+    addAction(renameAction);
+}
+
 QPointF SceneGraphWidget::getCenter() const
 {
     return mapToScene(viewport()->rect()).boundingRect().center();;
@@ -254,8 +293,9 @@ void SceneGraphWidget::setCenterAnimated(const QPointF &p, bool resetZoom)
 {
     auto propAnimation = new QPropertyAnimation();
     propAnimation->setTargetObject(this);
-    propAnimation->setDuration(200);
-    propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::InOutCubic));
+    propAnimation->setDuration(400);
+    //propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::InOutCubic));
+    propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::OutCubic));
     propAnimation->setStartValue(getCenter());
     propAnimation->setEndValue(p);
     propAnimation->start(QAbstractAnimation::DeleteWhenStopped);

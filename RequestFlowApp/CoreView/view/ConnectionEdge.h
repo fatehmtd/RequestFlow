@@ -43,8 +43,8 @@ namespace view
 		int _thickness = 10;
 		Eligibility _eligibility;
 
-		QColor _noCandidateColor = QColor("#FFFFA637");
-		QColor _notEligibleColor = QColor("#FF0000");
-		QColor _eligibleColor = QColor("#00FF00");
+        static QColor _noCandidateColor;
+        static QColor _notEligibleColor;
+        static QColor _eligibleColor;
 	};
 }
