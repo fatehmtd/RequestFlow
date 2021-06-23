@@ -45,19 +45,20 @@ namespace view
 
         namespace redesign
         {
-            const QColor darkOrange("#E18F43");
+            const QColor darkOrange("#FF924C");
             const QColor darkGreen("#57B079");
-            const QColor lightBlue("#65ABF9");
+            const QColor lightGreen("#8AC926");
+            const QColor lightBlue("#17A0ED");
             const QColor purple("#9874F8");
-            const QColor red("#FB434F");
-            const QColor darkYellow("#E7D03F");
-            const QColor darkBlue("#287B9E");
+            const QColor red("#B80006");
+            const QColor darkYellow("#FFCA3A");
+            const QColor darkBlue("#1D5972");
         }
 
         namespace nodes
         {
             const QColor delay = redesign::darkOrange;
-            const QColor endpoint = redesign::darkGreen;
+            const QColor endpoint = redesign::lightGreen;
             const QColor viewer = redesign::lightBlue;
             const QColor script = redesign::purple;
             const QColor external = redesign::red;

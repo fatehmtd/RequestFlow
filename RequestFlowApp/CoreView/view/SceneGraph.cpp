@@ -208,6 +208,8 @@ view::Node *view::SceneGraph::createGeometryForModel(model::Node *node)
 
 void view::SceneGraph::drawBackground(QPainter *painter, const QRectF &rect)
 {
+    if(!_drawBackground) return;
+
     switch (getBackgroundType()) {
     case SOLID:
         painter->fillRect(rect, QColor("#A8A8A8"));
@@ -679,22 +681,31 @@ void view::SceneGraph::customUpdate()
     getMiniMap()->setParentViewport(customRect);
 }
 
-QImage view::SceneGraph::takeScreenShotSvg(QRectF rect, qreal multiplier)
+QImage view::SceneGraph::takeScreenShotSvg(QString path, QRectF rect)
 {
     QRect outputRect(0, 0, rect.width(), rect.height());
     QSvgGenerator generator;
-    generator.setFileName(QString("./%1.svg").arg(getModelGraph()->getName().replace(" ", "_")));
+    generator.setFileName(path);
     generator.setSize(QSize(rect.width(), rect.height()));
     generator.setViewBox(QRectF(0, 0, rect.width(), rect.width()));
     //generator.setResolution(100);
 
-    QPainter painter(&generator);
+
+    QBrush tempBrush(QColor(0, 255, 0, 255));
+    auto prevBrush = backgroundBrush();
+    setBackgroundBrush(tempBrush);
+    _drawBackground = false;
+
+    QPainter painter;
+    painter.begin(&generator);
     painter.setRenderHint(QPainter::RenderHint::Antialiasing);
     painter.setRenderHint(QPainter::RenderHint::LosslessImageRendering);
     painter.setRenderHint(QPainter::RenderHint::SmoothPixmapTransform);
     painter.setRenderHint(QPainter::RenderHint::TextAntialiasing);
     render(&painter, outputRect, rect);
-
+    painter.end();
+    setBackgroundBrush(prevBrush);
+    _drawBackground = true;
     return QImage();
 }
 
@@ -702,15 +713,21 @@ QImage view::SceneGraph::takeScreenShotSvg(QRectF rect, qreal multiplier)
 
 QImage view::SceneGraph::takeScreenShot(QRectF rect, qreal multiplier)
 {
+    QBrush tempBrush(QColor(0, 255, 0, 255));
+    auto prevBrush = backgroundBrush();
+    setBackgroundBrush(tempBrush);
+    _drawBackground = false;
     QRect outputRect(0, 0, rect.width()*multiplier, rect.height()*multiplier);
-    QImage img(outputRect.width(), outputRect.height(), QImage::Format::Format_RGB888);
-    img.fill(qRgb(0, 0, 0));
+    QImage img(outputRect.width(), outputRect.height(), QImage::Format::Format_RGBA8888);
+    img.fill(qRgba(0, 0, 0, 0));
     QPainter painter(&img);
     painter.setRenderHint(QPainter::RenderHint::Antialiasing);
     painter.setRenderHint(QPainter::RenderHint::LosslessImageRendering);
     painter.setRenderHint(QPainter::RenderHint::SmoothPixmapTransform);
     painter.setRenderHint(QPainter::RenderHint::TextAntialiasing);
     render(&painter, outputRect, rect);
+    setBackgroundBrush(prevBrush);
+    _drawBackground = true;
     return img;
 }
 
@@ -729,8 +746,19 @@ void view::SceneGraph::addItem(QGraphicsItem *item)
     {
         connect(node, &view::Node::doubleClicked, this, [=]()
                 {
-                    takeScreenShotSvg(computeBoundingRect(getNodes(), 20), 3);
-                    takeScreenShot().save(QString("./%1.png").arg(getModelGraph()->getName().replace(" ", "_")));
+                    auto nodes = getNodes();
+                    clearSelection();
+                    update();
+                    for(auto node : nodes)
+                    {
+                        QList<Node*> tempList;
+                        tempList << node;
+                        auto rect = computeBoundingRect(tempList);
+                        takeScreenShotSvg(QString("./%1-%2-%3.svg").arg(getModelGraph()->getName().replace(" ", "_"), node->getModelNode()->getType(), node->getModelNode()->getName()), rect);
+                        //takeScreenShot(rect, 1.6).save(QString("./%1-%2.png").arg(getModelGraph()->getName().replace(" ", "_"), node->getModelNode()->getIdentifier()));
+                    }
+                    //takeScreenShotSvg(computeBoundingRect(getNodes(), 20), 3);
+                    //takeScreenShot().save(QString("./%1.png").arg(getModelGraph()->getName().replace(" ", "_")));
                     //emit nodeDoubleClicked(node);
                 });
     }

@@ -30,7 +30,6 @@ SceneGraphWidget::SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph
     setObjectName(sceneGraph->getModelGraph()->getIdentifier());
     createShortcuts();
     _rubberBand = new QRubberBand(QRubberBand::Shape::Line, this);
-    viewport()->grabGesture(Qt::GestureType::PanGesture);
 
     connect(verticalScrollBar(), &QScrollBar::valueChanged, this, [=](int value)
             {
@@ -93,22 +92,6 @@ void SceneGraphWidget::setupViewport(QWidget *widget)
 {
     QGraphicsView::setupViewport(widget);
     _sceneGraph->customUpdate();
-}
-
-#include <QGesture>
-
-bool SceneGraphWidget::event(QEvent *event)
-{
-    if(event->type() == QEvent::Type::Gesture)
-    {
-        auto gesture = (QGesture*)event;
-        if(gesture->gestureType() == Qt::GestureType::PanGesture)
-        {
-            auto panGesture = dynamic_cast<QPanGesture*>(gesture);
-            qDebug() << panGesture;
-        }
-    }
-    return QGraphicsView::event(event);
 }
 
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)

@@ -89,7 +89,7 @@ namespace view
         void customUpdate();
 
 
-        QImage takeScreenShotSvg(QRectF rect, qreal multiplier = 4.0f);
+        QImage takeScreenShotSvg(QString path, QRectF rect);
         QImage takeScreenShot(QRectF rect, qreal multiplier = 4.0f);
         QImage takeScreenShot(qreal padding=20, qreal multiplier=2.0f);
 
@@ -144,5 +144,7 @@ namespace view
 
 		QMap<QString, std::function<void(view::Edge*)>> _edgesActions;
 		QMap<QString, std::function<void(view::Node*)>> _nodesActions;
+
+        bool _drawBackground = true;
 	};
 }
