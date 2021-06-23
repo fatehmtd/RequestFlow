@@ -1,6 +1,6 @@
 #include "Node.h"
 #include "Colors.h"
-#include <QGraphicsProxyWidget.h>
+#include <QGraphicsProxyWidget>
 #include "Slot.h"
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
