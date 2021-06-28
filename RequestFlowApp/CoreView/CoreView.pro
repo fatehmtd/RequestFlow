@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 
-QT += core gui network widgets qml svg svgwidgets
+QT += core gui network widgets qml svg
 TEMPLATE = lib
 TARGET = CoreView
 CONFIG += c++11

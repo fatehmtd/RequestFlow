@@ -12,39 +12,39 @@ view::SettingsManager::~SettingsManager()
 
 void view::SettingsManager::clearRecentProjects()
 {
-	_settings->remove("recentProjects");
+    _settings->remove("recentProjects");
 }
 
 QList<QString> view::SettingsManager::enumRecentProjects() const
 {
-	auto recentProjectsList = _settings->value("recentProjects").toList();
-	QList<QString> output;
+    auto recentProjectsList = _settings->value("recentProjects").toList();
+    QList<QString> output;
     for (const auto& v : recentProjectsList)
-	{
-		output.append(v.toString());
-	}
+    {
+        output.append(v.toString());
+    }
     return output;
 }
 
 void view::SettingsManager::removeRecentProject(const QString& path)
 {
-	auto recentProjectsList = _settings->value("recentProjects").toList();
-	if (recentProjectsList.contains(path))
-	{
-		recentProjectsList.removeAll(path);
-		_settings->setValue("recentProjects", recentProjectsList);
-	}
+    auto recentProjectsList = _settings->value("recentProjects").toList();
+    if (recentProjectsList.contains(path))
+    {
+        recentProjectsList.removeAll(path);
+        _settings->setValue("recentProjects", recentProjectsList);
+    }
 }
 
 void view::SettingsManager::addRecentProject(const QString& path)
 {
-	auto recentProjectsList = _settings->value("recentProjects").toList();
-	if (recentProjectsList.contains(path))
-	{
-		recentProjectsList.removeAll(path);
-	}
-	recentProjectsList.prepend(path);
-	_settings->setValue("recentProjects", recentProjectsList);
+    auto recentProjectsList = _settings->value("recentProjects").toList();
+    if (recentProjectsList.contains(path))
+    {
+        recentProjectsList.removeAll(path);
+    }
+    recentProjectsList.prepend(path);
+    _settings->setValue("recentProjects", recentProjectsList);
 }
 
 QString view::SettingsManager::getLastOpenedLocation() const
@@ -112,6 +112,63 @@ void view::SettingsManager::setMiniMapStatus(bool status)
 bool view::SettingsManager::getMiniMapStatus() const
 {
     return getEntry("MiniMapStatus", true).toBool();
+}
+
+void view::SettingsManager::setProxyStatus(bool status)
+{
+    setEntry("proxy.status", status);
+}
+
+bool view::SettingsManager::getProxyStatus() const
+{
+    return getEntry("proxy.status", false).toBool();
+}
+
+void view::SettingsManager::setProxyConfig(ProxyConfig config)
+{
+    setEntry("proxy.hostName", config.hostName);
+    setEntry("proxy.port", config.port);
+    setEntry("proxy.authNeeded", config.authNeeded);
+    setEntry("proxy.userName", config.userName);
+    setEntry("proxy.password", config.password);
+    setEntry("proxy.proxyType", config.proxyType);
+}
+
+view::SettingsManager::ProxyConfig view::SettingsManager::getProxyConfig() const
+{
+    ProxyConfig config;
+    config.hostName = getEntry("proxy.hostName", "").toString();
+    config.port = getEntry("proxy.port", 8080).toUInt();
+    config.authNeeded = getEntry("proxy.authNeeded", false).toBool();
+    config.userName = getEntry("proxy.userName", "").toString();
+    config.password = getEntry("proxy.password", "").toString();
+    config.proxyType = getEntry("proxy.proxyType", 3).toInt();
+    return config;
+}
+
+#include <QNetworkProxy>
+
+void view::SettingsManager::applyProxySetting() const
+{
+    auto config = getProxyConfig();
+    QNetworkProxy proxy;
+    if(getProxyStatus())
+    {
+        proxy.setType((QNetworkProxy::ProxyType)config.proxyType);
+        proxy.setPort(config.port);
+        proxy.setHostName(config.hostName);
+        if(config.authNeeded)
+        {
+            proxy.setUser(config.userName);
+            proxy.setPassword(config.password);
+        }
+    }
+    else
+    {
+        proxy.setType(QNetworkProxy::ProxyType::NoProxy);
+    }
+
+    QNetworkProxy::setApplicationProxy(proxy);
 }
 
 void view::SettingsManager::setEntry(const QString &name, const QVariant &value)

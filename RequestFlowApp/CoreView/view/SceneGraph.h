@@ -38,6 +38,8 @@ namespace view
 		QList<Node*> getNodes() const;
 		QList<Edge*> getEdges() const;
 
+        QList<Node*> getSelectedNodes() const;
+
 		Node* getNodeAt(const QPointF& p) const;
 
 		model::Graph* getModelGraph() const;
@@ -54,9 +56,9 @@ namespace view
 
 		InteractionsHandler* getInteractionsHandler() const;
 
-        void deleteSelectedItems() const;
-        void duplicateSelectedItems() const;
-        void renameSelectedNode() const;
+        void deleteSelectedItems();
+        void duplicateSelectedItems();
+        void renameSelectedNode();
 
         // Visuals
 

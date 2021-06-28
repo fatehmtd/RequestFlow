@@ -39,7 +39,7 @@ void MainWindow::setupMenuBar()
         _fileMenu->addSeparator();
         _settingsAction = _fileMenu->addAction(QIcon(":/ui/settings"), "Settings...", [=]()
                                                {
-                                                   auto dlg = AppSettingDialog(this);
+                                                   AppSettingDialog dlg(_settingsManager, this);
                                                    dlg.exec();
                                                });
         //_settingsAction->setEnabled(false); // TODO: implement a settings dialog

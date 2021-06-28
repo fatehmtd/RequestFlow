@@ -163,6 +163,8 @@ namespace model
         QTimer _timer;
         QNetworkReply* _networkReply = nullptr;
 
+        bool _connectionFailed = false;
+
         QMap<QString, QString> _extraHeaders;
     };
 }

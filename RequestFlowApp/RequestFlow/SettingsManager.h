@@ -55,6 +55,27 @@ namespace view
         bool getMiniMapStatus() const;
 
         //////////////////////////////////////////////////////////////////////
+        /// Proxy
+        ///
+        struct ProxyConfig
+        {
+            QString hostName;
+            QString userName;
+            QString password;
+            bool authNeeded;
+            quint16 port;
+            int proxyType; // http or socks
+        };
+
+        void setProxyStatus(bool status);
+        bool getProxyStatus() const;
+
+        void setProxyConfig(ProxyConfig config);
+        ProxyConfig getProxyConfig() const;
+
+        void applyProxySetting() const;
+
+        //////////////////////////////////////////////////////////////////////
         /// Generic set/get entries
         ///
         void setEntry(const QString& name, const QVariant& value);

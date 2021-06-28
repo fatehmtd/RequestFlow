@@ -66,7 +66,7 @@ void SceneGraphWidget::initUi()
     setRenderHint(QPainter::RenderHint::LosslessImageRendering, false);
     setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
     setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
-    setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, false);
+    //setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, false);
 
     setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
     setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
@@ -224,7 +224,7 @@ void SceneGraphWidget::dropEvent(QDropEvent* event)
         if (entry != nullptr)
         {
             auto node = _sceneGraph->getInteractionsHandler()->createEndpointNode(entry);
-            node->setPos(mapToScene(event->position().toPoint()));
+            node->setPos(mapToScene(event->pos()));
         }
     }
 

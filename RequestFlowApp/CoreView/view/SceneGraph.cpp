@@ -129,6 +129,18 @@ QList<view::Edge *> view::SceneGraph::getEdges() const
     return edgesList;
 }
 
+QList<view::Node *> view::SceneGraph::getSelectedNodes() const
+{
+    QList<view::Node*> nodes;
+    for(auto node: getNodes())
+    {
+        if(node->isSelected())
+            nodes << node;
+    }
+
+    return nodes;
+}
+
 view::Node *view::SceneGraph::getNodeAt(const QPointF &p) const
 {
     auto item = itemAt(p, QTransform());
@@ -288,7 +300,7 @@ void view::SceneGraph::drawDotsBackground(QPainter *painter, const QRectF &rect)
     }
 
     QPen pen(QBrush(QColor("#E4E3E4")), 4.0f);
-    painter->fillRect(rect, backgroundBrush());
+    //painter->fillRect(rect, backgroundBrush());
     //pen.setStyle(Qt::PenStyle::DashLine);
     painter->setPen(pen);
     painter->drawPoints(points.data(), points.size());
@@ -340,7 +352,7 @@ void view::SceneGraph::drawGridBackground(QPainter *painter, const QRectF &rect)
         }
 
         QPen pen(QBrush(_darkGrid), 1.0f);
-        painter->fillRect(rect, backgroundBrush());
+        //painter->fillRect(rect, backgroundBrush());
         painter->setPen(pen);
         painter->drawLines(_lines);
     }
@@ -372,7 +384,7 @@ void view::SceneGraph::drawCrossBackground(QPainter *painter, const QRectF &rect
 
     QPen pen(QBrush(QColor("#E4E3E4")), 2.0f);
     //pen.setStyle(Qt::PenStyle::DashLine);
-    painter->fillRect(rect, backgroundBrush());
+    //painter->fillRect(rect, backgroundBrush());
     painter->setPen(pen);
     painter->drawLines(lines.data(), lines.size());
 }
@@ -401,7 +413,7 @@ void view::SceneGraph::drawQuadsBackground(QPainter *painter, const QRectF &rect
         QPen pen(QBrush(_lightGrid), 1.0f);
         //pen.setStyle(Qt::PenStyle::DashLine);
         painter->setPen(pen);
-        painter->drawRects(_rectList);
+        painter->drawRects(_rectList.toVector());
     }
 }
 
@@ -612,17 +624,39 @@ view::InteractionsHandler *view::SceneGraph::getInteractionsHandler() const
     return _interactionsHandler;
 }
 
-void view::SceneGraph::deleteSelectedItems() const
+void view::SceneGraph::deleteSelectedItems()
+{
+    auto items = selectedItems();
+
+    // process edges
+    for(auto item : items)
+    {
+        auto edge = dynamic_cast<view::Edge*>(item);
+        if(edge != nullptr)
+        {
+            _interactionsHandler->deleteEdge(edge);
+        }
+    }
+
+    // process nodes
+    for(auto item : items)
+    {
+        auto node = dynamic_cast<view::Node*>(item);
+        if(node != nullptr)
+        {
+            _interactionsHandler->deleteNode(node);
+        }
+    }
+
+    update();
+}
+
+void view::SceneGraph::duplicateSelectedItems()
 {
     qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
 }
 
-void view::SceneGraph::duplicateSelectedItems() const
-{
-    qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
-}
-
-void view::SceneGraph::renameSelectedNode() const
+void view::SceneGraph::renameSelectedNode()
 {
     qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
 }
@@ -713,6 +747,8 @@ QImage view::SceneGraph::takeScreenShotSvg(QString path, QRectF rect)
 
 QImage view::SceneGraph::takeScreenShot(QRectF rect, qreal multiplier)
 {
+    bool miniMapVisibility = getMiniMap()->isVisible();
+    getMiniMap()->setVisible(false);
     QBrush tempBrush(QColor(0, 255, 0, 255));
     auto prevBrush = backgroundBrush();
     setBackgroundBrush(tempBrush);
@@ -728,6 +764,7 @@ QImage view::SceneGraph::takeScreenShot(QRectF rect, qreal multiplier)
     render(&painter, outputRect, rect);
     setBackgroundBrush(prevBrush);
     _drawBackground = true;
+    getMiniMap()->setVisible(miniMapVisibility);
     return img;
 }
 
@@ -747,16 +784,34 @@ void view::SceneGraph::addItem(QGraphicsItem *item)
         connect(node, &view::Node::doubleClicked, this, [=]()
                 {
                     auto nodes = getNodes();
+                    for(auto node : nodes)
+                    {
+                        //if(node->isSelected())
+                        //nodes.removeAll(node);
+                    }
                     clearSelection();
                     update();
-                    for(auto node : nodes)
+                    qreal multiplier = 2.0;
+                    /*for(auto node : nodes)
                     {
                         QList<Node*> tempList;
                         tempList << node;
-                        auto rect = computeBoundingRect(tempList);
-                        takeScreenShotSvg(QString("./%1-%2-%3.svg").arg(getModelGraph()->getName().replace(" ", "_"), node->getModelNode()->getType(), node->getModelNode()->getName()), rect);
-                        //takeScreenShot(rect, 1.6).save(QString("./%1-%2.png").arg(getModelGraph()->getName().replace(" ", "_"), node->getModelNode()->getIdentifier()));
-                    }
+                        auto rect = computeBoundingRect(tempList, 20);
+                        //takeScreenShotSvg(QString("./%1-%2-%3.svg").arg(getModelGraph()->getName().replace(" ", "_"), node->getModelNode()->getType(), node->getModelNode()->getName()), rect);
+                        QString path = QString("./%1-%2-%3.png")
+                                           .arg(getModelGraph()->getName().replace(" ", "_"),
+                                                node->getModelNode()->getType(),
+                                                node->getModelNode()->getName());
+                        takeScreenShot(rect, multiplier).save(path);
+                        //takeScreenShotSvg(path, rect);
+                    }*/
+
+                    takeScreenShot(computeBoundingRect(nodes, 20), multiplier).save(QString("./%1.png")
+                                                                                        .arg(getModelGraph()->getName().replace(" ", "_")));
+/*
+                    takeScreenShotSvg(QString("./%1.svg")
+                                          .arg(getModelGraph()->getName().replace(" ", "_")), computeBoundingRect(nodes, 20));
+                    */
                     //takeScreenShotSvg(computeBoundingRect(getNodes(), 20), 3);
                     //takeScreenShot().save(QString("./%1.png").arg(getModelGraph()->getName().replace(" ", "_")));
                     //emit nodeDoubleClicked(node);

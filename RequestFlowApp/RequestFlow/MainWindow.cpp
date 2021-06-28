@@ -53,6 +53,7 @@ public:
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
     _settingsManager = new view::SettingsManager(this);
+    _settingsManager->applyProxySetting();
     setupUi();
 }
 

@@ -42,6 +42,7 @@ namespace view
         Node* createExternalNode();
 
 		void deleteNode(Node* node);
+        void deleteNodes(const QList<Node*>& nodes);
 		void deleteEdge(Edge* edge);
 		void deleteInputSlot(Slot* slot);
 

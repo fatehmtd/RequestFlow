@@ -171,8 +171,16 @@ void view::InteractionsHandler::deleteNode(Node* node)
 		delete edge;
 	}
 
-	delete node->getModelNode();
-	delete node;
+    delete node->getModelNode();
+    delete node;
+}
+
+void view::InteractionsHandler::deleteNodes(const QList<Node *> &nodes)
+{
+    for(auto node: nodes)
+    {
+        deleteNode(node);
+    }
 }
 
 void view::InteractionsHandler::deleteEdge(Edge* edge)

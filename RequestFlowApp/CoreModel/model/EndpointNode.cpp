@@ -281,12 +281,13 @@ QNetworkRequest model::EndpointNode::prepareRequest()
 void model::EndpointNode::processResponse(QNetworkReply* reply)
 {
     _timer.stop();
-    if (reply->isOpen())
-    {
-        QString data(reply->readAll());
 
-        QString fullResponse;
-        QTextStream out(&fullResponse, QIODevice::WriteOnly);
+    QString fullResponse;
+    QTextStream out(&fullResponse, QIODevice::WriteOnly);
+
+    if (reply->isOpen() && !_connectionFailed)
+    {
+        QString data(reply->readAll());        
 
         auto msecs = _elapsedTimer.elapsed();
         auto status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toInt();
@@ -315,7 +316,6 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
 			delete _networkReply;
 		}
         //*/
-        setConsoleResponseLog(fullResponse);
 
         if (validateHttpStatus(status))
         {
@@ -331,8 +331,12 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
     }
     else
     {
-        fail(QString("Failed to retreive a response from %1").arg(resolveUrl(getUrl()).toString()));
+        out << "Failed to retreive a response from : " <<  resolveUrl(getUrl()).toString() << "\n\n";
+        out << "Error : " << reply->errorString();
+        fail(fullResponse);
     }
+
+    setConsoleResponseLog(fullResponse);
 }
 
 void model::EndpointNode::setPayloadModel(QString& format)
@@ -566,7 +570,7 @@ QNetworkReply *model::EndpointNode::sendPatch(QNetworkRequest request)
 
 void model::EndpointNode::onErrorOccurred(QNetworkReply::NetworkError error)
 {
-    qDebug() << error;
+    _connectionFailed = true;
 }
 
 void model::EndpointNode::onGraphStop()
@@ -587,6 +591,7 @@ QString model::EndpointNode::getUserAgent() const
 
 void model::EndpointNode::sendPayload()
 {
+    _connectionFailed = false;
     _networkAccessManager->setTransferTimeout(0); // 0 = no timeout limit
     _elapsedTimer.start();
     _timer.setInterval(getTimeout());
