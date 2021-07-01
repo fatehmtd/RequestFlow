@@ -70,49 +70,6 @@ void MainWindow::setupMenuBar()
             }, QKeySequence::Find);
     }
 
-    // Scenario menu
-    {
-        _scenariosMenu = menuBar()->addMenu("Scenario");
-        _createScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/test_case"), "Create Scenario...", this, [=]()
-                                                          {
-                                                              auto name = QInputDialog::getText(this, "Create Scenario", "Name :");
-                                                              if (!name.isEmpty())
-                                                              {
-                                                                  createScenario(name);
-                                                              }
-                                                          });
-
-        _cloneScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/duplicate"), "Clone Scenario...", this, [=]()
-                                                         {
-                                                             cloneActiveScenario();
-                                                         });
-
-        _deleteScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/minus"), "Delete Scenario", this, [=]()
-                                                          {
-                                                              deleteActiveScenario();
-                                                          });
-    }
-
-    // Environment menu
-    {
-        _environmentsMenu = menuBar()->addMenu("Environment");
-        /*
-        _environmentConfigAction = _environmentsMenu->addAction(QIcon(":/ui/environment"), "Configure...", [=]()
-                                                                {
-                                                                    QDialog dialog(this);
-                                                                    dialog.setWindowTitle("Environments");
-                                                                    auto layout = new QVBoxLayout(&dialog);
-                                                                    //layout->setMargin(0);
-                                                                    layout->setSpacing(0);
-                                                                    auto environmentsWidget = new EnvironmentsWidget(&dialog);
-                                                                    layout->addWidget(environmentsWidget);
-                                                                    environmentsWidget->setProject(_project.get());
-                                                                    dialog.exec();
-                                                                });
-        _environmentsMenu->addSeparator();
-        //*/
-        _importSwaggerAction = _environmentsMenu->addAction(QIcon(":/ui/swagger"), "Swagger Import...", [=](){onImportSwagger();});
-    }
 
     // View menu
     {
@@ -281,6 +238,50 @@ void MainWindow::setupMenuBar()
             linesAction->trigger();
             break;
         }
+    }
+
+    // Scenario menu
+    {
+        _scenariosMenu = menuBar()->addMenu("Scenario");
+        _createScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/test_case"), "Create Scenario...", this, [=]()
+                                                          {
+                                                              auto name = QInputDialog::getText(this, "Create Scenario", "Name :");
+                                                              if (!name.isEmpty())
+                                                              {
+                                                                  createScenario(name);
+                                                              }
+                                                          });
+
+        _cloneScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/duplicate"), "Clone Scenario...", this, [=]()
+                                                         {
+                                                             cloneActiveScenario();
+                                                         });
+
+        _deleteScenarioAction = _scenariosMenu->addAction(QIcon(":/ui/minus"), "Delete Scenario", this, [=]()
+                                                          {
+                                                              deleteActiveScenario();
+                                                          });
+    }
+
+    // Environment menu
+    {
+        _toolsMenu = menuBar()->addMenu("Tools");
+        /*
+        _environmentConfigAction = _environmentsMenu->addAction(QIcon(":/ui/environment"), "Configure...", [=]()
+                                                                {
+                                                                    QDialog dialog(this);
+                                                                    dialog.setWindowTitle("Environments");
+                                                                    auto layout = new QVBoxLayout(&dialog);
+                                                                    //layout->setMargin(0);
+                                                                    layout->setSpacing(0);
+                                                                    auto environmentsWidget = new EnvironmentsWidget(&dialog);
+                                                                    layout->addWidget(environmentsWidget);
+                                                                    environmentsWidget->setProject(_project.get());
+                                                                    dialog.exec();
+                                                                });
+        _environmentsMenu->addSeparator();
+        //*/
+        _importSwaggerAction = _toolsMenu->addAction(QIcon(":/ui/swagger"), "Swagger Import...", [=](){onImportSwagger();});
     }
 
     // Help menu

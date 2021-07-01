@@ -65,7 +65,11 @@ FORMS += ./ui/ActionGroup.ui \
     ./ui/ViewerNodeUi.ui \
     ./ui/AppSettingDialog.ui \
     StartupDialog.ui
-RESOURCES += BleachUI.qrc
+
+RESOURCES += \
+    RequestFlow.qrc
+
+RESOURCES += qdarkstyle/theme/style.qrc
 
 DISTFILES += \
     $$PWD/license.txt

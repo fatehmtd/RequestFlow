@@ -128,25 +128,29 @@ namespace view
 		virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
 
 	protected:
+        // Visual settings
         int _backgroundType = 0;
         int _edgeType = 0;
 
 		model::Graph* _modelGraph = nullptr;
+
+        // Background painter
 		QColor _background;
 		QColor _lightGrid, _darkGrid;
 		ushort _cellSize, _blockSize;
-		float _zoomLevel;
-		Slot* _originSlot = nullptr, * _destinationSlot = nullptr;
-		QPointF _cursorPosition;
-		ConnectionEdge* _connectionEdge = nullptr;
+        bool _drawBackground = true;
 
+        float _zoomLevel;
+
+        // Edge creation
+        Slot * _originSlot = nullptr;
+        Slot * _destinationSlot = nullptr;
+		QPointF _cursorPosition;
+        ConnectionEdge * _connectionEdge = nullptr;
+
+        // Context menu
 		InteractionsHandler* _interactionsHandler = nullptr;
 
-        MiniMap *_miniMap = nullptr;
-
-		QMap<QString, std::function<void(view::Edge*)>> _edgesActions;
-		QMap<QString, std::function<void(view::Node*)>> _nodesActions;
-
-        bool _drawBackground = true;
+        MiniMap *_miniMap = nullptr;        
 	};
 }

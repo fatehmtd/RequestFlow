@@ -33,6 +33,8 @@ namespace view
 		
 		Node* getNode() const;
 		void setName(const QString& name);
+
+        QRectF boundingRect() const;
     protected:
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 

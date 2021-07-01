@@ -75,10 +75,8 @@ void MainWindow::setupUi()
     setWindowIcon(QIcon(":/ui/network"));
     //setMinimumSize(1280, 800);
     setupMenuBar();
-    setupRibbonBar();
     setupSceneGraph();
     setupEnvironmentsWidget();
-    setupCentralTitleBar();
 
     // enable the background image
     _ui.mdiArea->viewport()->installEventFilter(new BackgroundPaintFilter(this));
@@ -86,9 +84,6 @@ void MainWindow::setupUi()
 
     setProject(nullptr);
 }
-
-void MainWindow::setupRibbonBar()
-{}
 
 void MainWindow::setupEnvironmentsWidget()
 {
@@ -117,16 +112,6 @@ void MainWindow::setupSceneGraph()
                     }
                 }
             });
-}
-
-void MainWindow::setupCentralTitleBar()
-{
-    //QPixmap pixmap(":/ui/test_case");
-    //_ui.label_scenarioIcon->setPixmap(pixmap.scaledToWidth(24));
-    //_ui.label_scenarioIcon->setVisible(false);
-    //_ui.toolButton_clone->setVisible(false);
-    //_ui.toolButton_delete->setVisible(false);
-    //_ui.dockWidget->setVisible(false);
 }
 
 void MainWindow::openProject(const QString& fileName)
@@ -217,7 +202,7 @@ void MainWindow::setProject(model::Project* project)
     _scenariosMenu->setEnabled(projectAvailable);
 
     // Environments
-    _environmentsMenu->setEnabled(projectAvailable);
+    _toolsMenu->setEnabled(projectAvailable);
 
     _ui.inventoryWidget->setProject(project);
     _ui.logMessagesWidget->setProject(project);
@@ -360,7 +345,6 @@ void MainWindow::deleteScenario(view::SceneGraph* sceneGraph)
 
 void MainWindow::deleteActiveScenario()
 {
-
     //for(auto subWindow : _ui.mdiArea->subWindowList())
     {
         auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(_ui.mdiArea->activeSubWindow()->widget());

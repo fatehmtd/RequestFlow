@@ -162,16 +162,6 @@ model::Graph *view::SceneGraph::getModelGraph() const
     return _modelGraph;
 }
 
-void view::SceneGraph::registerEdgeAction(QString name, std::function<void(view::Edge *)> func)
-{
-    _edgesActions[name] = func;
-}
-
-void view::SceneGraph::registerNodeAction(QString name, std::function<void(view::Node *)> func)
-{
-    _nodesActions[name] = func;
-}
-
 void view::SceneGraph::clearNodes()
 {
     for (auto item : items()) {

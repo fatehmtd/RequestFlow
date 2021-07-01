@@ -47,7 +47,7 @@ bool view::Slot::isInput() const
 {
 	return _slot->getDirection() == model::Slot::Direction::INPUT;
 }
-/*
+
 QRectF view::Slot::boundingRect() const
 {
     return QGraphicsSvgItem::boundingRect();
@@ -55,7 +55,7 @@ QRectF view::Slot::boundingRect() const
 	auto basePos = getBasePosition();
 	return QRectF(basePos.x() - halfSize, basePos.y() - halfSize, _size, _size);
 }
-*/
+
 #include <QStyleOptionGraphicsItem>
 
 void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -74,7 +74,28 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     _title->setPos(textX, -8);
 
     setPos(finalPosition);
+
+    if(_mouseHovering)
+    {/*
+        auto originalBoundingRect = QGraphicsSvgItem::boundingRect();
+        float size = std::max(originalBoundingRect.width(), originalBoundingRect.height());
+        QPainterPath path;
+        QPen pen(Qt::PenStyle::SolidLine);
+        pen.setWidth(5);
+        pen.setColor(QColor(255, 255, 0));
+        painter->setPen(pen);
+        painter->drawEllipse(0, 0, size, size);*/
+        setScale(1.1f);
+    }
+    else
+    {
+        setScale(1.0f);
+    }
+
     QGraphicsSvgItem::paint(painter, option, widget);
+
+
+
 /*
     const float halfSize = _size * 0.5f;
     float outlineSize = _size * 1.1f;

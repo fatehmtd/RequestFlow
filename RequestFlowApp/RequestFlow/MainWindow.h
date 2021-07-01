@@ -40,10 +40,8 @@ private:
     void closeEvent(QCloseEvent* event) override;
     void setupUi();
     void setupMenuBar();
-    void setupRibbonBar();
     void setupEnvironmentsWidget();
     void setupSceneGraph();
-    void setupCentralTitleBar();
     void openProject(const QString& path);
     void setProject(model::Project* project);
 
@@ -106,7 +104,7 @@ private:
     QAction* _deleteScenarioAction = nullptr;
 
     // Environments
-    QMenu* _environmentsMenu = nullptr;
+    QMenu* _toolsMenu = nullptr;
     QAction* _environmentConfigAction = nullptr;
     QAction* _importSwaggerAction = nullptr;
 

@@ -10,7 +10,7 @@ AboutWidget::AboutWidget(QWidget *parent) :
     ui->setupUi(this);
     //QImage img(":/ui/network");
 
-    QPixmap pixmap(":/ui/network");
+    QPixmap pixmap(":/ui/requestflow-grey-256");
     ui->label_logo->setPixmap(pixmap.scaledToWidth(128, Qt::TransformationMode::SmoothTransformation));
     //setWindowFlag(Qt::WindowType::FramelessWindowHint);
     //setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);

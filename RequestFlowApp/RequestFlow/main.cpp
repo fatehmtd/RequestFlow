@@ -21,9 +21,27 @@ bool showLicense(QWidget* parent)
     return choice == QMessageBox::Yes;
 }
 
+void enableDarkTheme()
+{
+    //QFile f(":qdarkstyle/theme/style.qss");
+    QFile f(":/qdarkstyle/dark/style.qss");
+
+    if (!f.exists())   {
+        qDebug() << "Unable to set stylesheet, file not found\n";
+    }
+    else   {
+        f.open(QFile::ReadOnly | QFile::Text);
+        QTextStream ts(&f);
+        qApp->setStyleSheet(ts.readAll());
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    // TODO: fix the crash caused by the dark theme
+    //enableDarkTheme();
 
     MainWindow w;
     w.show();

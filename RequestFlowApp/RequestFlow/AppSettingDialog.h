@@ -32,6 +32,8 @@ private:
     void loadSettings();
     void handleProxySettings();
 
+    void setUiStatus(bool status);
+
 private:
     bool _faillureStatus = false;
     Ui::AppSettingDialog *ui;

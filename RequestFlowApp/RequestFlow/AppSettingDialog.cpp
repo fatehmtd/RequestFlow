@@ -41,9 +41,7 @@ void AppSettingDialog::onDialogButtonClicked(QAbstractButton *button)
 
 void AppSettingDialog::onReplyReceived()
 {
-    ui->pushButton_checkConnection->setEnabled(true);
-    ui->lineEdit_connectionAddress->setEnabled(true);
-    ui->progressBar->setVisible(false);
+    setUiStatus(true);
 
     if(!_faillureStatus)
     {
@@ -53,10 +51,7 @@ void AppSettingDialog::onReplyReceived()
 
 void AppSettingDialog::onErrorOccured(QNetworkReply::NetworkError error)
 {
-    ui->pushButton_checkConnection->setEnabled(true);
-    ui->lineEdit_connectionAddress->setEnabled(true);
-    ui->progressBar->setVisible(false);
-
+    setUiStatus(true);
     _faillureStatus = true;
     auto networkReply = dynamic_cast<QNetworkReply*>(sender());
 
@@ -65,11 +60,11 @@ void AppSettingDialog::onErrorOccured(QNetworkReply::NetworkError error)
 
 void AppSettingDialog::attemptConnection()
 {
+    setUiStatus(false);
     handleProxySettings();
 
     ui->progressBar->setVisible(true);
-    ui->pushButton_checkConnection->setEnabled(false);
-    ui->lineEdit_connectionAddress->setEnabled(false);
+    ui->tab->setEnabled(false);
 
     _faillureStatus = false;
     QNetworkRequest request(QUrl(ui->lineEdit_connectionAddress->text()));
@@ -91,7 +86,6 @@ void AppSettingDialog::applySettings()
     proxy.proxyType = ui->radioButton_http->isChecked() ? QNetworkProxy::HttpProxy : QNetworkProxy::Socks5Proxy;
     _settingsManager->setProxyStatus(ui->radioButton_manualProxy->isChecked());
     _settingsManager->setProxyConfig(proxy);
-    qDebug() << __FUNCTION__ << proxy.proxyType;
 }
 
 void AppSettingDialog::loadSettings()
@@ -128,4 +122,10 @@ void AppSettingDialog::handleProxySettings()
     }
 
     QNetworkProxy::setApplicationProxy(proxy);
+}
+
+void AppSettingDialog::setUiStatus(bool status)
+{
+    ui->tab->setEnabled(status);
+    ui->progressBar->setVisible(!status);
 }
