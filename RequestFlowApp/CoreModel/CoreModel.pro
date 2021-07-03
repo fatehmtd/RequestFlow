@@ -35,7 +35,8 @@ HEADERS += ./coremodel_global.h \
     ./model/PayloadNode.h \
     ./model/ScriptNode.h \
     ./model/AssertionNode.h \
-    ./model/MessageLogger.h
+    ./model/MessageLogger.h \
+    ./model/PersistenceHandlerUtils.h
 SOURCES += ./model/Graph.cpp \
     ./CustomJSEngine.cpp \
     ./model/GroupNode.cpp \
@@ -59,7 +60,8 @@ SOURCES += ./model/Graph.cpp \
     ./model/PayloadNode.cpp \
     ./model/ScriptNode.cpp \
     ./model/AssertionNode.cpp \
-    ./model/MessageLogger.cpp
+    ./model/MessageLogger.cpp \
+    ./model/PersistenceHandlerUtils.cpp
 RESOURCES += Resource.qrc
 
 DISTFILES +=

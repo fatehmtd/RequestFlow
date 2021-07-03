@@ -5,7 +5,7 @@
 
 namespace model
 {
-	class COREMODEL_EXPORT IdentifiableEntity : public PersistableEntity
+    class COREMODEL_EXPORT IdentifiableEntity : public QObject, public PersistableEntity
 	{
 		Q_OBJECT
 		Q_PROPERTY(QString identifier READ getIdentifier WRITE setIdentifier NOTIFY identifierChanged)

@@ -29,31 +29,32 @@
 #include "logic/AssertionNode.h"
 #include "logic/DelayNode.h"
 #include "logic/EndpointNode.h"
+#include "logic/ExternalNode.h"
 #include "logic/PayloadNode.h"
 #include "logic/ScriptNode.h"
 #include "logic/ViewerNode.h"
-#include "logic/ExternalNode.h"
 
 #include "SceneGraphWidget.h"
 
-#include <model/EndpointEntry.h>
 #include <QMimeData>
 #include <QStandardItem>
-#include <math.h>
 #include <functional>
+#include <math.h>
+#include <model/EndpointEntry.h>
 
-view::SceneGraph::SceneGraph(model::Graph *modelGraph, QObject *parent)
-    : QGraphicsScene(parent), _modelGraph(modelGraph)
+view::SceneGraph::SceneGraph(model::Graph* modelGraph, QObject* parent)
+    : QGraphicsScene(parent)
+    , _modelGraph(modelGraph)
 {
     _interactionsHandler = new InteractionsHandler(this);
     setupUi();
     createGeometricNodesForModel();
 }
 
-view::Slot *view::SceneGraph::findbyModel(model::Slot *slot) const
+view::Slot* view::SceneGraph::findbyModel(model::Slot* slot) const
 {
     for (auto item : items()) {
-        auto gr = dynamic_cast<view::Slot *>(item);
+        auto gr = dynamic_cast<view::Slot*>(item);
         if (gr != nullptr) {
             if (gr->getModelSlot() == slot)
                 return gr;
@@ -62,10 +63,10 @@ view::Slot *view::SceneGraph::findbyModel(model::Slot *slot) const
     return nullptr;
 }
 
-view::Node *view::SceneGraph::findbyModel(model::Node *node) const
+view::Node* view::SceneGraph::findbyModel(model::Node* node) const
 {
     for (auto item : items()) {
-        auto gr = dynamic_cast<view::Node *>(item);
+        auto gr = dynamic_cast<view::Node*>(item);
         if (gr != nullptr) {
             if (gr->getModelNode() == node)
                 return gr;
@@ -74,10 +75,10 @@ view::Node *view::SceneGraph::findbyModel(model::Node *node) const
     return nullptr;
 }
 
-view::Edge *view::SceneGraph::findbyModel(model::Edge *edge) const
+view::Edge* view::SceneGraph::findbyModel(model::Edge* edge) const
 {
     for (auto item : items()) {
-        auto gr = dynamic_cast<view::Edge *>(item);
+        auto gr = dynamic_cast<view::Edge*>(item);
         if (gr != nullptr) {
             if (gr->getModelEdge() == edge)
                 return gr;
@@ -106,12 +107,12 @@ void view::SceneGraph::createGeometricNodesForModel()
     update();
 }
 
-QList<view::Node *> view::SceneGraph::getNodes() const
+QList<view::Node*> view::SceneGraph::getNodes() const
 {
-    QList<Node *> nodesList;
+    QList<Node*> nodesList;
 
     for (auto item : items()) {
-        auto node = dynamic_cast<Node *>(item);
+        auto node = dynamic_cast<Node*>(item);
         if (node != nullptr)
             nodesList << node;
     }
@@ -119,36 +120,35 @@ QList<view::Node *> view::SceneGraph::getNodes() const
     return nodesList;
 }
 
-QList<view::Edge *> view::SceneGraph::getEdges() const
+QList<view::Edge*> view::SceneGraph::getEdges() const
 {
     auto modelEdgesList = getModelGraph()->getEdges();
-    QList<Edge *> edgesList;
+    QList<Edge*> edgesList;
     for (auto modelEdge : modelEdgesList) {
         edgesList << findbyModel(modelEdge);
     }
     return edgesList;
 }
 
-QList<view::Node *> view::SceneGraph::getSelectedNodes() const
+QList<view::Node*> view::SceneGraph::getSelectedNodes() const
 {
     QList<view::Node*> nodes;
-    for(auto node: getNodes())
-    {
-        if(node->isSelected())
+    for (auto node : getNodes()) {
+        if (node->isSelected())
             nodes << node;
     }
 
     return nodes;
 }
 
-view::Node *view::SceneGraph::getNodeAt(const QPointF &p) const
+view::Node* view::SceneGraph::getNodeAt(const QPointF& p) const
 {
     auto item = itemAt(p, QTransform());
-    Node *node = nullptr;
+    Node* node = nullptr;
 
     // Go up the hierarchy to find a parent node;
     while (item != nullptr) {
-        node = dynamic_cast<Node *>(item);
+        node = dynamic_cast<Node*>(item);
         if (node != nullptr)
             break;
         item = item->parentItem();
@@ -157,7 +157,7 @@ view::Node *view::SceneGraph::getNodeAt(const QPointF &p) const
     return node;
 }
 
-model::Graph *view::SceneGraph::getModelGraph() const
+model::Graph* view::SceneGraph::getModelGraph() const
 {
     return _modelGraph;
 }
@@ -165,7 +165,7 @@ model::Graph *view::SceneGraph::getModelGraph() const
 void view::SceneGraph::clearNodes()
 {
     for (auto item : items()) {
-        auto gr = dynamic_cast<view::Node *>(item);
+        auto gr = dynamic_cast<view::Node*>(item);
         if (gr != nullptr) {
             gr->clearUI();
         }
@@ -179,38 +179,39 @@ void view::SceneGraph::clearScene()
     }
 }
 
-view::Node *view::SceneGraph::createGeometryForModel(model::Node *node)
+view::Node* view::SceneGraph::createGeometryForModel(model::Node* node)
 {
-    QMap<QString, std::function<view::Node *(model::Node *)>> nodesMap;
-    nodesMap["Payload"] = [](model::Node *modelNode) {
-        return new logic::PayloadNode((model::PayloadNode *) modelNode);
+    QMap<QString, std::function<view::Node*(model::Node*)>> nodesMap;
+    nodesMap["Payload"] = [](model::Node* modelNode) {
+        return new logic::PayloadNode((model::PayloadNode*)modelNode);
     };
 
-    nodesMap["Endpoint"] = [](model::Node *modelNode) {
-        return new logic::EndpointNode((model::EndpointNode *) modelNode);
+    nodesMap["Endpoint"] = [](model::Node* modelNode) {
+        return new logic::EndpointNode((model::EndpointNode*)modelNode);
     };
-    nodesMap["Script"] = [](model::Node *modelNode) {
-        return new logic::ScriptNode((model::ScriptNode *) modelNode);
+    nodesMap["Script"] = [](model::Node* modelNode) {
+        return new logic::ScriptNode((model::ScriptNode*)modelNode);
     };
-    nodesMap["Viewer"] = [](model::Node *modelNode) {
-        return new logic::ViewerNode((model::ViewerNode *) modelNode);
+    nodesMap["Viewer"] = [](model::Node* modelNode) {
+        return new logic::ViewerNode((model::ViewerNode*)modelNode);
     };
-    nodesMap["Delay"] = [](model::Node *modelNode) {
-        return new logic::DelayNode((model::DelayNode *) modelNode);
+    nodesMap["Delay"] = [](model::Node* modelNode) {
+        return new logic::DelayNode((model::DelayNode*)modelNode);
     };
-    nodesMap["Assertion"] = [](model::Node *modelNode) {
-        return new logic::AssertionNode((model::AssertionNode *) modelNode);
+    nodesMap["Assertion"] = [](model::Node* modelNode) {
+        return new logic::AssertionNode((model::AssertionNode*)modelNode);
     };
-    nodesMap["External"] = [](model::Node *modelNode) {
-        return new logic::ExternalNode((model::ExternalNode *) modelNode);
+    nodesMap["External"] = [](model::Node* modelNode) {
+        return new logic::ExternalNode((model::ExternalNode*)modelNode);
     };
 
     return nodesMap[node->getType()](node);
 }
 
-void view::SceneGraph::drawBackground(QPainter *painter, const QRectF &rect)
+void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    if(!_drawBackground) return;
+    if (!_drawBackground)
+        return;
 
     switch (getBackgroundType()) {
     case SOLID:
@@ -230,8 +231,7 @@ void view::SceneGraph::drawBackground(QPainter *painter, const QRectF &rect)
         break;
     }
 
-
-    {/*
+    { /*
         auto nodes = getNodes();
         if(!nodes.isEmpty())
         {
@@ -260,16 +260,15 @@ void view::SceneGraph::drawBackground(QPainter *painter, const QRectF &rect)
         painter->setPen(pen);
         painter->drawPoints(points.data(), points.size());
     }*/
-
+    }
 }
-}
 
-void view::SceneGraph::drawForeground(QPainter *painter, const QRectF &rect)
+void view::SceneGraph::drawForeground(QPainter* painter, const QRectF& rect)
 {
     customUpdate();
 }
 
-void view::SceneGraph::drawDotsBackground(QPainter *painter, const QRectF &rect) const
+void view::SceneGraph::drawDotsBackground(QPainter* painter, const QRectF& rect) const
 {
     const int left = floor(rect.left());
     const int right = ceil(rect.right());
@@ -296,7 +295,7 @@ void view::SceneGraph::drawDotsBackground(QPainter *painter, const QRectF &rect)
     painter->drawPoints(points.data(), points.size());
 }
 
-void view::SceneGraph::drawGridBackground(QPainter *painter, const QRectF &rect) const
+void view::SceneGraph::drawGridBackground(QPainter* painter, const QRectF& rect) const
 {
     const int left = floor(rect.left());
     const int right = ceil(rect.right());
@@ -348,7 +347,7 @@ void view::SceneGraph::drawGridBackground(QPainter *painter, const QRectF &rect)
     }
 }
 
-void view::SceneGraph::drawCrossBackground(QPainter *painter, const QRectF &rect) const
+void view::SceneGraph::drawCrossBackground(QPainter* painter, const QRectF& rect) const
 {
     const int left = floor(rect.left());
     const int right = ceil(rect.right());
@@ -379,7 +378,7 @@ void view::SceneGraph::drawCrossBackground(QPainter *painter, const QRectF &rect
     painter->drawLines(lines.data(), lines.size());
 }
 
-void view::SceneGraph::drawQuadsBackground(QPainter *painter, const QRectF &rect) const
+void view::SceneGraph::drawQuadsBackground(QPainter* painter, const QRectF& rect) const
 {
     const int left = floor(rect.left());
     const int right = ceil(rect.right());
@@ -393,7 +392,7 @@ void view::SceneGraph::drawQuadsBackground(QPainter *painter, const QRectF &rect
         const int firstLeft = left - (left % _cellSize);
         const int firstTop = top - (top % _cellSize);
 
-        for (int i = firstLeft; i < right; i += _cellSize*2) {
+        for (int i = firstLeft; i < right; i += _cellSize * 2) {
             for (int j = firstTop; j < bottom; j += _cellSize) {
                 _rectList << QRect(i, j, _cellSize, _cellSize);
             }
@@ -407,7 +406,7 @@ void view::SceneGraph::drawQuadsBackground(QPainter *painter, const QRectF &rect
     }
 }
 
-void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     auto menu = _interactionsHandler->createContextMenu(event->scenePos());
     if (!menu->actions().isEmpty()) {
@@ -425,6 +424,7 @@ void view::SceneGraph::setupUi()
 
     //_background = QColor(140, 140, 140);
     _background = QColor("#F4F3F4");
+
     //_background = QColor("#A0A0A0");
     _lightGrid = QColor(200, 200, 200);
     _darkGrid = QColor(160, 160, 160);
@@ -453,10 +453,10 @@ void view::SceneGraph::setupUi()
 void view::SceneGraph::createEdge()
 {
     if (_originSlot && _destinationSlot) {
-        auto modelEdge = _modelGraph->connectSlots(dynamic_cast<model::OutputSlot *>(
+        auto modelEdge = _modelGraph->connectSlots(dynamic_cast<model::OutputSlot*>(
                                                        _originSlot->getModelSlot()),
-                                                   dynamic_cast<model::InputSlot *>(
-                                                       _destinationSlot->getModelSlot()));
+            dynamic_cast<model::InputSlot*>(
+                _destinationSlot->getModelSlot()));
 
         if (modelEdge != nullptr) {
             addItem(new Edge(this, modelEdge));
@@ -464,59 +464,50 @@ void view::SceneGraph::createEdge()
     }
 }
 
-void view::SceneGraph::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+void view::SceneGraph::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
     event->acceptProposedAction();
     return;
     QGraphicsScene::dragEnterEvent(event);
 }
 
-void view::SceneGraph::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
+void view::SceneGraph::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
 {
-    if(getModelGraph()->isRunning())
-    {
+    if (getModelGraph()->isRunning()) {
         event->ignore();
-    }
-    else
-    {
+    } else {
         event->acceptProposedAction();
     }
     //return;
     //QGraphicsScene::dragMoveEvent(event);
 }
 
-void view::SceneGraph::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
+void view::SceneGraph::dragLeaveEvent(QGraphicsSceneDragDropEvent* event)
 {
-    if(getModelGraph()->isRunning())
-    {
+    if (getModelGraph()->isRunning()) {
         event->ignore();
-    }
-    else
-    {
+    } else {
         event->acceptProposedAction();
     }
     //return;
     //QGraphicsScene::dragLeaveEvent(event);
 }
 
-void view::SceneGraph::dropEvent(QGraphicsSceneDragDropEvent *event)
+void view::SceneGraph::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
-    if(getModelGraph()->isRunning())
-    {
+    if (getModelGraph()->isRunning()) {
         event->ignore();
-    }
-    else
-    {
+    } else {
         event->acceptProposedAction();
     }
     //return;
     //QGraphicsScene::dropEvent(event);
 }
 
-void view::SceneGraph::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void view::SceneGraph::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if (event->button() == Qt::MouseButton::LeftButton) {
-        auto slot = dynamic_cast<Slot *>(itemAt(event->scenePos(), QTransform()));
+        auto slot = dynamic_cast<Slot*>(itemAt(event->scenePos(), QTransform()));
         if (slot != nullptr && !slot->isInput()) {
             _originSlot = slot;
             _connectionEdge->setOrigin(_originSlot);
@@ -529,7 +520,7 @@ void view::SceneGraph::mousePressEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsScene::mousePressEvent(event);
 }
 
-void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     //bring to front
     if (event->button()) {
@@ -539,7 +530,7 @@ void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     _cursorPosition = event->scenePos();
 
     if (_originSlot != nullptr) {
-        auto slot = dynamic_cast<Slot *>(itemAt(event->scenePos(), QTransform()));
+        auto slot = dynamic_cast<Slot*>(itemAt(event->scenePos(), QTransform()));
         if (slot != nullptr) {
             bool eligibleStatus = slot->acceptConnection(_originSlot);
             if (eligibleStatus) {
@@ -561,7 +552,7 @@ void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsScene::mouseMoveEvent(event);
 }
 
-void view::SceneGraph::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void view::SceneGraph::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     createEdge();
     _destinationSlot = nullptr;
@@ -580,11 +571,11 @@ void view::SceneGraph::bringToFront(QPointF pos) const
     }
 }
 
-void view::SceneGraph::bringToFront(Node *node) const
+void view::SceneGraph::bringToFront(Node* node) const
 {
     auto collidingItemsList = collidingItems(node);
     for (auto collidingItem : collidingItemsList) {
-        auto collidingNode = dynamic_cast<Node *>(collidingItem);
+        auto collidingNode = dynamic_cast<Node*>(collidingItem);
 
         if (collidingNode == nullptr)
             continue;
@@ -595,10 +586,10 @@ void view::SceneGraph::bringToFront(Node *node) const
     }
 }
 
-#include <model/PersistenceHandler.h>
 #include <QUuid>
+#include <model/PersistenceHandler.h>
 
-view::Node *view::SceneGraph::cloneNode(Node *originalNode)
+view::Node* view::SceneGraph::cloneNode(Node* originalNode)
 {
     model::PersistenceHandler handler;
     auto modelNode = getModelGraph()->createNodeFromJSValue(
@@ -609,7 +600,7 @@ view::Node *view::SceneGraph::cloneNode(Node *originalNode)
     return node;
 }
 
-view::InteractionsHandler *view::SceneGraph::getInteractionsHandler() const
+view::InteractionsHandler* view::SceneGraph::getInteractionsHandler() const
 {
     return _interactionsHandler;
 }
@@ -619,21 +610,17 @@ void view::SceneGraph::deleteSelectedItems()
     auto items = selectedItems();
 
     // process edges
-    for(auto item : items)
-    {
+    for (auto item : items) {
         auto edge = dynamic_cast<view::Edge*>(item);
-        if(edge != nullptr)
-        {
+        if (edge != nullptr) {
             _interactionsHandler->deleteEdge(edge);
         }
     }
 
     // process nodes
-    for(auto item : items)
-    {
+    for (auto item : items) {
         auto node = dynamic_cast<view::Node*>(item);
-        if(node != nullptr)
-        {
+        if (node != nullptr) {
             _interactionsHandler->deleteNode(node);
         }
     }
@@ -651,9 +638,10 @@ void view::SceneGraph::renameSelectedNode()
     qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
 }
 
-QRectF view::SceneGraph::computeBoundingRect(const QList<Node *> &nodes, qreal padding) const
+QRectF view::SceneGraph::computeBoundingRect(const QList<Node*>& nodes, qreal padding) const
 {
-    if(nodes.isEmpty()) return QRectF();
+    if (nodes.isEmpty())
+        return QRectF();
     auto firstNode = nodes.at(0);
     auto firstNodePos = firstNode->pos();
     qreal left = firstNodePos.x();
@@ -661,8 +649,7 @@ QRectF view::SceneGraph::computeBoundingRect(const QList<Node *> &nodes, qreal p
     qreal top = firstNode->y();
     qreal bottom = top + firstNode->height();
 
-    for(auto node : nodes)
-    {
+    for (auto node : nodes) {
         left = std::min(left, node->pos().x());
         right = std::max(right, node->pos().x() + node->width());
 
@@ -670,7 +657,7 @@ QRectF view::SceneGraph::computeBoundingRect(const QList<Node *> &nodes, qreal p
         bottom = std::max(bottom, node->pos().y() + node->height());
     }
 
-    return QRect(left-padding, top-padding, (right-left)+2*padding, (bottom-top)+2*padding);
+    return QRect(left - padding, top - padding, (right - left) + 2 * padding, (bottom - top) + 2 * padding);
 }
 
 void view::SceneGraph::setBackgroundType(view::SceneGraph::BackgroundType bgType)
@@ -693,7 +680,7 @@ int view::SceneGraph::getEdgeType() const
     return _edgeType;
 }
 
-view::MiniMap *view::SceneGraph::getMiniMap() const
+view::MiniMap* view::SceneGraph::getMiniMap() const
 {
     return _miniMap;
 }
@@ -713,7 +700,6 @@ QImage view::SceneGraph::takeScreenShotSvg(QString path, QRectF rect)
     generator.setSize(QSize(rect.width(), rect.height()));
     generator.setViewBox(QRectF(0, 0, rect.width(), rect.width()));
     //generator.setResolution(100);
-
 
     QBrush tempBrush(QColor(0, 255, 0, 255));
     auto prevBrush = backgroundBrush();
@@ -743,7 +729,7 @@ QImage view::SceneGraph::takeScreenShot(QRectF rect, qreal multiplier)
     auto prevBrush = backgroundBrush();
     setBackgroundBrush(tempBrush);
     _drawBackground = false;
-    QRect outputRect(0, 0, rect.width()*multiplier, rect.height()*multiplier);
+    QRect outputRect(0, 0, rect.width() * multiplier, rect.height() * multiplier);
     QImage img(outputRect.width(), outputRect.height(), QImage::Format::Format_RGBA8888);
     img.fill(qRgba(0, 0, 0, 0));
     QPainter painter(&img);
@@ -763,26 +749,23 @@ QImage view::SceneGraph::takeScreenShot(qreal padding, qreal multiplier)
     return takeScreenShot(computeBoundingRect(getNodes(), padding), multiplier);
 }
 
-void view::SceneGraph::addItem(QGraphicsItem *item)
+void view::SceneGraph::addItem(QGraphicsItem* item)
 {
     QGraphicsScene::addItem(item);
 
     // Support for double click focus
     auto node = dynamic_cast<view::Node*>(item);
-    if(node != nullptr)
-    {
-        connect(node, &view::Node::doubleClicked, this, [=]()
-                {
-                    auto nodes = getNodes();
-                    for(auto node : nodes)
-                    {
-                        //if(node->isSelected())
-                        //nodes.removeAll(node);
-                    }
-                    clearSelection();
-                    update();
-                    qreal multiplier = 2.0;
-                    /*for(auto node : nodes)
+    if (node != nullptr) {
+        connect(node, &view::Node::doubleClicked, this, [=]() {
+            auto nodes = getNodes();
+            for (auto node : nodes) {
+                //if(node->isSelected())
+                //nodes.removeAll(node);
+            }
+            clearSelection();
+            update();
+            qreal multiplier = 2.0;
+            /*for(auto node : nodes)
                     {
                         QList<Node*> tempList;
                         tempList << node;
@@ -796,17 +779,14 @@ void view::SceneGraph::addItem(QGraphicsItem *item)
                         //takeScreenShotSvg(path, rect);
                     }*/
 
-                    takeScreenShot(computeBoundingRect(nodes, 20), multiplier).save(QString("./%1.png")
-                                                                                        .arg(getModelGraph()->getName().replace(" ", "_")));
-/*
+            takeScreenShot(computeBoundingRect(nodes, 20), multiplier).save(QString("./%1.png").arg(getModelGraph()->getName().replace(" ", "_")));
+            /*
                     takeScreenShotSvg(QString("./%1.svg")
                                           .arg(getModelGraph()->getName().replace(" ", "_")), computeBoundingRect(nodes, 20));
                     */
-                    //takeScreenShotSvg(computeBoundingRect(getNodes(), 20), 3);
-                    //takeScreenShot().save(QString("./%1.png").arg(getModelGraph()->getName().replace(" ", "_")));
-                    //emit nodeDoubleClicked(node);
-                });
+            //takeScreenShotSvg(computeBoundingRect(getNodes(), 20), 3);
+            //takeScreenShot().save(QString("./%1.png").arg(getModelGraph()->getName().replace(" ", "_")));
+            //emit nodeDoubleClicked(node);
+        });
     }
 }
-
-

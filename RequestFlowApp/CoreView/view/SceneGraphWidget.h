@@ -1,16 +1,18 @@
 #pragma once
 #include "coreview_global.h"
 
+#include "SceneGraph.h"
+#include <model/PersistableEntity.h>
+
 #include <QGraphicsView>
 #include <QMouseEvent>
-#include "SceneGraph.h"
 #include <QTimer>
-#include "SceneGraph.h"
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QRubberBand>
 
-class COREVIEW_EXPORT SceneGraphWidget : public QGraphicsView
+
+class COREVIEW_EXPORT SceneGraphWidget : public QGraphicsView, public model::PersistableEntity
 {
 public:
 	SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph);
@@ -27,8 +29,8 @@ public:
 	float getZoomLevel() const;
 	void setZoomLevel(float level);
 
-	QJSValue saveToJSValue(model::PersistenceHandler* handler) const;
-	bool loadFromJSValue(const QJSValue& v);
+    QJSValue saveToJSValue(model::PersistenceHandler* handler) const override;
+    bool loadFromJSValue(const QJSValue& v) override;
 
     void findNodeDialog() const;
 

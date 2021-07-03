@@ -37,7 +37,7 @@ QJSValue model::PersistenceHandler::evaluate(const QString& script)
 	return _engine.evaluate(script);
 }
 
-QPointF model::PersistenceHandler::jsValueToPointF(const QJSValue& v) const
+QPointF model::PersistenceHandler::jsValueToPointF(const QJSValue& v)
 {
 	return QPointF(v.property("x").toNumber(), v.property("y").toNumber());
 }

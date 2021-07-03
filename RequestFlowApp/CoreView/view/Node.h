@@ -28,7 +28,7 @@ namespace view
 	class Slot;
 	class SceneGraph;
 
-	class COREVIEW_EXPORT Node : public QGraphicsObject
+    class COREVIEW_EXPORT Node : public QGraphicsObject, public model::PersistableEntity
 	{
 		Q_OBJECT
 	public:
@@ -151,7 +151,12 @@ namespace view
 		QPixmap _pixmap;
 		bool _painted = false;
 	private:
-		QString _nodeType;
-	};
+        QString _nodeType;
+
+        // PersistableEntity interface
+    public:
+        QJSValue saveToJSValue(model::PersistenceHandler *persistenceHandler) const override;
+        bool loadFromJSValue(const QJSValue &value) override;
+    };
 }
 

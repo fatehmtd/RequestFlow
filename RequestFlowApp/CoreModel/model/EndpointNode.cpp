@@ -3,15 +3,16 @@
 #include <QRegularExpression>
 #include <QTextStream>
 
-
 QString compactString(const QString& _body)
 {
     auto v = model::Message::JSONParse(_body);
-    if (!v.isValid() || v.isNull()) return _body;
+    if (!v.isValid() || v.isNull())
+        return _body;
     return model::Message::JSONStringify(v);
 }
 
-model::EndpointNode::EndpointNode(model::Graph* graph) : model::Node(graph, "Endpoint")
+model::EndpointNode::EndpointNode(model::Graph* graph)
+    : model::Node(graph, "Endpoint")
 {
     // default values
     setTimeout(3000);
@@ -38,8 +39,7 @@ model::EndpointNode::EndpointNode(model::Graph* graph) : model::Node(graph, "End
 
 model::EndpointNode::~EndpointNode()
 {
-    if (_networkReply != nullptr)
-    {
+    if (_networkReply != nullptr) {
         _networkReply->abort();
         delete _networkReply;
     }
@@ -51,12 +51,17 @@ void model::EndpointNode::createModel()
     addOutputSlot("Output", Slot::CUSTOM);
 }
 
-int model::EndpointNode::HttpMethodFromString(const QString &string)
+int model::EndpointNode::HttpMethodFromString(const QString& string)
 {
     static QStringList methods;
-    if(methods.isEmpty())
-    {
-        methods << "GET" << "POST" << "PUT" << "DEL" << "PATCH";
+    if (methods.isEmpty()) {
+        methods << "GET"
+                << "POST"
+                << "PUT"
+                << "DELETE"
+                << "PATCH"
+                << "HEAD"
+                << "OPTIONS";
     }
     int index = methods.lastIndexOf(string.toUpper());
     return index;
@@ -65,11 +70,17 @@ int model::EndpointNode::HttpMethodFromString(const QString &string)
 QString model::EndpointNode::HttpMethodStr(int method)
 {
     static QStringList methods;
-    if(methods.isEmpty())
-    {
-        methods << "GET" << "POST" << "PUT" << "DEL" << "PATCH";
+    if (methods.isEmpty()) {
+        methods << "GET"
+                << "POST"
+                << "PUT"
+                << "DELETE"
+                << "PATCH"
+                << "HEAD"
+                << "OPTIONS";
     }
-    if(method < methods.size()) return methods.at(method);
+    if (method < methods.size())
+        return methods.at(method);
     return "Not Found";
 }
 
@@ -127,7 +138,7 @@ QString model::EndpointNode::getConsoleResponseLog() const
     return _consoleResponseLog;
 }
 
-void model::EndpointNode::setConsoleRequestLog(const QString &log)
+void model::EndpointNode::setConsoleRequestLog(const QString& log)
 {
     _consoleRequestLog = log;
     emit consoleRequestLogChanged(log);
@@ -137,7 +148,6 @@ QString model::EndpointNode::getConsoleRequestLog() const
 {
     return _consoleRequestLog;
 }
-
 
 void model::EndpointNode::setHttpMethod(int method)
 {
@@ -159,9 +169,11 @@ void model::EndpointNode::setUserAgent(const QString& userAgent)
 bool model::EndpointNode::validateHttpStatus(int status) const
 {
     if (!getAcceptedCodes().isEmpty())
-        if (!getAcceptedCodes().contains(status)) return false;
+        if (!getAcceptedCodes().contains(status))
+            return false;
     if (!getRejectedCodes().isEmpty())
-        if (getRejectedCodes().contains(status)) return false;
+        if (getRejectedCodes().contains(status))
+            return false;
     return true;
 }
 
@@ -174,8 +186,7 @@ QUrl model::EndpointNode::resolveUrl(const QString& rawUrl) const
 
     // replace path variables placeholders
     const auto& pathVars = request.getPathVars();
-    for (const auto& key : pathVars.keys())
-    {
+    for (const auto& key : pathVars.keys()) {
         QRegularExpression pattern(QString("{%1}").arg(key));
         workingUrl = workingUrl.replace(pattern, pathVars[key].toString());
     }
@@ -183,8 +194,7 @@ QUrl model::EndpointNode::resolveUrl(const QString& rawUrl) const
     // set query params
     auto queryParams = request.getQueryParams();
 
-    for (const auto& key : queryParams.keys())
-    {
+    for (const auto& key : queryParams.keys()) {
         QRegularExpression pattern(QString("{%1}").arg(key));
         workingUrl = workingUrl.replace(pattern, queryParams[key].toString());
     }
@@ -219,8 +229,7 @@ QUrl model::EndpointNode::resolveUrl(const QString& rawUrl) const
 
     auto environment = getGraph()->getActiveEnvironment();
 
-    if (environment != nullptr)
-    {
+    if (environment != nullptr) {
         workingUrl = environment->evaluate(workingUrl);
     }
 
@@ -233,31 +242,26 @@ QNetworkRequest model::EndpointNode::prepareRequest()
     request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, getContentType());
     request.setHeader(QNetworkRequest::KnownHeaders::UserAgentHeader, getUserAgent());
 
-    for(auto headerKey : _extraHeaders.keys())
-    {
-        if(headerKey.isEmpty()) continue;
+    for (auto headerKey : _extraHeaders.keys()) {
+        if (headerKey.isEmpty())
+            continue;
         auto value = _extraHeaders[headerKey];
         request.setRawHeader(headerKey.toUtf8(), getGraph()->getActiveEnvironment()->evaluate(value).toUtf8());
     }
 
-    switch (getAuthMethod())
-    {
-    case AuthorizationMethod::BASIC_AUTH:
-    {
+    switch (getAuthMethod()) {
+    case AuthorizationMethod::BASIC_AUTH: {
         auto token = QString("%1:%2")
                          .arg(getGraph()->getActiveEnvironment()->evaluate(getBasicAuthUser()))
                          .arg(getGraph()->getActiveEnvironment()->evaluate(getBasicAuthPassword()))
                          .toLocal8Bit()
                          .toBase64();
         request.setRawHeader("Authorization", QString("Basic %1").arg(QString(token)).toLocal8Bit());
-    }
-    break;
-    case AuthorizationMethod::BEARER:
-    {
+    } break;
+    case AuthorizationMethod::BEARER: {
         auto token = QString("Bearer %1").arg(getGraph()->getActiveEnvironment()->evaluate(getBearerToken()));
         request.setRawHeader("Authorization", token.toLocal8Bit());
-    }
-    break;
+    } break;
     }
 
     QString log;
@@ -265,14 +269,14 @@ QNetworkRequest model::EndpointNode::prepareRequest()
 
     stream << QString("%1 %2\n").arg(HttpMethodStr(getHttpMethod()), request.url().toString());
     stream << "\n";
-    for(auto rawHeader : request.rawHeaderList())
-    {
+    for (auto rawHeader : request.rawHeaderList()) {
         stream << QString("%1 : %2\n").arg(QString(rawHeader), QString(request.rawHeader(rawHeader)));
     }
 
     auto data = compactString(getInputSlot()->getData().getBody());
 
-    stream << "\n\n" << data;
+    stream << "\n\n"
+           << data;
 
     setConsoleRequestLog(log);
     return request;
@@ -285,9 +289,8 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
     QString fullResponse;
     QTextStream out(&fullResponse, QIODevice::WriteOnly);
 
-    if (reply->isOpen() && !_connectionFailed)
-    {
-        QString data(reply->readAll());        
+    if (reply->isOpen() && !_connectionFailed) {
+        QString data(reply->readAll());
 
         auto msecs = _elapsedTimer.elapsed();
         auto status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toInt();
@@ -295,9 +298,9 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
         out << HttpMethodStr(getHttpMethod()) << " " << reply->url().toString() << "\n";
         out << "\n";
         out << "Status : " << status << "\n";
-        out << "Elapsed-Time : " << msecs << " ms" << "\n";
-        for (auto pair : reply->rawHeaderPairs())
-        {
+        out << "Elapsed-Time : " << msecs << " ms"
+            << "\n";
+        for (auto pair : reply->rawHeaderPairs()) {
             out << QString(pair.first) << " : " << QString(pair.second) << "\n";
         }
         //out << "Content-Length : " << reply->header(QNetworkRequest::KnownHeaders::ContentLengthHeader).toString() << "\n";
@@ -317,21 +320,16 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
 		}
         //*/
 
-        if (validateHttpStatus(status))
-        {
+        if (validateHttpStatus(status)) {
             auto response = getInputSlot()->getData();
             response.setBody(data);
             getOutputSlot()->setData(response);
             evaluate();
-        }
-        else
-        {
+        } else {
             fail(QString("Invalid HTTP status %1").arg(status));
         }
-    }
-    else
-    {
-        out << "Failed to retreive a response from : " <<  resolveUrl(getUrl()).toString() << "\n\n";
+    } else {
+        out << "Failed to retreive a response from : " << resolveUrl(getUrl()).toString() << "\n\n";
         out << "Error : " << reply->errorString();
         fail(fullResponse);
     }
@@ -427,19 +425,16 @@ QMap<QString, QString>& model::EndpointNode::getExtraHeaders()
 QJSValue model::EndpointNode::saveToJSValue(PersistenceHandler* handler) const
 {
     auto v = Node::saveToJSValue(handler);
-    saveChildren<unsigned int>(v, handler, "acceptedCodes", getAcceptedCodes(), [=](unsigned int v)
-        {
-            return handler->createJsValue(v);
-        });
-    saveChildren<unsigned int>(v, handler, "rejectedCodes", getRejectedCodes(), [=](unsigned int v)
-        {
-            return handler->createJsValue(v);
-        });
+    saveChildren<unsigned int>(v, handler, "acceptedCodes", getAcceptedCodes(), [=](unsigned int v) {
+        return handler->createJsValue(v);
+    });
+    saveChildren<unsigned int>(v, handler, "rejectedCodes", getRejectedCodes(), [=](unsigned int v) {
+        return handler->createJsValue(v);
+    });
 
-    saveChildren<QString, QString>(v, handler, "extraHeaders", getExtraHeaders(), [=](const QString& key, const QString& v)
-        {
-            return handler->createJsValue(v);
-        });
+    saveChildren<QString, QString>(v, handler, "extraHeaders", getExtraHeaders(), [=](const QString& key, const QString& v) {
+        return handler->createJsValue(v);
+    });
     return v;
 }
 
@@ -450,49 +445,43 @@ bool model::EndpointNode::loadFromJSValue(const QJSValue& v)
     Node::loadFromJSValue(v);
     {
         QList<unsigned int> values;
-        loadChildren(v, "acceptedCodes", [&values](const QJSValue& v)
-            {
-                values << v.toUInt();
-            });
+        loadChildren(v, "acceptedCodes", [&values](const QJSValue& v) {
+            values << v.toUInt();
+        });
         setAcceptedCodes(values);
     }
     {
         QList<unsigned int> values;
-        loadChildren(v, "rejectedCodes", [&values](const QJSValue& v)
-            {
-                values << v.toUInt();
-            });
+        loadChildren(v, "rejectedCodes", [&values](const QJSValue& v) {
+            values << v.toUInt();
+        });
         setRejectedCodes(values);
     }
 
     {
         QMap<QString, QString> extraHeaders;
-        loadChildren(v, "extraHeaders", [&extraHeaders](const QJSValue& v)
-                     {
-                         QJSValueIterator it(v);
-                         if(it.hasNext()) {
-                             it.next();
-                             if(it.name().isEmpty()) return;
-                             extraHeaders.insert(it.name(), v.property(it.name()).toString());
-                         }
-                     });
+        loadChildren(v, "extraHeaders", [&extraHeaders](const QJSValue& v) {
+            QJSValueIterator it(v);
+            if (it.hasNext()) {
+                it.next();
+                if (it.name().isEmpty())
+                    return;
+                extraHeaders.insert(it.name(), v.property(it.name()).toString());
+            }
+        });
         setExtraHeaders(extraHeaders);
     }
 
-    if(getBasicAuthUser().isEmpty())
-    {
+    if (getBasicAuthUser().isEmpty()) {
         setBasicAuthUser("{{basic_auth_0user}}");
     }
-    if(getBasicAuthPassword().isEmpty())
-    {
+    if (getBasicAuthPassword().isEmpty()) {
         setBasicAuthPassword("{{basic_auth_pwd}}");
     }
-    if(getBearerToken().isEmpty())
-    {
+    if (getBearerToken().isEmpty()) {
         setBearerToken("{{bearer_token}}");
     }
-    if(getUrl().isEmpty())
-    {
+    if (getUrl().isEmpty()) {
         setUrl("{{baseUrl}}");
     }
 
@@ -501,8 +490,7 @@ bool model::EndpointNode::loadFromJSValue(const QJSValue& v)
 
 void model::EndpointNode::onTimeout()
 {
-    if (_networkReply != nullptr)
-    {
+    if (_networkReply != nullptr) {
         _networkReply->abort();
         QString data(_networkReply->readAll());
 
@@ -514,7 +502,7 @@ void model::EndpointNode::onTimeout()
 
         QString methodStr[] = { "GET", "POST", "PUT", "PATCH", "DEL" };
 
-        out << methodStr[getHttpMethod()] << " " << _networkReply->url().toString() << "\n";
+        out << HttpMethodStr(getHttpMethod()) << " " << _networkReply->url().toString() << "\n";
         out << "\n";
         out << "Timeout : " << getTimeout() << "\n";
         out << "Status : " << status << "\n";
@@ -523,7 +511,8 @@ void model::EndpointNode::onTimeout()
         out << "Last-Modified : " << _networkReply->header(QNetworkRequest::KnownHeaders::LastModifiedHeader).toString() << "\n";
         out << "User-Agent : " << _networkReply->header(QNetworkRequest::KnownHeaders::UserAgentHeader).toString() << "\n";
         out << "Server : " << _networkReply->header(QNetworkRequest::KnownHeaders::ServerHeader).toString() << "\n";
-        out << "Elapsed-Time : " << msecs << " ms" << "\n";
+        out << "Elapsed-Time : " << msecs << " ms"
+            << "\n";
         out << "\n\n";
         out << data << "\n";
         /*
@@ -532,7 +521,6 @@ void model::EndpointNode::onTimeout()
 			_networkReply->abort();
 			delete _networkReply;
         }//*/
-
 
         setConsoleResponseLog(fullResponse);
 
@@ -551,7 +539,7 @@ QNetworkReply* model::EndpointNode::sendPost(QNetworkRequest request)
     return _networkAccessManager->post(request, data.toUtf8());
 }
 
-QNetworkReply* model::EndpointNode::sendDel(QNetworkRequest request)
+QNetworkReply* model::EndpointNode::sendDelete(QNetworkRequest request)
 {
     return _networkAccessManager->deleteResource(request);
 }
@@ -562,10 +550,22 @@ QNetworkReply* model::EndpointNode::sendPut(QNetworkRequest request)
     return _networkAccessManager->put(request, data.toUtf8());
 }
 
-QNetworkReply *model::EndpointNode::sendPatch(QNetworkRequest request)
+QNetworkReply* model::EndpointNode::sendPatch(QNetworkRequest request)
 {
     auto data = compactString(getInputSlot()->getData().getBody());
     return _networkAccessManager->sendCustomRequest(request, "PATCH", data.toUtf8());
+}
+
+QNetworkReply* model::EndpointNode::sendHead(QNetworkRequest request)
+{
+    auto data = compactString(getInputSlot()->getData().getBody());
+    return _networkAccessManager->sendCustomRequest(request, "HEAD", data.toUtf8());
+}
+
+QNetworkReply* model::EndpointNode::sendOptions(QNetworkRequest request)
+{
+    auto data = compactString(getInputSlot()->getData().getBody());
+    return _networkAccessManager->sendCustomRequest(request, "OPTIONS", data.toUtf8());
 }
 
 void model::EndpointNode::onErrorOccurred(QNetworkReply::NetworkError error)
@@ -576,8 +576,7 @@ void model::EndpointNode::onErrorOccurred(QNetworkReply::NetworkError error)
 void model::EndpointNode::onGraphStop()
 {
     Node::onGraphStop();
-    if (_networkReply != nullptr)
-    {
+    if (_networkReply != nullptr) {
         _networkReply->abort();
         delete _networkReply;
         _networkReply = nullptr;
@@ -592,31 +591,38 @@ QString model::EndpointNode::getUserAgent() const
 void model::EndpointNode::sendPayload()
 {
     _connectionFailed = false;
-    _networkAccessManager->setTransferTimeout(0); // 0 = no timeout limit
+    _networkAccessManager->setTransferTimeout(getTimeout()); // 0 = no timeout limit
     _elapsedTimer.start();
-    _timer.setInterval(getTimeout());
-    _timer.start();
+    //_timer.setInterval(getTimeout());
+    //_timer.start();
 
-    if (_networkReply != nullptr)
-    {
+    if (_networkReply != nullptr) {
         _networkReply->abort();
         delete _networkReply;
     }
 
     auto request = prepareRequest();
-    switch (getHttpMethod())
-    {
-    case HttpMethod::GET: // GET
+    switch (getHttpMethod()) {
+    case HttpMethod::GET:
         _networkReply = sendGet(request);
         break;
-    case HttpMethod::POST: // POST
+    case HttpMethod::POST:
         _networkReply = sendPost(request);
         break;
-    case HttpMethod::PUT: // PUT
+    case HttpMethod::PUT:
         _networkReply = sendPut(request);
         break;
-    case HttpMethod::DEL: // DEL
-        _networkReply = sendDel(request);
+    case HttpMethod::DELETE:
+        _networkReply = sendDelete(request);
+        break;
+    case HttpMethod::PATCH:
+        _networkReply = sendPatch(request);
+        break;
+    case HttpMethod::HEAD:
+        _networkReply = sendHead(request);
+        break;
+    case HttpMethod::OPTIONS:
+        _networkReply = sendOptions(request);
         break;
     }
 

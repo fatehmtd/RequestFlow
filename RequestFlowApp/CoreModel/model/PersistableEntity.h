@@ -5,12 +5,14 @@
 
 namespace model
 {
-	class COREMODEL_EXPORT PersistableEntity : public QObject
+    class COREMODEL_EXPORT PersistableEntity
 	{
-	public:
-		using QObject::QObject;
+    public:
+        PersistableEntity(QObject* owner);
 		virtual QJSValue saveToJSValue(PersistenceHandler* persistenceHandler) const;
 		virtual bool loadFromJSValue(const QJSValue& value);
+
+        QObject *getObject() const;
 	protected:		
 
 		template <typename T>
@@ -64,6 +66,8 @@ namespace model
 		}
 
 
-		virtual void loadChildren(const QJSValue& value, const QString& name, std::function<void(const QJSValue&)> func);
+        virtual void loadChildren(const QJSValue& value, const QString& name, std::function<void(const QJSValue&)> func);
+    private:
+        QObject * _object = nullptr;
 	};
 }

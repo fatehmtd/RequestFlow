@@ -16,7 +16,7 @@ namespace model
 		QJSValue createJsValue(const QPointF& v);
 		QJSValue createJsValueArray(quint32 size);
 
-		QPointF jsValueToPointF(const QJSValue& v) const;
+        static QPointF jsValueToPointF(const QJSValue& v);
 
 		template<typename T>
 		QJSValue createJsValue(const T& v)

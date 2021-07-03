@@ -1,7 +1,7 @@
 #include "IdentifiableEntity.h"
 #include <QUuid>
 
-model::IdentifiableEntity::IdentifiableEntity(QObject* parent) : PersistableEntity(parent)
+model::IdentifiableEntity::IdentifiableEntity(QObject* parent) : QObject(parent), PersistableEntity(this)
 {
 	setIdentifier(QUuid::createUuid().toString()); // auto generate an id
 }

@@ -65,7 +65,7 @@ bool model::Graph::checkIsParent(Node *child, Node *parent) const
 {
     auto parentsList = getNodeParents(child);
     if(parentsList.contains(parent)) return true;
-    for(auto p : parentsList)
+    for(auto p : qAsConst(parentsList))
     {
         if(checkIsParent(p, parent)) return true;
     }

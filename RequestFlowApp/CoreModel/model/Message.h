@@ -5,42 +5,44 @@
 #include <QMap>
 #include <QVariant>
 
-namespace model
-{
-	class COREMODEL_EXPORT Message
-	{
-	public:
-		explicit Message(QString body="");
-		Message(const Message& m);
-		~Message();
+namespace model {
+class COREMODEL_EXPORT Message {
+public:
+  explicit Message(QString body = "");
+  Message(const Message &m);
+  ~Message();
 
-		void setPathVars(const QMap<QString, QVariant>& pathVars);
-		QMap<QString, QVariant> getPathVars() const;
-		QMap<QString, QVariant>& getPathVars();
+  void setPathVars(const QMap<QString, QVariant> &pathVars);
+  QMap<QString, QVariant> getPathVars() const;
+  QMap<QString, QVariant> &getPathVars();
 
-		void setContext(const QMap<QString, QVariant>& context);
-		QMap<QString, QVariant> getContext() const;
-		QMap<QString, QVariant>& getContext();
+  void setHeaders(const QMap<QString, QVariant> &headers);
+  QMap<QString, QVariant> getHeaders() const;
+  QMap<QString, QVariant> &getHeaders();
 
-		void setQueryParams(const QMap<QString, QVariant>& queryParams);
-		QMap<QString, QVariant> getQueryParams() const;
-		QMap<QString, QVariant>& getQueryParams();
+  void setContext(const QMap<QString, QVariant> &context);
+  QMap<QString, QVariant> getContext() const;
+  QMap<QString, QVariant> &getContext();
 
-		QString getBody() const;
-		void setBody(const QString& body);
+  void setQueryParams(const QMap<QString, QVariant> &queryParams);
+  QMap<QString, QVariant> getQueryParams() const;
+  QMap<QString, QVariant> &getQueryParams();
 
-		QVariant toVariant() const;
-		void fromVariant(const QVariant& v);
+  QString getBody() const;
+  void setBody(const QString &body);
 
-		Message& operator = (const Message& m);
+  QVariant toVariant() const;
+  void fromVariant(const QVariant &v);
 
-		void printMe() const;
+  Message &operator=(const Message &m);
 
-		static QString JSONStringify(const QVariant& v);
-		static QVariant JSONParse(const QString& s);
+  void printMe() const;
 
-	private:
-		QMap<QString, QVariant> _pathVars, _queryParams, _context;
-		QString _body;
-	};
-}
+  static QString JSONStringify(const QVariant &v);
+  static QVariant JSONParse(const QString &s);
+
+private:
+  QMap<QString, QVariant> _pathVars, _queryParams, _context, _headers;
+  QString _body;
+};
+} // namespace model
