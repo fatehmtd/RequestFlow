@@ -1,32 +1,31 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
+#include <QtWidgets/QMainWindow>
 #include <view/SceneGraphWidget.h>
 
-#include "ActionToolBar.h"
-#include "ActionPage.h"
 #include "ActionGroup.h"
 #include "ActionItem.h"
+#include "ActionPage.h"
+#include "ActionToolBar.h"
 #include "SettingsManager.h"
 
-#include <model/Project.h>
-#include <model/PersistenceHandler.h>
-#include <model/PersistableEntity.h>
 #include <QMap>
 #include <chrono>
+#include <model/PersistableEntity.h>
+#include <model/PersistenceHandler.h>
+#include <model/Project.h>
 
 #include "EnvironmentsWidget.h"
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
 
 public slots:
     void onSceneDeleted(QString identifier);
-    void onActivateScene(model::Graph* scene);    
+    void onActivateScene(model::Graph* scene);
 
 private slots:
     void onNewProject();
@@ -70,7 +69,7 @@ private:
     void setMiniMapStatus(bool status);
 
 private:
-    SceneGraphWidget *getActiveSceneGraphWidget() const;
+    SceneGraphWidget* getActiveSceneGraphWidget() const;
 
 private:
     Ui::MainWindowClass _ui;
@@ -82,20 +81,20 @@ private:
     // File
     QMenu* _fileMenu = nullptr;
     QAction* _newProjectAction = nullptr;
-    QAction* _openProjectAction= nullptr;
-    QAction* _recentProjectsAction= nullptr;
-    QAction* _saveProjectAction= nullptr;
-    QAction* _saveProjectAsAction= nullptr;
+    QAction* _openProjectAction = nullptr;
+    QAction* _recentProjectsAction = nullptr;
+    QAction* _saveProjectAction = nullptr;
+    QAction* _saveProjectAsAction = nullptr;
     QAction* _closeProjectAction = nullptr;
     QAction* _quitProjectAction = nullptr;
     QAction* _settingsAction = nullptr;
     QMenu* _recentProjectsMenu = nullptr;
 
     // Edit
-    QMenu *_editMenu = nullptr;
-    QAction *_undoAction = nullptr;
-    QAction *_redoAction = nullptr;
-    QAction *_findNodeAction = nullptr;
+    QMenu* _editMenu = nullptr;
+    QAction* _undoAction = nullptr;
+    QAction* _redoAction = nullptr;
+    QAction* _findNodeAction = nullptr;
 
     // Scenarios
     QMenu* _scenariosMenu = nullptr;
@@ -103,17 +102,19 @@ private:
     QAction* _cloneScenarioAction = nullptr;
     QAction* _deleteScenarioAction = nullptr;
 
-    // Environments
+    // Tools
     QMenu* _toolsMenu = nullptr;
-    QAction* _environmentConfigAction = nullptr;
     QAction* _importSwaggerAction = nullptr;
+    QAction* _jsonViewer = nullptr;
 
     // View
     QMenu* _viewMenu = nullptr;
-    QAction * _miniMapAction = nullptr;
+
+    QAction* _miniMapAction = nullptr;
     QMenu* _miniMapLocationMenu = nullptr;
     QAction* _switchThemeAction = nullptr;
-    QAction* _centerOnAction = nullptr;
+    QAction* _centerOnSceneAction = nullptr;
+    QAction* _arrangeNodesAction = nullptr;
 
     // About
     QMenu* _helpMenu = nullptr;
@@ -130,5 +131,4 @@ private:
     //EnvironmentsWidget* _environmentsWidget = nullptr;
 
     //////////////////////////////////////////////////
-
 };

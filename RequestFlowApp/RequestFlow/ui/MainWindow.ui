@@ -79,9 +79,13 @@
   <widget class="QDockWidget" name="dockWidget_inventory">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>58</width>
+     <height>35</height>
     </size>
+   </property>
+   <property name="windowIcon">
+    <iconset resource="../RequestFlow.qrc">
+     <normaloff>:/ui/inventory</normaloff>:/ui/inventory</iconset>
    </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
@@ -100,9 +104,13 @@
   <widget class="QDockWidget" name="dockWidget_logs">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>58</width>
+     <height>35</height>
     </size>
+   </property>
+   <property name="windowIcon">
+    <iconset resource="../RequestFlow.qrc">
+     <normaloff>:/ui/execution</normaloff>:/ui/execution</iconset>
    </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
@@ -142,9 +150,16 @@
   <widget class="QDockWidget" name="dockWidget_environments">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>58</width>
+     <height>35</height>
     </size>
+   </property>
+   <property name="windowIcon">
+    <iconset resource="../RequestFlow.qrc">
+     <normaloff>:/ui/environment</normaloff>:/ui/environment</iconset>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
     <string>Evironments</string>
@@ -176,6 +191,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../RequestFlow.qrc"/>
+ </resources>
  <connections/>
 </ui>
