@@ -1,50 +1,71 @@
 #pragma once
 #include "coreview_global.h"
 
+#include <QColor>
 #include <QGraphicsPathItem>
 #include <QGraphicsTextItem>
 #include <model/Slot.h>
-#include <QColor>
 
-namespace view
-{
-	class Slot;
+namespace view {
+class Slot;
 
-	class COREVIEW_EXPORT ConnectionEdge : public QGraphicsPathItem
-	{
-	public:
-		ConnectionEdge();
+class COREVIEW_EXPORT ConnectionEdge : public QGraphicsPathItem {
+public:
+    ConnectionEdge();
 
-		void setOrigin(Slot* slot);
-		void setOriginP(const QPointF& position);
-		void setDestination(const QPointF& position);
+    void setHeadSlot(Slot* slot);
+    void setTailSlot(Slot* slot);
 
-		enum Eligibility
-		{
-			ELIGIBLE,
-			NOT_ELIGIBLE,
-			NO_CANDIDATE
-		};
+    void setTailPosition(const QPointF& p);
 
-		void setEligible();
-		void setNotEligible();
-		void setNoCandidateAvaible();
+    Slot* getHeadSlot() const;
+    Slot* getTailSlot() const;
+    QPointF getTailPosition() const;
 
-	protected:
-		virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+    void reset();
+    void resetTailSlot();
 
-		QPainterPath buildPath() const;
-		virtual QRectF boundingRect() const override;
-		virtual QPainterPath shape() const override;
+    enum Eligibility {
+        ELIGIBLE,
+        NOT_ELIGIBLE,
+        NO_CANDIDATE
+    };
 
-	protected:
-		Slot* _slotOrigin = nullptr;
-		QPointF _destinationPos, _originPos;
-		int _thickness = 10;
-		Eligibility _eligibility;
+    enum CreationDirection {
+        UNKNOWN = -1,
+        ORIGIN_TO_DESTINATION,
+        DESTINATION_TO_ORIGIN
+    };
 
-        static QColor _noCandidateColor;
-        static QColor _notEligibleColor;
-        static QColor _eligibleColor;
-	};
+    void setEligible();
+    void setNotEligible();
+    void setNoCandidateAvaible();
+
+    CreationDirection getDirection() const;
+
+protected:
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+
+    QPainterPath buildPath() const;
+    virtual QRectF boundingRect() const override;
+    virtual QPainterPath shape() const override;
+
+    QPointF getDestinationPosition() const;
+    QPointF getOriginPosition() const;
+
+protected:
+    Slot* _headSlot = nullptr;
+    Slot* _tailSlot = nullptr;
+
+    QPointF _tailPosition;
+
+    int _thickness = 10;
+    Eligibility _eligibility;
+
+    CreationDirection _creationDirection;
+
+    static QColor _noCandidateColor;
+    static QColor _notEligibleColor;
+    static QColor _eligibleColor;
+};
 }

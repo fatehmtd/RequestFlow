@@ -1,156 +1,148 @@
 #pragma once
 #include "coreview_global.h"
 
+#include <QAction>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
-#include <QAction>
-#include <functional>
 #include <QMap>
+#include <functional>
 
-#include <model/Graph.h>
 #include <model/Edge.h>
+#include <model/Graph.h>
 #include <model/Node.h>
 #include <model/Slot.h>
 
 #include "MiniMap.h"
 
-namespace view
-{
-	class InteractionsHandler;
-	class Node;
-	class Link;
-	class Slot;
-	class ConnectionEdge;
-	class Edge;
+namespace view {
+class InteractionsHandler;
+class Node;
+class Link;
+class Slot;
+class ConnectionEdge;
+class Edge;
 
-	class COREVIEW_EXPORT SceneGraph : public QGraphicsScene
-	{
-        Q_OBJECT
-	public:
-		SceneGraph(model::Graph* modelGraph, QObject* parent = nullptr);
+class COREVIEW_EXPORT SceneGraph : public QGraphicsScene {
+    Q_OBJECT
+public:
+    SceneGraph(model::Graph* modelGraph, QObject* parent = nullptr);
 
-		Slot* findbyModel(model::Slot* slot) const;
-		Node* findbyModel(model::Node* node) const;
-		Edge* findbyModel(model::Edge* edge) const;
+    Slot* findbyModel(model::Slot* slot) const;
+    Node* findbyModel(model::Node* node) const;
+    Edge* findbyModel(model::Edge* edge) const;
 
-		void createGeometricNodesForModel();
+    void createGeometricNodesForModel();
 
-		QList<Node*> getNodes() const;
-		QList<Edge*> getEdges() const;
+    QList<Node*> getNodes() const;
+    QList<Edge*> getEdges() const;
 
-        QList<Node*> getSelectedNodes() const;
+    QList<Node*> getSelectedNodes() const;
 
-		Node* getNodeAt(const QPointF& p) const;
+    Node* getNodeAt(const QPointF& p) const;
 
-		model::Graph* getModelGraph() const;
+    model::Graph* getModelGraph() const;
 
-		void registerEdgeAction(QString name, std::function<void(view::Edge*)> func);
-		void registerNodeAction(QString name, std::function<void(view::Node*)> func);
+    void registerEdgeAction(QString name, std::function<void(view::Edge*)> func);
+    void registerNodeAction(QString name, std::function<void(view::Node*)> func);
 
-		void clearNodes();
-		void clearScene();
+    void clearNodes();
+    void clearScene();
 
-		void bringToFront(Node* node) const;
+    void bringToFront(Node* node) const;
 
-		Node* cloneNode(Node* originalNode);
+    Node* cloneNode(Node* originalNode);
 
-		InteractionsHandler* getInteractionsHandler() const;
+    InteractionsHandler* getInteractionsHandler() const;
 
-        void deleteSelectedItems();
-        void duplicateSelectedItems();
-        void renameSelectedNode();
+    void deleteSelectedItems();
+    void duplicateSelectedItems();
+    void renameSelectedNode();
 
-        // Visuals
+    // Visuals
 
-        enum BackgroundType
-        {
-            SOLID,
-            DOTS,
-            CROSSES,
-            GRID,
-            QUADS
-        };
+    enum BackgroundType {
+        SOLID,
+        DOTS,
+        CROSSES,
+        GRID,
+        QUADS
+    };
 
-        enum EdgeType
-        {
-            CURVES,
-            LINES
-        };
+    enum EdgeType {
+        CURVES,
+        LINES
+    };
 
-        QRectF computeBoundingRect(const QList<view::Node*> & nodes, qreal padding=0) const;
+    QRectF computeBoundingRect(const QList<view::Node*>& nodes, qreal padding = 0) const;
 
-        void setBackgroundType(BackgroundType bgType);
-        int getBackgroundType() const;
+    void setBackgroundType(BackgroundType bgType);
+    int getBackgroundType() const;
 
-        void setEdgeType(EdgeType type);
-        int getEdgeType() const;
+    void setEdgeType(EdgeType type);
+    int getEdgeType() const;
 
-        MiniMap *getMiniMap() const;
+    MiniMap* getMiniMap() const;
 
-        void addItem(QGraphicsItem *item);
-        void customUpdate();
+    void addItem(QGraphicsItem* item);
+    void customUpdate();
 
+    QImage takeScreenShotSvg(QString path, QRectF rect);
+    QImage takeScreenShot(QRectF rect, qreal multiplier = 4.0f);
+    QImage takeScreenShot(qreal padding = 20, qreal multiplier = 2.0f);
 
-        QImage takeScreenShotSvg(QString path, QRectF rect);
-        QImage takeScreenShot(QRectF rect, qreal multiplier = 4.0f);
-        QImage takeScreenShot(qreal padding=20, qreal multiplier=2.0f);
+signals:
+    void nodeDoubleClicked(view::Node*);
 
-    signals:
-        void nodeDoubleClicked(view::Node*);
+protected:
+    Node* createGeometryForModel(model::Node* node);
 
-	protected:        
+    virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
+    virtual void drawForeground(QPainter* painter, const QRectF& rect) override;
 
-		Node* createGeometryForModel(model::Node* node);
+    void drawDotsBackground(QPainter* painter, const QRectF& rect) const;
+    void drawGridBackground(QPainter* painter, const QRectF& rect) const;
+    void drawCrossBackground(QPainter* painter, const QRectF& rect) const;
+    void drawQuadsBackground(QPainter* painter, const QRectF& rect) const;
 
-		virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
-        virtual void drawForeground(QPainter* painter, const QRectF& rect) override;
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
-        void drawDotsBackground(QPainter* painter, const QRectF& rect) const;
-        void drawGridBackground(QPainter* painter, const QRectF& rect) const;
-        void drawCrossBackground(QPainter* painter, const QRectF& rect) const;
-        void drawQuadsBackground(QPainter* painter, const QRectF& rect) const;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
-        virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
+    void bringToFront(QPointF pos) const;
 
-		virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-		virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
-		virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+    virtual void setupUi();
 
-		void bringToFront(QPointF pos) const;
+    void createEdge();
 
-		virtual void setupUi();
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
 
-		void createEdge();
+protected:
+    // Visual settings
+    int _backgroundType = 0;
+    int _edgeType = 0;
 
-		virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
-		virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
-		virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
-		virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
+    model::Graph* _modelGraph = nullptr;
 
-	protected:
-        // Visual settings
-        int _backgroundType = 0;
-        int _edgeType = 0;
+    // Background painter
+    QColor _background;
+    QColor _lightGrid, _darkGrid;
+    ushort _cellSize, _blockSize;
+    bool _drawBackground = true;
 
-		model::Graph* _modelGraph = nullptr;
+    float _zoomLevel;
 
-        // Background painter
-		QColor _background;
-		QColor _lightGrid, _darkGrid;
-		ushort _cellSize, _blockSize;
-        bool _drawBackground = true;
+    // Edge creation
+    QPointF _cursorPosition;
+    ConnectionEdge* _connectionEdge = nullptr;
 
-        float _zoomLevel;
+    // Context menu
+    InteractionsHandler* _interactionsHandler = nullptr;
 
-        // Edge creation
-        Slot * _originSlot = nullptr;
-        Slot * _destinationSlot = nullptr;
-		QPointF _cursorPosition;
-        ConnectionEdge * _connectionEdge = nullptr;
-
-        // Context menu
-		InteractionsHandler* _interactionsHandler = nullptr;
-
-        MiniMap *_miniMap = nullptr;        
-	};
+    MiniMap* _miniMap = nullptr;
+};
 }

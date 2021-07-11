@@ -185,7 +185,6 @@ view::Node* view::SceneGraph::createGeometryForModel(model::Node* node)
     nodesMap["Payload"] = [](model::Node* modelNode) {
         return new logic::PayloadNode((model::PayloadNode*)modelNode);
     };
-
     nodesMap["Endpoint"] = [](model::Node* modelNode) {
         return new logic::EndpointNode((model::EndpointNode*)modelNode);
     };
@@ -229,37 +228,6 @@ void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
     case QUADS:
         drawQuadsBackground(painter, rect);
         break;
-    }
-
-    { /*
-        auto nodes = getNodes();
-        if(!nodes.isEmpty())
-        {
-            auto rect = computeBoundingRect(nodes, 100);
-            int left = rect.x();
-            int right = left + rect.width();
-            int top = rect.y();
-            int bottom = top + rect.height();
-
-        // points
-        int _cellSize = 10;
-        const int firstLeft = left - ((int)left % _cellSize);
-        const int firstTop = top - ((int)top % _cellSize);
-        int count = (1 + (right - firstLeft) / _cellSize) * (1 + (bottom - firstTop) / _cellSize);
-        QVector<QPointF> points(count);
-
-        int index = 0;
-        for (int i = firstLeft; i < right; i += _cellSize) {
-            for (int j = firstTop; j < bottom; j += _cellSize) {
-                points[index++] = QPointF(i, j);
-            }
-        }
-
-        QPen pen(QBrush(QColor("#AA0000")), 4.0f);
-        //pen.setStyle(Qt::PenStyle::DashLine);
-        painter->setPen(pen);
-        painter->drawPoints(points.data(), points.size());
-    }*/
     }
 }
 
@@ -419,8 +387,8 @@ void view::SceneGraph::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 void view::SceneGraph::setupUi()
 {
     setItemIndexMethod(ItemIndexMethod::BspTreeIndex);
-    _cellSize = 80; // in pixels
-    _blockSize = 4; // in cells
+    _cellSize = 60; // in pixels
+    _blockSize = 6; // in cells
 
     //_background = QColor(140, 140, 140);
     _background = QColor("#F4F3F4");
@@ -452,11 +420,19 @@ void view::SceneGraph::setupUi()
 
 void view::SceneGraph::createEdge()
 {
-    if (_originSlot && _destinationSlot) {
-        auto modelEdge = _modelGraph->connectSlots(dynamic_cast<model::OutputSlot*>(
-                                                       _originSlot->getModelSlot()),
-            dynamic_cast<model::InputSlot*>(
-                _destinationSlot->getModelSlot()));
+    if (_connectionEdge->getHeadSlot() && _connectionEdge->getTailSlot()) {
+        model::Slot *outputSlot = nullptr, *inputSlot = nullptr;
+
+        if (_connectionEdge->getDirection() == ConnectionEdge::DESTINATION_TO_ORIGIN) {
+            outputSlot = _connectionEdge->getTailSlot()->getModelSlot();
+            inputSlot = _connectionEdge->getHeadSlot()->getModelSlot();
+        } else if (_connectionEdge->getDirection() == ConnectionEdge::ORIGIN_TO_DESTINATION) {
+            inputSlot = _connectionEdge->getTailSlot()->getModelSlot();
+            outputSlot = _connectionEdge->getHeadSlot()->getModelSlot();
+        }
+
+        auto modelEdge = _modelGraph->connectSlots(dynamic_cast<model::OutputSlot*>(outputSlot),
+            dynamic_cast<model::InputSlot*>(inputSlot));
 
         if (modelEdge != nullptr) {
             addItem(new Edge(this, modelEdge));
@@ -508,10 +484,9 @@ void view::SceneGraph::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if (event->button() == Qt::MouseButton::LeftButton) {
         auto slot = dynamic_cast<Slot*>(itemAt(event->scenePos(), QTransform()));
-        if (slot != nullptr && !slot->isInput()) {
-            _originSlot = slot;
-            _connectionEdge->setOrigin(_originSlot);
-            _connectionEdge->setDestination(event->scenePos());
+        if (slot != nullptr) {
+            _connectionEdge->setHeadSlot(slot);
+            _connectionEdge->setTailPosition(event->scenePos());
         }
     }
 
@@ -529,23 +504,24 @@ void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     _cursorPosition = event->scenePos();
 
-    if (_originSlot != nullptr) {
-        auto slot = dynamic_cast<Slot*>(itemAt(event->scenePos(), QTransform()));
-        if (slot != nullptr) {
-            bool eligibleStatus = slot->acceptConnection(_originSlot);
+    if (_connectionEdge->getDirection() != ConnectionEdge::CreationDirection::UNKNOWN) {
+
+        auto candidateSlot = dynamic_cast<Slot*>(itemAt(event->scenePos(), QTransform()));
+
+        if (candidateSlot != nullptr) {
+            bool eligibleStatus = candidateSlot->acceptConnection(_connectionEdge->getHeadSlot());
             if (eligibleStatus) {
-                _destinationSlot = slot;
+                _connectionEdge->setTailSlot(candidateSlot);
                 _connectionEdge->setEligible();
             } else {
-                _destinationSlot = nullptr;
                 _connectionEdge->setNotEligible();
+                _connectionEdge->resetTailSlot();
             }
         } else {
-            _destinationSlot = nullptr;
             _connectionEdge->setNoCandidateAvaible();
         }
-        _connectionEdge->setDestination(_cursorPosition);
 
+        _connectionEdge->setTailPosition(_cursorPosition);
         _connectionEdge->update();
     }
 
@@ -555,9 +531,7 @@ void view::SceneGraph::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 void view::SceneGraph::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     createEdge();
-    _destinationSlot = nullptr;
-    _originSlot = nullptr;
-    _connectionEdge->setOrigin(_originSlot);
+    _connectionEdge->reset();
     update();
     QGraphicsScene::mouseReleaseEvent(event);
 }

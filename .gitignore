@@ -44,3 +44,5 @@ BleachUI/RequestFlow.pro.user*
 *.pro.user.*
 RequestFlowApp/RequestFlow.pro.user
 *.zip
+RequestFlowApp/deploy/RequestFlow-win-dist.7z
+RequestFlowApp/deploy/RequestFlow-win-dist
