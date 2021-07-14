@@ -57,6 +57,8 @@ void SceneGraphWidget::initUi()
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
+    qDebug() << "single step : " << horizontalScrollBar()->singleStep();
+
     // TODO: test other flags
     // setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
@@ -149,20 +151,33 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
     auto itemUnderCursor = _sceneGraph->itemAt(
         mapToScene(event->position().toPoint()), QTransform());
 
-    if (itemUnderCursor != nullptr && !ctrlPressed) {
-        auto widget = dynamic_cast<QGraphicsProxyWidget*>(itemUnderCursor);
+    if (itemUnderCursor != nullptr) {
+        qDebug() << __FUNCTION__ << itemUnderCursor;
+    }
+    if (ctrlPressed) {
 
-        if (widget != nullptr) {
-            auto dx = horizontalScrollBar()->value();
-            auto dy = verticalScrollBar()->value();
+        /*
+        if (itemUnderCursor != nullptr && !ctrlPressed) {
+            auto widget = dynamic_cast<QGraphicsProxyWidget*>(itemUnderCursor);
 
-            QGraphicsView::wheelEvent(event);
+            if (widget != nullptr) {
+                auto dx = horizontalScrollBar()->value();
+                auto dy = verticalScrollBar()->value();
 
-            horizontalScrollBar()->setValue(dx);
-            verticalScrollBar()->setValue(dy);
-        }
-    } else {
+                QGraphicsView::wheelEvent(event);
+
+                horizontalScrollBar()->setValue(dx);
+                verticalScrollBar()->setValue(dy);
+            }
+        } else {
+            performZoom(event);
+        }//*/
+
         performZoom(event);
+    }
+
+    else {
+        QGraphicsView::wheelEvent(event);
     }
 
     _sceneGraph->customUpdate();

@@ -14,28 +14,6 @@
    <string>ScriptNodeWidgetUi</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
-   <item row="2" column="0" colspan="4">
-    <widget class="QPlainTextEdit" name="plainTextEdit"/>
-   </item>
-   <item row="0" column="1">
-    <widget class="QPushButton" name="pushButton_externalEditor">
-     <property name="text">
-      <string>Edit with</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <spacer name="horizontalSpacer">
      <property name="orientation">
@@ -48,6 +26,13 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="pushButton_externalEditor">
+     <property name="text">
+      <string>Edit with</string>
+     </property>
+    </widget>
    </item>
    <item row="0" column="2">
     <widget class="QComboBox" name="comboBox_externalEditors">
@@ -68,6 +53,9 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QPlainTextEdit" name="plainTextEdit"/>
    </item>
   </layout>
  </widget>

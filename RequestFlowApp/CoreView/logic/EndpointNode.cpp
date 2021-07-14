@@ -38,10 +38,18 @@ void logic::EndpointNode::initUI()
             break;
         }
     }
+
+    _ui.buttonGroup_auth->setId(_ui.radioButton_noAuth, 0);
+    _ui.buttonGroup_auth->setId(_ui.radioButton_basicAuth, 1);
+    _ui.buttonGroup_auth->setId(_ui.radioButton_bearerAuth, 2);
+    _ui.buttonGroup_auth->setId(_ui.radioButton_oAuth, 3);
+
+    _ui.buttonGroup_auth->button(endpointNode->getAuthMethod())->setChecked(true);
+    _ui.stackedWidget->setCurrentIndex(endpointNode->getAuthMethod());
+
     _ui.comboBox_method->setCurrentIndex(endpointNode->getHttpMethod());
     _ui.spinBox_timeout->setValue(endpointNode->getTimeout());
     _ui.plainTextEdit_payloadModel->setPlainText(endpointNode->getPayloadModel());
-    _ui.tabWidget_authentication->setCurrentIndex(endpointNode->getAuthMethod());
     _ui.lineEdit_baUser->setText(endpointNode->getBasicAuthUser());
     _ui.lineEdit_baPwd->setText(endpointNode->getBasicAuthPassword());
     _ui.lineEdit_bearerToken->setText(endpointNode->getBearerToken());
@@ -82,7 +90,12 @@ void logic::EndpointNode::initUI()
     connect(_ui.lineEdit_baUser, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBasicAuthUser);
     connect(_ui.lineEdit_baPwd, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBasicAuthPassword);
     connect(_ui.lineEdit_bearerToken, &QLineEdit::textChanged, endpointNode, &model::EndpointNode::setBearerToken);
-    connect(_ui.tabWidget_authentication, &QTabWidget::currentChanged, endpointNode, &model::EndpointNode::setAuthMethod);
+
+    connect(_ui.buttonGroup_auth, &QButtonGroup::idClicked, this, [=](int id) {
+        _ui.stackedWidget->setCurrentIndex(id);
+        endpointNode->setAuthMethod(id);
+    });
+
     connect(_ui.spinBox_timeout, SIGNAL(valueChanged(int)), this, SLOT(onTimeoutChanged(int)));
     connect(_ui.comboBox_method, SIGNAL(currentIndexChanged(int)), this, SLOT(onHttpMethodChanged(int)));
     connect(_ui.comboBox_contentType, SIGNAL(currentTextChanged(const QString&)), this, SLOT(onContentTypeChanged(const QString&)));

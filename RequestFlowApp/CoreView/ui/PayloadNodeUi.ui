@@ -13,19 +13,7 @@
   <property name="windowTitle">
    <string>PayloadNode</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_5">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox_loadFromFile">
      <property name="title">
@@ -64,7 +52,7 @@
       <attribute name="title">
        <string>Body</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
+      <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0">
         <widget class="QPlainTextEdit" name="plainTextEdit_body">
          <property name="backgroundVisible">
