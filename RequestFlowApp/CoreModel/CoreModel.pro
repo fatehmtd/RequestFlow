@@ -8,7 +8,7 @@
 QT += core qml #webchannel websockets xml xmlpatterns
 TEMPLATE = lib
 TARGET = CoreModel
-CONFIG += c++11
+CONFIG += c++17
 DEFINES += COREMODEL_LIB
 
 HEADERS += ./coremodel_global.h \

@@ -212,6 +212,12 @@ QMenu* view::InteractionsHandler::createContextMenu(const QPointF& p)
     auto selectedItems = _sceneGraph->selectedItems();
 
     auto item = _sceneGraph->itemAt(p, QTransform());
+
+    if (item != nullptr) {
+        item->setSelected(true);
+        _sceneGraph->update();
+    }
+
     QMenu* menu = new QMenu();
 
     QList<ItemAction> availableActions;

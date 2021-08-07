@@ -142,14 +142,14 @@ QPainterPath view::Edge::buildPathSegmented() const
 
 QRectF view::Edge::boundingRect() const
 {
-    /*
-    //auto s = scene();
-    //auto v = s->views()[0];
-    //auto r = v->sceneRect();
-    //return s->sceneRect().normalized();
-    */
 
-    return buildPath().boundingRect().adjusted(-50, -50, 50, 50).normalized();
+    auto s = scene();
+    auto v = s->views()[0];
+    auto r = v->sceneRect();
+    return s->sceneRect().normalized();
+    //*/
+
+    //return buildPath().boundingRect().adjusted(-50, -50, 50, 50).normalized();
     /*
     //TODO: fix this workaround to render using the proper boundingRect
     float size = 1 << 13;

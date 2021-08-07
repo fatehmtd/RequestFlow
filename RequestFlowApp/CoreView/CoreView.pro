@@ -6,7 +6,7 @@
 QT += core gui network widgets qml svg
 TEMPLATE = lib
 TARGET = CoreView
-CONFIG += c++11
+CONFIG += c++17
 DEFINES += COREVIEW_LIB
 INCLUDEPATH += $$PWD/../CoreModel
 DEPENDPATH += $$PWD/../CoreModel

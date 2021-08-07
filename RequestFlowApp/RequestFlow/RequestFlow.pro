@@ -3,14 +3,13 @@
 # ------------------------------------------------------
 
 QT += core gui network widgets qml svg
+CONFIG += c++17
 TEMPLATE = app
 TARGET = RequestFlow
 
 #CONFIG(debug, debug|release):CONFIG += console
 
 RC_ICONS = $$PWD/icons/network.ico
-
-#win32: LIBS += User32.lib
 
 HEADERS += ./resource.h \
     ./BackgroundPaintFilter.h \
