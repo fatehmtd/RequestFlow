@@ -72,11 +72,16 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::setupUi()
 {
     _ui.setupUi(this);
+
+    preparePalettes();
+
     setWindowIcon(QIcon(":/ui/network"));
     //setMinimumSize(1280, 800);
     setupMenuBar();
     setupSceneGraph();
     setupEnvironmentsWidget();
+
+    setTheme(_settingsManager->getTheme());
 
     // enable the background image
     _ui.mdiArea->viewport()->installEventFilter(new BackgroundPaintFilter(this));
@@ -95,23 +100,23 @@ void MainWindow::setupSceneGraph()
     _ui.mdiArea->setTabsClosable(false);
 
     connect(_ui.logMessagesWidget, &LogMessagesWidget::senderSelected, this, [=](model::Node* node)
+    {
+        auto subWindowsList = _ui.mdiArea->subWindowList();
+        std::for_each(subWindowsList.begin(), subWindowsList.end(), [=](QMdiSubWindow* subWindow) {
+            auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
+            if (sceneGraphWidget != nullptr)
             {
-                for (auto subWindow : _ui.mdiArea->subWindowList())
+                if (sceneGraphWidget->getSceneGraph()->getModelGraph() == node->getGraph())
                 {
-                    auto sceneGraphWidget = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
-                    if (sceneGraphWidget != nullptr)
-                    {
-                        if (sceneGraphWidget->getSceneGraph()->getModelGraph() == node->getGraph())
-                        {
-                            auto nodeGr = sceneGraphWidget->getSceneGraph()->findbyModel(node);
+                    auto nodeGr = sceneGraphWidget->getSceneGraph()->findbyModel(node);
 
-                            _ui.mdiArea->setActiveSubWindow(subWindow);
+                    _ui.mdiArea->setActiveSubWindow(subWindow);
 
-                            sceneGraphWidget->setCenterAnimated(nodeGr);
-                        }
-                    }
+                    sceneGraphWidget->setCenterAnimated(nodeGr);
                 }
-            });
+            }
+        }
+        );});
 }
 
 void MainWindow::openProject(const QString& fileName)
@@ -277,7 +282,7 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
         {
             envName = graph->getActiveEnvironment()->getName();
         }
-        return QString("%1 [Env: %2]").arg(graph->getName()).arg(envName);
+        return QString("%1 [Env: %2]").arg(graph->getName(), envName);
     };
 
     _subwindowsMap.insert(sceneGraph->getModelGraph()->getIdentifier(), window);
@@ -291,29 +296,29 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
 
     auto sysMenu = new QMenu(window);
     sysMenu->addAction(QIcon(":/ui/duplicate"), "Clone Scenario", [=]()
-                       {
-                           auto newName = QInputDialog::getText(this, "Clone Scenario", "New Scenario Name : ", QLineEdit::Normal, QString("%1 - Clone").arg(sceneGraphWidget->getSceneGraph()->getModelGraph()->getName()));
-                           if(!newName.isEmpty())
-                           {
-                               cloneScenario(sceneGraphWidget->getSceneGraph(), newName);
-                           }
-                       });
+    {
+        auto newName = QInputDialog::getText(this, "Clone Scenario", "New Scenario Name : ", QLineEdit::Normal, QString("%1 - Clone").arg(sceneGraphWidget->getSceneGraph()->getModelGraph()->getName()));
+        if(!newName.isEmpty())
+        {
+            cloneScenario(sceneGraphWidget->getSceneGraph(), newName);
+        }
+    });
 
     sysMenu->addAction(QIcon(":/ui/delete"), "Delete Scenario", [=]()
-                       {
-                           deleteScenario(sceneGraphWidget->getSceneGraph());
-                       });
+    {
+        deleteScenario(sceneGraphWidget->getSceneGraph());
+    });
     window->setSystemMenu(sysMenu);
 
     connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, [=](const QString& str)
-            {
-                window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
-            });
+    {
+        window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
+    });
 
     connect(sceneGraph->getModelGraph(), &model::Graph::activeEnvironmentChanged, window, [=]()
-            {
-                window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
-            });
+    {
+        window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
+    });
 
     window->showMaximized();
 
@@ -322,7 +327,7 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
 
 void MainWindow::cloneScenario(view::SceneGraph* sceneGraph, QString newName)
 {
-    auto sgw = (SceneGraphWidget*)sceneGraph->views()[0];
+    auto sgw = (SceneGraphWidget*)sceneGraph->views().first();
     model::PersistenceHandler persistenceHandler;
     auto jsValue = sgw->saveToJSValue(&persistenceHandler);
     auto newGraph = sceneGraph->getModelGraph()->clone();
@@ -377,10 +382,10 @@ QJSValue MainWindow::savetoJSValue(model::PersistenceHandler* handler) const
     auto scenesValue = handler->createJsValue();
 
     std::for_each(sceneGraphWidgets.begin(), sceneGraphWidgets.end(), [=, &scenesValue](SceneGraphWidget* sgw)
-                  {
-                      auto sceneGraph = sgw->getSceneGraph();
-                      scenesValue.setProperty(sceneGraph->getModelGraph()->getIdentifier(), sgw->saveToJSValue(handler));
-                  });
+    {
+        auto sceneGraph = sgw->getSceneGraph();
+        scenesValue.setProperty(sceneGraph->getModelGraph()->getIdentifier(), sgw->saveToJSValue(handler));
+    });
 
     uiValue.setProperty("scenes", scenesValue);
     return uiValue;
@@ -432,15 +437,67 @@ void MainWindow::setMiniMapLocation(int location)
 void MainWindow::setMiniMapStatus(bool status)
 {
     _settingsManager->setMiniMapStatus(status);
-    for(auto subWindow : _ui.mdiArea->subWindowList())
-    {
+    auto subwindowsList = _ui.mdiArea->subWindowList();
+
+    std::for_each(subwindowsList.begin(), subwindowsList.end(), [status](QMdiSubWindow* subWindow) {
         auto sgw = dynamic_cast<SceneGraphWidget*>(subWindow->widget());
         if(sgw != nullptr)
         {
             sgw->getSceneGraph()->getMiniMap()->setVisible(status);
         }
-    }
+    });
     _miniMapAction->setChecked(status);
+}
+
+void MainWindow::setTheme(view::SettingsManager::Theme theme)
+{
+    _settingsManager->setTheme(theme);
+    switch(theme) {
+    case view::SettingsManager::Theme::LIGHT:
+        qApp->setPalette(_lightPalette);
+        break;
+    default:
+        qApp->setPalette(_darkPalette);
+        break;
+    }
+}
+
+
+void MainWindow::switchTheme()
+{
+    qDebug() << _settingsManager->getTheme();
+    switch(_settingsManager->getTheme()) {
+    case view::SettingsManager::Theme::LIGHT:
+        setTheme(view::SettingsManager::Theme::DARK);
+        break;
+    case view::SettingsManager::Theme::DARK:
+        setTheme(view::SettingsManager::Theme::LIGHT);
+        break;
+    }
+}
+
+void MainWindow::preparePalettes()
+{
+    // Light Palette
+    _lightPalette = qApp->style()->standardPalette();
+
+    // Dark Palette
+    _darkPalette.setColor(QPalette::Window, QColor(53,53,53));
+    _darkPalette.setColor(QPalette::WindowText, Qt::white);
+    _darkPalette.setColor(QPalette::Base, QColor(15,15,15));
+    _darkPalette.setColor(QPalette::AlternateBase, QColor(53,53,53));
+    _darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
+    _darkPalette.setColor(QPalette::ToolTipText, Qt::white);
+    _darkPalette.setColor(QPalette::Text, Qt::white);
+    _darkPalette.setColor(QPalette::Button, QColor(53,53,53));
+    _darkPalette.setColor(QPalette::ButtonText, Qt::white);
+    _darkPalette.setColor(QPalette::BrightText, Qt::red);
+
+    _darkPalette.setColor(QPalette::Highlight, QColor(142,45,197).lighter());
+    _darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    _darkPalette.setColor(QPalette::Disabled, QPalette::Text, Qt::darkGray);
+    _darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, Qt::darkGray);
 }
 
 SceneGraphWidget *MainWindow::getActiveSceneGraphWidget() const
@@ -470,12 +527,12 @@ void MainWindow::updateRecentProjectsList()
 
     // add an open project action
     for (const auto& prj : recentProjects)
-    {        
+    {
         auto action = menu->addAction(QIcon(":/ui/network"), prj);
         connect(action, &QAction::triggered, this, [=]()
-                {
-                    openProject(prj);
-                });
+        {
+            openProject(prj);
+        });
     }
 
     if (recentProjects.size() > 0)
@@ -487,16 +544,16 @@ void MainWindow::updateRecentProjectsList()
         action->setFont(font);
         action->setIcon(QIcon(":/ui/broom"));
         connect(action, &QAction::triggered, this, [=]()
-                {
-                    if (QMessageBox::warning(this,
-                                             "Warning",
-                                             "Clear recent projects list",
-                                             QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Yes)
-                    {
-                        _settingsManager->clearRecentProjects();
-                        updateRecentProjectsList();
-                    }
-                });
+        {
+            if (QMessageBox::warning(this,
+                                     "Warning",
+                                     "Clear recent projects list",
+                                     QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Yes)
+            {
+                _settingsManager->clearRecentProjects();
+                updateRecentProjectsList();
+            }
+        });
     }
     else
     {

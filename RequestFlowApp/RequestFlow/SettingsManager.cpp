@@ -94,6 +94,16 @@ uint view::SettingsManager::getEdgesStyle() const
     return getEntry("edgeStyle", 0).toUInt();
 }
 
+void view::SettingsManager::setTheme(Theme theme)
+{
+    setEntry("theme", (int)theme);
+}
+
+view::SettingsManager::Theme view::SettingsManager::getTheme() const
+{
+    return (Theme)getEntry("theme", Theme::LIGHT).toInt();
+}
+
 void view::SettingsManager::setMiniMapLocation(int location)
 {
     setEntry("MiniMapLocation", location);

@@ -46,3 +46,5 @@ RequestFlowApp/RequestFlow.pro.user
 *.zip
 RequestFlowApp/deploy/RequestFlow-win-dist.7z
 RequestFlowApp/deploy/RequestFlow-win-dist
+.DS_Store
+*.DS_Store

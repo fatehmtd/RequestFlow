@@ -71,7 +71,8 @@ RESOURCES += \
 RESOURCES += qdarkstyle/theme/style.qrc
 
 DISTFILES += \
-    $$PWD/license.txt
+    $$PWD/license.txt \
+    Info.plist
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../CoreModel/release/ -lCoreModel
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../CoreModel/debug/ -lCoreModel
@@ -93,3 +94,8 @@ else:unix: LIBS += -L$$OUT_PWD/../ExecutionEngine/ -lExecutionEngine
 
 INCLUDEPATH += $$PWD/../ExecutionEngine
 DEPENDPATH += $$PWD/../ExecutionEngine
+
+QMAKE_INFO_PLIST=Info.plist
+#QMAKE_INFO_PLIST = Info.plist
+
+

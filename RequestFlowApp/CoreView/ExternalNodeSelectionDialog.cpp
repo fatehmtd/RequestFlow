@@ -1,5 +1,5 @@
 #include "ExternalNodeSelectionDialog.h"
-#include "ui_ExternalNodeSelectionDialog.h"
+#include "ui_externalnodeselectiondialog.h"
 
 #include <QDebug>
 #include <model/Graph.h>
@@ -28,6 +28,7 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const override
     {
+        if(_filteredGraphs.isEmpty()) return QModelIndex();
         return createIndex(row, column, _filteredGraphs[row]);
     }
 

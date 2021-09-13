@@ -74,7 +74,7 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     float textX = isInput() ? (boundingRect().width() + textSpace) : (-(textSpace + textRect.width()));
     _title->setPos(textX, -8);
 
-    setPos(finalPosition);
+    //setPos(finalPosition);
 
     if (_mouseHovering) { /*
         auto originalBoundingRect = QGraphicsSvgItem::boundingRect();
@@ -160,6 +160,7 @@ QPointF view::Slot::getCenterPosition() const
 
 bool view::Slot::acceptConnection(Slot* origin) const
 {
+    if(origin == nullptr) return false;
     return getModelSlot()->getNode()->getGraph()->canConnectSlots(origin->getModelSlot(), getModelSlot());
 }
 

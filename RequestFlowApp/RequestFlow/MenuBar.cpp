@@ -141,9 +141,10 @@ void MainWindow::setupMenuBar()
 
         _viewMenu->addSeparator();
         _switchThemeAction = _viewMenu->addAction(QIcon(), "Switch theme...", [=]() {
-            qDebug() << "clicked on " << _viewMenu;
+            //qDebug() << "clicked on " << _viewMenu;
+            switchTheme();
         });
-        _switchThemeAction->setEnabled(false);
+        //_switchThemeAction->setEnabled(false);
 
         _viewMenu->addSeparator();
 

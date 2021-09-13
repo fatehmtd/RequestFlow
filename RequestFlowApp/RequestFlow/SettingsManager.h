@@ -46,6 +46,16 @@ namespace view
         uint getEdgesStyle() const;
 
         ///////////////////////////////////////////////////////////////////////
+        /// Theme
+        ///
+        enum Theme {
+            LIGHT,
+            DARK
+        };
+
+        void setTheme(Theme theme);
+        Theme getTheme() const;
+        ///////////////////////////////////////////////////////////////////////
         /// MiniMap
         ///
         void setMiniMapLocation(int location);

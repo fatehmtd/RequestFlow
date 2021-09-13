@@ -361,6 +361,71 @@ void view::Node::paint(QPainter* painter,
         painter->setBrush(backgroundBrush);
         painter->drawPath(backgroundPath);
     }
+  }
+
+  auto rect = boundingRect();
+  int w = rect.width(), h = rect.height();
+
+  // Shadow
+  if (true) {
+    float outlineSize = _edgeSize * 3.0f;
+    QPainterPath outlinePath;
+    // outlinePath.setFillRule(Qt::FillRule::WindingFill);
+    outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
+
+    QRadialGradient gradient(QPoint(width() * 0.5f, height() * 0.5f),
+                             std::max(w, h) * 0.91f);
+    // gradient.setCenter(300, 300);
+    // gradient.setColorAt(0.0, colors::red);
+    gradient.setColorAt(0.0, QColor(100, 100, 100, 50));
+    // gradient.setColorAt(0.8f, QColor(255, 0, 0, 50));
+    gradient.setColorAt(1.0f, QColor(0, 0, 0, 0));
+    // gradient.setRadius(std::max(w-300, h-300)*2.0f);
+    // gradient.setRadius(300);
+
+    QBrush brush(gradient);
+    QPen pen(brush, outlineSize);
+    // QBrush gradientBrush()
+    painter->setPen(pen);
+    painter->setBrush(Qt::BrushStyle::NoBrush);
+
+    // painter->setBrush(brush);
+    painter->drawPath(outlinePath);
+    // painter->fillRect(outlinePath.boundingRect().toRect(), gradient);
+  }
+  // return;
+
+  // Background
+  {
+    QPainterPath backgroundPath;
+    // auto bgColor = colors::light::purple;
+    //auto bgColor = QColor("#F0F0F0");
+    auto bgColor = _contentWidget->palette().color(QPalette::Window);
+    QPen pen(bgColor);
+
+    QBrush backgroundBrush(bgColor);
+    backgroundPath.setFillRule(Qt::FillRule::WindingFill);
+    backgroundPath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
+    painter->setPen(pen);
+    painter->setBrush(backgroundBrush);
+    painter->drawPath(backgroundPath);
+  }
+
+  // Title background
+  {
+    QPainterPath backgroundPath;
+    // auto bgColor = colors::light::yellow;
+    auto bgColor = _bgColor;
+    QPen pen(bgColor);
+
+    float headerHeight = getHeaderHeight() * 0.7f + getSlotsSectionHeight();
+    QBrush backgroundBrush(bgColor);
+    backgroundPath.setFillRule(Qt::FillRule::WindingFill);
+    backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);
+    backgroundPath.addRoundedRect(0, 10, w, headerHeight, 0, 0);
+    painter->setPen(pen);
+    painter->setBrush(backgroundBrush);
+    painter->drawPath(backgroundPath);
 
     // Title background
     {
@@ -489,21 +554,31 @@ void view::Node::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 }
 
 QVariant view::Node::itemChange(GraphicsItemChange change,
-    const QVariant& value)
-{
-    switch (change) {
-    case QGraphicsItem::ItemPositionChange: {
-        auto p = value.toPointF();
-        auto delta = p - _topLeftCorner;
-        _topLeftCorner = p;
-        _bottomRightCorner += delta;
-        scene()->update();
-        break;
+                                const QVariant &value) {
+  switch (change) {
+  case QGraphicsItem::ItemPositionChange: {
+    auto p = value.toPointF();
+    auto delta = p - _topLeftCorner;
+    _topLeftCorner = p;
+    _bottomRightCorner += delta;
+    scene()->update();
+    // move all the slots
+    {
+        auto childrenList = childItems();
+        std::for_each(childrenList.begin(), childrenList.end(), [](QGraphicsItem* child) {
+            //child->update();
+            auto slot = dynamic_cast<view::Slot*>(child);
+            if(slot != nullptr) {
+                slot->setPos(slot->getBasePosition() - QPointF(10, 10));
+            }
+        });
     }
-    default:
-        break;
-    }
-    return QGraphicsObject::itemChange(change, value);
+    break;
+  }
+  default:
+    break;
+  }
+  return QGraphicsObject::itemChange(change, value);
 }
 
 void view::Node::doResize(QGraphicsSceneMouseEvent* event)
@@ -558,8 +633,14 @@ void view::Node::doResize(QGraphicsSceneMouseEvent* event)
         item->update();
     });
 
-    update();
-    scene()->update();
+  auto childrenList = childItems();
+
+  std::for_each(childrenList.begin(), childrenList.end(), [](QGraphicsItem* child) {
+      child->update();
+  });
+
+  update();
+  scene()->update();
 }
 
 int view::Node::computeGripCorner(const QPointF& p)

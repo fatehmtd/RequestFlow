@@ -16,6 +16,7 @@
 #include <model/PersistenceHandler.h>
 #include <model/Project.h>
 
+#include "SettingsManager.h"
 #include "EnvironmentsWidget.h"
 
 class MainWindow : public QMainWindow {
@@ -26,6 +27,7 @@ public:
 public slots:
     void onSceneDeleted(QString identifier);
     void onActivateScene(model::Graph* scene);
+
 
 private slots:
     void onNewProject();
@@ -67,6 +69,11 @@ private:
 
     void setMiniMapLocation(int location);
     void setMiniMapStatus(bool status);
+
+    void setTheme(view::SettingsManager::Theme theme);
+    void switchTheme();
+
+    void preparePalettes();
 
 private:
     SceneGraphWidget* getActiveSceneGraphWidget() const;
@@ -129,6 +136,9 @@ private:
     view::SettingsManager* _settingsManager = nullptr;
 
     //EnvironmentsWidget* _environmentsWidget = nullptr;
+
+    QPalette _lightPalette;
+    QPalette _darkPalette;
 
     //////////////////////////////////////////////////
 };

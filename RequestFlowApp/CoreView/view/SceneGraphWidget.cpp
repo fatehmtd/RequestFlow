@@ -23,6 +23,8 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 
+#include <QNativeGestureEvent>
+
 SceneGraphWidget::SceneGraphWidget(QWidget* parent,
     view::SceneGraph* sceneGraph)
     : QGraphicsView(parent)
@@ -92,6 +94,20 @@ void SceneGraphWidget::setupViewport(QWidget* widget)
     _sceneGraph->customUpdate();
 }
 
+bool SceneGraphWidget::event(QEvent *ev)
+{
+    switch(ev->type()) {
+    case QEvent::NativeGesture: {
+        auto nge = dynamic_cast<QNativeGestureEvent*>(ev);
+        if(nativeGestureEvent(nge)) return true;
+    }
+        break;
+    default:
+        break;
+    }
+    return QGraphicsView::event(ev);
+}
+
 void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::MouseButton::LeftButton) {
@@ -150,7 +166,7 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
         mapToScene(event->position().toPoint()), QTransform());
 
     if (itemUnderCursor != nullptr) {
-        qDebug() << __FUNCTION__ << itemUnderCursor;
+        //qDebug() << __FUNCTION__ << itemUnderCursor;
     }
     if (ctrlPressed) {
 
@@ -190,6 +206,19 @@ void SceneGraphWidget::mouseMiddleButtonPressed(QMouseEvent* event)
 void SceneGraphWidget::mouseMiddleButtonReleased(QMouseEvent*)
 {
     setDragMode(QGraphicsView::DragMode::NoDrag);
+}
+
+bool SceneGraphWidget::nativeGestureEvent(QNativeGestureEvent *nativeGestureEvent)
+{
+    if(nativeGestureEvent != nullptr) {
+        if(nativeGestureEvent->gestureType() == Qt::ZoomNativeGesture) {
+            auto zvalue = nativeGestureEvent->value();
+            auto lvl = zvalue < 0 ? _zoomStep : -_zoomStep;
+            setZoomLevel(getZoomLevel() + lvl);
+            return true;
+        }
+    }
+    return false;
 }
 
 void SceneGraphWidget::performZoom(QWheelEvent* event)
@@ -259,7 +288,6 @@ void SceneGraphWidget::createShortcuts()
 QPointF SceneGraphWidget::getCenter() const
 {
     return mapToScene(viewport()->rect()).boundingRect().center();
-    ;
 }
 
 void SceneGraphWidget::setCenter(const QPointF& p)

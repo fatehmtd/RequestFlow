@@ -39,6 +39,8 @@ protected:
 
     void setupViewport(QWidget *widget) override;
 
+    virtual bool event(QEvent* ev) override;
+
 	virtual void mousePressEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;
 	virtual void mouseMoveEvent(QMouseEvent* event) override;
@@ -46,6 +48,8 @@ protected:
 
 	virtual void mouseMiddleButtonPressed(QMouseEvent* event);
 	virtual void mouseMiddleButtonReleased(QMouseEvent* event);
+
+    virtual bool nativeGestureEvent(QNativeGestureEvent* event);
 
     void performZoom(QWheelEvent* event);
 

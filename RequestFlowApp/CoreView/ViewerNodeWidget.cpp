@@ -29,6 +29,7 @@ void logic::ViewerNodeWidget::setupUi()
     auto viewerNode = getModelNode();
     _ui.setupUi(this);
     _ui.lineEdit_jsonPath->setText(viewerNode->getFilter());
+    layout()->setMargin(0);
 
     _ui.groupBox->setChecked(viewerNode->getExportToFile());
     _ui.lineEdit_filePath->setText(viewerNode->getFilePath());
