@@ -1,190 +1,279 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Translation Files">
-      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
-      <Extensions>ts</Extensions>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="view">
-      <UniqueIdentifier>{685d1ff7-aebe-4f2c-8faf-8c112410e37d}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="logic">
-      <UniqueIdentifier>{ee2c06cd-6a85-4b7b-ad9a-8b351cef1152}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="view\ConnectionEdge">
-      <UniqueIdentifier>{65ea0b7c-2951-4738-8551-92816762a346}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\Edge">
-      <UniqueIdentifier>{808c5777-8530-41b3-af3d-24b4eeecd10b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\Node">
-      <UniqueIdentifier>{9d63f8cf-a2dc-4ad2-a7d6-10659147b6f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\SceneGraph">
-      <UniqueIdentifier>{8afd23c7-854e-42f5-b9c1-5d62229ff3df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\Slot">
-      <UniqueIdentifier>{c42101a0-2805-45c6-9e5a-cc8e75a8b4c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\AssertionNode">
-      <UniqueIdentifier>{12259613-2490-4087-ace2-3fcad7ad9db3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\EndpointNode">
-      <UniqueIdentifier>{5d2f36f9-e605-47c8-8dd2-fb24b61de8bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\DelayNode">
-      <UniqueIdentifier>{d41969f4-66a6-4fe8-81fe-4cfd17ea107a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\PayloadNode">
-      <UniqueIdentifier>{09ec08b7-a905-40ef-9227-7693766a28fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\ScriptNode">
-      <UniqueIdentifier>{d27c45a8-e056-4d56-887f-1848271fdbc4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logic\ViewerNode">
-      <UniqueIdentifier>{d612693b-e442-424e-84e7-636b13b536c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\Node\ContentWidget">
-      <UniqueIdentifier>{d9802e52-dad7-4802-9dd2-d5097b2cdb62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\Node\ContentWidget\CustomProxyWidget">
-      <UniqueIdentifier>{a0a94389-cd60-42c7-8185-61bb190f513a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="InteractionsHandler">
-      <UniqueIdentifier>{325cc7ad-1d70-4492-aeec-14d0391c77a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\SceneGraphWidget">
-      <UniqueIdentifier>{609695c1-33f7-46d9-abbd-ae44ba30b0b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{08333bda-9987-4d6f-951e-4bfc9f6af715}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="coreview_global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClCompile Include="CoreView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClInclude Include="view\Colors.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="view\SceneGraph.h">
-      <Filter>view\SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="view\ConnectionEdge.h">
-      <Filter>view\ConnectionEdge</Filter>
-    </ClInclude>
-    <ClInclude Include="view\CustomProxyWidget.h">
-      <Filter>view\Node\ContentWidget\CustomProxyWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="InteractionsHandler.h">
-      <Filter>InteractionsHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="view\SceneGraphWidget.h">
-      <Filter>view\SceneGraphWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="CoreView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="logic\AssertionNode.cpp">
-      <Filter>logic\AssertionNode</Filter>
-    </ClCompile>
-    <ClCompile Include="logic\DelayNode.cpp">
-      <Filter>logic\DelayNode</Filter>
-    </ClCompile>
-    <ClCompile Include="logic\EndpointNode.cpp">
-      <Filter>logic\EndpointNode</Filter>
-    </ClCompile>
-    <ClCompile Include="logic\ViewerNode.cpp">
-      <Filter>logic\ViewerNode</Filter>
-    </ClCompile>
-    <ClCompile Include="logic\ScriptNode.cpp">
-      <Filter>logic\ScriptNode</Filter>
-    </ClCompile>
-    <ClCompile Include="logic\PayloadNode.cpp">
-      <Filter>logic\PayloadNode</Filter>
-    </ClCompile>
-    <ClCompile Include="view\Edge.cpp">
-      <Filter>view\Edge</Filter>
-    </ClCompile>
-    <ClCompile Include="view\ContentWidget.cpp">
-      <Filter>view\Node\ContentWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="view\Slot.cpp">
-      <Filter>view\Slot</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="view\ConnectionEdge.cpp">
-      <Filter>view\ConnectionEdge</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="view\Node.cpp">
-      <Filter>view\Node</Filter>
+    <ClCompile Include="view\ContentWidget.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="view\CustomProxyWidget.cpp">
-      <Filter>view\Node\ContentWidget\CustomProxyWidget</Filter>
+    <ClCompile Include="CoreViewUtils.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="view\SceneGraph.cpp">
-      <Filter>view\SceneGraph</Filter>
+    <ClCompile Include="CustomJSONModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomNodeModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\DelayNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="view\Edge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\EndpointNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\ExternalNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExternalNodeSelectionDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericJSONItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="view\GroupNode.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InteractionsHandler.cpp">
-      <Filter>InteractionsHandler</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LargePayloadInfoWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="view\Node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeSearchDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\PayloadNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="view\SceneGraph.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="view\SceneGraphWidget.cpp">
-      <Filter>view\SceneGraphWidget</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\ScriptNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="view\Slot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logic\ViewerNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewerNodeWidget.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="logic\AssertionNode.h">
-      <Filter>logic\AssertionNode</Filter>
+      <Filter>Header Files</Filter>
     </QtMoc>
+    <ClInclude Include="view\Colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="view\ConnectionEdge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="view\ContentWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="CoreViewUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="CustomJSONModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="CustomNodeModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <QtMoc Include="logic\DelayNode.h">
-      <Filter>logic\DelayNode</Filter>
-    </QtMoc>
-    <QtMoc Include="logic\EndpointNode.h">
-      <Filter>logic\EndpointNode</Filter>
-    </QtMoc>
-    <QtMoc Include="logic\ViewerNode.h">
-      <Filter>logic\ViewerNode</Filter>
-    </QtMoc>
-    <QtMoc Include="logic\ScriptNode.h">
-      <Filter>logic\ScriptNode</Filter>
-    </QtMoc>
-    <QtMoc Include="logic\PayloadNode.h">
-      <Filter>logic\PayloadNode</Filter>
+      <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="view\Edge.h">
-      <Filter>view\Edge</Filter>
+      <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="view\ContentWidget.h">
-      <Filter>view\Node\ContentWidget</Filter>
+    <QtMoc Include="logic\EndpointNode.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\ExternalNode.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ExternalNodeSelectionDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="GenericJSONItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="view\GroupNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractionsHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="LargePayloadInfoWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="MiniMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="view\Node.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="NodeSearchDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="logic\PayloadNode.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="view\SceneGraph.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="view\SceneGraphWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="logic\ScriptNode.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="view\Slot.h">
-      <Filter>view\Slot</Filter>
+      <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="view\Node.h">
-      <Filter>view\Node</Filter>
+    <QtMoc Include="logic\ViewerNode.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ViewerNodeWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="coreview_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="ui\AssertNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
     <QtUic Include="ui\DelayNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\EndpointNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\ExternalNodeUi.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="NodeSearchDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\PayloadNodeUi.ui">
@@ -196,5 +285,52 @@
     <QtUic Include="ui\ViewerNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="externalnodeselectiondialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="largepayloadinfowidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="slots\Frame 21.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slots\Frame 24.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slots\Frame 25.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slots\Frame 26.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="slots\Frame 35.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="NodeIcons.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="nodes\assertion.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="nodes\delay.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="nodes\endpoint.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="nodes\external.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="nodes\payload.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="nodes\script.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="nodes\viewer.svg">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

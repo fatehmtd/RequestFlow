@@ -201,7 +201,10 @@ QPointF view::ConnectionEdge::getDestinationPosition() const
         return _headSlot->getCenterPosition();
     case CreationDirection::ORIGIN_TO_DESTINATION:
         return _tailPosition;
+    default:
+        return QPointF();
     }
+    return QPointF();
 }
 
 QPointF view::ConnectionEdge::getOriginPosition() const
@@ -213,5 +216,8 @@ QPointF view::ConnectionEdge::getOriginPosition() const
         return _tailPosition;
     case CreationDirection::ORIGIN_TO_DESTINATION:
         return _headSlot->getCenterPosition();
+    default:
+        return QPointF();
     }
+    return QPointF();
 }

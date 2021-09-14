@@ -28,7 +28,7 @@
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="g6" />
   <g
      id="g6">
     <path
@@ -37,14 +37,15 @@
        id="path2" />
     <path
        d="M21 8v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8zm-2 1h-5V4H5v16h14V9z"
-       id="path4" />
+       id="path4"
+       style="fill:#5c5c5c;fill-opacity:1" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="Layer 1">
     <rect
-       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.43617;stroke-linecap:square;stroke-linejoin:round"
+       style="fill:#5c5c5c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.43617;stroke-linecap:square;stroke-linejoin:round"
        id="rect849"
        width="8.25"
        height="1.725"
@@ -52,7 +53,7 @@
        y="0.94102085"
        transform="rotate(45)" />
     <rect
-       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.43617;stroke-linecap:square;stroke-linejoin:round"
+       style="fill:#5c5c5c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3.43617;stroke-linecap:square;stroke-linejoin:round"
        id="rect849-0"
        width="8.25"
        height="1.725"

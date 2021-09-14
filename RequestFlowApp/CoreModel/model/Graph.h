@@ -16,6 +16,7 @@ class InputSlot;
 class Environment;
 class Project;
 class MessageLogger;
+class ExecutionEngine;
 
 class COREMODEL_EXPORT Graph : public IdentifiableEntity {
     Q_OBJECT
@@ -30,7 +31,11 @@ public:
     QList<Node*> getNodes() const;
     QList<Edge*> getEdges() const;
 
+    QList<Node*> getNodeChildren(Node* node) const;
     QList<Node*> getNodeParents(Node* node) const;
+    QList<Node*> getStartingNodes() const;
+    QList<Node*> getEndingNodes() const;
+
     bool checkIsParent(Node* child, Node* parent) const;
 
     Edge* findEdge(const InputSlot* destination, const OutputSlot* origin) const;
@@ -62,6 +67,9 @@ public:
     bool wasCanceled() const;
     bool hasFailed() const;
     bool hasSucceeded();
+
+    void setExecutionEngine(ExecutionEngine* engine);
+    ExecutionEngine* getExecutionEngine() const;
 
     void setActiveEnvironment(Environment* env);
     Environment* getActiveEnvironment() const;
@@ -104,6 +112,7 @@ private:
     QMap<Node*, std::chrono::system_clock::time_point> _executionTimes;
     Environment* _environment = nullptr;
     MessageLogger* _messageLogger = nullptr;
+    ExecutionEngine* _executionEngine = nullptr;
     QElapsedTimer _elapsedTimer;
     bool _isRunning = false;
     State _currentState, _finalExecutionState;

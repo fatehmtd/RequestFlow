@@ -9,6 +9,8 @@
 #include <QVBoxLayout>
 #include <math.h>
 
+#include <QOpenGLWidget>
+
 #include <QAction>
 #include <QMimeData>
 #include <model/Environment.h>
@@ -60,16 +62,20 @@ void SceneGraphWidget::initUi()
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     // TODO: test other flags
-    setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+    setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::BoundingRectViewportUpdate);
+    //setOptimizationFlag(QGraphicsView::OptimizationFlag::IndirectPainting);
+    //setOptimizationFlag(QGraphicsView::OptimizationFlag::DontAdjustForAntialiasing);
 
     setRenderHint(QPainter::RenderHint::Antialiasing, true);
-    setRenderHint(QPainter::RenderHint::LosslessImageRendering, false);
+    setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
     setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
     setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
     // setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, false);
 
     setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
     setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+
+    //setViewport(new QOpenGLWidget());
 
     _zoomInFactor = 1.5f;
     _zoomStep = 1;
@@ -94,14 +100,14 @@ void SceneGraphWidget::setupViewport(QWidget* widget)
     _sceneGraph->customUpdate();
 }
 
-bool SceneGraphWidget::event(QEvent *ev)
+bool SceneGraphWidget::event(QEvent* ev)
 {
-    switch(ev->type()) {
+    switch (ev->type()) {
     case QEvent::NativeGesture: {
         auto nge = dynamic_cast<QNativeGestureEvent*>(ev);
-        if(nativeGestureEvent(nge)) return true;
-    }
-        break;
+        if (nativeGestureEvent(nge))
+            return true;
+    } break;
     default:
         break;
     }
@@ -208,10 +214,10 @@ void SceneGraphWidget::mouseMiddleButtonReleased(QMouseEvent*)
     setDragMode(QGraphicsView::DragMode::NoDrag);
 }
 
-bool SceneGraphWidget::nativeGestureEvent(QNativeGestureEvent *nativeGestureEvent)
+bool SceneGraphWidget::nativeGestureEvent(QNativeGestureEvent* nativeGestureEvent)
 {
-    if(nativeGestureEvent != nullptr) {
-        if(nativeGestureEvent->gestureType() == Qt::ZoomNativeGesture) {
+    if (nativeGestureEvent != nullptr) {
+        if (nativeGestureEvent->gestureType() == Qt::ZoomNativeGesture) {
             auto zvalue = nativeGestureEvent->value();
             auto lvl = zvalue < 0 ? _zoomStep : -_zoomStep;
             setZoomLevel(getZoomLevel() + lvl);
@@ -420,4 +426,23 @@ void SceneGraphWidget::findNodeDialog() const
 {
     auto dlg = new view::NodeSearchDialog(const_cast<SceneGraphWidget*>(this));
     dlg->exec();
+}
+
+void SceneGraphWidget::centerOnScene()
+{
+    auto childrenList = _sceneGraph->getNodes();
+
+    if (childrenList.isEmpty())
+        return;
+
+    auto node = childrenList.first();
+    auto p = node->scenePos();
+
+    QRectF rect = childrenList.first()->boundingRect().adjusted(p.x(), p.y(), p.x(), p.y());
+    std::for_each(childrenList.begin(), childrenList.end(), [&rect](view::Node* node) {
+        auto p = node->scenePos();
+        rect = rect.united(node->boundingRect().adjusted(p.x(), p.y(), p.x(), p.y()));
+    });
+
+    setCenterAnimated(rect.center());
 }

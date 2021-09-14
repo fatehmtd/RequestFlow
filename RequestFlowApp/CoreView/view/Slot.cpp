@@ -61,6 +61,7 @@ QRectF view::Slot::boundingRect() const
 
 void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
+
     float textSpace = 14;
 
     auto basePos = getBasePosition();
@@ -74,8 +75,8 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     float textX = isInput() ? (boundingRect().width() + textSpace) : (-(textSpace + textRect.width()));
     _title->setPos(textX, -8);
 
-    //setPos(finalPosition);
-
+    //
+//return;
     if (_mouseHovering) { /*
         auto originalBoundingRect = QGraphicsSvgItem::boundingRect();
         float size = std::max(originalBoundingRect.width(), originalBoundingRect.height());
@@ -89,7 +90,10 @@ void view::Slot::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     } else {
         setScale(1.0f);
     }
-
+    //setPos(finalPosition);
+    //QTransform transf;
+    //setTransform(transf.translate(finalPosition.x(), finalPosition.y()));
+    //setTransform()
     QGraphicsSvgItem::paint(painter, option, widget);
 
     /*

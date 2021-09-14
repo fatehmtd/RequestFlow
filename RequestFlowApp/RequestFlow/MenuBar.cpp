@@ -133,18 +133,25 @@ void MainWindow::setupMenuBar()
         _viewMenu->addAction(_ui.dockWidget_logs->toggleViewAction());
 
         _viewMenu->addSeparator();
-        _centerOnSceneAction = _viewMenu->addAction(QIcon(":/ui/focus"), "Center View", [=]() {});
+        _centerOnSceneAction = _viewMenu->addAction(QIcon(":/ui/focus"), "Center View", [=]() {
+            auto sgw = getActiveSceneGraphWidget();
+            if (sgw != nullptr) {
+                sgw->centerOnScene();
+            }
+        });
         //_centerOnSceneAction->setEnabled(false);
 
-        _arrangeNodesAction = _viewMenu->addAction(QIcon(":/ui/arrange-nodes"), "Arrange nodes", [=]() {});
-        //_arrangeNodesAction->setEnabled(false);
+        _arrangeNodesAction = _viewMenu->addAction(QIcon(":/ui/arrange-nodes"), "Arrange nodes", [=]() {
+            auto sgw = getActiveSceneGraphWidget();
+            if (sgw != nullptr) {
+                sgw->getSceneGraph()->rearrangeNodes();
+            }
+        });
 
         _viewMenu->addSeparator();
-        _switchThemeAction = _viewMenu->addAction(QIcon(), "Switch theme...", [=]() {
-            //qDebug() << "clicked on " << _viewMenu;
+        _switchThemeAction = _viewMenu->addAction(QIcon(":/ui/paint"), "Switch theme", [=]() {
             switchTheme();
         });
-        //_switchThemeAction->setEnabled(false);
 
         _viewMenu->addSeparator();
 
@@ -263,20 +270,20 @@ void MainWindow::setupMenuBar()
     {
         _toolsMenu = menuBar()->addMenu("Tools");
         /*
-        _environmentConfigAction = _environmentsMenu->addAction(QIcon(":/ui/environment"), "Configure...", [=]()
-                                                                {
-                                                                    QDialog dialog(this);
-                                                                    dialog.setWindowTitle("Environments");
-                                                                    auto layout = new QVBoxLayout(&dialog);
-                                                                    //layout->setMargin(0);
-                                                                    layout->setSpacing(0);
-                                                                    auto environmentsWidget = new EnvironmentsWidget(&dialog);
-                                                                    layout->addWidget(environmentsWidget);
-                                                                    environmentsWidget->setProject(_project.get());
-                                                                    dialog.exec();
-                                                                });
-        _environmentsMenu->addSeparator();
-        //*/
+		_environmentConfigAction = _environmentsMenu->addAction(QIcon(":/ui/environment"), "Configure...", [=]()
+																{
+																	QDialog dialog(this);
+																	dialog.setWindowTitle("Environments");
+																	auto layout = new QVBoxLayout(&dialog);
+																	//layout->setMargin(0);
+																	layout->setSpacing(0);
+																	auto environmentsWidget = new EnvironmentsWidget(&dialog);
+																	layout->addWidget(environmentsWidget);
+																	environmentsWidget->setProject(_project.get());
+																	dialog.exec();
+																});
+		_environmentsMenu->addSeparator();
+		//*/
         _importSwaggerAction = _toolsMenu->addAction(QIcon(":/ui/swagger"), "Swagger Import...", [=]() { onImportSwagger(); });
         _jsonViewer = _toolsMenu->addAction(QIcon(":/ui/json_file"), "JSON Viewer", [=]() {});
     }

@@ -212,9 +212,12 @@ void view::SceneGraph::drawBackground(QPainter* painter, const QRectF& rect)
     if (!_drawBackground)
         return;
 
+    QColor lightGridColor = qApp->palette().color(QPalette::Window).lighter();
+    painter->fillRect(rect, lightGridColor);
+
     switch (getBackgroundType()) {
     case SOLID:
-        painter->fillRect(rect, QColor("#A8A8A8"));
+        //painter->fillRect(rect, QColor("#A8A8A8"));
         break;
     case DOTS:
         drawDotsBackground(painter, rect);
@@ -238,6 +241,9 @@ void view::SceneGraph::drawForeground(QPainter* painter, const QRectF& rect)
 
 void view::SceneGraph::drawDotsBackground(QPainter* painter, const QRectF& rect) const
 {
+    QColor lightGridColor = qApp->palette().color(QPalette::Highlight).lighter();
+    //QColor darkGridColor = qApp->palette().color(QPalette::Highlight).darker();
+
     const int left = floor(rect.left());
     const int right = ceil(rect.right());
     const int top = floor(rect.top());
@@ -256,12 +262,14 @@ void view::SceneGraph::drawDotsBackground(QPainter* painter, const QRectF& rect)
         }
     }
 
-    QPen pen(QBrush(QColor("#E4E3E4")), 4.0f);
+    QPen pen(QBrush(lightGridColor), 4.0f);
     //painter->fillRect(rect, backgroundBrush());
     //pen.setStyle(Qt::PenStyle::DashLine);
     painter->setPen(pen);
     painter->drawPoints(points.data(), points.size());
 }
+
+#include <QApplication>
 
 void view::SceneGraph::drawGridBackground(QPainter* painter, const QRectF& rect) const
 {
@@ -269,6 +277,9 @@ void view::SceneGraph::drawGridBackground(QPainter* painter, const QRectF& rect)
     const int right = ceil(rect.right());
     const int top = floor(rect.top());
     const int bottom = ceil(rect.bottom());
+
+    QColor lightGridColor = qApp->palette().color(QPalette::Highlight).lighter();
+    QColor darkGridColor = qApp->palette().color(QPalette::Highlight);
 
     // cells
     {
@@ -285,7 +296,7 @@ void view::SceneGraph::drawGridBackground(QPainter* painter, const QRectF& rect)
             _lines.push_back(QLine(left, i, right, i));
         }
 
-        QPen pen(QBrush(_lightGrid), 1.0f);
+        QPen pen(QBrush(lightGridColor), 1.0f);
         pen.setStyle(Qt::PenStyle::DashLine);
         painter->setPen(pen);
         painter->drawLines(_lines);
@@ -308,7 +319,7 @@ void view::SceneGraph::drawGridBackground(QPainter* painter, const QRectF& rect)
             _lines.push_back(QLine(left, i, right, i));
         }
 
-        QPen pen(QBrush(_darkGrid), 1.0f);
+        QPen pen(QBrush(darkGridColor), 2.0f);
         //painter->fillRect(rect, backgroundBrush());
         painter->setPen(pen);
         painter->drawLines(_lines);
@@ -317,6 +328,9 @@ void view::SceneGraph::drawGridBackground(QPainter* painter, const QRectF& rect)
 
 void view::SceneGraph::drawCrossBackground(QPainter* painter, const QRectF& rect) const
 {
+    QColor lightGridColor = qApp->palette().color(QPalette::Highlight).lighter();
+    //QColor darkGridColor = qApp->palette().color(QPalette::Highlight).darker();
+
     const int left = floor(rect.left());
     const int right = ceil(rect.right());
     const int top = floor(rect.top());
@@ -339,7 +353,7 @@ void view::SceneGraph::drawCrossBackground(QPainter* painter, const QRectF& rect
         }
     }
 
-    QPen pen(QBrush(QColor("#E4E3E4")), 2.0f);
+    QPen pen(QBrush(lightGridColor), 2.0f);
     //pen.setStyle(Qt::PenStyle::DashLine);
     //painter->fillRect(rect, backgroundBrush());
     painter->setPen(pen);
@@ -402,6 +416,8 @@ void view::SceneGraph::setupUi()
     _lightGrid = colors::lightestGrey;
     _darkGrid = colors::lightGrey;
     //*/
+
+    setItemIndexMethod(ItemIndexMethod::BspTreeIndex);
 
     const int gridSize = 1 << 14;
     const int hgridSize = gridSize >> 1;
@@ -548,16 +564,17 @@ void view::SceneGraph::bringToFront(QPointF pos) const
 void view::SceneGraph::bringToFront(Node* node) const
 {
     auto collidingItemsList = collidingItems(node);
-    for (auto collidingItem : collidingItemsList) {
-        auto collidingNode = dynamic_cast<Node*>(collidingItem);
 
-        if (collidingNode == nullptr)
-            continue;
-        if (collidingItem == node)
-            continue;
+    std::for_each(collidingItemsList.begin(), collidingItemsList.end(), [node](QGraphicsItem* collidingItem) {
+        if (collidingItem != node) {
 
-        collidingItem->stackBefore(node);
-    }
+            auto collidingNode = dynamic_cast<Node*>(collidingItem);
+
+            if (collidingNode != nullptr) {
+                collidingItem->stackBefore(node);
+            }
+        }
+    });
 }
 
 #include <QUuid>
@@ -605,11 +622,42 @@ void view::SceneGraph::deleteSelectedItems()
 void view::SceneGraph::duplicateSelectedItems()
 {
     qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
+    //TODO: implement duplicateSelectedItems
 }
 
 void view::SceneGraph::renameSelectedNode()
 {
     qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
+    //TODO: implement renameSelectedNode
+}
+
+void view::SceneGraph::rearrangeNodes() const
+{
+    auto startingNodes = getModelGraph()->getStartingNodes();
+
+    if (startingNodes.isEmpty())
+        return;
+
+    double leftMost = findbyModel(startingNodes[0])->scenePos().x();
+    double levelWidth = 1200;
+
+    std::for_each(startingNodes.begin(), startingNodes.end(), [=, &leftMost](model::Node* modelNode) {
+        auto viewNode = findbyModel(modelNode);
+        if (viewNode != nullptr) {
+            viewNode->computeHorizontalLevelForward();
+
+            qreal x = viewNode->scenePos().x();
+            if (leftMost > x) {
+                leftMost = x;
+            }
+        }
+    });
+
+    auto viewNodesList = getNodes();
+    std::for_each(viewNodesList.begin(), viewNodesList.end(), [leftMost, levelWidth](view::Node* viewNode) {
+        auto p = viewNode->scenePos();
+        viewNode->setPos(leftMost + levelWidth * viewNode->getHorizontalLevel(), p.y());
+    });
 }
 
 QRectF view::SceneGraph::computeBoundingRect(const QList<Node*>& nodes, qreal padding) const
@@ -661,6 +709,8 @@ view::MiniMap* view::SceneGraph::getMiniMap() const
 
 void view::SceneGraph::customUpdate()
 {
+    if (views().isEmpty())
+        return;
     auto sgw = dynamic_cast<SceneGraphWidget*>(views().first());
     auto customRect = sgw->mapToScene(sgw->viewport()->rect()).boundingRect();
     getMiniMap()->setParentViewport(customRect);
@@ -732,10 +782,10 @@ void view::SceneGraph::addItem(QGraphicsItem* item)
     if (node != nullptr) {
         connect(node, &view::Node::doubleClicked, this, [=]() {
             auto nodes = getNodes();
-            for (auto node : nodes) {
+            /*for (auto node : nodes) {
                 //if(node->isSelected())
                 //nodes.removeAll(node);
-            }
+            }*/
             clearSelection();
             update();
             qreal multiplier = 2.0;

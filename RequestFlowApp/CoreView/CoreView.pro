@@ -43,6 +43,7 @@ HEADERS += ./coreview_global.h \
     GenericJSONItem.h \
     MiniMap.h \
     NodeSearchDialog.h \
+    view/CustomProxyWidget.h \
     view/GroupNode.h
 SOURCES += ./view/ConnectionEdge.cpp \
     ./ExternalNodeSelectionDialog.cpp \
@@ -68,6 +69,7 @@ SOURCES += ./view/ConnectionEdge.cpp \
     GenericJSONItem.cpp \
     MiniMap.cpp \
     NodeSearchDialog.cpp \
+    view/CustomProxyWidget.cpp \
     view/GroupNode.cpp
 FORMS += ./ui/DelayNodeUi.ui \
     $$PWD/externalnodeselectiondialog.ui \

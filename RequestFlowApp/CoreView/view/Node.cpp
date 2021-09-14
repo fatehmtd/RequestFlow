@@ -103,12 +103,16 @@ void view::Node::setupUi()
     //_icon->setTransformationMode(Qt::TransformationMode::SmoothTransformation);
 }
 
+#include "CustomProxyWidget.h"
+
 void view::Node::setupContentWidget()
 {
     ////////////////////////////
-    auto proxyWidget = new QGraphicsProxyWidget(this);
+    auto proxyWidget = new CustomProxyWidget(this);
+    proxyWidget->setAttribute(Qt::WidgetAttribute::WA_OpaquePaintEvent);
     _contentWidget = new ContentWidget(nullptr);
     proxyWidget->setWidget(_contentWidget);
+    _contentWidget->setAttribute(Qt::WidgetAttribute::WA_OpaquePaintEvent);
 
     // proxyWidget->setVisible(false);
     int top = getHeaderHeight() + getSlotsSectionHeight() + 0;
@@ -153,8 +157,9 @@ void view::Node::setupUIForModel()
 
 QRectF view::Node::boundingRect() const
 {
-    auto rect = QRectF(0, 0, _size.width(), _size.height());
-    return rect;
+    return _boundingRect;
+    //auto rect = QRectF(0, 0, _size.width(), _size.height());
+    //return rect;
 }
 
 void view::Node::setTitle(const QString& txt)
@@ -207,6 +212,8 @@ void view::Node::setSize(int w, int h)
 
     _size.setWidth(w);
     _size.setHeight(h);
+
+    _boundingRect = QRectF(0, 0, w, h);
 
     _bottomRightCorner = _topLeftCorner + QPointF(w, h);
 }
@@ -276,6 +283,62 @@ QString view::Node::getNodeType() const { return _nodeType; }
 
 QColor view::Node::getBackgroundColor() const { return _bgColor; }
 
+void view::Node::resetLevels()
+{
+    _horizontalLevel = -1;
+    _verticalLevel = -1;
+}
+
+void view::Node::computeHorizontalLevelForward()
+{
+    auto modelGraph = getSceneGraph()->getModelGraph();
+    auto modelParentNodes = modelGraph->getNodeParents(getModelNode());
+
+    if (modelParentNodes.isEmpty()) {
+        _horizontalLevel = 0;
+    } else {
+        int maxLevel = getSceneGraph()->findbyModel(modelParentNodes[0])->getHorizontalLevel();
+        int minLevel = maxLevel;
+
+        for (int i = 1; i < modelParentNodes.size(); i++) {
+            int level = getSceneGraph()->findbyModel(modelParentNodes[i])->getHorizontalLevel();
+            if (level > maxLevel) {
+                maxLevel = level;
+            }
+
+            if (level < minLevel) {
+                minLevel = level;
+            }
+        }
+        _horizontalLevel = maxLevel + 1;
+    }
+
+    for (auto modelChildNode : modelGraph->getNodeChildren(getModelNode())) {
+        auto viewChildNode = getSceneGraph()->findbyModel(modelChildNode);
+        if (viewChildNode != nullptr) {
+            viewChildNode->computeHorizontalLevelForward();
+        }
+    }
+}
+
+void view::Node::computeHorizontalLevelBackward()
+{
+}
+
+int view::Node::getHorizontalLevel() const
+{
+    return _horizontalLevel;
+}
+
+void view::Node::computeVerticalLevel()
+{
+}
+
+int view::Node::getVerticalLevel() const
+{
+    return _verticalLevel;
+}
+
 void view::Node::onGraphStarted()
 {
     if (_contentWidget != nullptr) {
@@ -314,6 +377,8 @@ void view::Node::paint(QPainter* painter,
         }
     }
 
+    painter->setClipRect(option->exposedRect);
+
     auto rect = boundingRect();
     int w = rect.width(), h = rect.height();
 
@@ -350,8 +415,7 @@ void view::Node::paint(QPainter* painter,
     {
 
         QPainterPath backgroundPath;
-        // auto bgColor = colors::light::purple;
-        auto bgColor = QColor("#F0F0F0");
+        auto bgColor = _contentWidget->palette().color(QPalette::Window);
         QPen pen(bgColor);
 
         QBrush backgroundBrush(bgColor);
@@ -361,71 +425,6 @@ void view::Node::paint(QPainter* painter,
         painter->setBrush(backgroundBrush);
         painter->drawPath(backgroundPath);
     }
-  }
-
-  auto rect = boundingRect();
-  int w = rect.width(), h = rect.height();
-
-  // Shadow
-  if (true) {
-    float outlineSize = _edgeSize * 3.0f;
-    QPainterPath outlinePath;
-    // outlinePath.setFillRule(Qt::FillRule::WindingFill);
-    outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-
-    QRadialGradient gradient(QPoint(width() * 0.5f, height() * 0.5f),
-                             std::max(w, h) * 0.91f);
-    // gradient.setCenter(300, 300);
-    // gradient.setColorAt(0.0, colors::red);
-    gradient.setColorAt(0.0, QColor(100, 100, 100, 50));
-    // gradient.setColorAt(0.8f, QColor(255, 0, 0, 50));
-    gradient.setColorAt(1.0f, QColor(0, 0, 0, 0));
-    // gradient.setRadius(std::max(w-300, h-300)*2.0f);
-    // gradient.setRadius(300);
-
-    QBrush brush(gradient);
-    QPen pen(brush, outlineSize);
-    // QBrush gradientBrush()
-    painter->setPen(pen);
-    painter->setBrush(Qt::BrushStyle::NoBrush);
-
-    // painter->setBrush(brush);
-    painter->drawPath(outlinePath);
-    // painter->fillRect(outlinePath.boundingRect().toRect(), gradient);
-  }
-  // return;
-
-  // Background
-  {
-    QPainterPath backgroundPath;
-    // auto bgColor = colors::light::purple;
-    //auto bgColor = QColor("#F0F0F0");
-    auto bgColor = _contentWidget->palette().color(QPalette::Window);
-    QPen pen(bgColor);
-
-    QBrush backgroundBrush(bgColor);
-    backgroundPath.setFillRule(Qt::FillRule::WindingFill);
-    backgroundPath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-    painter->setPen(pen);
-    painter->setBrush(backgroundBrush);
-    painter->drawPath(backgroundPath);
-  }
-
-  // Title background
-  {
-    QPainterPath backgroundPath;
-    // auto bgColor = colors::light::yellow;
-    auto bgColor = _bgColor;
-    QPen pen(bgColor);
-
-    float headerHeight = getHeaderHeight() * 0.7f + getSlotsSectionHeight();
-    QBrush backgroundBrush(bgColor);
-    backgroundPath.setFillRule(Qt::FillRule::WindingFill);
-    backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);
-    backgroundPath.addRoundedRect(0, 10, w, headerHeight, 0, 0);
-    painter->setPen(pen);
-    painter->setBrush(backgroundBrush);
-    painter->drawPath(backgroundPath);
 
     // Title background
     {
@@ -443,8 +442,24 @@ void view::Node::paint(QPainter* painter,
         painter->setBrush(backgroundBrush);
         painter->drawPath(backgroundPath);
 
-        // pattern
-        /*
+        // Title background
+        {
+            QPainterPath backgroundPath;
+            // auto bgColor = colors::light::yellow;
+            auto bgColor = _bgColor;
+            QPen pen(bgColor);
+
+            float headerHeight = getHeaderHeight() * 0.7f + getSlotsSectionHeight();
+            QBrush backgroundBrush(bgColor);
+            backgroundPath.setFillRule(Qt::FillRule::WindingFill);
+            backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);
+            backgroundPath.addRoundedRect(0, 10, w, headerHeight, 0, 0);
+            painter->setPen(pen);
+            painter->setBrush(backgroundBrush);
+            painter->drawPath(backgroundPath);
+
+            // pattern
+            /*
     backgroundBrush.setColor(QColor(155, 155, 155));
     backgroundBrush.setStyle(Qt::BrushStyle::Dense3Pattern);
     backgroundPath.addRoundedRect(0, 0, w, headerHeight, _edgeSize, _edgeSize);
@@ -453,29 +468,29 @@ void view::Node::paint(QPainter* painter,
     painter->setBrush(backgroundBrush);
     painter->drawPath(backgroundPath);
     //*/
-    }
-
-    // Outline
-    {
-        if (isSelected()) {
-            QPainterPath outlinePath;
-            outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-            QPen pen(colors::orange, _edgeSize);
-            painter->setPen(pen);
-            painter->setBrush(Qt::BrushStyle::NoBrush);
-            painter->drawPath(outlinePath);
-        } else {
-            QPainterPath outlinePath;
-            outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-            QPen pen(QColor("#4D4B4D"), _edgeSize * 0.25f);
-            painter->setPen(pen);
-            painter->setBrush(Qt::BrushStyle::NoBrush);
-            painter->drawPath(outlinePath);
         }
-    }
 
-    // Outline for resizing
-    if (_isResizing) { /*
+        // Outline
+        {
+            if (isSelected()) {
+                QPainterPath outlinePath;
+                outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
+                QPen pen(colors::orange, _edgeSize);
+                painter->setPen(pen);
+                painter->setBrush(Qt::BrushStyle::NoBrush);
+                painter->drawPath(outlinePath);
+            } else {
+                QPainterPath outlinePath;
+                outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
+                QPen pen(QColor("#4D4B4D"), _edgeSize * 0.25f);
+                painter->setPen(pen);
+                painter->setBrush(Qt::BrushStyle::NoBrush);
+                painter->drawPath(outlinePath);
+            }
+        }
+
+        // Outline for resizing
+        if (_isResizing) { /*
               auto p0 = _topLeftCorner - scenePos();
               auto p1 = _bottomRightCorner - _topLeftCorner;
 
@@ -486,15 +501,16 @@ void view::Node::paint(QPainter* painter,
               painter->setBrush(Qt::BrushStyle::NoBrush);
               painter->drawPath(outlinePath.simplified());
       //*/
-    } else {
-        // Outline Hover
-        if (_mouseHover && !isSelected()) {
-            QPainterPath outlinePath;
-            outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
-            QPen pen(QColor("#FFFFA637"), _edgeSize, Qt::PenStyle::DashDotDotLine);
-            painter->setPen(pen);
-            painter->setBrush(Qt::BrushStyle::NoBrush);
-            painter->drawPath(outlinePath);
+        } else {
+            // Outline Hover
+            if (_mouseHover && !isSelected()) {
+                QPainterPath outlinePath;
+                outlinePath.addRoundedRect(0, 0, w, h, _edgeSize, _edgeSize);
+                QPen pen(QColor("#FFFFA637"), _edgeSize, Qt::PenStyle::DashDotDotLine);
+                painter->setPen(pen);
+                painter->setBrush(Qt::BrushStyle::NoBrush);
+                painter->drawPath(outlinePath);
+            }
         }
     }
 }
@@ -554,31 +570,33 @@ void view::Node::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 }
 
 QVariant view::Node::itemChange(GraphicsItemChange change,
-                                const QVariant &value) {
-  switch (change) {
-  case QGraphicsItem::ItemPositionChange: {
-    auto p = value.toPointF();
-    auto delta = p - _topLeftCorner;
-    _topLeftCorner = p;
-    _bottomRightCorner += delta;
-    scene()->update();
-    // move all the slots
-    {
-        auto childrenList = childItems();
-        std::for_each(childrenList.begin(), childrenList.end(), [](QGraphicsItem* child) {
-            //child->update();
-            auto slot = dynamic_cast<view::Slot*>(child);
-            if(slot != nullptr) {
-                slot->setPos(slot->getBasePosition() - QPointF(10, 10));
-            }
-        });
+    const QVariant& value)
+{
+    switch (change) {
+    case QGraphicsItem::ItemScaleChange:
+    case QGraphicsItem::ItemPositionChange: {
+        auto p = value.toPointF();
+        auto delta = p - _topLeftCorner;
+        _topLeftCorner = p;
+        _bottomRightCorner += delta;
+
+        //scene()->update();
+        break;
     }
-    break;
-  }
-  default:
-    break;
-  }
-  return QGraphicsObject::itemChange(change, value);
+    default:
+        break;
+    }
+
+    // update the slots positions
+    for (auto childItem : childItems()) {
+        auto slot = dynamic_cast<view::Slot*>(childItem);
+        if (slot != nullptr) {
+            auto pos = slot->getBasePosition();
+            pos += QPointF(-10, -10);
+            slot->setPos(pos);
+        }
+    }
+    return QGraphicsObject::itemChange(change, value);
 }
 
 void view::Node::doResize(QGraphicsSceneMouseEvent* event)
@@ -633,14 +651,8 @@ void view::Node::doResize(QGraphicsSceneMouseEvent* event)
         item->update();
     });
 
-  auto childrenList = childItems();
-
-  std::for_each(childrenList.begin(), childrenList.end(), [](QGraphicsItem* child) {
-      child->update();
-  });
-
-  update();
-  scene()->update();
+    update();
+    scene()->update();
 }
 
 int view::Node::computeGripCorner(const QPointF& p)

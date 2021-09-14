@@ -24,6 +24,8 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget* parent = nullptr);
 
+    void openProject(const QString& path);
+
 public slots:
     void onSceneDeleted(QString identifier);
     void onActivateScene(model::Graph* scene);
@@ -42,8 +44,7 @@ private:
     void setupUi();
     void setupMenuBar();
     void setupEnvironmentsWidget();
-    void setupSceneGraph();
-    void openProject(const QString& path);
+    void setupSceneGraph();    
     void setProject(model::Project* project);
 
     // about menu

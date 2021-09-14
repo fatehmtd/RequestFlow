@@ -1,42 +1,111 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="459px" height="459px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
-<g>
-	<g id="image">
-		<path d="M459,408V51c0-28.05-22.95-51-51-51H51C22.95,0,0,22.95,0,51v357c0,28.05,22.95,51,51,51h357
-			C436.05,459,459,436.05,459,408z M140.25,267.75l63.75,76.5l89.25-114.75L408,382.5H51L140.25,267.75z"/>
+
+<svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   width="459px"
+   height="459px"
+   viewBox="0 0 459 459"
+   style="enable-background:new 0 0 459 459;"
+   xml:space="preserve"
+   sodipodi:docname="background.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs40"><linearGradient
+     inkscape:collect="always"
+     id="linearGradient879"><stop
+       style="stop-color:#000000;stop-opacity:1;"
+       offset="0"
+       id="stop875" /><stop
+       style="stop-color:#000000;stop-opacity:0;"
+       offset="1"
+       id="stop877" /></linearGradient><linearGradient
+     inkscape:collect="always"
+     xlink:href="#linearGradient879"
+     id="linearGradient881"
+     x1="0"
+     y1="229.5"
+     x2="459"
+     y2="229.5"
+     gradientUnits="userSpaceOnUse" /></defs><sodipodi:namedview
+   id="namedview38"
+   pagecolor="#505050"
+   bordercolor="#ffffff"
+   borderopacity="1"
+   inkscape:pageshadow="0"
+   inkscape:pageopacity="0"
+   inkscape:pagecheckerboard="1"
+   showgrid="false"
+   inkscape:zoom="1.8344227"
+   inkscape:cx="229.77257"
+   inkscape:cy="229.77257"
+   inkscape:window-width="1920"
+   inkscape:window-height="1027"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="g5" />
+<g
+   id="g5">
+	<g
+   id="image"
+   style="fill:#5c5c5c;fill-opacity:1">
+		<path
+   d="M459,408V51c0-28.05-22.95-51-51-51H51C22.95,0,0,22.95,0,51v357c0,28.05,22.95,51,51,51h357    C436.05,459,459,436.05,459,408z M140.25,267.75l63.75,76.5l89.25-114.75L408,382.5H51L140.25,267.75z"
+   id="path2"
+   style="fill:#5c5c5c;fill-opacity:1" />
 	</g>
 </g>
-<g>
+<g
+   id="g7">
 </g>
-<g>
+<g
+   id="g9">
 </g>
-<g>
+<g
+   id="g11">
 </g>
-<g>
+<g
+   id="g13">
 </g>
-<g>
+<g
+   id="g15">
 </g>
-<g>
+<g
+   id="g17">
 </g>
-<g>
+<g
+   id="g19">
 </g>
-<g>
+<g
+   id="g21">
 </g>
-<g>
+<g
+   id="g23">
 </g>
-<g>
+<g
+   id="g25">
 </g>
-<g>
+<g
+   id="g27">
 </g>
-<g>
+<g
+   id="g29">
 </g>
-<g>
+<g
+   id="g31">
 </g>
-<g>
+<g
+   id="g33">
 </g>
-<g>
+<g
+   id="g35">
 </g>
 </svg>

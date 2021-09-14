@@ -1,155 +1,192 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
     <Filter Include="Form Files">
       <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
       <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="MainWindow">
-      <UniqueIdentifier>{442dfb8f-7eb4-4907-960f-9ebd261752ed}</UniqueIdentifier>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Widgets">
-      <UniqueIdentifier>{a5873439-36d0-4953-a916-a8e6c3a82a05}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Widgets\EnvironmentsWidget">
-      <UniqueIdentifier>{3cdbb07d-f31d-4331-8949-210e4c283d24}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Widgets\ActionToolBar">
-      <UniqueIdentifier>{f716ad78-a1c4-4056-929a-e1054bf39353}</UniqueIdentifier>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Widgets\ActionToolBar\ActionGroup">
-      <UniqueIdentifier>{96191848-b9a8-4823-a5ab-a32541bc72af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets\ActionToolBar\ActionItem">
-      <UniqueIdentifier>{2d1e772c-a79a-4267-9762-f0b760fda269}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets\ActionToolBar\ActionPage">
-      <UniqueIdentifier>{b96f7731-ef0e-4fb4-91f8-3803cf731023}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets\ScenariosWidget">
-      <UniqueIdentifier>{a95cad9b-967f-47f0-ba33-44a702e4cb05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SettingsManager">
-      <UniqueIdentifier>{df59b533-0f6e-4606-bfb7-dbe8d1bd08d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets\InventoryWidget">
-      <UniqueIdentifier>{bcfd1626-a6d0-4b42-9c17-e6f43dcc89d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets\GraphLogMessagesWidget">
-      <UniqueIdentifier>{f1a39ea4-344a-4321-859f-cb42b5082579}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets\LogMessagesWidget">
-      <UniqueIdentifier>{a2f052c8-a0fd-4cf2-9dd8-4d091a7f6f44}</UniqueIdentifier>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="BleachUI.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="AboutWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionToolBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AppSettingDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentsModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentsWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphLogMessagesWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryItemModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogMessagesWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainWindow.cpp">
-      <Filter>MainWindow</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnvironmentsWidget.cpp">
-      <Filter>Widgets\EnvironmentsWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionGroup.cpp">
-      <Filter>Widgets\ActionToolBar\ActionGroup</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionItem.cpp">
-      <Filter>Widgets\ActionToolBar\ActionItem</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionPage.cpp">
-      <Filter>Widgets\ActionToolBar\ActionPage</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionToolBar.cpp">
-      <Filter>Widgets\ActionToolBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ScenariosWidget.cpp">
-      <Filter>Widgets\ScenariosWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="InventoryWidget.cpp">
-      <Filter>Widgets\InventoryWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="LogMessagesWidget.cpp">
-      <Filter>Widgets\LogMessagesWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphLogMessagesWidget.cpp">
-      <Filter>Widgets\GraphLogMessagesWidget</Filter>
+    <ClCompile Include="MenuBar.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SettingsManager.cpp">
-      <Filter>SettingsManager</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StartupDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="AboutWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionGroup.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="ActionItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="ActionPage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ActionToolBar.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AppSettingDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="BackgroundPaintFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentsModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="EnvironmentsWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GraphLogMessagesWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="InventoryItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="InventoryItemModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="InventoryWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LogMessagesWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SettingsManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="StartupDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ActionItem.h">
-      <Filter>Widgets\ActionToolBar\ActionItem</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsManager.h">
-      <Filter>SettingsManager</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="MainWindow.h">
-      <Filter>MainWindow</Filter>
-    </QtMoc>
-    <QtMoc Include="EnvironmentsWidget.h">
-      <Filter>Widgets\EnvironmentsWidget</Filter>
-    </QtMoc>
-    <QtMoc Include="ActionGroup.h">
-      <Filter>Widgets\ActionToolBar\ActionGroup</Filter>
-    </QtMoc>
-    <QtMoc Include="ActionPage.h">
-      <Filter>Widgets\ActionToolBar\ActionPage</Filter>
-    </QtMoc>
-    <QtMoc Include="ActionToolBar.h">
-      <Filter>Widgets\ActionToolBar</Filter>
-    </QtMoc>
-    <QtMoc Include="ScenariosWidget.h">
-      <Filter>Widgets\ScenariosWidget</Filter>
-    </QtMoc>
-    <QtMoc Include="InventoryWidget.h">
-      <Filter>Widgets\InventoryWidget</Filter>
-    </QtMoc>
-    <QtMoc Include="LogMessagesWidget.h">
-      <Filter>Widgets\LogMessagesWidget</Filter>
-    </QtMoc>
-    <QtMoc Include="GraphLogMessagesWidget.h">
-      <Filter>Widgets\GraphLogMessagesWidget</Filter>
-    </QtMoc>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="ui\MainWindow.ui">
+    <QtUic Include="ui\AboutWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\ActionGroup.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\ActionPage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ui\AppSettingDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ui\DelayNodeUi.ui">
@@ -170,6 +207,9 @@
     <QtUic Include="ui\LogMessagesWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="ui\MainWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
     <QtUic Include="ui\ModifierNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -182,18 +222,808 @@
     <QtUic Include="ui\ScriptNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="StartupDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
     <QtUic Include="ui\ViewerNodeUi.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="BleachUI.rc">
+    <None Include="qdarkstyle\theme\rc\.keep">
       <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    </None>
+    <QtRcc Include="RequestFlow.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="icons\RequestFlowLogo-256.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\arrange.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_down_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_left_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_right_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\arrow_up_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\background.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\base_icon_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\brackets.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_closed_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_end_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_line_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_more_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\branch_open_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\broom.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_checked_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_indeterminate_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\checkbox_unchecked_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\contact.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\curly_brakets.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\del.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\delete.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\duplicate.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\edge_curve.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\edge_line.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\execution.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\external_link.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\file_close.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\focus.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\get.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\hastag.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\history.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\information.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\inventory.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\json-file.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="license.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_horizontal_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\line_vertical_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\minimap-bottom-left.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\minimap-bottom-right.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\minimap-top-left.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\minimap-top-right.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\minimap.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\minus.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\network.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\new_file.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\open_file.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\pen.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\play.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\plus.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\post.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\put.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\quit.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_checked_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\radio_unchecked_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\redo.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\requestflow_bg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\right-arrow.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\save_file.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\scenario.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\search.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\server.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\settings.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\slot.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\stop.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="qdarkstyle\theme\style.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="qdarkstyle\theme\style.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\swagger.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_horizontal_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_move_vertical_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_horizontal_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\toolbar_separator_vertical_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\transparent_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\twitter.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\undo.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\unlock.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_close_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_grip_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_minimize_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock_disabled.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock_disabled@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock_focus@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock_pressed.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qdarkstyle\theme\rc\window_undock_pressed@2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icons\network.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ResourceCompile Include=".\RequestFlow_resource.rc" />
   </ItemGroup>
 </Project>

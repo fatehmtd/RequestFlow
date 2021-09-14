@@ -73,6 +73,8 @@ public:
         LINES
     };
 
+    void rearrangeNodes() const;
+
     QRectF computeBoundingRect(const QList<view::Node*>& nodes, qreal padding = 0) const;
 
     void setBackgroundType(BackgroundType bgType);

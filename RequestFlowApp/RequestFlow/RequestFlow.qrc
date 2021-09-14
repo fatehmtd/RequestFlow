@@ -50,6 +50,7 @@
         <file alias="focus">icons/focus.svg</file>
         <file alias="background">icons/background.svg</file>
         <file alias="patch">icons/patch.svg</file>
+        <file alias="paint">icons/paint.svg</file>
     </qresource>
     <qresource prefix="/misc">
         <file>license.txt</file>

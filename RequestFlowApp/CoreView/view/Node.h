@@ -1,162 +1,173 @@
 #pragma once
 #include "coreview_global.h"
 
-#include <QGraphicsSvgItem>
-#include <QGraphicsItem>
-#include <QGraphicsTextItem>
-#include <QGraphicsObject>
-#include <QGraphicsWidget>
-#include <QGraphicsPixmapItem>
-#include <QIcon>
-#include <QPixmap>
-#include <QObject>
-#include <QJSValue>
-#include <QJSEngine>
-#include <model/Node.h>
-#include "ContentWidget.h"
 #include "Colors.h"
+#include "ContentWidget.h"
+#include <QGraphicsItem>
+#include <QGraphicsObject>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsSvgItem>
+#include <QGraphicsTextItem>
+#include <QGraphicsWidget>
+#include <QIcon>
+#include <QJSEngine>
+#include <QJSValue>
+#include <QObject>
+#include <QPixmap>
+#include <model/Node.h>
 
 #include "SceneGraph.h"
 
-namespace modelr
-{
-	class PersistenceHandler;
+namespace modelr {
+class PersistenceHandler;
 }
 
-namespace view
-{
-	class Slot;
-	class SceneGraph;
+namespace view {
+class Slot;
+class SceneGraph;
 
-    class COREVIEW_EXPORT Node : public QGraphicsObject, public model::PersistableEntity
-	{
-		Q_OBJECT
-	public:
-		Node(model::Node* modelNode, QString nodeType);
-		~Node();
+class COREVIEW_EXPORT Node : public QGraphicsObject, public model::PersistableEntity {
+    Q_OBJECT
+public:
+    Node(model::Node* modelNode, QString nodeType);
+    ~Node();
 
-		int width() const;
-		int height() const;
+    int width() const;
+    int height() const;
 
-		int getSlotIndex(const Slot* slot) const;
-		ContentWidget* getContentWidget() const;
+    int getSlotIndex(const Slot* slot) const;
+    ContentWidget* getContentWidget() const;
 
-		model::Node* getModelNode() const;
+    model::Node* getModelNode() const;
 
-		template <class T>
-		T getModelNode() const
-		{
-			return dynamic_cast<T>(getModelNode());
-		}
+    template <class T>
+    T getModelNode() const
+    {
+        return dynamic_cast<T>(getModelNode());
+    }
 
-		Slot* getSlot(const QString& name) const;
+    Slot* getSlot(const QString& name) const;
 
-		// Inherited via QGraphicsItem
-		virtual QRectF boundingRect() const override;
+    // Inherited via QGraphicsItem
+    virtual QRectF boundingRect() const override;
 
-		void setTitle(const QString& txt);
-		QString getTitle() const;
+    void setTitle(const QString& txt);
+    QString getTitle() const;
 
-		void setSize(int w, int h);
+    void setSize(int w, int h);
 
-		float getSlotHeight() const;
-		float getHeaderHeight() const;
-		float getSlotsSectionHeight() const;
-		float getContentHeight() const;
+    float getSlotHeight() const;
+    float getHeaderHeight() const;
+    float getSlotsSectionHeight() const;
+    float getContentHeight() const;
 
-		void setMinSize(QSize size);
-        void setMinSize(int w, int h);
-		QSize getMinSize() const;
+    void setMinSize(QSize size);
+    void setMinSize(int w, int h);
+    QSize getMinSize() const;
 
-        void setMaxSize(QSize size);
-        void setMaxSize(int w, int h);
-        QSize getMaxSize() const;
+    void setMaxSize(QSize size);
+    void setMaxSize(int w, int h);
+    QSize getMaxSize() const;
 
-        void setSvgIcon(QString path);
+    void setSvgIcon(QString path);
 
-		virtual void clearUI();
+    virtual void clearUI();
 
-		bool isResizable() const;
-		void setResizable(bool status);
+    bool isResizable() const;
+    void setResizable(bool status);
 
-		view::SceneGraph* getSceneGraph() const;
+    view::SceneGraph* getSceneGraph() const;
 
-		QString getNodeType() const;
+    QString getNodeType() const;
 
-        QColor getBackgroundColor() const;
+    QColor getBackgroundColor() const;
 
-	private slots:
-		void onGraphStarted();
-        void onGraphFinished();
+    void resetLevels();
+    void computeHorizontalLevelForward();
+    void computeHorizontalLevelBackward();
+    int getHorizontalLevel() const;
 
-    signals:
-        void doubleClicked();
+    void computeVerticalLevel();
+    int getVerticalLevel() const;
 
-	protected:
-		enum Handle
-		{
-			LEFT = 1,
-			RIGHT = 2,
-			TOP = 4,
-			BOTTOM = 8,
-			TOP_LEFT = 5,
-			TOP_RIGHT = 6,
-			BOTTOM_LEFT = 9,
-			BOTTOM_RIGHT = 10
-		};
+private slots:
+    void onGraphStarted();
+    void onGraphFinished();
 
-		virtual void setupUi();
-		virtual void setupContentWidget();
-		virtual void setupUIForModel();
-		virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+signals:
+    void doubleClicked();
 
-		virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event)	 override;
-		virtual void mousePressEvent(QGraphicsSceneMouseEvent* event)	 override;
-		virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event)	 override;
-
-		virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
-		virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
-		virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
-		virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
-
-		void doResize(QGraphicsSceneMouseEvent* event);
-	private:
-		int computeGripCorner(const QPointF& cursorPos);
-		void handleResize(const QPointF& pos);
-
-        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-
-	protected:
-		model::Node* _node = nullptr;
-		QGraphicsTextItem* _title = nullptr;
-        QGraphicsSvgItem* _icon = nullptr;
-		ContentWidget* _contentWidget = nullptr;
-		QSize _size;
-		int _padding;
-		int _edgeSize;
-		QPointF _mouseShift;
-		QColor _bgColor;
-		bool _mouseHover = false;
-
-		// resizing
-		QPointF _anchorPoint;
-		int _cursorResizeMode = false;
-		bool _resizeEligible = false;
-		bool _isResizing = false;
-		QPointF _topLeftCorner, _bottomRightCorner;
-		bool _firstTimeResize = true;
-		QSize _minSize;
-        QSize _maxSize;
-		bool _isResizable = true;
-		QPixmap _pixmap;
-		bool _painted = false;
-	private:
-        QString _nodeType;
-
-        // PersistableEntity interface
-    public:
-        QJSValue saveToJSValue(model::PersistenceHandler *persistenceHandler) const override;
-        bool loadFromJSValue(const QJSValue &value) override;
+protected:
+    enum Handle {
+        LEFT = 1,
+        RIGHT = 2,
+        TOP = 4,
+        BOTTOM = 8,
+        TOP_LEFT = 5,
+        TOP_RIGHT = 6,
+        BOTTOM_LEFT = 9,
+        BOTTOM_RIGHT = 10
     };
-}
 
+    virtual void setupUi();
+    virtual void setupContentWidget();
+    virtual void setupUIForModel();
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
+
+    void doResize(QGraphicsSceneMouseEvent* event);
+
+private:
+    int computeGripCorner(const QPointF& cursorPos);
+    void handleResize(const QPointF& pos);
+
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
+
+protected:
+    model::Node* _node = nullptr;
+    QGraphicsTextItem* _title = nullptr;
+    QGraphicsSvgItem* _icon = nullptr;
+    ContentWidget* _contentWidget = nullptr;
+    QSize _size;
+    int _padding;
+    int _edgeSize;
+    QPointF _mouseShift;
+    QColor _bgColor;
+    bool _mouseHover = false;
+
+    QRectF _boundingRect;
+
+    // reorganizing
+    int _horizontalLevel = -1;
+    int _verticalLevel = -1;
+
+    // resizing
+    QPointF _anchorPoint;
+    int _cursorResizeMode = false;
+    bool _resizeEligible = false;
+    bool _isResizing = false;
+    QPointF _topLeftCorner, _bottomRightCorner;
+    bool _firstTimeResize = true;
+    QSize _minSize;
+    QSize _maxSize;
+    bool _isResizable = true;
+    QPixmap _pixmap;
+    bool _painted = false;
+
+private:
+    QString _nodeType;
+
+    // PersistableEntity interface
+public:
+    QJSValue saveToJSValue(model::PersistenceHandler* persistenceHandler) const override;
+    bool loadFromJSValue(const QJSValue& value) override;
+};
+}

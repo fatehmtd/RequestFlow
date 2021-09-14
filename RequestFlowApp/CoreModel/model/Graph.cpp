@@ -47,16 +47,54 @@ QList<model::Edge*> model::Graph::getEdges() const
     return findChildren<Edge*>();
 }
 
+QList<model::Node*> model::Graph::getNodeChildren(Node* node) const
+{
+    QList<Node*> childrenNodes;
+    for (auto slot : node->getOutputSlots()) {
+        for (auto edge : findEdges(slot)) {
+            auto childNode = edge->getDestinationSlot()->getNode();
+            if (childNode != nullptr) {
+                childrenNodes << childNode;
+            }
+        }
+    }
+    return childrenNodes;
+}
+
 QList<model::Node*> model::Graph::getNodeParents(Node* node) const
 {
     QList<Node*> parentsNodes;
     for (auto slot : node->getInputSlots()) {
         for (auto edge : findEdges(slot)) {
             auto parentNode = edge->getOriginSlot()->getNode();
-            parentsNodes << parentNode;
+            if (parentNode != nullptr) {
+                parentsNodes << parentNode;
+            }
         }
     }
     return parentsNodes;
+}
+
+QList<model::Node*> model::Graph::getStartingNodes() const
+{
+    QList<Node*> output;
+    for (auto node : getNodes()) {
+        if (node->getInputSlots().isEmpty()) {
+            output << node;
+        }
+    }
+    return output;
+}
+
+QList<model::Node*> model::Graph::getEndingNodes() const
+{
+    QList<Node*> output;
+    for (auto node : getNodes()) {
+        if (node->getOutputSlots().isEmpty()) {
+            output << node;
+        }
+    }
+    return output;
 }
 
 bool model::Graph::checkIsParent(Node* child, Node* parent) const
@@ -176,6 +214,16 @@ bool model::Graph::hasSucceeded()
     return _finalExecutionState == State::SUCCEEDED;
 }
 
+void model::Graph::setExecutionEngine(ExecutionEngine* engine)
+{
+    _executionEngine = engine;
+}
+
+model::ExecutionEngine* model::Graph::getExecutionEngine() const
+{
+    return _executionEngine;
+}
+
 void model::Graph::setActiveEnvironment(Environment* env)
 {
     _environment = env;
@@ -197,6 +245,7 @@ QJSValue model::Graph::saveToJSValue(PersistenceHandler* persistenceHandler) con
     return value;
 }
 
+#include "../ExecutionEngine.h"
 #include "AssertionNode.h"
 #include "DelayNode.h"
 #include "EndpointNode.h"
@@ -228,6 +277,7 @@ bool model::Graph::loadFromJSValue(const QJSValue& v)
 
 model::Node* model::Graph::createNodeFromJSValue(const QJSValue& value)
 {
+    // TODO: separate the creation logic from the graph, use a node manager
     QMap<QString, QMetaObject> nodesMap;
     nodesMap["Payload"] = PayloadNode::staticMetaObject;
     nodesMap["Endpoint"] = EndpointNode::staticMetaObject;

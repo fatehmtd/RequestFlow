@@ -8,6 +8,8 @@
 #include <QPen>
 #include <math.h>
 
+#include <QApplication>
+
 view::Edge::Edge(SceneGraph* graph, model::Edge* edge)
     : _edge(edge)
 {
@@ -25,7 +27,7 @@ view::Edge::Edge(SceneGraph* graph, model::Edge* edge)
     setAcceptHoverEvents(true);
     _thickness = 9.0f;
 
-    _idleColor = QColor("#4D4B4D");
+    _idleColor = QColor("#E1E1E1");
     _successColor = colors::blue;
     _failureColor = colors::red;
     _hoverColor = colors::orange;
@@ -49,7 +51,7 @@ QPainterPath view::Edge::shape() const
 void view::Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     painter->setClipPath(shape());
-    painter->setClipRect(option->exposedRect);
+    //painter->setClipRect(option->exposedRect);
 
     //auto inPosition = _slotDestination->getBasePosition(true);
     //auto outPosition = _slotOrigin->getBasePosition(true);
@@ -142,6 +144,20 @@ QPainterPath view::Edge::buildPathSegmented() const
 
 QRectF view::Edge::boundingRect() const
 {
+    if (_slotDestination == nullptr || _slotOrigin == nullptr)
+        return QRectF();
+    /*
+    auto p0 = _slotDestination->getCenterPosition();
+    auto p1 = _slotOrigin->getCenterPosition();
+
+    qreal minX = qMin(p0.x(), p1.x());
+    qreal maxX = qMax(p0.x(), p1.x());
+
+    qreal minY = qMin(p0.y(), p1.y());
+    qreal maxY = qMax(p0.y(), p1.y());
+
+    return QRectF(minX, minY, maxX - minX, maxY - minY);
+    //*/
 
     auto s = scene();
     auto v = s->views()[0];
@@ -150,8 +166,10 @@ QRectF view::Edge::boundingRect() const
     //*/
 
     //return buildPath().boundingRect().adjusted(-50, -50, 50, 50).normalized();
-    /*
+
     //TODO: fix this workaround to render using the proper boundingRect
+    /*
+    auto modelEdge = getModelEdge();
     float size = 1 << 13;
     float hsize = size * 0.5f;
     return QRectF(-hsize, -hsize, size, size);
@@ -180,8 +198,12 @@ QColor view::Edge::evalColor() const
     switch (_transferStatus) {
     case -1: // faillure
         return _failureColor;
-    case 0:
+    case 0: {
+        auto bg = qApp->palette().color(QPalette::AlternateBase).darker();
+        //_idleColor = QColor(255 - bg.red(), 255 - bg.green(), 255 - bg.blue());
+        _idleColor = bg;
         return _idleColor;
+    }
     case 1:
         return _successColor;
     }
