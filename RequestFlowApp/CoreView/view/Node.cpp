@@ -162,6 +162,11 @@ QRectF view::Node::boundingRect() const
     //return rect;
 }
 
+QPointF view::Node::getCenter() const
+{
+    return QPointF(_size.width() / 2, _size.height() / 2) + scenePos();
+}
+
 void view::Node::setTitle(const QString& txt)
 {
     QString sanitizedName = txt.trimmed();

@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
     // force the fusion style on Mac for now
     //#ifdef Q_OS_MAC
-    qDebug() << QStyleFactory::keys();
+    //qDebug() << QStyleFactory::keys();
     a.setStyle(QStyleFactory::create("Fusion"));
     //#endif
 

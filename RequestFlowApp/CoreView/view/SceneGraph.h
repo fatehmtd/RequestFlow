@@ -33,6 +33,7 @@ public:
 
     void createGeometricNodesForModel();
 
+    QList<Node*> getNodeChildren(view::Node* node) const;
     QList<Node*> getNodes() const;
     QList<Edge*> getEdges() const;
 

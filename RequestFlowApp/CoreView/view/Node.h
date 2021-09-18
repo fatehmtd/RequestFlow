@@ -51,6 +51,8 @@ public:
     // Inherited via QGraphicsItem
     virtual QRectF boundingRect() const override;
 
+    QPointF getCenter() const;
+
     void setTitle(const QString& txt);
     QString getTitle() const;
 

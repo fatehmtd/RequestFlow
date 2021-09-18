@@ -107,6 +107,17 @@ void view::SceneGraph::createGeometricNodesForModel()
     update();
 }
 
+QList<view::Node*> view::SceneGraph::getNodeChildren(Node* node) const
+{
+    QList<view::Node*> output;
+
+    auto modelChildrenNodes = getModelGraph()->getNodeChildren(node->getModelNode());
+    std::for_each(modelChildrenNodes.begin(), modelChildrenNodes.end(), [this, &output](model::Node* child) {
+        output << findbyModel(child);
+    });
+    return output;
+}
+
 QList<view::Node*> view::SceneGraph::getNodes() const
 {
     QList<Node*> nodesList;
@@ -638,8 +649,10 @@ void view::SceneGraph::rearrangeNodes() const
     if (startingNodes.isEmpty())
         return;
 
+    // First step: layout from left to right
+
     double leftMost = findbyModel(startingNodes[0])->scenePos().x();
-    double levelWidth = 1200;
+    double levelWidth = 10;
 
     std::for_each(startingNodes.begin(), startingNodes.end(), [=, &leftMost](model::Node* modelNode) {
         auto viewNode = findbyModel(modelNode);
@@ -657,6 +670,87 @@ void view::SceneGraph::rearrangeNodes() const
     std::for_each(viewNodesList.begin(), viewNodesList.end(), [leftMost, levelWidth](view::Node* viewNode) {
         auto p = viewNode->scenePos();
         viewNode->setPos(leftMost + levelWidth * viewNode->getHorizontalLevel(), p.y());
+    });
+
+    // Second step: iteratively attract and repel
+    int numIterations = 100;
+    const qreal maxThreshold = 1200.0;
+    const qreal minThreshold = 600.0;
+    const qreal deltaStep = 10.0;
+
+    auto computeLength = [](const QPointF& a, const QPointF& b) {
+        return sqrt(pow(b.x() - a.x(), 2.0) + pow(b.y() - a.y(), 2.0));
+    };
+
+    //TODO: create a better rearrangement algorithm
+    while (true) {
+
+        std::for_each(viewNodesList.begin(), viewNodesList.end(), [=](view::Node* viewNode) {
+            auto currentCenter = viewNode->getCenter();
+
+            ////////////////////
+            std::for_each(viewNodesList.begin(), viewNodesList.end(), [=](view::Node* neighborNode) {
+                if (neighborNode == viewNode)
+                    return; // skip self
+                auto neighborCenter = neighborNode->getCenter();
+
+                // compute the distance
+                auto dist = computeLength(currentCenter, neighborCenter);
+
+                QPointF dirVec = (neighborCenter - currentCenter);
+                if (dist < 1.0f) {
+                    dirVec = QPointF(1, 1);
+                } else {
+                    dirVec /= dist;
+                }
+
+                // check if the nodes are connected
+                // if the nodes are connected :
+                //      if dist < minThreshold -> move away from neighbor
+                //      else move towards neighbor
+                // else
+                //      if dist > maxThreshold -> skip
+                //      else move neighbor away from the current node
+
+                if (getModelGraph()->checkIsParent(neighborNode->getModelNode(), viewNode->getModelNode())) {
+                    if (dist < minThreshold) {
+                        // move away from neighbor
+                        viewNode->setPos(viewNode->scenePos() - (dirVec * deltaStep));
+                    } else {
+                        // move towards the neighbor
+                        viewNode->setPos(viewNode->scenePos() + (dirVec * deltaStep));
+                    }
+                } else {
+                    if (dist < maxThreshold) {
+                        // move neighbor away from the current node
+                        neighborNode->setPos(neighborNode->scenePos() + (dirVec * deltaStep));
+                        auto neighborChildrenNodes = getNodeChildren(neighborNode);
+                        std::for_each(neighborChildrenNodes.begin(), neighborChildrenNodes.end(),
+                            [dirVec, deltaStep](view::Node* neighborChild) {
+                                neighborChild->setPos(neighborChild->scenePos() + (dirVec * deltaStep));
+                            });
+                    }
+                }
+            });
+            ////////////////////
+        });
+
+        --numIterations;
+        if (numIterations <= 0)
+            break;
+    }
+
+    QPointF center;
+    std::for_each(viewNodesList.begin(), viewNodesList.end(), [&center](view::Node* viewNode) {
+        auto p = viewNode->scenePos();
+        center += p;
+    });
+
+    center /= viewNodesList.size();
+
+    std::for_each(viewNodesList.begin(), viewNodesList.end(), [center](view::Node* viewNode) {
+        auto p = viewNode->scenePos();
+        viewNode->setPos(p - center);
     });
 }
 

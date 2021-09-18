@@ -94,7 +94,7 @@ signals:
     void started();
     void stopped();
     void canceled();
-    void failed(Node* node, QString reason);
+    void failed(model::Node* node, QString reason);
     void failed();
     void succeeded();
 
