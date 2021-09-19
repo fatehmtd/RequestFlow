@@ -202,7 +202,8 @@ void MainWindow::onAbout()
     dialog->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
     dialog->setWindowFlag(Qt::WindowType::WindowMinMaxButtonsHint, false);
     dialog->setWindowFlag(Qt::WindowType::WindowContextHelpButtonHint, false);
-    dialog->setWindowFlag(Qt::WindowType::WindowTitleHint, false);
+    dialog->setWindowFlag(Qt::WindowType::WindowTitleHint, true);
+    //dialog->setWindowFlag(Qt::WindowType::FramelessWindowHint, true);
     //dialog->setSizePolicy(QSizePolicy::Policy::Fixed);
     auto widget = new AboutWidget(dialog);
     dialog->setFixedSize(widget->size());

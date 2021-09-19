@@ -28,6 +28,7 @@ HEADERS += ./resource.h \
     ./LogMessagesWidget.h \
     ./SettingsManager.h \
     AppSettingDialog.h \
+    AppVersion.h \
     StartupDialog.h
 SOURCES += ./main.cpp \
     ./MenuBar.cpp \

@@ -22,6 +22,9 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -276,6 +279,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <attribute name="title">
        <string>External Editors -- not yet implemented</string>
       </attribute>

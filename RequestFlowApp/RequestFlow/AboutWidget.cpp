@@ -1,11 +1,13 @@
 #include "AboutWidget.h"
 #include "ui_AboutWidget.h"
-#include <QPixmap>
 #include <QImage>
+#include <QPixmap>
 
-AboutWidget::AboutWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::AboutWidget)
+#include "AppVersion.h"
+
+AboutWidget::AboutWidget(QWidget* parent)
+    : QWidget(parent)
+    , ui(new Ui::AboutWidget)
 {
     ui->setupUi(this);
     //QImage img(":/ui/network");
@@ -16,6 +18,7 @@ AboutWidget::AboutWidget(QWidget *parent) :
     //setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
     //setWindowFlag(Qt::WindowType::WindowMinMaxButtonsHint, false);
     //setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
+    ui->label_version->setText(QString("Version : %1").arg(APP_VERSION));
 }
 
 AboutWidget::~AboutWidget()
