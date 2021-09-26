@@ -9,7 +9,8 @@ TARGET = RequestFlow
 
 #CONFIG(debug, debug|release):CONFIG += console
 
-RC_ICONS = $$PWD/icons/network.ico
+macos:ICON = $$PWD/icons/icon.icns
+else:RC_ICONS = $$PWD/icons/network.ico
 
 HEADERS += ./resource.h \
     ./BackgroundPaintFilter.h \
@@ -95,6 +96,12 @@ else:unix: LIBS += -L$$OUT_PWD/../ExecutionEngine/ -lExecutionEngine
 
 INCLUDEPATH += $$PWD/../ExecutionEngine
 DEPENDPATH += $$PWD/../ExecutionEngine
+
+
+#Qt doesn't copy over the .icns file ?!
+RESOURCE_FILES.files = $$ICON
+RESOURCE_FILES.path = Contents/Resources
+QMAKE_BUNDLE_DATA += RESOURCE_FILES
 
 QMAKE_INFO_PLIST=Info.plist
 #QMAKE_INFO_PLIST = Info.plist
