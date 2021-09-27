@@ -35,27 +35,15 @@ QMap<QString, QVariant> model::Environment::getEntries() const
 	return _entries;
 }
 
-QString model::Environment::evaluate(QString workingUrl) const
-{
-	// TODO: implement an error handling mechanism
-	// extract {vars}
-    /*
-	{
-		QRegularExpression envVarPattern("{{([\\d\\w]+)}}");
-		auto it = envVarPattern.globalMatch(workingUrl);
-		while (it.hasNext())
-		{
-			auto match = it.next();
-			auto name = match.captured(1);
-		}
-	}
-    //*/
+QString model::Environment::evaluate(QString workingUrl) const {
+    if(_entries.isEmpty()) return workingUrl;
 
-	for (const auto& key : _entries.keys())
-	{
-		QRegularExpression pattern(QString("{{%1}}").arg(key));
-		workingUrl = workingUrl.replace(pattern, _entries[key].toString());
-	}
+    const auto& entriesKeys = _entries.keys();
+
+    std::for_each(entriesKeys.begin(), entriesKeys.end(), [&workingUrl, this](const QString& key){
+        QRegularExpression pattern(QString("{{%1}}").arg(key));
+        workingUrl = workingUrl.replace(pattern, _entries[key].toString());
+    });
 
 	return workingUrl;
 }

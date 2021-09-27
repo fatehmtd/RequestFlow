@@ -164,6 +164,7 @@ void MainWindow::setProject(model::Project* project)
         if (project->getGraphs().isEmpty()) {
             auto graph = new model::Graph(_project.get());
             graph->setName("Default scenario");
+            graph->setActiveEnvironment(_project->getEnvironments().first());
             auto sceneGraph = new view::SceneGraph(graph);
             openScenario(sceneGraph);
         } else {

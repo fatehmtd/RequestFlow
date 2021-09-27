@@ -88,7 +88,8 @@ view::Node* view::InteractionsHandler::createEndpointNode(const model::EndpointE
     nodeModel->createModel();
 
     if (entry != nullptr) {
-        auto url = _sceneGraph->getModelGraph()->getActiveEnvironment()->evaluate(entry->getUrl()).toLower();
+        auto env = _sceneGraph->getModelGraph()->getActiveEnvironment();
+        auto url = env->evaluate(entry->getUrl()).toLower();
         // validate and sanitize url
         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
             url = QString("{{baseUrl}}%1").arg(entry->getUrl());
