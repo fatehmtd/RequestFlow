@@ -2,20 +2,20 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="256"
    height="256"
    viewBox="0 0 67.733332 67.733335"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="put.svg">
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="patch.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.70625"
-     inkscape:cx="105.81882"
-     inkscape:cy="161.35696"
+     inkscape:cx="105.78755"
+     inkscape:cy="161.4652"
      inkscape:document-units="mm"
      inkscape:current-layer="g2569"
      showgrid="false"
@@ -40,7 +40,8 @@
      inkscape:window-height="1027"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -49,7 +50,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -70,29 +70,25 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="text">
+     inkscape:label="text"
+     style="display:inline">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="5.5048838"
        y="11.909158"
-       id="text822"><tspan
-         sodipodi:role="line"
-         id="tspan820"
-         x="5.5048838"
-         y="21.564653"
-         style="stroke-width:0.26458332px" /></text>
+       id="text822" />
     <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;line-height:149.00000095%;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#d45500;fill-opacity:1;stroke:none;stroke-width:0.32125705px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="36.00415"
-       y="48.003483"
-       id="text826"><tspan
-         sodipodi:role="line"
-         id="tspan824"
-         x="36.00415"
-         y="48.003483"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#d45500;stroke-width:0.32125705px">PUT</tspan></text>
+       id="text2567-6"
+       y="41.002666"
+       x="34.429638"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20.4515px;line-height:88%;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;opacity:0.98;fill:#359680;fill-opacity:1;stroke:none;stroke-width:0.206935px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20.4515px;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#359680;fill-opacity:1;stroke-width:0.206935px"
+         y="41.002666"
+         x="34.429638"
+         id="tspan5593-3"
+         sodipodi:role="line">PATCH</tspan></text>
   </g>
   <g
      inkscape:label="shadow"
@@ -103,23 +99,18 @@
        id="text2563"
        y="11.909158"
        x="5.5048838"
-       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       xml:space="preserve"><tspan
-         style="stroke-width:0.26458332px"
-         y="21.564653"
-         x="5.5048838"
-         id="tspan2561"
-         sodipodi:role="line" /></text>
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve" />
     <text
        id="text2567"
-       y="47.150616"
-       x="34.854717"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;line-height:149.00000095%;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;opacity:0.98000004;fill:#ff9c48;fill-opacity:1;stroke:none;stroke-width:0.32125705px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       y="39.548664"
+       x="33.506031"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20.4515px;line-height:88%;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;opacity:0.98;fill:#50e3c2;fill-opacity:1;stroke:none;stroke-width:0.206935px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#ff9c48;fill-opacity:1;stroke-width:0.32125705px"
-         y="47.150616"
-         x="34.854717"
-         id="tspan2565"
-         sodipodi:role="line">PUT</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20.4515px;font-family:Raleway;-inkscape-font-specification:'Raleway, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#50e3c2;fill-opacity:1;stroke-width:0.206935px"
+         y="39.548664"
+         x="33.506031"
+         id="tspan5593"
+         sodipodi:role="line">PATCH</tspan></text>
   </g>
 </svg>

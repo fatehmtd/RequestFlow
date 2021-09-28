@@ -6,6 +6,10 @@
 #include <model/Environment.h>
 #include <model/Node.h>
 
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QRegularExpressionMatchIterator>
+
 #include <QJsonDocument>
 
 logic::EndpointNode::EndpointNode(model::EndpointNode* modelNode)
@@ -20,6 +24,55 @@ void logic::EndpointNode::clearUI()
     _ui.plainTextEdit_response->clear();
 }
 
+void setLineEditTextFormat(QLineEdit* lineEdit, const QList<QTextLayout::FormatRange>& formats)
+{
+    if (!lineEdit)
+        return;
+
+    QList<QInputMethodEvent::Attribute> attributes;
+    foreach (const QTextLayout::FormatRange& fr, formats) {
+        QInputMethodEvent::AttributeType type = QInputMethodEvent::TextFormat;
+        int start = fr.start - lineEdit->cursorPosition();
+        int length = fr.length;
+        QVariant value = fr.format;
+        attributes.append(QInputMethodEvent::Attribute(type, start, length, value));
+    }
+    QInputMethodEvent event(QString(), attributes);
+    QCoreApplication::sendEvent(lineEdit, &event);
+}
+
+void clearLineEditTextFormat(QLineEdit* lineEdit)
+{
+    setLineEditTextFormat(lineEdit, QList<QTextLayout::FormatRange>());
+}
+
+#include <qrgb.h>
+
+QList<QTextLayout::FormatRange> evaluatePattern(const QString& pattern, const QString& text, QTextCharFormat textCharFormat)
+{
+    auto regexVar = QRegularExpression(pattern);
+    auto matchIterator = regexVar.globalMatch(text);
+
+    QList<QTextLayout::FormatRange> formats;
+
+    while (matchIterator.hasNext()) {
+        if (!matchIterator.isValid())
+            break;
+        auto match = matchIterator.next();
+        const int index = match.capturedStart("var");
+        const int len = match.capturedLength("var");
+
+        QTextLayout::FormatRange formatRange;
+        formatRange.start = index;
+        formatRange.length = len;
+        formatRange.format = textCharFormat;
+
+        formats << formatRange;
+    }
+
+    return formats;
+}
+
 void logic::EndpointNode::initUI()
 {
     auto widget = new QWidget();
@@ -27,11 +80,46 @@ void logic::EndpointNode::initUI()
     getContentWidget()->layout()->addWidget(widget);
     getContentWidget()->adjustSize();
 
+    connect(_ui.lineEdit_url, &QLineEdit::textChanged, this, [=](const QString& text) {
+        clearLineEditTextFormat(_ui.lineEdit_url);
+
+        QTextCharFormat textCharFormatEnvVar;
+        textCharFormatEnvVar.setFontPointSize(10);
+        textCharFormatEnvVar.setFontWeight(QFont::ExtraBold);
+        textCharFormatEnvVar.setBackground(QColor(qRgb(50, 180, 50)));
+        textCharFormatEnvVar.setForeground(Qt::white);
+
+        QTextCharFormat textCharFormatVar;
+        textCharFormatVar.setFontPointSize(10);
+        textCharFormatVar.setFontWeight(QFont::Bold);
+        //textCharFormatVar.setFontItalic(true);
+        textCharFormatVar.setBackground(QColor(qRgb(50, 50, 180)));
+        textCharFormatVar.setForeground(Qt::white);
+
+        QTextCharFormat textCharFormatSymbols;
+        textCharFormatSymbols.setFontPointSize(12);
+        textCharFormatSymbols.setFontWeight(QFont::Bold);
+        //textCharFormatVar.setFontItalic(true);
+        //textCharFormatSymbols.setBackground(QColor(qRgb(180, 50, 50)));
+        //textCharFormatSymbols.setBackground(QColor(qRgb(180, 50, 50)));
+
+        const QString patternEnvVar = "(?<var>{{[\\d\\w\\s]+}})";
+        const QString patternVar = "[^{](?<var>{[\\w\\d\\s]+})";
+        const QString patternSymbols = "(?<var>[\\/,&=?]+)";
+
+        auto formats = evaluatePattern(patternEnvVar, text, textCharFormatEnvVar);
+        formats.append(evaluatePattern(patternVar, text, textCharFormatVar));
+        formats.append(evaluatePattern(patternSymbols, text, textCharFormatSymbols));
+
+        setLineEditTextFormat(_ui.lineEdit_url, formats);
+    });
+
     connect(_ui.lineEdit_url, &QLineEdit::textChanged, this, &EndpointNode::onUrlTextChanged);
 
     // set the data from the model
     auto endpointNode = dynamic_cast<model::EndpointNode*>(getModelNode());
     _ui.lineEdit_url->setText(endpointNode->getUrl());
+    _ui.lineEdit_url->home(false);
     for (int i = 0; i < _ui.comboBox_contentType->count(); i++) {
         if (endpointNode->getContentType() == _ui.comboBox_contentType->itemText(i)) {
             _ui.comboBox_contentType->setCurrentIndex(i);

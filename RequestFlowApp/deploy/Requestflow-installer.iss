@@ -5,11 +5,11 @@
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "Fateh Benmerzoug, Ph.D"
 #define MyAppURL "http://www.requestflow.dev"
-#define MyAppExeName "RequestFlow.exe"
+#define MyAppExeName "Requestflow.exe"
 #define MyAppDescription "REST testing for human beings"
 
 #define DependenciesFolder "D:\developpement\libs\BleachUICpp\RequestFlowApp\deploy\RequestFlow-win"
-#define MainFolder "D:\developpement\libs\BleachUICpp\RequestFlowApp\x64\Release"
+#define MainFolder "D:\developpement\libs\BleachUICpp\build-RequestFlow-Desktop_Qt_5_15_2_MSVC2019_64bit-Release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -26,7 +26,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
-OutputBaseFilename=RequestFlow Setup
+OutputBaseFilename=requestflow-win
 Compression=lzma
 SolidCompression=yes
 ChangesAssociations = yes
@@ -54,10 +54,10 @@ Name: "{app}\platforms"; Flags: uninsalwaysuninstall
 Name: "{app}\samples"; Flags: uninsalwaysuninstall
 
 [Files]
-Source: "{#MainFolder}\RequestFlow.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MainFolder}\CoreModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MainFolder}\CoreView.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MainFolder}\ExecutionEngine.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MainFolder}\RequestFlow\release\RequestFlow.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MainFolder}\CoreModel\release\CoreModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MainFolder}\CoreView\release\CoreView.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MainFolder}\ExecutionEngine\release\ExecutionEngine.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#DependenciesFolder}\libcrypto-1_1-x64.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#DependenciesFolder}\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#DependenciesFolder}\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
