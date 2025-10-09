@@ -38,6 +38,7 @@ public:
     Node* createScriptNode();
     Node* createAssertionNode();
     Node* createExternalNode();
+    Node* createConditionalNode();
 
     void deleteNode(Node* node);
     void deleteNodes(const QList<Node*>& nodes);

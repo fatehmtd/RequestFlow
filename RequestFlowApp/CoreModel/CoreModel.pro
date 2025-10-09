@@ -37,7 +37,8 @@ HEADERS += ./coremodel_global.h \
     ./model/AssertionNode.h \
     ./model/MessageLogger.h \
     ./model/PersistenceHandlerUtils.h \
-    ExecutionEngine.h
+    ExecutionEngine.h \
+    model/conditionalnode.h
 SOURCES += ./model/Graph.cpp \
     ./CustomJSEngine.cpp \
     ./model/GroupNode.cpp \
@@ -63,7 +64,8 @@ SOURCES += ./model/Graph.cpp \
     ./model/AssertionNode.cpp \
     ./model/MessageLogger.cpp \
     ./model/PersistenceHandlerUtils.cpp \
-    ExecutionEngine.cpp
+    ExecutionEngine.cpp \
+    model/conditionalnode.cpp
 RESOURCES += Resource.qrc
 
 DISTFILES +=

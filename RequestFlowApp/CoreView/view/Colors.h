@@ -53,17 +53,44 @@ namespace view
             const QColor red("#B80006");
             const QColor darkYellow("#FFCA3A");
             const QColor darkBlue("#1D5972");
+
+            // Core workflow colors
+            const QColor deepBlue("#1E3A8A");      // Primary actions, LLM nodes
+            const QColor brightBlue("#3B82F6");    // Endpoints, HTTP requests
+            const QColor emerald("#10B981");       // Success states, valid responses
+            const QColor amber("#F59E0B");         // Warning, processing states
+            const QColor rose("#EF4444");          // Errors, failed requests
+            const QColor violet("#8B5CF6");        // AI/ML specific nodes
+            const QColor slate("#64748B");         // Utility nodes, delays
+            const QColor indigo("#6366F1");        // Logic nodes, conditionals
+
+            // Optimized for dark backgrounds
+            const QColor oceanBlue("#0EA5E9");     // Primary endpoints
+            const QColor seafoam("#06D6A0");       // Success/completion
+            const QColor coral("#FF6B6B");         // Errors/failures
+            const QColor gold("#FFD23F");          // Warnings/processing
+            const QColor lavender("#A78BFA");      // AI/LLM nodes
+            const QColor mint("#4ECDC4");          // Data nodes
+            const QColor peach("#FF8E53");         // Logic/conditional
+            const QColor steel("#6B7280");         // Utility/system
         }
 
         namespace nodes
         {
-            const QColor delay = redesign::darkOrange;
+            /*const QColor delay = redesign::darkOrange;
             const QColor endpoint = redesign::lightGreen;
             const QColor viewer = redesign::lightBlue;
             const QColor script = redesign::purple;
             const QColor external = redesign::red;
             const QColor payload = redesign::darkYellow;
-            const QColor assertion = redesign::darkBlue;
+            const QColor assertion = redesign::darkBlue;*/
+            const QColor delay = redesign::amber;          // Processing/waiting states
+            const QColor endpoint = redesign::brightBlue;  // HTTP requests/API calls
+            const QColor viewer = redesign::emerald;       // Success/data display
+            const QColor script = redesign::violet;        // AI/ML and scripting
+            const QColor external = redesign::rose;        // External/error states
+            const QColor payload = redesign::gold;         // Data/content nodes
+            const QColor assertion = redesign::deepBlue;   // Validation/testing
         }
 	}
 }

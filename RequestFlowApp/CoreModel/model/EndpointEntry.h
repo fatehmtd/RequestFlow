@@ -42,7 +42,8 @@ namespace model
 			GET,
 			POST,
 			PUT,
-			DEL
+            DEL,
+            PATCH
 		};
 		Q_ENUM(HttpMethod);
 

@@ -5,6 +5,7 @@
 
 class InventoryItem : public QObject
 {
+    Q_OBJECT
 public:
     enum Type
     {

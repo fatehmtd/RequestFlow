@@ -68,3 +68,5 @@ RequestFlowApp/CoreView/ui_*.h
 *.DS_Store
 RequestFlowApp/deploy/RequestFlow-mac/RequestFlow.dmg
 *.dmg
+
+RequestFlowApp/build

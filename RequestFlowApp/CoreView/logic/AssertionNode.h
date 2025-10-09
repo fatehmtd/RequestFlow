@@ -14,7 +14,7 @@ namespace logic
         virtual void clearUI() override;
 
     private:
-        void setupUi();
+        void setupUi() override;
     private:        
         Ui::AssertNodeWidgetUi _ui;
     };
