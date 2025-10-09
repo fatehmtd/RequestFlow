@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DELAY_NODE_H
+#define DELAY_NODE_H
+
 #include "../coremodel_global.h"
 #include "Node.h"
 #include "Message.h"
@@ -29,3 +31,5 @@ namespace model
         QTimer _timer;
     };
 }
+
+#endif

@@ -80,6 +80,15 @@ void view::InteractionsHandler::registerEmptySpaceAction(const QString& name, Ex
         func, icon, order);
 }
 
+view::Node *view::InteractionsHandler::createConditionalNode()
+{
+    auto modelNode = new model::ConditionalNode(_sceneGraph->getModelGraph());
+    modelNode->createModel();
+    auto grNodeA = new logic::PayloadNode(modelNode);
+    _sceneGraph->addItem(grNodeA);
+    return grNodeA;
+}
+
 #include <model/EndpointEntry.h>
 
 view::Node* view::InteractionsHandler::createEndpointNode(const model::EndpointEntry* entry)

@@ -12,6 +12,7 @@
 #include <QTimer>
 
 class COREVIEW_EXPORT SceneGraphWidget : public QGraphicsView, public model::PersistableEntity {
+    Q_OBJECT
 public:
     SceneGraphWidget(QWidget* parent, view::SceneGraph* sceneGraph);
     ~SceneGraphWidget();

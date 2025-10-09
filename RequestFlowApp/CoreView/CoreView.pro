@@ -3,10 +3,10 @@
 # ------------------------------------------------------
 
 
-QT += core gui network widgets qml svg
+QT += core gui network widgets qml svg svgwidgets opengl openglwidgets
 TEMPLATE = lib
 TARGET = CoreView
-CONFIG += c++17
+CONFIG += c++17 moc
 DEFINES += COREVIEW_LIB
 INCLUDEPATH += $$PWD/../CoreModel
 DEPENDPATH += $$PWD/../CoreModel
@@ -15,7 +15,6 @@ DEPENDPATH += $$PWD/../CoreModel
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../CoreModel/release/ -lCoreModel
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../CoreModel/debug/ -lCoreModel
 else:unix: LIBS += -L$$OUT_PWD/../CoreModel/ -lCoreModel
-
 
 HEADERS += ./coreview_global.h \
     ./ExternalNodeSelectionDialog.h \

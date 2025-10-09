@@ -26,10 +26,10 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
+      <enum>QTabWidget::TabPosition::North</enum>
      </property>
      <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
+      <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
       <number>1</number>
@@ -88,7 +88,7 @@
        <item row="0" column="0" colspan="2">
         <widget class="QSplitter" name="splitter_2">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <widget class="QPlainTextEdit" name="plainTextEdit_json">
           <property name="placeholderText">
@@ -100,7 +100,7 @@
            <number>1</number>
           </property>
           <property name="editTriggers">
-           <set>QAbstractItemView::AllEditTriggers</set>
+           <set>QAbstractItemView::EditTrigger::AllEditTriggers</set>
           </property>
           <property name="tabKeyNavigation">
            <bool>true</bool>
@@ -109,10 +109,10 @@
            <bool>true</bool>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::SingleSelection</enum>
+           <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
           </property>
           <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
+           <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
           </property>
           <property name="iconSize">
            <size>
