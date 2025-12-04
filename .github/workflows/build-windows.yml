@@ -1,4 +1,4 @@
-name: Build RequestFlow
+name: Build RequestFlow (Windows)
 
 on:
   push:
