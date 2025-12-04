@@ -3,16 +3,8 @@
 # ------------------------------------------------------
 
 TEMPLATE = subdirs
+CONFIG += ordered
 SUBDIRS += CoreModel/CoreModel.pro \
     CoreView/CoreView.pro \
-    ExecutionEngine \
+    ExecutionEngine/ExecutionEngine.pro \
     RequestFlow/RequestFlow.pro
-
-# Define build order dependencies
-RequestFlow.depends = CoreModel CoreView ExecutionEngine
-CoreView.depends = CoreModel
-ExecutionEngine.depends = CoreModel
-
-DEPENDPATH += CoreModel/
-DEPENDPATH += CoreView/
-DEPENDPATH += ExecutionEngine/
