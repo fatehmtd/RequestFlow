@@ -36,21 +36,29 @@ jobs:
       working-directory: RequestFlowApp/build
       run: make -j$(sysctl -n hw.ncpu)
         
-    - name: Deploy Qt dependencies
-      working-directory: RequestFlowApp/build/RequestFlow
-      run: macdeployqt RequestFlow.app -dmg
-        
     - name: Copy project libraries to app bundle
       working-directory: RequestFlowApp/build
       run: |
+        mkdir -p RequestFlow/RequestFlow.app/Contents/Frameworks
         cp CoreModel/libCoreModel.*.dylib RequestFlow/RequestFlow.app/Contents/Frameworks/ || true
         cp CoreView/libCoreView.*.dylib RequestFlow/RequestFlow.app/Contents/Frameworks/ || true
         cp ExecutionEngine/libExecutionEngine.*.dylib RequestFlow/RequestFlow.app/Contents/Frameworks/ || true
         
-    - name: Package artifacts
+    - name: Fix library paths
       working-directory: RequestFlowApp/build/RequestFlow
       run: |
-        mv RequestFlow.dmg ../../../RequestFlow-macOS-x64.dmg
+        for lib in RequestFlow.app/Contents/Frameworks/*.dylib; do
+          install_name_tool -id "@rpath/$(basename $lib)" "$lib"
+          install_name_tool -add_rpath "@executable_path/../Frameworks" RequestFlow.app/Contents/MacOS/RequestFlow || true
+        done
+        
+    - name: Deploy Qt dependencies
+      working-directory: RequestFlowApp/build/RequestFlow
+      run: macdeployqt RequestFlow.app -dmg
+        
+    - name: Rename DMG
+      working-directory: RequestFlowApp/build/RequestFlow
+      run: mv RequestFlow.dmg ../../../RequestFlow-macOS-x64.dmg
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4

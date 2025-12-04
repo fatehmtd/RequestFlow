@@ -44,9 +44,21 @@ jobs:
     - name: Copy project libraries
       working-directory: RequestFlowApp/build
       run: |
-        cp CoreModel/libCoreModel.so* RequestFlow/ || true
-        cp CoreView/libCoreView.so* RequestFlow/ || true
-        cp ExecutionEngine/libExecutionEngine.so* RequestFlow/ || true
+        mkdir -p RequestFlow/lib
+        cp CoreModel/libCoreModel.so* RequestFlow/lib/ || true
+        cp CoreView/libCoreView.so* RequestFlow/lib/ || true
+        cp ExecutionEngine/libExecutionEngine.so* RequestFlow/lib/ || true
+        
+    - name: Create launch script
+      working-directory: RequestFlowApp/build/RequestFlow
+      run: |
+        cat > RequestFlow.sh << 'EOF'
+        #!/bin/bash
+        SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+        export LD_LIBRARY_PATH="${SCRIPT_DIR}/lib:${LD_LIBRARY_PATH}"
+        "${SCRIPT_DIR}/RequestFlow" "$@"
+        EOF
+        chmod +x RequestFlow.sh
         
     - name: Package artifacts
       working-directory: RequestFlowApp/build
