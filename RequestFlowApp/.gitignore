@@ -1,0 +1,84 @@
+# Build directories
+build/
+debug/
+release/
+Debug/
+Release/
+
+# Qt-generated files
+*.pro.user
+*.pro.user.*
+*.qm
+.qmake.cache
+.qmake.stash
+Makefile
+Makefile.*
+ui_*.h
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+
+# C++ artifacts
+*.o
+*.obj
+*.exp
+*.lib
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+
+# Visual Studio files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.db
+*.opendb
+.vs/
+ipch/
+*.VC.db
+*.VC.VC.opendb
+
+# IDEs
+.vscode/
+.idea/
+*.creator
+*.creator.user
+*.files
+*.includes
+*.config
+*.cflags
+*.cxxflags
+
+# Temporary files
+*~
+*.autosave
+*.swp
+*.swo
+*_backup
+*.orig
+*.rej
+*.bak
+tmp/
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Compiled resource files
+*.res
+
+# Deployment files
+*.msi
+*.zip
+*.tar.gz

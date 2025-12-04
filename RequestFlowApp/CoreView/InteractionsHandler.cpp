@@ -82,11 +82,12 @@ void view::InteractionsHandler::registerEmptySpaceAction(const QString& name, Ex
 
 view::Node *view::InteractionsHandler::createConditionalNode()
 {
-    auto modelNode = new model::ConditionalNode(_sceneGraph->getModelGraph());
+    return nullptr;
+    /*auto modelNode = new model::ConditionalNode(_sceneGraph->getModelGraph());
     modelNode->createModel();
     auto grNodeA = new logic::PayloadNode(modelNode);
     _sceneGraph->addItem(grNodeA);
-    return grNodeA;
+    return grNodeA;*/
 }
 
 #include <model/EndpointEntry.h>

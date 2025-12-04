@@ -17,7 +17,6 @@ namespace model
         Q_INVOKABLE PayloadNode(model::Graph* graph);
         void createModel() override;
 
-
         model::Message getMessage() const;
 
         void evaluate() override;

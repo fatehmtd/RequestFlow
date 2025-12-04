@@ -1,26 +1,14 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RequestFlow", "RequestFlow\RequestFlow.vcxproj", "{3BFF11FD-C7C5-331A-B094-2CB63C55D32D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DF50DC37-23D4-329C-BDA7-77347E4BD688} = {DF50DC37-23D4-329C-BDA7-77347E4BD688}
-		{3F73C754-2A7C-33BC-9763-BAEF4019BD07} = {3F73C754-2A7C-33BC-9763-BAEF4019BD07}
-		{9A6AC2B3-1536-370F-AFF9-98D886032E94} = {9A6AC2B3-1536-370F-AFF9-98D886032E94}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreModel", "CoreModel\CoreModel.vcxproj", "{3F73C754-2A7C-33BC-9763-BAEF4019BD07}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreView", "CoreView\CoreView.vcxproj", "{9A6AC2B3-1536-370F-AFF9-98D886032E94}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3F73C754-2A7C-33BC-9763-BAEF4019BD07} = {3F73C754-2A7C-33BC-9763-BAEF4019BD07}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExecutionEngine", "ExecutionEngine\ExecutionEngine.vcxproj", "{DF50DC37-23D4-329C-BDA7-77347E4BD688}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3F73C754-2A7C-33BC-9763-BAEF4019BD07} = {3F73C754-2A7C-33BC-9763-BAEF4019BD07}
-		{9A6AC2B3-1536-370F-AFF9-98D886032E94} = {9A6AC2B3-1536-370F-AFF9-98D886032E94}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,7 +37,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = 5.15.2_msvc2019_64
 		SolutionGuid = {3C4A5BE9-0A01-41B4-897D-8F6DFFB2669F}
+		Qt5Version = 5.15.2_msvc2019_64
 	EndGlobalSection
 EndGlobal
