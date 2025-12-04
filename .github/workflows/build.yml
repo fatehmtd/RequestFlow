@@ -39,33 +39,10 @@ jobs:
       run: |
         qmake ..\RequestFlow.pro -r "CONFIG+=release"
         
-    - name: Build CoreModel
+    - name: Build with nmake
       working-directory: RequestFlowApp/build
       run: |
-        cd CoreModel
         nmake
-        cd ..
-        
-    - name: Build CoreView
-      working-directory: RequestFlowApp/build
-      run: |
-        cd CoreView
-        nmake
-        cd ..
-        
-    - name: Build ExecutionEngine
-      working-directory: RequestFlowApp/build
-      run: |
-        cd ExecutionEngine
-        nmake
-        cd ..
-        
-    - name: Build RequestFlow
-      working-directory: RequestFlowApp/build
-      run: |
-        cd RequestFlow
-        nmake
-        cd ..
         
     - name: Deploy Qt dependencies
       working-directory: RequestFlowApp/build
