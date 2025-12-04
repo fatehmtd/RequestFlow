@@ -1,4 +1,4 @@
-﻿name: Build RequestFlow (macOS)
+name: Build RequestFlow (macOS)
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.7.3'
+        version: '6.7.2'
         host: 'mac'
         target: 'desktop'
         arch: 'clang_64'
