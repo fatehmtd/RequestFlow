@@ -1,0 +1,83 @@
+name: Build RequestFlow
+
+on:
+  push:
+    branches: [ main, feature/*, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.7.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
+        cache: true
+
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Create build directory
+      working-directory: RequestFlowApp
+      run: |
+        if (!(Test-Path build)) { New-Item -ItemType Directory -Path build }
+
+    - name: Configure with qmake
+      working-directory: RequestFlowApp/build
+      run: |
+        qmake ..\RequestFlow.pro -r "CONFIG+=release"
+
+    - name: Build with nmake
+      working-directory: RequestFlowApp/build
+      run: |
+        nmake
+
+    - name: Prepare clean distribution directory
+      working-directory: RequestFlowApp/build
+      run: |
+        New-Item -ItemType Directory -Path dist -Force
+        Copy-Item RequestFlow\release\RequestFlow.exe dist\
+
+    - name: Deploy Qt dependencies
+      working-directory: RequestFlowApp/build/dist
+      run: |
+        windeployqt --release RequestFlow.exe
+
+    - name: Copy project DLLs
+      working-directory: RequestFlowApp/build
+      run: |
+        Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction SilentlyContinue
+        Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
+        Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
+
+    - name: Package artifacts
+      working-directory: RequestFlowApp/build
+      run: |
+        Compress-Archive -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: RequestFlow-Windows-x64
+        path: RequestFlow-Windows-x64.zip
+        retention-days: 30
+
+    - name: Upload release asset (on tags)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: RequestFlow-Windows-x64.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
