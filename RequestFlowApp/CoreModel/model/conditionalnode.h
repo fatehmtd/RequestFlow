@@ -10,7 +10,7 @@ namespace model {
     class COREMODEL_EXPORT ConditionalNode : public model::Node
     {
         Q_OBJECT
-        Q_PROPERTY(QString script MEMBER _script READ getScript WRITE setScript);
+        Q_PROPERTY(QString script MEMBER _condition READ getCondition WRITE setCondition);
     public:
         Q_INVOKABLE ConditionalNode(model::Graph* graph);
 

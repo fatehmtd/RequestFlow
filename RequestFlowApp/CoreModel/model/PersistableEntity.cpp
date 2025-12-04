@@ -23,8 +23,8 @@ QJSValue model::PersistableEntity::saveToJSValue(PersistenceHandler* persistence
 bool model::PersistableEntity::loadFromJSValue(const QJSValue& value)
 {
     for (int i = 0; i < _object->metaObject()->propertyCount(); i++) {
-        auto prop = _object->metaObject()->property(i);
-        auto v = value.property(QString(prop.name())).toVariant();
+        QMetaProperty prop = _object->metaObject()->property(i);
+        QVariant v = value.property(QString(prop.name())).toVariant();
         _object->setProperty(prop.name(), v);
     }
     return true;
@@ -37,7 +37,7 @@ QObject* model::PersistableEntity::getObject() const
 
 void model::PersistableEntity::loadChildren(const QJSValue& value, const QString& name, std::function<void(const QJSValue&)> func)
 {
-    auto arrayValue = value.property(name);
+    QJSValue arrayValue = value.property(name);
     for (int i = 0; i < arrayValue.property("length").toInt(); i++) {
         func(arrayValue.property(i));
     }
