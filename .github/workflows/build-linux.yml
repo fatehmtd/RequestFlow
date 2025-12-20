@@ -21,7 +21,7 @@ jobs:
         version: '6.7.3'
         host: 'linux'
         target: 'desktop'
-        arch: 'linux_gcc_64'
+        arch: 'gcc_64'
         cache: true
         
     - name: Install dependencies
@@ -33,15 +33,127 @@ jobs:
         
     - name: Create build directory
       working-directory: RequestFlowApp
-      run: mkdir -p build
+      run: |
+        # Remove any cached qmake configuration
+        rm -f .qmake.stash .qmake.cache
+        
+        # Create clean build directory
+        rm -rf build
+        mkdir -p build
+    
+    - name: Verify Qt installation
+      run: |
+        echo "=== Qt Installation Check ==="
+        echo "Environment variables set by install-qt-action:"
+        echo "Qt6_DIR: $Qt6_DIR"
+        echo "QT_ROOT_DIR: $QT_ROOT_DIR"
+        echo "Qt6_ROOT: $Qt6_ROOT"
+        echo "IQTA_TOOLS: $IQTA_TOOLS"
+        echo "PATH: $PATH"
+        echo ""
+        
+        echo "Searching for Qt installations:"
+        find /home/runner/work -type d -name "6.7.3" 2>/dev/null | head -5 || true
+        echo ""
+        
+        echo "Looking for qmake executables:"
+        find /home/runner/work -name "qmake" -type f 2>/dev/null | head -10 || true
+        echo ""
+        
+        # Try to find the actual Qt installation
+        if [ -d "/home/runner/work/RequestFlow/Qt/6.7.3" ]; then
+          echo "Found Qt 6.7.3 directory, listing contents:"
+          ls -la /home/runner/work/RequestFlow/Qt/6.7.3/
+          echo ""
+        fi
         
     - name: Configure with qmake
       working-directory: RequestFlowApp/build
-      run: qmake ../RequestFlow.pro -r "CONFIG+=release"
+      run: |
+        # Find the correct qmake path - try multiple locations and arch variants
+        QMAKE_PATH=""
         
-    - name: Build with make
+        # Try linux_gcc_64 first (Qt 6.7+ standard naming)
+        if [ -n "$Qt6_DIR" ] && [ -f "$Qt6_DIR/bin/qmake" ]; then
+          QMAKE_PATH="$Qt6_DIR/bin/qmake"
+          echo "✓ Found qmake via Qt6_DIR: $Qt6_DIR"
+        elif [ -f "/home/runner/work/RequestFlow/Qt/6.7.3/linux_gcc_64/bin/qmake" ]; then
+          QMAKE_PATH="/home/runner/work/RequestFlow/Qt/6.7.3/linux_gcc_64/bin/qmake"
+          echo "✓ Found qmake at linux_gcc_64 path"
+        elif [ -f "/home/runner/work/RequestFlow/Qt/6.7.3/gcc_64/bin/qmake" ]; then
+          # Fallback to gcc_64 if linux_gcc_64 doesn't exist
+          QMAKE_PATH="/home/runner/work/RequestFlow/Qt/6.7.3/gcc_64/bin/qmake"
+          echo "✓ Found qmake at gcc_64 path (fallback)"
+        elif [ -f "$GITHUB_WORKSPACE/../Qt/6.7.3/linux_gcc_64/bin/qmake" ]; then
+          QMAKE_PATH="$GITHUB_WORKSPACE/../Qt/6.7.3/linux_gcc_64/bin/qmake"
+          echo "✓ Found qmake via GITHUB_WORKSPACE (linux_gcc_64)"
+        elif [ -f "$GITHUB_WORKSPACE/../Qt/6.7.3/gcc_64/bin/qmake" ]; then
+          QMAKE_PATH="$GITHUB_WORKSPACE/../Qt/6.7.3/gcc_64/bin/qmake"
+          echo "✓ Found qmake via GITHUB_WORKSPACE (gcc_64)"
+        else
+          echo "❌ ERROR: Cannot find qmake from Qt 6.7.3"
+          echo ""
+          echo "Environment:"
+          echo "  Qt6_DIR: $Qt6_DIR"
+          echo "  GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo ""
+          echo "Searching for Qt installations:"
+          find /home/runner/work -name "qmake" -type f 2>/dev/null | head -10 || true
+          echo ""
+          echo "Checking Qt directory:"
+          ls -la /home/runner/work/RequestFlow/Qt/6.7.3/ 2>/dev/null || echo "Qt 6.7.3 directory not found"
+          exit 1
+        fi
+        
+        echo ""
+        echo "Qt Configuration:"
+        echo "  qmake path: $QMAKE_PATH"
+        echo "  Qt version: $($QMAKE_PATH -query QT_VERSION)"
+        echo "  Qt prefix: $($QMAKE_PATH -query QT_INSTALL_PREFIX)"
+        echo ""
+        
+        # Show which arch we're actually using
+        QT_PREFIX=$($QMAKE_PATH -query QT_INSTALL_PREFIX)
+        if [[ "$QT_PREFIX" == *"linux_gcc_64"* ]]; then
+          echo "✓ Using linux_gcc_64 Qt installation"
+        elif [[ "$QT_PREFIX" == *"gcc_64"* ]]; then
+          echo "ℹ Using gcc_64 Qt installation (older naming)"
+        else
+          echo "⚠ Qt installation path: $QT_PREFIX"
+        fi
+        echo ""
+        
+        # Run qmake
+        echo "Running qmake..."
+        $QMAKE_PATH ../RequestFlow.pro -r "CONFIG+=release"
+        
+        # Verify the generated Makefile
+        echo ""
+        echo "Makefile verification:"
+        if grep -q "gcc_64\|linux_gcc_64" Makefile; then
+          echo "✓ Makefile generated successfully with Qt paths"
+          echo ""
+          echo "Qt paths in Makefile (first 3 unique):"
+          grep -o "/[^ ]*/Qt/[0-9.]*[^ ]*" Makefile | sed 's|/[^/]*$||' | sort -u | head -3 || true
+        else
+          echo "⚠ Warning: No Qt paths found in Makefile"
+        fi
+        
+    - name: Build with make  
       working-directory: RequestFlowApp/build
-      run: make -j$(nproc)
+      run: |
+        # Build everything (this should handle UI file generation automatically)
+        make -j$(nproc) 2>&1 | tee build.log || {
+          echo "Build failed. Showing last 50 lines of output:"
+          tail -50 build.log
+          echo ""
+          echo "Checking for .ui files in project:"
+          find .. -name "*.ui" -type f
+          echo ""
+          echo "Checking for generated ui_*.h files:"
+          find . -name "ui_*.h" -type f
+          exit 1
+        }
         
     - name: Prepare AppDir structure
       working-directory: RequestFlowApp/build
