@@ -81,10 +81,10 @@ SOURCES += ./view/ConnectionEdge.cpp \
     HTTPHighlighter.cpp \
     JSCompleter.cpp
 FORMS += ./ui/DelayNodeUi.ui \
-    $$PWD/externalnodeselectiondialog.ui \
-    $$PWD/largepayloadinfowidget.ui \
-    $$PWD/ui/AssertNodeUi.ui \
-    $$PWD/ui/ExternalNodeUi.ui \
+    ./externalnodeselectiondialog.ui \
+    ./largepayloadinfowidget.ui \
+    ./ui/AssertNodeUi.ui \
+    ./ui/ExternalNodeUi.ui \
     ./ui/EndpointNodeUi.ui \
     ./ui/PayloadNodeUi.ui \
     ./ui/ScriptNodeUi.ui \
