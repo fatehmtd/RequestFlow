@@ -23,28 +23,34 @@ jobs:
         target: 'desktop'
         arch: 'win64_mingw'
         cache: true
-        tools: 'tools_mingw90 qt.tools.win64_mingw1120'
+        tools: 'tools_mingw90'
         
     - name: Verify installation and set up PATH
       run: |
         Write-Host "Qt6_DIR: $env:Qt6_DIR"
         Write-Host "IQTA_TOOLS: $env:IQTA_TOOLS"
         
-        # Find MinGW directory
+        # List tools directory to see what's there
+        Write-Host "`nContents of IQTA_TOOLS:"
+        Get-ChildItem "$env:IQTA_TOOLS" -Directory | ForEach-Object { Write-Host "  $($_.Name)" }
+        
+        # Find MinGW directory (tools_mingw90 installs as mingw1120_64 or similar)
         $mingwPath = Get-ChildItem -Path "$env:IQTA_TOOLS" -Directory -Filter "mingw*" -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($mingwPath) {
-          Write-Host "Found MinGW at: $($mingwPath.FullName)"
+          Write-Host "`nFound MinGW at: $($mingwPath.FullName)"
           $mingwBin = Join-Path $mingwPath.FullName "bin"
-          echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        } else {
-          Write-Host "MinGW not found in tools directory, checking common locations..."
-          # Fallback: check if MinGW is in Qt directory structure
-          $qtMingw = Get-ChildItem -Path (Split-Path $env:Qt6_DIR -Parent) -Directory -Filter "mingw*" -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($qtMingw) {
-            Write-Host "Found MinGW at: $($qtMingw.FullName)"
-            $mingwBin = Join-Path $qtMingw.FullName "bin"
+          
+          # Verify g++ exists
+          if (Test-Path "$mingwBin\g++.exe") {
+            Write-Host "Verified g++ exists at: $mingwBin\g++.exe"
             echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          } else {
+            Write-Host "Warning: g++ not found in $mingwBin"
           }
+        } else {
+          Write-Host "`nMinGW directory not found in IQTA_TOOLS"
+          Write-Host "This is unexpected - tools_mingw90 should have installed MinGW"
+          exit 1
         }
         
     - name: Verify compiler
