@@ -5,6 +5,7 @@
 #include <QAbstractItemModel>
 #include <model/Message.h>
 #include <model/ViewerNode.h>
+#include "JSONHighlighter.h"
 
 namespace logic
 {
@@ -35,5 +36,7 @@ namespace logic
         Ui::ViewerWidgetUiForm _ui;
         model::Message _message;
         ViewerNode* _node;
+        view::JSONHighlighter* _jsonHighlighter;
+        view::JSONHighlighter* _rawHighlighter;
     };
 }

@@ -1,4 +1,5 @@
 #include "EndpointNode.h"
+#include "HTTPHighlighter.h"
 #include <QDebug>
 #include <QGraphicsProxyWidget>
 #include <QRegularExpression>
@@ -141,6 +142,16 @@ void logic::EndpointNode::initUI()
     _ui.lineEdit_baUser->setText(endpointNode->getBasicAuthUser());
     _ui.lineEdit_baPwd->setText(endpointNode->getBasicAuthPassword());
     _ui.lineEdit_bearerToken->setText(endpointNode->getBearerToken());
+
+    // Set monospace font for request/response viewers
+    QFont monoFont("Courier New", 10);
+    monoFont.setStyleHint(QFont::Monospace);
+    _ui.plainTextEdit_request->setFont(monoFont);
+    _ui.plainTextEdit_response->setFont(monoFont);
+
+    // Enable HTTP syntax highlighting
+    auto requestHTTPHiglighter = new view::HTTPHighlighter(_ui.plainTextEdit_request->document());
+    auto responseHTTPHiglighter = new view::HTTPHighlighter(_ui.plainTextEdit_response->document());
 
     // Http codes
     {

@@ -18,7 +18,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.8.3'
+        version: '6.7.3'
         host: 'linux'
         target: 'desktop'
         arch: 'gcc_64'
@@ -27,7 +27,9 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 libxcb-cursor0
+        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-x11-0 \
+          libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 \
+          libxcb-xinerama0 libxcb-cursor0 libfuse2 file
         
     - name: Create build directory
       working-directory: RequestFlowApp
@@ -41,40 +43,88 @@ jobs:
       working-directory: RequestFlowApp/build
       run: make -j$(nproc)
         
-    - name: Copy project libraries
+    - name: Prepare AppDir structure
       working-directory: RequestFlowApp/build
       run: |
-        mkdir -p RequestFlow/lib
-        cp CoreModel/libCoreModel.so* RequestFlow/lib/ || true
-        cp CoreView/libCoreView.so* RequestFlow/lib/ || true
-        cp ExecutionEngine/libExecutionEngine.so* RequestFlow/lib/ || true
+        mkdir -p AppDir/usr/bin
+        mkdir -p AppDir/usr/lib
+        mkdir -p AppDir/usr/share/applications
+        mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
         
-    - name: Create launch script
-      working-directory: RequestFlowApp/build/RequestFlow
+        # Copy main executable
+        cp RequestFlow/RequestFlow AppDir/usr/bin/
+        
+        # Copy project libraries
+        cp CoreModel/libCoreModel.so* AppDir/usr/lib/ || true
+        cp CoreView/libCoreView.so* AppDir/usr/lib/ || true
+        cp ExecutionEngine/libExecutionEngine.so* AppDir/usr/lib/ || true
+        
+        # List all shared libraries for verification
+        echo "Copied libraries:"
+        ls -la AppDir/usr/lib/
+        
+    - name: Create desktop entry
+      working-directory: RequestFlowApp/build/AppDir
       run: |
-        cat > RequestFlow.sh << 'EOF'
-        #!/bin/bash
-        SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-        export LD_LIBRARY_PATH="${SCRIPT_DIR}/lib:${LD_LIBRARY_PATH}"
-        "${SCRIPT_DIR}/RequestFlow" "$@"
-        EOF
-        chmod +x RequestFlow.sh
+        cat > usr/share/applications/requestflow.desktop << 'DESKTOP'
+        [Desktop Entry]
+        Type=Application
+        Name=RequestFlow
+        Exec=RequestFlow
+        Icon=requestflow
+        Categories=Development;Network;
+        Comment=HTTP Request Flow Application
+        DESKTOP
         
-    - name: Package artifacts
+    - name: Create app icon
+      working-directory: RequestFlowApp/build/AppDir
+      run: |
+        # Create a simple placeholder icon if none exists
+        # In a real project, you'd copy your actual icon
+        convert -size 256x256 xc:blue usr/share/icons/hicolor/256x256/apps/requestflow.png 2>/dev/null || \
+        echo "Icon creation skipped - install imagemagick if needed"
+        
+    - name: Download linuxdeploy and Qt plugin
       working-directory: RequestFlowApp/build
-      run: tar -czf ../../RequestFlow-Linux-x64.tar.gz RequestFlow/
+      run: |
+        wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+        wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+        chmod +x linuxdeploy*.AppImage
+        
+    - name: Create AppImage
+      working-directory: RequestFlowApp/build
+      run: |
+        export QMAKE=$Qt6_DIR/bin/qmake
+        export PATH=$Qt6_DIR/bin:$PATH
+        export LD_LIBRARY_PATH=$Qt6_DIR/lib:$LD_LIBRARY_PATH
+        
+        ./linuxdeploy-x86_64.AppImage \
+          --appdir AppDir \
+          --plugin qt \
+          --executable AppDir/usr/bin/RequestFlow \
+          --desktop-file AppDir/usr/share/applications/requestflow.desktop \
+          --icon-file AppDir/usr/share/icons/hicolor/256x256/apps/requestflow.png \
+          --output appimage
+        
+        # Rename the AppImage
+        mv RequestFlow*.AppImage ../../RequestFlow-Linux-x86_64.AppImage || true
+        
+    - name: Verify AppImage
+      run: |
+        ls -lh RequestFlow-Linux-x86_64.AppImage
+        file RequestFlow-Linux-x86_64.AppImage
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: RequestFlow-Linux-x64
-        path: RequestFlow-Linux-x64.tar.gz
+        name: RequestFlow-Linux-x86_64
+        path: RequestFlow-Linux-x86_64.AppImage
         retention-days: 30
         
     - name: Upload release asset (on tags)
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: RequestFlow-Linux-x64.tar.gz
+        files: RequestFlow-Linux-x86_64.AppImage
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

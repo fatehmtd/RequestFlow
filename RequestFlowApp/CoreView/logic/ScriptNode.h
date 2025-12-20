@@ -3,6 +3,8 @@
 #include <QPlainTextEdit>
 #include <model/ScriptNode.h>
 #include "ui_ScriptNodeUi.h"
+#include "../JSHighlighter.h"
+#include "../JSCompleter.h"
 
 namespace logic
 {
@@ -13,8 +15,10 @@ namespace logic
 		ScriptNode(model::ScriptNode* modelNode);
 		virtual void clearUI() override;
 	private:
-		void setupUi();
+        void setupUi();
 	private:
 		Ui::ScriptNodeUiWidget _ui;
+        view::JSHighlighter* _highlighter = nullptr;
+        view::JSCompleter* _completer = nullptr;
 	};
 }

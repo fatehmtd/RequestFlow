@@ -1,4 +1,5 @@
 #include "CustomJSONModel.h"
+#include <QFont>
 
 logic::CustomJSONModel::CustomJSONModel(GenericJSONItem* rootItem, QObject* parent) : _root(rootItem), QAbstractItemModel(parent)
 {
@@ -59,7 +60,7 @@ int logic::CustomJSONModel::rowCount(const QModelIndex& parent) const
 
 int logic::CustomJSONModel::columnCount(const QModelIndex& parent) const
 {
-    return 1;
+    return 2;
 }
 
 QVariant logic::CustomJSONModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -86,20 +87,53 @@ QVariant logic::CustomJSONModel::data(const QModelIndex& index, int role) const
         switch (index.column())
         {
         case 0:
-            return QString("%1 : %2").arg(item->getPath()).arg(item->getValue());
-        //case 1:
-        //return item->getValue();
+            // Column 0: Key
+            return item->getPath();
+        case 1:
+            // Column 1: Value
+            return item->getValue();
         default:
             return QVariant();
         }
     }
     case Qt::ForegroundRole:
     {
-        return item->getForeground();
+        switch (index.column())
+        {
+        case 0:
+            // Key column: Blue
+            return QColor(0, 92, 197);
+        case 1:
+            // Value column: Type-specific color
+            return item->getForeground();
+        default:
+            return QVariant();
+        }
+    }
+    case Qt::FontRole:
+    {
+        // Make keys bold
+        if (index.column() == 0)
+        {
+            QFont font;
+            font.setBold(true);
+            return font;
+        }
+        return QVariant();
+    }
+    case Qt::TextAlignmentRole:
+    {
+        // Align keys to top
+        if (index.column() == 0)
+        {
+            return Qt::AlignTop;
+        }
+        return QVariant();
     }
     case Qt::DecorationRole:
     {
-        return item->getDecoration();
+        // Icons disabled for cleaner view
+        return QVariant();
     }
     }
     return QVariant();

@@ -19,6 +19,14 @@ void logic::AssertionNode::setupUi()
     _ui.plainTextEdit->setPlainText(node->getScript());
     _ui.plainTextEdit->setPlaceholderText("// javascript");
 
+    // Set monospace font for code editor
+    QFont font("Courier New", 10);
+    font.setStyleHint(QFont::Monospace);
+    _ui.plainTextEdit->setFont(font);
+
+    // Enable JavaScript syntax highlighting
+    _highlighter = new view::JSHighlighter(_ui.plainTextEdit->document());
+
     connect(_ui.plainTextEdit, &QPlainTextEdit::textChanged, this, [=]()
 		{
             node->setScript(_ui.plainTextEdit->toPlainText());

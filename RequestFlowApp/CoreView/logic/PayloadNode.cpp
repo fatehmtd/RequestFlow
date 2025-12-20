@@ -95,6 +95,11 @@ void logic::PayloadNode::fillFromMessage(const model::Message& message)
 	_ui.tableWidget_path->setRowCount(50);
 	_ui.tableWidget_query->setRowCount(50);
 
+	// Disable highlighter during bulk text insertion for performance
+	if (_highlighter && message.getBody().length() > 50000) {
+		_highlighter->setEnabled(false);
+	}
+
 	{
 		auto keys = message.getQueryParams().keys();
 		for (int i = 0; i < keys.size(); i++)
@@ -115,7 +120,11 @@ void logic::PayloadNode::fillFromMessage(const model::Message& message)
 
     //_ui.plainTextEdit_body->setPlainText(message.getBody());
     customDivideText(message.getBody(), _ui.plainTextEdit_body->textCursor(), 1000);
-}
+	// Re-enable highlighter after text insertion
+	if (_highlighter && message.getBody().length() > 50000) {
+		_highlighter->setEnabled(true);
+		_highlighter->rehighlight();
+	}}
 
 void logic::PayloadNode::clearUI()
 {
@@ -136,6 +145,14 @@ void logic::PayloadNode::setupUi()
 
 	_ui.tableWidget_path->setRowCount(50);
 	_ui.tableWidget_query->setRowCount(50);
+
+	// Set monospace font for JSON editor
+	QFont font("Courier New", 10);
+	font.setStyleHint(QFont::Monospace);
+	_ui.plainTextEdit_body->setFont(font);
+
+	// Enable JSON syntax highlighting
+	_highlighter = new view::JSONHighlighter(_ui.plainTextEdit_body->document());
 
     auto payloadNode = dynamic_cast<model::PayloadNode*>(getModelNode());
 

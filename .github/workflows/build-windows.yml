@@ -18,16 +18,17 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.7.2'
+        version: '6.7.3'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_msvc2019_64'
+        arch: 'win64_mingw'
         cache: true
-
-    - name: Setup MSVC
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x64
+        
+    - name: Setup MinGW
+      run: |
+        choco install mingw -y
+        $env:PATH = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;$env:PATH"
+        echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: Create build directory
       working-directory: RequestFlowApp
@@ -39,10 +40,10 @@ jobs:
       run: |
         qmake ..\RequestFlow.pro -r "CONFIG+=release"
 
-    - name: Build with nmake
+    - name: Build with mingw32-make
       working-directory: RequestFlowApp/build
       run: |
-        nmake
+        mingw32-make -j$env:NUMBER_OF_PROCESSORS
 
     - name: Prepare clean distribution directory
       working-directory: RequestFlowApp/build
@@ -53,14 +54,24 @@ jobs:
     - name: Deploy Qt dependencies
       working-directory: RequestFlowApp/build/dist
       run: |
-        windeployqt --release RequestFlow.exe
+        windeployqt --release --svg RequestFlow.exe
 
-    - name: Copy project DLLs
+    - name: Copy project DLLs and MinGW runtime
       working-directory: RequestFlowApp/build
       run: |
+        # Copy project DLLs
         Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction SilentlyContinue
         Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
         Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
+        
+        # Copy MinGW runtime DLLs
+        $mingwPath = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
+        Copy-Item "$mingwPath\libgcc_s_seh-1.dll" dist\ -ErrorAction SilentlyContinue
+        Copy-Item "$mingwPath\libstdc++-6.dll" dist\ -ErrorAction SilentlyContinue
+        Copy-Item "$mingwPath\libwinpthread-1.dll" dist\ -ErrorAction SilentlyContinue
+        
+        # List all DLLs for verification
+        Get-ChildItem dist\*.dll | Select-Object Name
 
     - name: Package artifacts
       working-directory: RequestFlowApp/build

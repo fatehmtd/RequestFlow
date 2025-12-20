@@ -199,26 +199,27 @@ void MainWindow::setProject(model::Project* project)
 
 void MainWindow::onAbout()
 {
-    auto dialog = new QDialog(this);
-    dialog->setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
-    dialog->setWindowFlag(Qt::WindowType::WindowMinMaxButtonsHint, false);
-    dialog->setWindowFlag(Qt::WindowType::WindowContextHelpButtonHint, false);
-    dialog->setWindowFlag(Qt::WindowType::WindowTitleHint, true);
-    //dialog->setWindowFlag(Qt::WindowType::FramelessWindowHint, true);
-    //dialog->setSizePolicy(QSizePolicy::Policy::Fixed);
-    auto widget = new AboutWidget(dialog);
-    dialog->setFixedSize(widget->size());
-    dialog->exec();
+    QDialog dialog(this);
+    dialog.setWindowFlag(Qt::WindowType::WindowCloseButtonHint, true);
+    dialog.setWindowFlag(Qt::WindowType::WindowMinMaxButtonsHint, false);
+    dialog.setWindowFlag(Qt::WindowType::WindowContextHelpButtonHint, false);
+    dialog.setWindowFlag(Qt::WindowType::WindowTitleHint, true);
+    //dialog.setWindowFlag(Qt::WindowType::FramelessWindowHint, true);
+    //dialog.setSizePolicy(QSizePolicy::Policy::Fixed);
+    AboutWidget widget(&dialog);
+    dialog.setFixedSize(widget.size());
+    dialog.exec();
 }
 
 void MainWindow::onContactSupport()
 {
-    QDesktopServices::openUrl(QUrl("mailto:fateh@requestflow.dev?subject=Regarding RequestFlow"));
+    QMessageBox::information(this, "Info", "Supported not available right now.");
 }
 
 void MainWindow::onWebsite()
 {
-    QDesktopServices::openUrl(QUrl("http://www.requestflow.dev"));
+    //QDesktopServices::openUrl(QUrl("http://www.requestflow.dev"));
+    QMessageBox::information(this, "Info", "Supported not available right now.");
 }
 
 void MainWindow::onActivateLicense()

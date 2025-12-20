@@ -43,7 +43,13 @@ HEADERS += ./coreview_global.h \
     MiniMap.h \
     NodeSearchDialog.h \
     view/CustomProxyWidget.h \
-    view/GroupNode.h
+    view/GroupNode.h \
+    JSHighlighter.h \
+    JSONHighlighter.h \
+    HTTPHighlighter.h \
+    JSCompleter.h \
+    SyntaxColors.h \
+    HTMLDelegate.h
 SOURCES += ./view/ConnectionEdge.cpp \
     ./ExternalNodeSelectionDialog.cpp \
     ./LargePayloadInfoWidget.cpp \
@@ -69,7 +75,11 @@ SOURCES += ./view/ConnectionEdge.cpp \
     MiniMap.cpp \
     NodeSearchDialog.cpp \
     view/CustomProxyWidget.cpp \
-    view/GroupNode.cpp
+    view/GroupNode.cpp \
+    JSHighlighter.cpp \
+    JSONHighlighter.cpp \
+    HTTPHighlighter.cpp \
+    JSCompleter.cpp
 FORMS += ./ui/DelayNodeUi.ui \
     $$PWD/externalnodeselectiondialog.ui \
     $$PWD/largepayloadinfowidget.ui \
