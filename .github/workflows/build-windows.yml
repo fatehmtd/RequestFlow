@@ -75,7 +75,7 @@ jobs:
     - name: Build with mingw32-make
       working-directory: RequestFlowApp/build
       run: |
-        mingw32-make
+        mingw32-make -j$env:NUMBER_OF_PROCESSORS
 
     - name: Prepare clean distribution directory
       working-directory: RequestFlowApp/build
@@ -86,28 +86,72 @@ jobs:
     - name: Deploy Qt dependencies
       working-directory: RequestFlowApp/build/dist
       run: |
-        windeployqt --release --svg RequestFlow.exe
+        Write-Host "Running windeployqt..."
+        windeployqt --release --svg --compiler-runtime RequestFlow.exe
+        
+        Write-Host "`nChecking for Qt DLLs after windeployqt:"
+        Get-ChildItem . -Filter "Qt6*.dll" | ForEach-Object { Write-Host "  Found: $($_.Name)" }
 
-    - name: Copy project DLLs and MinGW runtime
+    - name: Copy additional Qt and project DLLs
       working-directory: RequestFlowApp/build
       run: |
         # Copy project DLLs
+        Write-Host "Copying project DLLs..."
         Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction SilentlyContinue
         Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
         Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
+        
+        # Find Qt installation directory
+        $qtDir = $env:Qt6_DIR
+        $qtBinDir = Join-Path $qtDir "bin"
+        
+        Write-Host "`nQt bin directory: $qtBinDir"
+        
+        # Manually copy Qt SVG-related DLLs that windeployqt might miss
+        $svgDlls = @(
+            "Qt6Svg.dll",
+            "Qt6SvgWidgets.dll"
+        )
+        
+        Write-Host "`nCopying Qt SVG DLLs..."
+        foreach ($dll in $svgDlls) {
+            $sourcePath = Join-Path $qtBinDir $dll
+            if (Test-Path $sourcePath) {
+                Copy-Item $sourcePath dist\ -Force
+                Write-Host "  Copied: $dll"
+            } else {
+                Write-Host "  Warning: $dll not found at $sourcePath"
+            }
+        }
         
         # Find and copy MinGW runtime DLLs
         $gccPath = (Get-Command g++).Path
         $mingwBin = Split-Path $gccPath
         
-        Write-Host "Copying MinGW runtime DLLs from: $mingwBin"
-        Copy-Item "$mingwBin\libgcc_s_seh-1.dll" dist\ -ErrorAction SilentlyContinue
-        Copy-Item "$mingwBin\libstdc++-6.dll" dist\ -ErrorAction SilentlyContinue
-        Copy-Item "$mingwBin\libwinpthread-1.dll" dist\ -ErrorAction SilentlyContinue
+        Write-Host "`nCopying MinGW runtime DLLs from: $mingwBin"
+        $mingwDlls = @(
+            "libgcc_s_seh-1.dll",
+            "libstdc++-6.dll",
+            "libwinpthread-1.dll"
+        )
         
-        # List all files in distribution directory
-        Write-Host "`nFiles in distribution directory:"
-        Get-ChildItem dist\ -Recurse | ForEach-Object { Write-Host $_.FullName }
+        foreach ($dll in $mingwDlls) {
+            $sourcePath = Join-Path $mingwBin $dll
+            if (Test-Path $sourcePath) {
+                Copy-Item $sourcePath dist\ -Force
+                Write-Host "  Copied: $dll"
+            } else {
+                Write-Host "  Warning: $dll not found"
+            }
+        }
+        
+        # Verify all Qt6 DLLs are present
+        Write-Host "`nFinal Qt6 DLLs in distribution:"
+        Get-ChildItem dist\ -Filter "Qt6*.dll" | ForEach-Object { Write-Host "  $($_.Name)" }
+        
+        # List all DLLs
+        Write-Host "`nAll DLLs in distribution directory:"
+        Get-ChildItem dist\ -Filter "*.dll" | ForEach-Object { Write-Host "  $($_.Name)" }
 
     - name: Package artifacts
       working-directory: RequestFlowApp/build
