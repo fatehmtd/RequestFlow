@@ -15,7 +15,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Qt
+    - name: Install Qt with MinGW
       uses: jurplel/install-qt-action@v4
       with:
         version: '6.7.3'
@@ -23,12 +23,38 @@ jobs:
         target: 'desktop'
         arch: 'win64_mingw'
         cache: true
+        tools: 'tools_mingw90 qt.tools.win64_mingw1120'
         
-    - name: Setup MinGW
+    - name: Verify installation and set up PATH
       run: |
-        choco install mingw -y
-        $env:PATH = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;$env:PATH"
-        echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        Write-Host "Qt6_DIR: $env:Qt6_DIR"
+        Write-Host "IQTA_TOOLS: $env:IQTA_TOOLS"
+        
+        # Find MinGW directory
+        $mingwPath = Get-ChildItem -Path "$env:IQTA_TOOLS" -Directory -Filter "mingw*" -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($mingwPath) {
+          Write-Host "Found MinGW at: $($mingwPath.FullName)"
+          $mingwBin = Join-Path $mingwPath.FullName "bin"
+          echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        } else {
+          Write-Host "MinGW not found in tools directory, checking common locations..."
+          # Fallback: check if MinGW is in Qt directory structure
+          $qtMingw = Get-ChildItem -Path (Split-Path $env:Qt6_DIR -Parent) -Directory -Filter "mingw*" -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($qtMingw) {
+            Write-Host "Found MinGW at: $($qtMingw.FullName)"
+            $mingwBin = Join-Path $qtMingw.FullName "bin"
+            echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          }
+        }
+        
+    - name: Verify compiler
+      run: |
+        Write-Host "Checking g++ version:"
+        g++ --version
+        Write-Host "`nChecking qmake:"
+        qmake --version
+        Write-Host "`nChecking mingw32-make:"
+        mingw32-make --version
 
     - name: Create build directory
       working-directory: RequestFlowApp
@@ -49,7 +75,7 @@ jobs:
       working-directory: RequestFlowApp/build
       run: |
         New-Item -ItemType Directory -Path dist -Force
-        Copy-Item RequestFlow\release\RequestFlow.exe dist\
+        Copy-Item RequestFlow\release\RequestFlow.exe dist\ -ErrorAction Stop
 
     - name: Deploy Qt dependencies
       working-directory: RequestFlowApp/build/dist
@@ -64,14 +90,18 @@ jobs:
         Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
         Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
         
-        # Copy MinGW runtime DLLs
-        $mingwPath = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
-        Copy-Item "$mingwPath\libgcc_s_seh-1.dll" dist\ -ErrorAction SilentlyContinue
-        Copy-Item "$mingwPath\libstdc++-6.dll" dist\ -ErrorAction SilentlyContinue
-        Copy-Item "$mingwPath\libwinpthread-1.dll" dist\ -ErrorAction SilentlyContinue
+        # Find and copy MinGW runtime DLLs
+        $gccPath = (Get-Command g++).Path
+        $mingwBin = Split-Path $gccPath
         
-        # List all DLLs for verification
-        Get-ChildItem dist\*.dll | Select-Object Name
+        Write-Host "Copying MinGW runtime DLLs from: $mingwBin"
+        Copy-Item "$mingwBin\libgcc_s_seh-1.dll" dist\ -ErrorAction SilentlyContinue
+        Copy-Item "$mingwBin\libstdc++-6.dll" dist\ -ErrorAction SilentlyContinue
+        Copy-Item "$mingwBin\libwinpthread-1.dll" dist\ -ErrorAction SilentlyContinue
+        
+        # List all files in distribution directory
+        Write-Host "`nFiles in distribution directory:"
+        Get-ChildItem dist\ -Recurse | ForEach-Object { Write-Host $_.FullName }
 
     - name: Package artifacts
       working-directory: RequestFlowApp/build
