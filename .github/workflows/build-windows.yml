@@ -75,7 +75,7 @@ jobs:
     - name: Build with mingw32-make
       working-directory: RequestFlowApp/build
       run: |
-        mingw32-make -j$env:NUMBER_OF_PROCESSORS
+        mingw32-make
 
     - name: Prepare clean distribution directory
       working-directory: RequestFlowApp/build
