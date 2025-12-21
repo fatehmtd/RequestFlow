@@ -125,7 +125,7 @@ jobs:
         
         # Run qmake
         echo "Running qmake..."
-        $QMAKE_PATH ../RequestFlow.pro -r "CONFIG+=release"
+        $QMAKE_PATH ../RequestFlowApp.pro -r "CONFIG+=release"
         
         # Verify the generated Makefile
         echo ""

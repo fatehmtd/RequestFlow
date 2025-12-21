@@ -30,7 +30,7 @@ jobs:
         
     - name: Configure with qmake
       working-directory: RequestFlowApp/build
-      run: qmake ../RequestFlow.pro -r "CONFIG+=release"
+      run: qmake ../RequestFlowApp.pro -r "CONFIG+=release"
         
     - name: Build with make
       working-directory: RequestFlowApp/build
