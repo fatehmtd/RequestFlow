@@ -166,14 +166,27 @@ jobs:
         # Copy main executable
         cp RequestFlow/RequestFlow AppDir/usr/bin/
         
-        # Copy project libraries
-        cp CoreModel/libCoreModel.so* AppDir/usr/lib/ || true
-        cp CoreView/libCoreView.so* AppDir/usr/lib/ || true
-        cp ExecutionEngine/libExecutionEngine.so* AppDir/usr/lib/ || true
-        
-        # List all shared libraries for verification
+        # Copy project libraries (search build output for versioned .so files and preserve symlinks)
+        find .. -maxdepth 2 -type f -name "libCoreModel.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+        find .. -maxdepth 2 -type f -name "libCoreView.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+        find .. -maxdepth 2 -type f -name "libExecutionEngine.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+
+        # Ensure SONAME symlinks exist (e.g. libCoreModel.so.1 -> libCoreModel.so.1.0.0 and libCoreModel.so -> libCoreModel.so.1)
+        pushd AppDir/usr/lib >/dev/null
+        for libbase in CoreModel CoreView ExecutionEngine; do
+          verfile=$(ls -1 lib${libbase}.so* 2>/dev/null | grep -E "lib${libbase}\.so\.[0-9]" | head -n1 || true)
+          if [ -n "$verfile" ]; then
+            if [ ! -e "lib${libbase}.so.1" ]; then
+              ln -sf "$verfile" "lib${libbase}.so.1" || true
+            fi
+            if [ ! -e "lib${libbase}.so" ]; then
+              ln -sf "lib${libbase}.so.1" "lib${libbase}.so" || true
+            fi
+          fi
+        done
         echo "Copied libraries:"
-        ls -la AppDir/usr/lib/
+        ls -la
+        popd >/dev/null
         
     - name: Create desktop entry
       working-directory: RequestFlowApp/build/AppDir
