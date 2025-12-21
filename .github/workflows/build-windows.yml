@@ -101,27 +101,35 @@ jobs:
         Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
         Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
         
-        # Find Qt installation directory
+        # Find Qt installation directory (fallback to QT_ROOT_DIR if Qt6_DIR missing)
         $qtDir = $env:Qt6_DIR
-        $qtBinDir = Join-Path $qtDir "bin"
-        
-        Write-Host "`nQt bin directory: $qtBinDir"
-        
-        # Manually copy Qt SVG-related DLLs that windeployqt might miss
-        $svgDlls = @(
+        if (-not $qtDir -or $qtDir -eq "") {
+          Write-Host "Qt6_DIR not set; falling back to QT_ROOT_DIR"
+          $qtDir = $env:QT_ROOT_DIR
+        }
+
+        if ($qtDir -and (Test-Path $qtDir)) {
+          $qtBinDir = Join-Path $qtDir "bin"
+          Write-Host "`nQt bin directory: $qtBinDir"
+
+          # Manually copy Qt SVG-related DLLs that windeployqt might miss
+          $svgDlls = @(
             "Qt6Svg.dll",
             "Qt6SvgWidgets.dll"
-        )
-        
-        Write-Host "`nCopying Qt SVG DLLs..."
-        foreach ($dll in $svgDlls) {
+          )
+
+          Write-Host "`nCopying Qt SVG DLLs..."
+          foreach ($dll in $svgDlls) {
             $sourcePath = Join-Path $qtBinDir $dll
             if (Test-Path $sourcePath) {
-                Copy-Item $sourcePath dist\ -Force
-                Write-Host "  Copied: $dll"
+              Copy-Item $sourcePath dist\ -Force
+              Write-Host "  Copied: $dll"
             } else {
-                Write-Host "  Warning: $dll not found at $sourcePath"
+              Write-Host "  Warning: $dll not found at $sourcePath"
             }
+          }
+        } else {
+          Write-Host "Qt installation directory not found (Qt6_DIR and QT_ROOT_DIR empty). Skipping Qt DLL copy."
         }
         
         # Find and copy MinGW runtime DLLs
