@@ -167,9 +167,10 @@ jobs:
         cp RequestFlow/RequestFlow AppDir/usr/bin/
         
         # Copy project libraries (search build output for versioned .so files and preserve symlinks)
-        find .. -maxdepth 2 -type f -name "libCoreModel.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
-        find .. -maxdepth 2 -type f -name "libCoreView.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
-        find .. -maxdepth 2 -type f -name "libExecutionEngine.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+        # Search entire build tree for any .so files produced by the build
+        find .. -type f -name "libCoreModel.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+        find .. -type f -name "libCoreView.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+        find .. -type f -name "libExecutionEngine.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
 
         # Ensure SONAME symlinks exist (e.g. libCoreModel.so.1 -> libCoreModel.so.1.0.0 and libCoreModel.so -> libCoreModel.so.1)
         pushd AppDir/usr/lib >/dev/null
@@ -186,6 +187,14 @@ jobs:
         done
         echo "Copied libraries:"
         ls -la
+        echo "--- AppDir/usr/lib symlinks and files ---"
+        ls -l AppDir/usr/lib || true
+        echo "--- Binary NEEDED entries (readelf) ---"
+        if command -v readelf >/dev/null 2>&1; then
+          readelf -d AppDir/usr/bin/RequestFlow | grep -i NEEDED || true
+        else
+          echo "readelf not available"
+        fi
         popd >/dev/null
         
     - name: Create desktop entry
