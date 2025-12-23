@@ -46,9 +46,13 @@ jobs:
         New-Item -ItemType Directory -Path dist -Force
         Copy-Item RequestFlow\release\RequestFlow.exe dist\ -ErrorAction Stop
         # Copy project DLLs
-        Copy-Item ..\CoreModel\release\CoreModel.dll dist\ -ErrorAction SilentlyContinue
-        Copy-Item ..\CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
-        Copy-Item ..\ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
+        Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction Stop
+        Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction Stop
+        Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction Stop
+
+    - name: Deploy Qt and MinGW dependencies
+      working-directory: RequestFlowApp/build
+      run: |
         # Deploy Qt dependencies
         cd dist
         windeployqt --release --svg --compiler-runtime RequestFlow.exe
