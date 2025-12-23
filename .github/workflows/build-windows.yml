@@ -25,141 +25,45 @@ jobs:
         cache: true
         tools: 'tools_mingw90'
         
-    - name: Verify installation and set up PATH
+    - name: Add MinGW to PATH and verify tools
       run: |
-        Write-Host "Qt6_DIR: $env:Qt6_DIR"
-        Write-Host "IQTA_TOOLS: $env:IQTA_TOOLS"
-        
-        # List tools directory to see what's there
-        Write-Host "`nContents of IQTA_TOOLS:"
-        Get-ChildItem "$env:IQTA_TOOLS" -Directory | ForEach-Object { Write-Host "  $($_.Name)" }
-        
-        # Find MinGW directory (tools_mingw90 installs as mingw1120_64 or similar)
         $mingwPath = Get-ChildItem -Path "$env:IQTA_TOOLS" -Directory -Filter "mingw*" -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($mingwPath) {
-          Write-Host "`nFound MinGW at: $($mingwPath.FullName)"
           $mingwBin = Join-Path $mingwPath.FullName "bin"
-          
-          # Verify g++ exists
-          if (Test-Path "$mingwBin\g++.exe") {
-            Write-Host "Verified g++ exists at: $mingwBin\g++.exe"
-            echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          } else {
-            Write-Host "Warning: g++ not found in $mingwBin"
-          }
-        } else {
-          Write-Host "`nMinGW directory not found in IQTA_TOOLS"
-          Write-Host "This is unexpected - tools_mingw90 should have installed MinGW"
-          exit 1
+          echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         }
-        
-    - name: Verify compiler
-      run: |
-        Write-Host "Checking g++ version:"
         g++ --version
-        Write-Host "`nChecking qmake:"
         qmake --version
-        Write-Host "`nChecking mingw32-make:"
         mingw32-make --version
 
-    - name: Create build directory
+    - name: Build and package
       working-directory: RequestFlowApp
       run: |
         if (!(Test-Path build)) { New-Item -ItemType Directory -Path build }
-
-    - name: Configure with qmake
-      working-directory: RequestFlowApp/build
-      run: |
+        cd build
         qmake ..\RequestFlowApp.pro -r "CONFIG+=release"
-
-    - name: Build with mingw32-make
-      working-directory: RequestFlowApp/build
-      run: |
         mingw32-make
-
-    - name: Prepare clean distribution directory
-      working-directory: RequestFlowApp/build
-      run: |
         New-Item -ItemType Directory -Path dist -Force
         Copy-Item RequestFlow\release\RequestFlow.exe dist\ -ErrorAction Stop
-
-    - name: Deploy Qt dependencies
-      working-directory: RequestFlowApp/build/dist
-      run: |
-        Write-Host "Running windeployqt..."
-        windeployqt --release --svg --compiler-runtime RequestFlow.exe
-        
-        Write-Host "`nChecking for Qt DLLs after windeployqt:"
-        Get-ChildItem . -Filter "Qt6*.dll" | ForEach-Object { Write-Host "  Found: $($_.Name)" }
-
-    - name: Copy additional Qt and project DLLs
-      working-directory: RequestFlowApp/build
-      run: |
         # Copy project DLLs
-        Write-Host "Copying project DLLs..."
-        Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction SilentlyContinue
-        Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
-        Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
-        
-        # Find Qt installation directory (fallback to QT_ROOT_DIR if Qt6_DIR missing)
-        $qtDir = $env:Qt6_DIR
-        if (-not $qtDir -or $qtDir -eq "") {
-          Write-Host "Qt6_DIR not set; falling back to QT_ROOT_DIR"
-          $qtDir = $env:QT_ROOT_DIR
-        }
-
-        if ($qtDir -and (Test-Path $qtDir)) {
-          $qtBinDir = Join-Path $qtDir "bin"
-          Write-Host "`nQt bin directory: $qtBinDir"
-
-          # Manually copy Qt SVG-related DLLs that windeployqt might miss
-          $svgDlls = @(
-            "Qt6Svg.dll",
-            "Qt6SvgWidgets.dll"
-          )
-
-          Write-Host "`nCopying Qt SVG DLLs..."
-          foreach ($dll in $svgDlls) {
-            $sourcePath = Join-Path $qtBinDir $dll
-            if (Test-Path $sourcePath) {
-              Copy-Item $sourcePath dist\ -Force
-              Write-Host "  Copied: $dll"
-            } else {
-              Write-Host "  Warning: $dll not found at $sourcePath"
-            }
-          }
-        } else {
-          Write-Host "Qt installation directory not found (Qt6_DIR and QT_ROOT_DIR empty). Skipping Qt DLL copy."
-        }
-        
-        # Find and copy MinGW runtime DLLs
+        Copy-Item ..\CoreModel\release\CoreModel.dll dist\ -ErrorAction SilentlyContinue
+        Copy-Item ..\CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
+        Copy-Item ..\ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
+        # Deploy Qt dependencies
+        cd dist
+        windeployqt --release --svg --compiler-runtime RequestFlow.exe
+        # Copy MinGW runtime DLLs
         $gccPath = (Get-Command g++).Path
         $mingwBin = Split-Path $gccPath
-        
-        Write-Host "`nCopying MinGW runtime DLLs from: $mingwBin"
-        $mingwDlls = @(
-            "libgcc_s_seh-1.dll",
-            "libstdc++-6.dll",
-            "libwinpthread-1.dll"
-        )
-        
+        $mingwDlls = @("libgcc_s_seh-1.dll", "libstdc++-6.dll", "libwinpthread-1.dll")
         foreach ($dll in $mingwDlls) {
-            $sourcePath = Join-Path $mingwBin $dll
-            if (Test-Path $sourcePath) {
-                Copy-Item $sourcePath dist\ -Force
-                Write-Host "  Copied: $dll"
-            } else {
-                Write-Host "  Warning: $dll not found"
-            }
+          $sourcePath = Join-Path $mingwBin $dll
+          if (Test-Path $sourcePath) {
+            Copy-Item $sourcePath . -Force
+          }
         }
-        
-        # Verify all Qt6 DLLs are present
-        Write-Host "`nFinal Qt6 DLLs in distribution:"
-        Get-ChildItem dist\ -Filter "Qt6*.dll" | ForEach-Object { Write-Host "  $($_.Name)" }
-        
-        # List all DLLs
-        Write-Host "`nAll DLLs in distribution directory:"
-        Get-ChildItem dist\ -Filter "*.dll" | ForEach-Object { Write-Host "  $($_.Name)" }
+        cd ..
+        Compress-Archive -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
 
     - name: Package artifacts
       working-directory: RequestFlowApp/build
