@@ -62,13 +62,11 @@ jobs:
             Copy-Item $sourcePath . -Force
           }
         }
-        cd ..
-        Compress-Archive -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
 
     - name: Package artifacts
       working-directory: RequestFlowApp/build
       run: |
-        Compress-Archive -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
+        Compress-Archive -Force -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
