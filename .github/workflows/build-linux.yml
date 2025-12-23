@@ -60,13 +60,21 @@ jobs:
     - name: Prepare deployment files
       run: |
         cd build
+        echo "--- Build directory contents ---"
+        ls -la .
+
+        echo "--- Parent directory contents ---"
+        ls -la ../
+
+        echo "--- Grandparent directory contents ---"
+        ls la ../../
         
         # Copy desktop file and fix line endings
-        cp ../RequestFlow.desktop RequestFlow/
+        cp ../../RequestFlowApp/deployment/linux/RequestFlow.desktop RequestFlow/
         sed -i 's/\r$//' RequestFlow/RequestFlow.desktop
         
         # Copy icon
-        cp ../RequestFlowApp/design/RequestFlowLogo-256.png RequestFlow/RequestFlow.png
+        cp ../../RequestFlowApp/design/RequestFlowLogo-256.png RequestFlow/RequestFlow.png
         
     - name: Download linuxdeployqt
       run: |
