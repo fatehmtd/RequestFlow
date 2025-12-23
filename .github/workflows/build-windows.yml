@@ -56,6 +56,38 @@ jobs:
         # Deploy Qt dependencies
         cd dist
         windeployqt --release --svg --compiler-runtime RequestFlow.exe
+
+        # Find Qt installation directory (fallback to QT_ROOT_DIR if Qt6_DIR missing)
+        $qtDir = $env:Qt6_DIR
+        if (-not $qtDir -or $qtDir -eq "") {
+          Write-Host "Qt6_DIR not set; falling back to QT_ROOT_DIR"
+          $qtDir = $env:QT_ROOT_DIR
+        }
+
+        if ($qtDir -and (Test-Path $qtDir)) {
+          $qtBinDir = Join-Path $qtDir "bin"
+          Write-Host "`nQt bin directory: $qtBinDir"
+
+          # Manually copy Qt SVG-related DLLs that windeployqt might miss
+          $svgDlls = @(
+            "Qt6Svg.dll",
+            "Qt6SvgWidgets.dll"
+          )
+
+          Write-Host "`nCopying Qt SVG DLLs..."
+          foreach ($dll in $svgDlls) {
+            $sourcePath = Join-Path $qtBinDir $dll
+            if (Test-Path $sourcePath) {
+              Copy-Item $sourcePath . -Force
+              Write-Host "  Copied: $dll"
+            } else {
+              Write-Host "  Warning: $dll not found at $sourcePath"
+            }
+          }
+        } else {
+          Write-Host "Qt installation directory not found (Qt6_DIR and QT_ROOT_DIR empty). Skipping Qt DLL copy."
+        }
+              
         # Copy MinGW runtime DLLs
         $gccPath = (Get-Command g++).Path
         $mingwBin = Split-Path $gccPath
