@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RequestFlow - REST API Testing for Human Beings. A visual, node-based REST API testing and workflow automation tool.">
+    <meta name="keywords" content="REST API, API Testing, HTTP Client, Workflow Automation, Visual Programming, Qt">
+    <meta name="author" content="Fateh Benmerzoug, Ph.D">
+    <title>RequestFlow - REST API Testing for Human Beings</title>
+    <link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+    <link rel="icon" type="image/png" href="icons/logo.svg">
+    <link rel="apple-touch-icon" href="icons/logo.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <img src="icons/logo.svg" alt="RequestFlow Logo" id="nav-logo">
+                <h1>RequestFlow</h1>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="#videos">Videos</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="#contribute">Contribute</a></li>
+                <li><a href="https://github.com/fatehmtd/RequestFlow" target="_blank" class="btn-outline">GitHub</a></li>
+            </ul>
+            <div class="nav-controls">
+                <button class="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button class="hamburger" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">RequestFlow</h1>
+                <p class="hero-subtitle">REST API Testing for Human Beings</p>
+                <p class="hero-description">
+                    A visual, node-based REST API testing and workflow automation tool built with Qt. 
+                    Design, test, and automate HTTP request workflows with an intuitive graphical interface.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">Download Now</a>
+                    <a href="https://github.com/fatehmtd/RequestFlow" target="_blank" class="btn btn-secondary">View on GitHub</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <a href="images/main-ui.png" data-fancybox="hero" data-caption="RequestFlow Application Screenshot" class="hero-image-link" aria-label="View full-size screenshot">
+                    <img src="images/main-ui.png" alt="RequestFlow Application Screenshot">
+                    <div class="image-overlay">
+                        <i class="fas fa-search-plus"></i>
+                        <span>Click to enlarge</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Status Notice -->
+    <section class="notice">
+        <div class="container">
+            <div class="notice-box">
+                <h2>🚀 Early Access Project</h2>
+                <p>RequestFlow is an <strong>actively developed open source project</strong> offering a unique visual approach to API testing. While the core features are functional and ready to use, we're continuously improving and expanding the platform.</p>
+                
+                <h3>What to Expect</h3>
+                <ul>
+                    <li><strong>Active Development:</strong> New features and improvements are regularly added</li>
+                    <li><strong>Community-Driven:</strong> Your feedback directly shapes the roadmap</li>
+                    <li><strong>Growing Documentation:</strong> Guides and tutorials are being expanded</li>
+                    <li><strong>Open Source:</strong> Full transparency and opportunity to contribute</li>
+                </ul>
+                
+                <p>Found a bug or have an idea? We'd love to hear from you! Share your feedback on <a href="https://github.com/fatehmtd/RequestFlow/issues" target="_blank">GitHub</a> or contribute to make RequestFlow even better.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Features</h2>
+            <p class="section-subtitle">Everything you need for powerful API testing and automation</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><img src="icons/endpoint.svg" alt="" class="feature-icon">Visual Node-Based Editor</h3>
+                    <p>Design API test workflows using an intuitive drag-and-drop interface. Connect nodes to create complex request sequences visually.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><img src="icons/external.svg" alt="" class="feature-icon">Multiple Node Types</h3>
+                    <p>Endpoint, Script, Assertion, Payload, Viewer, Delay, Conditional, Group, and External nodes for complete workflow control.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><img src="icons/delay.svg" alt="" class="feature-icon">Environment Management</h3>
+                    <p>Define and switch between multiple environments (dev, staging, production) with ease. Manage API endpoints and credentials per environment.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><img src="icons/payload.svg" alt="" class="feature-icon">Variable Substitution</h3>
+                    <p>Use environment variables and dynamic values in URLs, headers, and payloads with simple <code>{variable}</code> syntax.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><img src="icons/viewer.svg" alt="" class="feature-icon">Message Flow Tracking</h3>
+                    <p>Visualize and debug data flow between nodes. See exactly how data transforms through your workflow.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><img src="icons/script.svg" alt="" class="feature-icon">Custom JavaScript Engine</h3>
+                    <p>Built-in JavaScript execution for advanced scripting capabilities. Transform data, create custom validations, and more.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><img src="icons/assertion.svg" alt="" class="feature-icon">Assertion Nodes</h3>
+                    <p>Validate API responses with custom assertions. Ensure your APIs behave exactly as expected.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><i class="fas fa-folder-open feature-icon"></i>Project Management</h3>
+                    <p>Save and organize multiple test scenarios in project files (.rqfl). Keep your workflows organized and version-controlled.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><i class="fas fa-palette feature-icon"></i>Dark/Light Theme</h3>
+                    <p>Customizable UI themes for comfortable viewing. Choose the theme that works best for you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section id="screenshots" class="screenshots">
+        <div class="container">
+            <h2 class="section-title">Screenshots</h2>
+            <p class="section-subtitle">See RequestFlow in action</p>
+            
+            <div class="screenshots-grid">
+                <!-- Placeholder for screenshot 1 -->
+                <div class="screenshot-item">
+                    <a href="images/example-flow.png" data-fancybox="gallery" data-caption="Node-based workflow editor" class="screenshot-link">                        
+                        <img src="images/example-flow.png" alt="Node-based workflow editor"">
+                        <div class="image-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </a>
+                    <p class="screenshot-caption">Node-based workflow editor</p>
+                </div>
+
+                <!-- Placeholder for screenshot 2 -->
+                <div class="screenshot-item">
+                    <a href="images/config-endpoint.png" data-fancybox="gallery" data-caption="Configuring API endpoints" class="screenshot-link">
+                        <img src="images/config-endpoint.png" alt="Configuring API endpoints">
+                        <div class="image-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </a>
+                    <p class="screenshot-caption">Configuring API endpoints</p>
+                </div>
+
+                <!-- Placeholder for screenshot 3 -->
+                <div class="screenshot-item">
+                    <a href="images/prod-env.png" data-fancybox="gallery" data-caption="Environment management" class="screenshot-link">
+                        <img src="images/prod-env.png" alt="Environment management">
+                        <div class="image-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </a>
+                    <p class="screenshot-caption">Environment management</p>
+                </div>
+
+                <!-- Placeholder for screenshot 4 -->
+                <div class="screenshot-item">
+                    <a href="images/data-viz.png" data-fancybox="gallery" data-caption="Response data visualization" class="screenshot-link">
+                        <img src="images/data-viz.png" alt="Response data visualization">
+                        <div class="image-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </a>
+                    <p class="screenshot-caption">Response data visualization</p>
+                </div>
+
+                <!-- Placeholder for screenshot 5 -->
+                <div class="screenshot-item">
+                    <a href="images/scripting.png" data-fancybox="gallery" data-caption="Custom JavaScript editing" class="screenshot-link">
+                        <img src="images/scripting.png" alt="Custom JavaScript editing">
+                        <div class="image-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </a>
+                    <p class="screenshot-caption">Custom JavaScript editing</p>
+                </div>
+
+                <!-- Placeholder for screenshot 6 -->
+                <div class="screenshot-item">
+                    <a href="images/view-filtering.png" data-fancybox="gallery" data-caption="View filtering with JSON Path Expressions" class="screenshot-link">
+                        <img src="images/view-filtering.png" alt="View filtering with JSON Path Expressions">
+                        <div class="image-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </a>
+                    <p class="screenshot-caption">View filtering with JSON Path Expressions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section id="videos" class="videos">
+        <div class="container">
+            <h2 class="section-title">Videos</h2>
+            <p class="section-subtitle">Watch tutorials and feature demonstrations</p>
+            
+            <div class="videos-grid">
+                <!-- Placeholder for video 1 -->
+                <div class="video-item">
+                    <div class="placeholder-video">
+                        <p>🎥 Getting Started</p>
+                        <p class="placeholder-note">Introduction and basic usage</p>
+                    </div>
+                    <h3>Getting Started with RequestFlow</h3>
+                    <p>Learn the basics of creating your first API workflow</p>
+                </div>
+
+                <!-- Placeholder for video 2 -->
+                <div class="video-item">
+                    <div class="placeholder-video">
+                        <p>🎥 Advanced Features</p>
+                        <p class="placeholder-note">Script nodes and assertions</p>
+                    </div>
+                    <h3>Advanced Features Tutorial</h3>
+                    <p>Discover powerful features like script nodes and custom assertions</p>
+                </div>
+
+                <!-- Placeholder for video 3 -->
+                <div class="video-item">
+                    <div class="placeholder-video">
+                        <p>🎥 Real-World Example</p>
+                        <p class="placeholder-note">Complete workflow demonstration</p>
+                    </div>
+                    <h3>Real-World API Testing</h3>
+                    <p>See how to test a complete authentication flow</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download">
+        <div class="container">
+            <h2 class="section-title">Download RequestFlow</h2>
+            <p class="section-subtitle">Available for Windows, macOS, and Linux</p>
+            
+            <div class="download-cards">
+                <div class="download-card">
+                    <i class="fab fa-windows platform-icon"></i>
+                    <h3>Windows</h3>
+                    <p>Windows 10/11 (64-bit)</p>
+                    <a href="https://github.com/fatehmtd/RequestFlow/releases" target="_blank" class="btn btn-primary">Download for Windows</a>
+                    <p class="download-note">Includes installer with all dependencies</p>
+                </div>
+
+                <div class="download-card">
+                    <i class="fab fa-apple platform-icon"></i>
+                    <h3>macOS</h3>
+                    <p>macOS 10.14+</p>
+                    <a href="https://github.com/fatehmtd/RequestFlow/releases" target="_blank" class="btn btn-primary">Download for macOS</a>
+                    <p class="download-note">Universal binary for Intel and Apple Silicon</p>
+                </div>
+
+                <div class="download-card">
+                    <i class="fab fa-linux platform-icon"></i>
+                    <h3>Linux</h3>
+                    <p>Ubuntu, Fedora, and more</p>
+                    <a href="https://github.com/fatehmtd/RequestFlow/releases" target="_blank" class="btn btn-primary">Download for Linux</a>
+                    <p class="download-note">AppImage or build from source</p>
+                </div>
+            </div>
+
+            <div class="build-from-source">
+                <h3>Build from Source</h3>
+                <p>RequestFlow is open source! Clone the repository and build it yourself:</p>
+                <pre><code>git clone https://github.com/fatehmtd/RequestFlow.git
+cd RequestFlow/RequestFlowApp
+qmake RequestFlow.pro
+make</code></pre>
+                <p>See the <a href="https://github.com/fatehmtd/RequestFlow#building-from-source" target="_blank">README</a> for detailed build instructions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Requirements -->
+    <section class="requirements">
+        <div class="container">
+            <h2 class="section-title">System Requirements</h2>
+            
+            <div class="requirements-grid">
+                <div class="requirement-item">
+                    <h3>Operating System</h3>
+                    <ul>
+                        <li>Windows 10/11 (64-bit)</li>
+                        <li>macOS 10.14 or later</li>
+                        <li>Linux (Ubuntu 20.04+, Fedora, etc.)</li>
+                    </ul>
+                </div>
+
+                <div class="requirement-item">
+                    <h3>Build Requirements</h3>
+                    <ul>
+                        <li>Qt 5.15.2+ or Qt 6.x</li>
+                        <li>C++17 compatible compiler</li>
+                        <li>MSVC 2019+ / GCC / Clang</li>
+                    </ul>
+                </div>
+
+                <div class="requirement-item">
+                    <h3>Qt Modules</h3>
+                    <ul>
+                        <li>Core, GUI, Network, Widgets</li>
+                        <li>QML, SVG, OpenGL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contribute Section -->
+    <section id="contribute" class="contribute">
+        <div class="container">
+            <h2 class="section-title">Contribute to RequestFlow</h2>
+            <p class="section-subtitle">RequestFlow is open source! We welcome contributions from the community.</p>
+            
+            <div class="contribute-content">
+                <div class="contribute-text">
+                    <h3>How to Contribute</h3>
+                    <ol>
+                        <li><strong>Fork the Repository</strong> - Create your own fork of the project</li>
+                        <li><strong>Create a Branch</strong> - Make your changes in a feature branch</li>
+                        <li><strong>Make Changes</strong> - Implement your feature or bug fix</li>
+                        <li><strong>Test</strong> - Ensure your changes build and work correctly</li>
+                        <li><strong>Submit a Pull Request</strong> - Share your improvements with the community</li>
+                    </ol>
+
+                    <h3>Areas for Contribution</h3>
+                    <ul class="contribute-areas">
+                        <li>Bug fixes and stability improvements</li>
+                        <li>New node types and functionality</li>
+                        <li>UI/UX enhancements</li>
+                        <li>Documentation improvements</li>
+                        <li>Platform-specific fixes and optimizations</li>
+                        <li>Test coverage and performance optimizations</li>
+                    </ul>
+
+                    <a href="https://github.com/fatehmtd/RequestFlow/blob/main/CONTRIBUTING.md" target="_blank" class="btn btn-primary">View Contributing Guidelines</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <h2 class="section-title">About RequestFlow</h2>
+            <div class="about-content">
+                <p>
+                    RequestFlow is a professional REST API testing and workflow automation tool that brings 
+                    visual programming concepts to API testing. Built with Qt for cross-platform compatibility, 
+                    it provides a powerful yet intuitive interface for designing, testing, and automating 
+                    complex HTTP request workflows.
+                </p>
+                <p>
+                    Created and maintained by <strong>Fateh Benmerzoug, Ph.D</strong>, RequestFlow is now 
+                    open source under the MIT License, allowing developers worldwide to contribute and improve 
+                    the tool.
+                </p>
+                <p>
+                    <strong>Current Version:</strong> 1.0.0<br>
+                    <strong>License:</strong> MIT License<br>
+                    <strong>Website:</strong> <a href="http://www.requestflow.dev" target="_blank">www.requestflow.dev</a><br>
+                    <strong>Email:</strong> <a href="mailto:fateh@requestflow.dev">fateh@requestflow.dev</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>RequestFlow</h4>
+                    <p>REST API Testing for Human Beings</p>
+                    <p>&copy; 2025 Fateh Benmerzoug, Ph.D</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <ul>
+                        <li><a href="https://github.com/fatehmtd/RequestFlow" target="_blank">GitHub</a></li>
+                        <li><a href="https://github.com/fatehmtd/RequestFlow/releases" target="_blank">Releases</a></li>
+                        <li><a href="https://github.com/fatehmtd/RequestFlow/issues" target="_blank">Issues</a></li>
+                        <li><a href="https://github.com/fatehmtd/RequestFlow/blob/main/CONTRIBUTING.md" target="_blank">Contributing</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/fatehmtd/RequestFlow#readme" target="_blank">Documentation</a></li>
+                        <li><a href="https://github.com/fatehmtd/RequestFlow/blob/main/LICENSE" target="_blank">License</a></li>
+                        <li><a href="http://www.requestflow.dev" target="_blank">Website</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:fateh@requestflow.dev">fateh@requestflow.dev</a></li>
+                        <li><a href="http://www.requestflow.dev" target="_blank">www.requestflow.dev</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Built with ❤️ using Qt Framework | Open Source under MIT License</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
