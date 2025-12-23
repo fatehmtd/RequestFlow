@@ -80,6 +80,7 @@ jobs:
         cd build
         export PATH=/usr/lib/x86_64-linux-gnu/qt6/bin:$PATH
         export LD_LIBRARY_PATH=$PWD/RequestFlow:$PWD/CoreModel:$PWD/CoreView:$PWD/ExecutionEngine:$LD_LIBRARY_PATH
+        export OUTPUT=../RequestFlow-Linux-x86_64.AppImage
         
         ./squashfs-root/AppRun RequestFlow/RequestFlow \
           -qmake=/usr/bin/qmake6 \
@@ -87,9 +88,6 @@ jobs:
           -no-translations \
           -appimage \
           -verbose=2
-        
-        # Rename the AppImage
-        mv RequestFlow-x86_64.AppImage ../RequestFlow-Linux-x86_64.AppImage || true
         
     - name: Verify AppImage
       run: |
