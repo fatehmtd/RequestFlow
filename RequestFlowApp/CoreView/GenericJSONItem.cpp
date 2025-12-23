@@ -1,6 +1,7 @@
 #include "GenericJSONItem.h"
 
 #include "CoreViewUtils.h"
+#include "SyntaxColors.h"
 
 logic::GenericJSONItem::GenericJSONItem(const QString& path, const QString& value, int type, GenericJSONItem* parent)
     : _path(path), _value(value), _type(type), _parent(parent)
@@ -10,23 +11,23 @@ logic::GenericJSONItem::GenericJSONItem(const QString& path, const QString& valu
     case QVariant::Type::Map:
     {
         _decoration = view::SVGRenderer::getInstance()->renderToIcon(":/ui/{}");
-        _foreground = QColor(0, 0, 255);
+        _foreground = view::SyntaxColors::jsonKey(); // Blue for object keys
         break;
     }
     case QVariant::Type::List:
     {
         _decoration = view::SVGRenderer::getInstance()->renderToIcon(":/ui/[]");
-        _foreground = QColor(0, 0, 255);
+        _foreground = view::SyntaxColors::jsonKey(); // Blue for arrays
         break;
     }
     case QVariant::Type::String:
     {
-        _foreground = QColor("#AC0D8A");
+        _foreground = view::SyntaxColors::jsonString(); // Red for strings
         break;
     }
     case QVariant::Type::Bool:
     {
-        _foreground = QColor("#002CF5");
+        _foreground = view::SyntaxColors::jsonBoolean(); // Magenta for booleans
         break;
     }
     case QVariant::Type::Int:
@@ -35,7 +36,7 @@ logic::GenericJSONItem::GenericJSONItem(const QString& path, const QString& valu
     case QVariant::Type::ULongLong:
     case QVariant::Type::Double:
     {
-        _foreground = QColor("#00875C");
+        _foreground = view::SyntaxColors::jsonNumber(); // Teal for numbers
         break;
     }
     }

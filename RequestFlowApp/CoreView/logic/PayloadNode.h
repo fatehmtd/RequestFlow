@@ -3,6 +3,7 @@
 #include <QTextEdit>
 #include "ui_PayloadNodeUi.h"
 #include <model/PayloadNode.h>
+#include "../JSONHighlighter.h"
 
 namespace logic
 {
@@ -23,6 +24,7 @@ namespace logic
 
     private:
         Ui::PayloadNodeUi _ui;
+        view::JSONHighlighter* _highlighter;
     };
 }
 

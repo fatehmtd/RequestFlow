@@ -1,5 +1,5 @@
 #include "ExternalNodeSelectionDialog.h"
-#include "ui_externalnodeselectiondialog.h"
+#include "ui_ExternalNodeSelectionDialog.h"
 
 #include <QDebug>
 #include <model/Graph.h>

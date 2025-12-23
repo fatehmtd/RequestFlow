@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=RequestFlow
+Comment=Visual REST API Testing and Automation Tool
+Exec=RequestFlow
+Icon=RequestFlow
+Categories=Development;
+Terminal=false

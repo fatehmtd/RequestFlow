@@ -2,6 +2,7 @@
 #include "../view/Node.h"
 #include <model/AssertionNode.h>
 #include "ui_AssertNodeUi.h"
+#include "../JSHighlighter.h"
 
 namespace logic
 {
@@ -17,5 +18,6 @@ namespace logic
         void setupUi() override;
     private:        
         Ui::AssertNodeWidgetUi _ui;
+        view::JSHighlighter* _highlighter;
     };
 }

@@ -15,57 +15,94 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Qt
+    - name: Install Qt with MinGW
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.7.2'
+        version: '6.7.3'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_msvc2019_64'
+        arch: 'win64_mingw'
         cache: true
+        tools: 'tools_mingw90'
+        
+    - name: Add MinGW to PATH and verify tools
+      run: |
+        $mingwPath = Get-ChildItem -Path "$env:IQTA_TOOLS" -Directory -Filter "mingw*" -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($mingwPath) {
+          $mingwBin = Join-Path $mingwPath.FullName "bin"
+          echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        }
+        g++ --version
+        qmake --version
+        mingw32-make --version
 
-    - name: Setup MSVC
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x64
-
-    - name: Create build directory
+    - name: Build and package
       working-directory: RequestFlowApp
       run: |
         if (!(Test-Path build)) { New-Item -ItemType Directory -Path build }
-
-    - name: Configure with qmake
-      working-directory: RequestFlowApp/build
-      run: |
-        qmake ..\RequestFlow.pro -r "CONFIG+=release"
-
-    - name: Build with nmake
-      working-directory: RequestFlowApp/build
-      run: |
-        nmake
-
-    - name: Prepare clean distribution directory
-      working-directory: RequestFlowApp/build
-      run: |
+        cd build
+        qmake ..\RequestFlowApp.pro -r "CONFIG+=release"
+        mingw32-make
         New-Item -ItemType Directory -Path dist -Force
-        Copy-Item RequestFlow\release\RequestFlow.exe dist\
+        Copy-Item RequestFlow\release\RequestFlow.exe dist\ -ErrorAction Stop
+        # Copy project DLLs
+        Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction Stop
+        Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction Stop
+        Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction Stop
 
-    - name: Deploy Qt dependencies
-      working-directory: RequestFlowApp/build/dist
-      run: |
-        windeployqt --release RequestFlow.exe
-
-    - name: Copy project DLLs
+    - name: Deploy Qt and MinGW dependencies
       working-directory: RequestFlowApp/build
       run: |
-        Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction SilentlyContinue
-        Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction SilentlyContinue
-        Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction SilentlyContinue
+        # Deploy Qt dependencies
+        cd dist
+        windeployqt --release --svg --compiler-runtime RequestFlow.exe
+
+        # Find Qt installation directory (fallback to QT_ROOT_DIR if Qt6_DIR missing)
+        $qtDir = $env:Qt6_DIR
+        if (-not $qtDir -or $qtDir -eq "") {
+          Write-Host "Qt6_DIR not set; falling back to QT_ROOT_DIR"
+          $qtDir = $env:QT_ROOT_DIR
+        }
+
+        if ($qtDir -and (Test-Path $qtDir)) {
+          $qtBinDir = Join-Path $qtDir "bin"
+          Write-Host "`nQt bin directory: $qtBinDir"
+
+          # Manually copy Qt SVG-related DLLs that windeployqt might miss
+          $svgDlls = @(
+            "Qt6Svg.dll",
+            "Qt6SvgWidgets.dll"
+          )
+
+          Write-Host "`nCopying Qt SVG DLLs..."
+          foreach ($dll in $svgDlls) {
+            $sourcePath = Join-Path $qtBinDir $dll
+            if (Test-Path $sourcePath) {
+              Copy-Item $sourcePath . -Force
+              Write-Host "  Copied: $dll"
+            } else {
+              Write-Host "  Warning: $dll not found at $sourcePath"
+            }
+          }
+        } else {
+          Write-Host "Qt installation directory not found (Qt6_DIR and QT_ROOT_DIR empty). Skipping Qt DLL copy."
+        }
+              
+        # Copy MinGW runtime DLLs
+        $gccPath = (Get-Command g++).Path
+        $mingwBin = Split-Path $gccPath
+        $mingwDlls = @("libgcc_s_seh-1.dll", "libstdc++-6.dll", "libwinpthread-1.dll")
+        foreach ($dll in $mingwDlls) {
+          $sourcePath = Join-Path $mingwBin $dll
+          if (Test-Path $sourcePath) {
+            Copy-Item $sourcePath . -Force
+          }
+        }
 
     - name: Package artifacts
       working-directory: RequestFlowApp/build
       run: |
-        Compress-Archive -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
+        Compress-Archive -Force -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4

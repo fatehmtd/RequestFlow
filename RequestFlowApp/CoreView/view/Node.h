@@ -30,7 +30,7 @@ class COREVIEW_EXPORT Node : public QGraphicsObject, public model::PersistableEn
     Q_OBJECT
 public:
     Node(model::Node* modelNode, QString nodeType);
-    ~Node();
+    virtual ~Node();
 
     int width() const;
     int height() const;
@@ -131,7 +131,7 @@ private:
     int computeGripCorner(const QPointF& cursorPos);
     void handleResize(const QPointF& pos);
 
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
 
 protected:
     model::Node* _node = nullptr;

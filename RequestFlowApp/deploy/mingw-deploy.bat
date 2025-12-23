@@ -1,2 +1,0 @@
-D:\Qt\6.1.1\mingw81_64\bin/windeployqt ./RequestFlow-win/RequestFlow.exe -no-opengl-sw --no-translations --no-system-d3d-compiler --release --compiler-runtime --force
-7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=1024m -ms=on RequestFlow-win-dist .\RequestFlow-win\*

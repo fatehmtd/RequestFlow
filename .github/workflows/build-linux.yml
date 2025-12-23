@@ -9,72 +9,104 @@ on:
 
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      with:
-        version: '6.8.3'
-        host: 'linux'
-        target: 'desktop'
-        arch: 'gcc_64'
-        cache: true
         
-    - name: Install dependencies
+    - name: Install Qt and dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 libxcb-cursor0
+        sudo apt-get install -y \
+          build-essential \
+          qt6-base-dev \
+          qt6-tools-dev \
+          qt6-tools-dev-tools \
+          libqt6opengl6-dev \
+          qt6-declarative-dev \
+          libqt6svg6-dev \
+          qmake6 \
+          libgl1-mesa-dev \
+          libglu1-mesa-dev \
+          libxkbcommon-x11-0 \
+          libxcb-icccm4 \
+          libxcb-image0 \
+          libxcb-keysyms1 \
+          libxcb-render-util0 \
+          libxcb-xinerama0 \
+          libxcb-randr0 \
+          libxcb-shape0 \
+          libxcb-cursor0 \
+          libfuse2 \
+          file \
+          wget
         
     - name: Create build directory
-      working-directory: RequestFlowApp
-      run: mkdir -p build
-        
+      run: |
+        mkdir -p build
+        cd build
+    
     - name: Configure with qmake
-      working-directory: RequestFlowApp/build
-      run: qmake ../RequestFlow.pro -r "CONFIG+=release"
-        
-    - name: Build with make
-      working-directory: RequestFlowApp/build
-      run: make -j$(nproc)
-        
-    - name: Copy project libraries
-      working-directory: RequestFlowApp/build
       run: |
-        mkdir -p RequestFlow/lib
-        cp CoreModel/libCoreModel.so* RequestFlow/lib/ || true
-        cp CoreView/libCoreView.so* RequestFlow/lib/ || true
-        cp ExecutionEngine/libExecutionEngine.so* RequestFlow/lib/ || true
+        cd build
+        qmake6 ../RequestFlowApp/RequestFlowApp.pro -r "CONFIG+=release"
         
-    - name: Create launch script
-      working-directory: RequestFlowApp/build/RequestFlow
+    - name: Build with make  
       run: |
-        cat > RequestFlow.sh << 'EOF'
-        #!/bin/bash
-        SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-        export LD_LIBRARY_PATH="${SCRIPT_DIR}/lib:${LD_LIBRARY_PATH}"
-        "${SCRIPT_DIR}/RequestFlow" "$@"
-        EOF
-        chmod +x RequestFlow.sh
+        cd build
+        make -j$(nproc)
         
-    - name: Package artifacts
-      working-directory: RequestFlowApp/build
-      run: tar -czf ../../RequestFlow-Linux-x64.tar.gz RequestFlow/
+    - name: Prepare deployment files
+      run: |
+        cd build
+        
+        # Copy desktop file and fix line endings
+        cp ../RequestFlowApp/deployment/linux/RequestFlow.desktop RequestFlow/
+        sed -i 's/\r$//' RequestFlow/RequestFlow.desktop
+        
+        # Copy icon
+        cp ../RequestFlowApp/design/RequestFlowLogo-256.png RequestFlow/RequestFlow.png
+        
+    - name: Download linuxdeployqt
+      run: |
+        cd build
+        wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+        chmod +x linuxdeployqt-continuous-x86_64.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage --appimage-extract
+        
+    - name: Create AppImage
+      run: |
+        cd build
+        export PATH=/usr/lib/x86_64-linux-gnu/qt6/bin:$PATH
+        export LD_LIBRARY_PATH=$PWD/RequestFlow:$PWD/CoreModel:$PWD/CoreView:$PWD/ExecutionEngine:$LD_LIBRARY_PATH
+        
+        ./squashfs-root/AppRun RequestFlow/RequestFlow \
+          -qmake=/usr/bin/qmake6 \
+          -qmldir=../RequestFlowApp \
+          -no-translations \
+          -appimage \
+          -verbose=2
+        
+        # Rename the AppImage
+        mv RequestFlow-*-x86_64.AppImage ../RequestFlow-Linux-x86_64.AppImage || true
+        
+    - name: Verify AppImage
+      run: |
+        ls -lh RequestFlow-Linux-x86_64.AppImage
+        file RequestFlow-Linux-x86_64.AppImage
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: RequestFlow-Linux-x64
-        path: RequestFlow-Linux-x64.tar.gz
+        name: RequestFlow-Linux-x86_64
+        path: RequestFlow-Linux-x86_64.AppImage
         retention-days: 30
         
     - name: Upload release asset (on tags)
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: RequestFlow-Linux-x64.tar.gz
+        files: RequestFlow-Linux-x86_64.AppImage
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

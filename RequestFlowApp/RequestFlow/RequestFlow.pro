@@ -87,15 +87,8 @@ win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../CoreView/release/ -
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../CoreView/debug/ -lCoreView
 else:unix: LIBS += -L$$OUT_PWD/../CoreView/ -lCoreView
 
-INCLUDEPATH += $$PWD/../CoreView
-DEPENDPATH += $$PWD/../CoreView
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../ExecutionEngine/release/ -lExecutionEngine
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../ExecutionEngine/debug/ -lExecutionEngine
-else:unix: LIBS += -L$$OUT_PWD/../ExecutionEngine/ -lExecutionEngine
-
-INCLUDEPATH += $$PWD/../ExecutionEngine
-DEPENDPATH += $$PWD/../ExecutionEngine
+INCLUDEPATH += $$PWD/../CoreView $$PWD/../ExecutionEngine
+DEPENDPATH += $$PWD/../CoreView $$PWD/../ExecutionEngine
 
 
 #Qt doesn't copy over the .icns file ?!

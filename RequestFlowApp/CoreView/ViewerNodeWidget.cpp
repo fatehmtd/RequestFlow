@@ -1,9 +1,12 @@
 #include "ViewerNodeWidget.h"
+#include "HTMLDelegate.h"
 #include <QFileDialog>
 #include <QGraphicsView>
 #include <QAbstractItemModel>
 #include <QFile>
 #include <QTextStream>
+#include <QStyledItemDelegate>
+#include <QHeaderView>
 #include <model/../CustomJSEngine.h>
 #include <QJsonDocument>
 #include "logic/ViewerNode.h"
@@ -31,6 +34,25 @@ void logic::ViewerNodeWidget::setupUi()
     _ui.lineEdit_jsonPath->setText(viewerNode->getFilter());
     layout()->setContentsMargins(0, 0, 0, 0);
 
+    // Set monospace font for JSON viewers
+    QFont font("Courier New", 10);
+    font.setStyleHint(QFont::Monospace);
+    _ui.plainTextEdit_json->setFont(font);
+    _ui.plainTextEdit_raw->setFont(font);
+
+    // Configure tree view columns
+    _ui.treeView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    _ui.treeView->setWordWrap(true);
+    _ui.treeView->setTextElideMode(Qt::ElideNone);
+    _ui.treeView->setUniformRowHeights(false);
+    _ui.treeView->header()->setStretchLastSection(true);
+    _ui.treeView->header()->setMinimumSectionSize(10);
+    _ui.treeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    // Enable JSON syntax highlighting
+    _jsonHighlighter = new view::JSONHighlighter(_ui.plainTextEdit_json->document());
+    _rawHighlighter = new view::JSONHighlighter(_ui.plainTextEdit_raw->document());
+
     _ui.groupBox->setChecked(viewerNode->getExportToFile());
     _ui.lineEdit_filePath->setText(viewerNode->getFilePath());
 
@@ -39,15 +61,21 @@ void logic::ViewerNodeWidget::setupUi()
 
     connect(_ui.lineEdit_jsonPath, &QLineEdit::textChanged, viewerNode, &model::ViewerNode::setFilter);
 
-    connect(_ui.toolButton_filter, &QToolButton::clicked, this, [=]()
-            {
-                filter(_ui.lineEdit_jsonPath->text());
-            });
+
+    connect(_ui.pushButton_filter, &QPushButton::clicked, this, [=]()
+             {
+                 filter(_ui.lineEdit_jsonPath->text());
+             });
 
     connect(_ui.lineEdit_jsonPath, &QLineEdit::returnPressed, this, [=]()
             {
                 filter(_ui.lineEdit_jsonPath->text());
             });
+
+    connect(_ui.pushButton_clear, &QPushButton::clicked, this, [=]() {
+        _ui.lineEdit_jsonPath->setText("$");
+        filter(_ui.lineEdit_jsonPath->text());
+    });
 
     connect(viewerNode, &model::Node::ready, this, [=]()
         {
@@ -116,9 +144,13 @@ void logic::ViewerNodeWidget::setTreeModel(const QVariant& v)
         delete model;
     model = new CustomJSONModel(rootItem, this);
     _ui.treeView->setModel(model);
-    _ui.treeView->update();
     _ui.treeView->expand(model->index(0, 0));
     _ui.treeView->setHeaderHidden(false);
+    
+    // Resize columns to fit content
+    _ui.treeView->resizeColumnToContents(0);
+    _ui.treeView->resizeColumnToContents(1);
+    _ui.treeView->update();
 }
 
 void logic::ViewerNodeWidget::filter(const QString& filter)
@@ -135,9 +167,23 @@ void logic::ViewerNodeWidget::filter(const QString& filter)
     auto txt = engine.fromScriptValue<QVariant>(engine.evaluate("JSON.stringify(_result);"));
 
     QJsonDocument document = QJsonDocument::fromJson(txt.toString().toUtf8());
+    auto jsonText = document.toJson();
+
+    // Disable highlighter during bulk text insertion for performance
+    bool isLargeJson = jsonText.length() > 50000;
+    if (isLargeJson && _jsonHighlighter) {
+        _jsonHighlighter->setEnabled(false);
+    }
+
     //_ui.plainTextEdit_json->setPlainText(document.toJson());
     //_ui.plainTextEdit_json->clear();
-    customDivideText(document.toJson(), _ui.plainTextEdit_json->textCursor(), 10000);
+    customDivideText(jsonText, _ui.plainTextEdit_json->textCursor(), 10000);
+
+    // Re-enable highlighter
+    if (isLargeJson && _jsonHighlighter) {
+        _jsonHighlighter->setEnabled(true);
+        _jsonHighlighter->rehighlight();
+    }
 
     auto value = engine.fromScriptValue<QVariant>(jsValue);
     setTreeModel(value);
@@ -158,8 +204,22 @@ model::Message logic::ViewerNodeWidget::getMessage() const
 void logic::ViewerNodeWidget::fillData()
 {
     auto data = _message.getBody();
+
+    // Disable highlighters during bulk text insertion for performance
+    bool isLargeData = data.length() > 50000;
+    if (isLargeData && _rawHighlighter) {
+        _rawHighlighter->setEnabled(false);
+    }
+
     customDivideText(data, _ui.plainTextEdit_raw->textCursor(), 10000);
     //_ui.plainTextEdit_raw->setPlainText(data);
+
+    // Re-enable highlighter
+    if (isLargeData && _rawHighlighter) {
+        _rawHighlighter->setEnabled(true);
+        _rawHighlighter->rehighlight();
+    }
+
     // json
     filter(_ui.lineEdit_jsonPath->text());
 }
