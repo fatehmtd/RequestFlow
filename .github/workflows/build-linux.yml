@@ -9,239 +9,87 @@ on:
 
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      with:
-        version: '6.7.3'
-        host: 'linux'
-        target: 'desktop'
-        arch: 'linux_gcc_64'
-        cache: true
         
-    - name: Install dependencies
+    - name: Install Qt and dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-x11-0 \
-          libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 \
-          libxcb-xinerama0 libxcb-cursor0 libfuse2 file
+        sudo apt-get install -y \
+          build-essential \
+          qt6-base-dev \
+          qt6-tools-dev \
+          qt6-tools-dev-tools \
+          libqt6opengl6-dev \
+          qt6-declarative-dev \
+          libqt6svg6-dev \
+          qmake6 \
+          libgl1-mesa-dev \
+          libglu1-mesa-dev \
+          libxkbcommon-x11-0 \
+          libxcb-icccm4 \
+          libxcb-image0 \
+          libxcb-keysyms1 \
+          libxcb-render-util0 \
+          libxcb-xinerama0 \
+          libxcb-randr0 \
+          libxcb-shape0 \
+          libxcb-cursor0 \
+          libfuse2 \
+          file \
+          wget
         
     - name: Create build directory
-      working-directory: RequestFlowApp
       run: |
-        # Remove any cached qmake configuration
-        rm -f .qmake.stash .qmake.cache
-        
-        # Create clean build directory
-        rm -rf build
         mkdir -p build
+        cd build
     
-    - name: Verify Qt installation
-      run: |
-        echo "=== Qt Installation Check ==="
-        echo "Environment variables set by install-qt-action:"
-        echo "Qt6_DIR: $Qt6_DIR"
-        echo "QT_ROOT_DIR: $QT_ROOT_DIR"
-        echo "Qt6_ROOT: $Qt6_ROOT"
-        echo "IQTA_TOOLS: $IQTA_TOOLS"
-        echo "PATH: $PATH"
-        echo ""
-        
-        echo "Searching for Qt installations:"
-        find /home/runner/work -type d -name "6.7.3" 2>/dev/null | head -5 || true
-        echo ""
-        
-        echo "Looking for qmake executables:"
-        find /home/runner/work -name "qmake" -type f 2>/dev/null | head -10 || true
-        echo ""
-        
-        # Try to find the actual Qt installation
-        if [ -d "/home/runner/work/RequestFlow/Qt/6.7.3" ]; then
-          echo "Found Qt 6.7.3 directory, listing contents:"
-          ls -la /home/runner/work/RequestFlow/Qt/6.7.3/
-          echo ""
-        fi
-        
     - name: Configure with qmake
-      working-directory: RequestFlowApp/build
       run: |
-        # Find the correct qmake path - try multiple locations and arch variants
-        QMAKE_PATH=""
-        
-        # Try linux_gcc_64 first (Qt 6.7+ standard naming)
-        if [ -n "$Qt6_DIR" ] && [ -f "$Qt6_DIR/bin/qmake" ]; then
-          QMAKE_PATH="$Qt6_DIR/bin/qmake"
-          echo "✓ Found qmake via Qt6_DIR: $Qt6_DIR"
-        elif [ -f "/home/runner/work/RequestFlow/Qt/6.7.3/linux_gcc_64/bin/qmake" ]; then
-          QMAKE_PATH="/home/runner/work/RequestFlow/Qt/6.7.3/linux_gcc_64/bin/qmake"
-          echo "✓ Found qmake at linux_gcc_64 path"
-        elif [ -f "/home/runner/work/RequestFlow/Qt/6.7.3/gcc_64/bin/qmake" ]; then
-          # Fallback to gcc_64 if linux_gcc_64 doesn't exist
-          QMAKE_PATH="/home/runner/work/RequestFlow/Qt/6.7.3/gcc_64/bin/qmake"
-          echo "✓ Found qmake at gcc_64 path (fallback)"
-        elif [ -f "$GITHUB_WORKSPACE/../Qt/6.7.3/linux_gcc_64/bin/qmake" ]; then
-          QMAKE_PATH="$GITHUB_WORKSPACE/../Qt/6.7.3/linux_gcc_64/bin/qmake"
-          echo "✓ Found qmake via GITHUB_WORKSPACE (linux_gcc_64)"
-        elif [ -f "$GITHUB_WORKSPACE/../Qt/6.7.3/gcc_64/bin/qmake" ]; then
-          QMAKE_PATH="$GITHUB_WORKSPACE/../Qt/6.7.3/gcc_64/bin/qmake"
-          echo "✓ Found qmake via GITHUB_WORKSPACE (gcc_64)"
-        else
-          echo "❌ ERROR: Cannot find qmake from Qt 6.7.3"
-          echo ""
-          echo "Environment:"
-          echo "  Qt6_DIR: $Qt6_DIR"
-          echo "  GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          echo ""
-          echo "Searching for Qt installations:"
-          find /home/runner/work -name "qmake" -type f 2>/dev/null | head -10 || true
-          echo ""
-          echo "Checking Qt directory:"
-          ls -la /home/runner/work/RequestFlow/Qt/6.7.3/ 2>/dev/null || echo "Qt 6.7.3 directory not found"
-          exit 1
-        fi
-        
-        echo ""
-        echo "Qt Configuration:"
-        echo "  qmake path: $QMAKE_PATH"
-        echo "  Qt version: $($QMAKE_PATH -query QT_VERSION)"
-        echo "  Qt prefix: $($QMAKE_PATH -query QT_INSTALL_PREFIX)"
-        echo ""
-        
-        # Show which arch we're actually using
-        QT_PREFIX=$($QMAKE_PATH -query QT_INSTALL_PREFIX)
-        if [[ "$QT_PREFIX" == *"linux_gcc_64"* ]]; then
-          echo "✓ Using linux_gcc_64 Qt installation"
-        elif [[ "$QT_PREFIX" == *"gcc_64"* ]]; then
-          echo "ℹ Using gcc_64 Qt installation (older naming)"
-        else
-          echo "⚠ Qt installation path: $QT_PREFIX"
-        fi
-        echo ""
-        
-        # Run qmake
-        echo "Running qmake..."
-        $QMAKE_PATH ../RequestFlowApp.pro -r "CONFIG+=release"
-        
-        # Verify the generated Makefile
-        echo ""
-        echo "Makefile verification:"
-        if grep -q "gcc_64\|linux_gcc_64" Makefile; then
-          echo "✓ Makefile generated successfully with Qt paths"
-          echo ""
-          echo "Qt paths in Makefile (first 3 unique):"
-          grep -o "/[^ ]*/Qt/[0-9.]*[^ ]*" Makefile | sed 's|/[^/]*$||' | sort -u | head -3 || true
-        else
-          echo "⚠ Warning: No Qt paths found in Makefile"
-        fi
+        cd build
+        qmake6 ../RequestFlowApp/RequestFlowApp.pro -r "CONFIG+=release"
         
     - name: Build with make  
-      working-directory: RequestFlowApp/build
       run: |
-        # Build everything (this should handle UI file generation automatically)
-        make -j$(nproc) 2>&1 | tee build.log || {
-          echo "Build failed. Showing last 50 lines of output:"
-          tail -50 build.log
-          echo ""
-          echo "Checking for .ui files in project:"
-          find .. -name "*.ui" -type f
-          echo ""
-          echo "Checking for generated ui_*.h files:"
-          find . -name "ui_*.h" -type f
-          exit 1
-        }
+        cd build
+        make -j$(nproc)
         
-    - name: Prepare AppDir structure
-      working-directory: RequestFlowApp/build
+    - name: Prepare deployment files
       run: |
-        mkdir -p AppDir/usr/bin
-        mkdir -p AppDir/usr/lib
-        mkdir -p AppDir/usr/share/applications
-        mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+        cd build
         
-        # Copy main executable
-        cp RequestFlow/RequestFlow AppDir/usr/bin/
+        # Copy desktop file and fix line endings
+        cp ../RequestFlow.desktop RequestFlow/
+        sed -i 's/\r$//' RequestFlow/RequestFlow.desktop
         
-        # Copy project libraries (search build output for versioned .so files and preserve symlinks)
-        # Search entire build tree for any .so files produced by the build
-        find .. -type f -name "libCoreModel.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
-        find .. -type f -name "libCoreView.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
-        find .. -type f -name "libExecutionEngine.so*" -print0 | xargs -0 -I{} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
-
-        # Ensure SONAME symlinks exist (e.g. libCoreModel.so.1 -> libCoreModel.so.1.0.0 and libCoreModel.so -> libCoreModel.so.1)
-        pushd AppDir/usr/lib >/dev/null
-        for libbase in CoreModel CoreView ExecutionEngine; do
-          verfile=$(ls -1 lib${libbase}.so* 2>/dev/null | grep -E "lib${libbase}\.so\.[0-9]" | head -n1 || true)
-          if [ -n "$verfile" ]; then
-            if [ ! -e "lib${libbase}.so.1" ]; then
-              ln -sf "$verfile" "lib${libbase}.so.1" || true
-            fi
-            if [ ! -e "lib${libbase}.so" ]; then
-              ln -sf "lib${libbase}.so.1" "lib${libbase}.so" || true
-            fi
-          fi
-        done
-        echo "Copied libraries:"
-        ls -la
-        echo "--- AppDir/usr/lib symlinks and files ---"
-        ls -l AppDir/usr/lib || true
-        echo "--- Binary NEEDED entries (readelf) ---"
-        if command -v readelf >/dev/null 2>&1; then
-          readelf -d AppDir/usr/bin/RequestFlow | grep -i NEEDED || true
-        else
-          echo "readelf not available"
-        fi
-        popd >/dev/null
+        # Copy icon
+        cp ../RequestFlowApp/design/RequestFlowLogo-256.png RequestFlow/RequestFlow.png
         
-    - name: Create desktop entry
-      working-directory: RequestFlowApp/build/AppDir
+    - name: Download linuxdeployqt
       run: |
-        cat > usr/share/applications/requestflow.desktop << 'DESKTOP'
-        [Desktop Entry]
-        Type=Application
-        Name=RequestFlow
-        Exec=RequestFlow
-        Icon=requestflow
-        Categories=Development;Network;
-        Comment=HTTP Request Flow Application
-        DESKTOP
-        
-    - name: Create app icon
-      working-directory: RequestFlowApp/build/AppDir
-      run: |
-        # Create a simple placeholder icon if none exists
-        # In a real project, you'd copy your actual icon
-        convert -size 256x256 xc:blue usr/share/icons/hicolor/256x256/apps/requestflow.png 2>/dev/null || \
-        echo "Icon creation skipped - install imagemagick if needed"
-        
-    - name: Download linuxdeploy and Qt plugin
-      working-directory: RequestFlowApp/build
-      run: |
-        wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-        wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-        chmod +x linuxdeploy*.AppImage
+        cd build
+        wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+        chmod +x linuxdeployqt-continuous-x86_64.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage --appimage-extract
         
     - name: Create AppImage
-      working-directory: RequestFlowApp/build
       run: |
-        export QMAKE=$Qt6_DIR/bin/qmake
-        export PATH=$Qt6_DIR/bin:$PATH
-        export LD_LIBRARY_PATH=$Qt6_DIR/lib:$LD_LIBRARY_PATH
+        cd build
+        export PATH=/usr/lib/x86_64-linux-gnu/qt6/bin:$PATH
+        export LD_LIBRARY_PATH=$PWD/RequestFlow:$PWD/CoreModel:$PWD/CoreView:$PWD/ExecutionEngine:$LD_LIBRARY_PATH
         
-        ./linuxdeploy-x86_64.AppImage \
-          --appdir AppDir \
-          --plugin qt \
-          --executable AppDir/usr/bin/RequestFlow \
-          --desktop-file AppDir/usr/share/applications/requestflow.desktop \
-          --icon-file AppDir/usr/share/icons/hicolor/256x256/apps/requestflow.png \
-          --output appimage
+        ./squashfs-root/AppRun RequestFlow/RequestFlow \
+          -qmake=/usr/bin/qmake6 \
+          -qmldir=../RequestFlowApp \
+          -no-translations \
+          -appimage \
+          -verbose=2
         
         # Rename the AppImage
-        mv RequestFlow*.AppImage ../../RequestFlow-Linux-x86_64.AppImage || true
+        mv RequestFlow-x86_64.AppImage ../RequestFlow-Linux-x86_64.AppImage || true
         
     - name: Verify AppImage
       run: |
