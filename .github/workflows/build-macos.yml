@@ -209,6 +209,20 @@ jobs:
         ls -la RequestFlow.app/Contents/Frameworks/
         otool -L RequestFlow.app/Contents/MacOS/RequestFlow
 
+    - name: Remove quarantine attributes
+      run: |
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
+
+        # Remove quarantine attributes that cause "damaged" errors on macOS
+        # This is necessary for unsigned apps distributed outside the App Store
+        xattr -cr RequestFlow.app
+        echo "Removed quarantine attributes from app bundle"
+
     - name: Create ZIP archive
       run: |
         # Save the workspace root
