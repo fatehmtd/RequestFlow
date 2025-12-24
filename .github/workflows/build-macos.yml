@@ -38,11 +38,18 @@ jobs:
       run: |
         cd build
         qmake ../RequestFlowApp/RequestFlowApp.pro -r "CONFIG+=release"
+        ls -la .
 
     - name: Build with make
       run: |
         cd build
         make -j$(sysctl -n hw.ncpu)
+        echo "current directory:"
+        ls -la .
+        echo "parent directory:"
+        ls -la ..
+        echo "grandparent directory:"
+        ls -la ../../
 
     - name: Prepare app bundle
       run: |
