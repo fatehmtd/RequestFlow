@@ -2,7 +2,7 @@ name: Build RequestFlow (Windows)
 
 on:
   push:
-    branches: [ main, feature/*, develop ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main, develop ]
   workflow_dispatch:
@@ -99,17 +99,18 @@ jobs:
           }
         }
 
-    - name: Package artifacts
-      working-directory: RequestFlowApp/build
-      run: |
-        Compress-Archive -Force -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
-
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: RequestFlow-Windows-x64
-        path: RequestFlow-Windows-x64.zip
+        path: RequestFlowApp/build/dist/*
         retention-days: 30
+
+    - name: Package release zip (on tags)
+      if: startsWith(github.ref, 'refs/tags/')
+      working-directory: RequestFlowApp/build
+      run: |
+        Compress-Archive -Force -Path dist\* -DestinationPath ..\..\RequestFlow-Windows-x64.zip
 
     - name: Upload release asset (on tags)
       if: startsWith(github.ref, 'refs/tags/')
