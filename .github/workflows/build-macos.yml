@@ -44,16 +44,28 @@ jobs:
       run: |
         cd build
         make -j$(sysctl -n hw.ncpu)
-        echo "current directory:"
-        ls -la .
-        echo "parent directory:"
-        ls -la ..
-        echo "grandparent directory:"
-        ls -la ../../
+        echo "Build directory structure:"
+        find . -type d -maxdepth 3
+        echo "Executables and libraries:"
+        find . -name "*.dylib" -o -name "RequestFlow" -type f
 
     - name: Prepare app bundle
       run: |
-        cd build/RequestFlow/release
+        cd build
+
+        # Find the actual build output directory
+        if [ -d "RequestFlow/release" ]; then
+          BUILD_DIR="RequestFlow/release"
+        elif [ -d "RequestFlow" ]; then
+          BUILD_DIR="RequestFlow"
+        else
+          echo "Error: Could not find RequestFlow build directory"
+          exit 1
+        fi
+
+        cd "$BUILD_DIR"
+        echo "Working in: $(pwd)"
+        ls -la
 
         # Create the app bundle structure if it doesn't exist
         mkdir -p RequestFlow.app/Contents/MacOS
@@ -61,26 +73,45 @@ jobs:
         mkdir -p RequestFlow.app/Contents/Resources
 
         # Copy the executable
-        cp RequestFlow RequestFlow.app/Contents/MacOS/
+        if [ -f "RequestFlow" ]; then
+          cp RequestFlow RequestFlow.app/Contents/MacOS/
+        elif [ -f "RequestFlow.app/Contents/MacOS/RequestFlow" ]; then
+          echo "App bundle already exists"
+        else
+          echo "Error: RequestFlow executable not found"
+          exit 1
+        fi
 
-        # Copy project libraries
-        cp ../../CoreModel/release/libCoreModel.1.0.0.dylib RequestFlow.app/Contents/Frameworks/ || true
-        cp ../../CoreView/release/libCoreView.1.0.0.dylib RequestFlow.app/Contents/Frameworks/ || true
-        cp ../../ExecutionEngine/release/libExecutionEngine.1.0.0.dylib RequestFlow.app/Contents/Frameworks/ || true
+        # Find and copy project libraries
+        for lib in CoreModel CoreView ExecutionEngine; do
+          # Try different possible locations
+          if [ -f "../../${lib}/release/lib${lib}.1.0.0.dylib" ]; then
+            cp "../../${lib}/release/lib${lib}.1.0.0.dylib" RequestFlow.app/Contents/Frameworks/
+          elif [ -f "../../${lib}/lib${lib}.1.0.0.dylib" ]; then
+            cp "../../${lib}/lib${lib}.1.0.0.dylib" RequestFlow.app/Contents/Frameworks/
+          elif [ -f "../${lib}/lib${lib}.1.0.0.dylib" ]; then
+            cp "../${lib}/lib${lib}.1.0.0.dylib" RequestFlow.app/Contents/Frameworks/
+          fi
+        done
 
         # Create symbolic links for the libraries
         cd RequestFlow.app/Contents/Frameworks
-        ln -sf libCoreModel.1.0.0.dylib libCoreModel.1.dylib || true
-        ln -sf libCoreModel.1.0.0.dylib libCoreModel.dylib || true
-        ln -sf libCoreView.1.0.0.dylib libCoreView.1.dylib || true
-        ln -sf libCoreView.1.0.0.dylib libCoreView.dylib || true
-        ln -sf libExecutionEngine.1.0.0.dylib libExecutionEngine.1.dylib || true
-        ln -sf libExecutionEngine.1.0.0.dylib libExecutionEngine.dylib || true
+        for lib in CoreModel CoreView ExecutionEngine; do
+          if [ -f "lib${lib}.1.0.0.dylib" ]; then
+            ln -sf lib${lib}.1.0.0.dylib lib${lib}.1.dylib
+            ln -sf lib${lib}.1.0.0.dylib lib${lib}.dylib
+          fi
+        done
         cd ../../..
 
     - name: Create Info.plist
       run: |
-        cd build/RequestFlow/release
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
         cat > RequestFlow.app/Contents/Info.plist << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -110,7 +141,12 @@ jobs:
 
     - name: Deploy Qt dependencies
       run: |
-        cd build/RequestFlow/release
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
 
         # Deploy Qt dependencies including plugins
         macdeployqt RequestFlow.app -verbose=2
@@ -137,7 +173,12 @@ jobs:
 
     - name: Fix library paths
       run: |
-        cd build/RequestFlow/release
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
 
         # Update library install names
         install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib RequestFlow.app/Contents/MacOS/RequestFlow || true
@@ -158,17 +199,34 @@ jobs:
 
     - name: Verify app bundle
       run: |
-        cd build/RequestFlow/release
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
         ls -la RequestFlow.app/Contents/MacOS/
         ls -la RequestFlow.app/Contents/Frameworks/
         otool -L RequestFlow.app/Contents/MacOS/RequestFlow
 
     - name: Create ZIP archive
       run: |
-        cd build/RequestFlow/release
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
 
         # Create ZIP archive with the app bundle
-        zip -r ../../../RequestFlow-macOS.zip RequestFlow.app
+        # Determine how many levels up to go to reach the root
+        if [ -d "../../.." ]; then
+          ZIP_PATH="../../../RequestFlow-macOS.zip"
+        else
+          ZIP_PATH="../../RequestFlow-macOS.zip"
+        fi
+
+        zip -r "$ZIP_PATH" RequestFlow.app
 
     - name: Verify ZIP
       run: |
