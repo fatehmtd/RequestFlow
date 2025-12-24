@@ -180,36 +180,32 @@ jobs:
           cd RequestFlow
         fi
 
-        # Deploy Qt dependencies including plugins
-        macdeployqt RequestFlow.app -verbose=2
-
-        # Ensure SVG plugin is copied (macdeployqt sometimes misses it)
-        mkdir -p RequestFlow.app/Contents/PlugIns/imageformats
-
         # Find Qt installation directory
         QT_DIR=$(qmake -query QT_INSTALL_PREFIX)
         echo "Qt installation directory: $QT_DIR"
 
-        # Copy SVG plugin if it exists and fix its library paths
+        # Copy SVG plugins BEFORE running macdeployqt so it can fix their dependencies
+        mkdir -p RequestFlow.app/Contents/PlugIns/imageformats
+        mkdir -p RequestFlow.app/Contents/PlugIns/iconengines
+
         if [ -f "$QT_DIR/plugins/imageformats/libqsvg.dylib" ]; then
           cp "$QT_DIR/plugins/imageformats/libqsvg.dylib" RequestFlow.app/Contents/PlugIns/imageformats/
-          # Fix library paths for SVG imageformat plugin
-          for lib in QtCore QtGui QtSvg QtWidgets; do
-            install_name_tool -change "@rpath/${lib}.framework/Versions/A/${lib}" "@executable_path/../Frameworks/${lib}.framework/Versions/A/${lib}" RequestFlow.app/Contents/PlugIns/imageformats/libqsvg.dylib 2>/dev/null || true
-          done
-          echo "Copied and fixed SVG image format plugin"
+          echo "Copied SVG image format plugin"
         fi
 
-        # Copy SVG icon engine plugin and fix its library paths
-        mkdir -p RequestFlow.app/Contents/PlugIns/iconengines
         if [ -f "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" ]; then
           cp "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" RequestFlow.app/Contents/PlugIns/iconengines/
-          # Fix library paths for SVG icon engine plugin
-          for lib in QtCore QtGui QtSvg QtWidgets; do
-            install_name_tool -change "@rpath/${lib}.framework/Versions/A/${lib}" "@executable_path/../Frameworks/${lib}.framework/Versions/A/${lib}" RequestFlow.app/Contents/PlugIns/iconengines/libqsvgicon.dylib 2>/dev/null || true
-          done
-          echo "Copied and fixed SVG icon engine plugin"
+          echo "Copied SVG icon engine plugin"
         fi
+
+        # Copy QtSvg framework if not already present
+        if [ -d "$QT_DIR/lib/QtSvg.framework" ] && [ ! -d "RequestFlow.app/Contents/Frameworks/QtSvg.framework" ]; then
+          cp -R "$QT_DIR/lib/QtSvg.framework" RequestFlow.app/Contents/Frameworks/
+          echo "Copied QtSvg framework"
+        fi
+
+        # Deploy Qt dependencies - this will fix library paths for all plugins and frameworks
+        macdeployqt RequestFlow.app -verbose=2 -always-overwrite
 
     - name: Fix library paths
       run: |
@@ -231,6 +227,17 @@ jobs:
         install_name_tool -id @executable_path/../Frameworks/libCoreView.1.dylib libCoreView.1.0.0.dylib || true
         install_name_tool -id @executable_path/../Frameworks/libExecutionEngine.1.dylib libExecutionEngine.1.0.0.dylib || true
 
+        # Fix Qt framework references in custom libraries (QtSvg is used by CoreView)
+        for lib in libCoreModel.1.0.0.dylib libCoreView.1.0.0.dylib libExecutionEngine.1.0.0.dylib; do
+          if [ -f "$lib" ]; then
+            # Get all @rpath Qt framework references and fix them
+            otool -L "$lib" | grep "@rpath/Qt" | awk '{print $1}' | while read dep; do
+              framework_name=$(echo "$dep" | sed 's|@rpath/||')
+              install_name_tool -change "$dep" "@executable_path/../Frameworks/$framework_name" "$lib" 2>/dev/null || true
+            done
+          fi
+        done
+
         # Fix CoreView dependencies on CoreModel
         install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib libCoreView.1.0.0.dylib || true
 
@@ -245,9 +252,22 @@ jobs:
         elif [ -d "RequestFlow" ]; then
           cd RequestFlow
         fi
+        echo "=== MacOS directory ==="
         ls -la RequestFlow.app/Contents/MacOS/
+        echo "=== Frameworks directory ==="
         ls -la RequestFlow.app/Contents/Frameworks/
+        echo "=== Check for QtSvg framework ==="
+        ls -la RequestFlow.app/Contents/Frameworks/QtSvg.framework/Versions/A/ 2>/dev/null || echo "QtSvg.framework NOT FOUND"
+        echo "=== PlugIns/imageformats ==="
+        ls -la RequestFlow.app/Contents/PlugIns/imageformats/ 2>/dev/null || echo "imageformats directory NOT FOUND"
+        echo "=== PlugIns/iconengines ==="
+        ls -la RequestFlow.app/Contents/PlugIns/iconengines/ 2>/dev/null || echo "iconengines directory NOT FOUND"
+        echo "=== Main executable dependencies ==="
         otool -L RequestFlow.app/Contents/MacOS/RequestFlow
+        echo "=== libCoreView dependencies ==="
+        otool -L RequestFlow.app/Contents/Frameworks/libCoreView.1.0.0.dylib 2>/dev/null || echo "libCoreView not found"
+        echo "=== SVG plugin dependencies ==="
+        otool -L RequestFlow.app/Contents/PlugIns/imageformats/libqsvg.dylib 2>/dev/null || echo "libqsvg not found"
 
     - name: Remove quarantine attributes
       run: |

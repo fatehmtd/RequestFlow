@@ -42,7 +42,9 @@ jobs:
         if (!(Test-Path build)) { New-Item -ItemType Directory -Path build }
         cd build
         qmake ..\RequestFlowApp.pro -r "CONFIG+=release"
-        mingw32-make
+        $cpuCount = [Environment]::ProcessorCount
+        Write-Host "Building with $cpuCount parallel jobs"
+        mingw32-make -j $cpuCount
         New-Item -ItemType Directory -Path dist -Force
         Copy-Item RequestFlow\release\RequestFlow.exe dist\ -ErrorAction Stop
         # Copy project DLLs
