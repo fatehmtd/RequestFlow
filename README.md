@@ -280,9 +280,30 @@ Created and maintained by **Fateh Benmerzoug, Ph.D**
 
 ---
 
+## Built With
+
+<p align="center">
+  <a href="https://www.qt.io/">
+    <img src="https://www.qt.io/hubfs/Qt-logo-neon-small.png" alt="Qt" height="60">
+  </a>
+</p>
+
+RequestFlow is proudly built with the [Qt Framework](https://www.qt.io/) - a powerful cross-platform application development framework. Qt enables us to deliver a native experience on Windows, macOS, and Linux from a single codebase.
+
+**Qt Modules Used:**
+- **Qt Widgets** - Modern, responsive UI components
+- **Qt Network** - HTTP/HTTPS client functionality
+- **Qt SVG** - Scalable vector graphics for crisp icons
+- **Qt QML/Quick** - Declarative UI elements
+- **QGraphicsView** - High-performance node-based canvas
+
+We're grateful to the Qt Company and the Qt open source community for making this project possible.
+
+---
+
 ## Acknowledgments
 
-Built with the Qt Framework. Special thanks to the open source community for inspiration and support.
+Special thanks to the open source community for inspiration and support.
 
 ---
 
