@@ -83,24 +83,23 @@ jobs:
         fi
 
         # Create and copy the application icon from design folder
-        ICON_SOURCE="${GITHUB_WORKSPACE}/RequestFlowApp/design/circle/RequestFlowLogo-256.png"
+        ICON_DIR="${GITHUB_WORKSPACE}/RequestFlowApp/design/macos/AppIcons/Assets.xcassets/AppIcon.appiconset"
 
-        if [ -f "$ICON_SOURCE" ]; then
+        if [ -d "$ICON_DIR" ]; then
           # Create iconset directory
           mkdir -p RequestFlow.iconset
 
-          # Copy and resize the icon to different sizes required by macOS
-          # Using sips (built-in macOS tool) to resize
-          sips -z 16 16     "$ICON_SOURCE" --out RequestFlow.iconset/icon_16x16.png
-          sips -z 32 32     "$ICON_SOURCE" --out RequestFlow.iconset/icon_16x16@2x.png
-          sips -z 32 32     "$ICON_SOURCE" --out RequestFlow.iconset/icon_32x32.png
-          sips -z 64 64     "$ICON_SOURCE" --out RequestFlow.iconset/icon_32x32@2x.png
-          sips -z 128 128   "$ICON_SOURCE" --out RequestFlow.iconset/icon_128x128.png
-          sips -z 256 256   "$ICON_SOURCE" --out RequestFlow.iconset/icon_128x128@2x.png
-          sips -z 256 256   "$ICON_SOURCE" --out RequestFlow.iconset/icon_256x256.png
-          sips -z 512 512   "$ICON_SOURCE" --out RequestFlow.iconset/icon_256x256@2x.png
-          sips -z 512 512   "$ICON_SOURCE" --out RequestFlow.iconset/icon_512x512.png
-          cp "$ICON_SOURCE" RequestFlow.iconset/icon_512x512@2x.png
+          # Copy pre-generated icons to iconset with correct naming
+          cp "$ICON_DIR/16.png" RequestFlow.iconset/icon_16x16.png
+          cp "$ICON_DIR/32.png" RequestFlow.iconset/icon_16x16@2x.png
+          cp "$ICON_DIR/32.png" RequestFlow.iconset/icon_32x32.png
+          cp "$ICON_DIR/64.png" RequestFlow.iconset/icon_32x32@2x.png
+          cp "$ICON_DIR/128.png" RequestFlow.iconset/icon_128x128.png
+          cp "$ICON_DIR/256.png" RequestFlow.iconset/icon_128x128@2x.png
+          cp "$ICON_DIR/256.png" RequestFlow.iconset/icon_256x256.png
+          cp "$ICON_DIR/512.png" RequestFlow.iconset/icon_256x256@2x.png
+          cp "$ICON_DIR/512.png" RequestFlow.iconset/icon_512x512.png
+          cp "$ICON_DIR/1024.png" RequestFlow.iconset/icon_512x512@2x.png
 
           # Convert iconset to icns
           iconutil -c icns RequestFlow.iconset -o RequestFlow.app/Contents/Resources/icon.icns
@@ -108,9 +107,9 @@ jobs:
           # Clean up
           rm -rf RequestFlow.iconset
 
-          echo "Created and installed application icon from RequestFlowLogo-256.png"
+          echo "Created and installed application icon from macos AppIcons"
         else
-          echo "Warning: Could not find icon source at $ICON_SOURCE"
+          echo "Warning: Could not find icon directory at $ICON_DIR"
         fi
 
         # Find and copy project libraries
