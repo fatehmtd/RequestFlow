@@ -190,17 +190,25 @@ jobs:
         QT_DIR=$(qmake -query QT_INSTALL_PREFIX)
         echo "Qt installation directory: $QT_DIR"
 
-        # Copy SVG plugin if it exists
+        # Copy SVG plugin if it exists and fix its library paths
         if [ -f "$QT_DIR/plugins/imageformats/libqsvg.dylib" ]; then
           cp "$QT_DIR/plugins/imageformats/libqsvg.dylib" RequestFlow.app/Contents/PlugIns/imageformats/
-          echo "Copied SVG image format plugin"
+          # Fix library paths for SVG imageformat plugin
+          for lib in QtCore QtGui QtSvg QtWidgets; do
+            install_name_tool -change "@rpath/${lib}.framework/Versions/A/${lib}" "@executable_path/../Frameworks/${lib}.framework/Versions/A/${lib}" RequestFlow.app/Contents/PlugIns/imageformats/libqsvg.dylib 2>/dev/null || true
+          done
+          echo "Copied and fixed SVG image format plugin"
         fi
 
-        # Copy SVG icon engine plugin
+        # Copy SVG icon engine plugin and fix its library paths
         mkdir -p RequestFlow.app/Contents/PlugIns/iconengines
         if [ -f "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" ]; then
           cp "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" RequestFlow.app/Contents/PlugIns/iconengines/
-          echo "Copied SVG icon engine plugin"
+          # Fix library paths for SVG icon engine plugin
+          for lib in QtCore QtGui QtSvg QtWidgets; do
+            install_name_tool -change "@rpath/${lib}.framework/Versions/A/${lib}" "@executable_path/../Frameworks/${lib}.framework/Versions/A/${lib}" RequestFlow.app/Contents/PlugIns/iconengines/libqsvgicon.dylib 2>/dev/null || true
+          done
+          echo "Copied and fixed SVG icon engine plugin"
         fi
 
     - name: Fix library paths
