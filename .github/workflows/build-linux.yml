@@ -2,7 +2,7 @@ name: Build RequestFlow (Linux)
 
 on:
   push:
-    branches: [ main, feature/*, develop ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main, develop ]
   workflow_dispatch:

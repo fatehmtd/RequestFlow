@@ -293,6 +293,45 @@
                 </div>
             </div>
 
+            <div class="installation-instructions">
+                <h3>Installation Instructions</h3>
+
+                <div class="install-platform">
+                    <h4><i class="fab fa-apple"></i> macOS</h4>
+                    <ol>
+                        <li>Download <code>RequestFlow-macOS.dmg</code> from the releases page</li>
+                        <li>Open the DMG file (double-click)</li>
+                        <li>Drag <code>RequestFlow.app</code> to the Applications folder shortcut</li>
+                        <li>Eject the DMG</li>
+                        <li><strong>Important:</strong> Before first launch, remove quarantine attributes by running this in Terminal:
+                            <pre><code>xattr -cr /Applications/RequestFlow.app</code></pre>
+                        </li>
+                        <li><strong>On first launch:</strong> Right-click the app in Applications and select "Open"</li>
+                        <li>Click "Open" in the security dialog that appears</li>
+                        <li>The app will now run normally</li>
+                    </ol>
+                    <p class="install-note"><strong>Note:</strong> Since the app is currently unsigned, macOS Gatekeeper requires these extra steps. The <code>xattr -cr</code> command removes quarantine attributes that cause the "damaged" error, and right-click → Open bypasses the signature requirement.</p>
+                </div>
+
+                <div class="install-platform">
+                    <h4><i class="fab fa-linux"></i> Linux</h4>
+                    <ol>
+                        <li>Download <code>RequestFlow-Linux-x86_64.AppImage</code> from the releases page</li>
+                        <li>Make it executable: <code>chmod +x RequestFlow-Linux-x86_64.AppImage</code></li>
+                        <li>Run it: <code>./RequestFlow-Linux-x86_64.AppImage</code></li>
+                    </ol>
+                </div>
+
+                <div class="install-platform">
+                    <h4><i class="fab fa-windows"></i> Windows</h4>
+                    <ol>
+                        <li>Download <code>RequestFlow-Windows-x64.zip</code> from the releases page</li>
+                        <li>Extract the ZIP file to your preferred location</li>
+                        <li>Run <code>RequestFlow.exe</code></li>
+                    </ol>
+                </div>
+            </div>
+
             <div class="build-from-source">
                 <h3>Build from Source</h3>
                 <p>RequestFlow is open source! Clone the repository and build it yourself:</p>
@@ -392,8 +431,8 @@ make</code></pre>
                 <p>
                     <strong>Current Version:</strong> 1.0.0<br>
                     <strong>License:</strong> MIT License<br>
-                    <strong>Website:</strong> <a href="http://www.requestflow.dev" target="_blank">www.requestflow.dev</a><br>
-                    <strong>Email:</strong> <a href="mailto:fateh@requestflow.dev">fateh@requestflow.dev</a>
+                    <strong>Website:</strong> <a href="https://fatehmtd.github.io/RequestFlow" target="_blank">fatehmtd.github.io/RequestFlow</a><br>
+                    <strong>Email:</strong> <a href="mailto:fateh+requestflow@gmail.com">fateh+requestflow@gmail.com</a>
                 </p>
             </div>
         </div>
@@ -424,15 +463,15 @@ make</code></pre>
                     <ul>
                         <li><a href="https://github.com/fatehmtd/RequestFlow#readme" target="_blank">Documentation</a></li>
                         <li><a href="https://github.com/fatehmtd/RequestFlow/blob/main/LICENSE" target="_blank">License</a></li>
-                        <li><a href="http://www.requestflow.dev" target="_blank">Website</a></li>
+                        <li><a href="https://fatehmtd.github.io/RequestFlow" target="_blank">Website</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h4>Contact</h4>
                     <ul>
-                        <li><a href="mailto:fateh@requestflow.dev">fateh@requestflow.dev</a></li>
-                        <li><a href="http://www.requestflow.dev" target="_blank">www.requestflow.dev</a></li>
+                        <li><a href="mailto:fatehmtd+requestflow@gmail.com">fatehmtd+requestflow@gmail.com</a></li>
+                        <li><a href="https://fatehmtd.github.io/RequestFlow" target="_blank">fatehmtd.github.io/RequestFlow</a></li>
                     </ul>
                 </div>
             </div>

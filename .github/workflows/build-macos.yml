@@ -1,0 +1,330 @@
+name: Build RequestFlow (macOS)
+
+on:
+  push:
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.7.3'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        cache: true
+
+    - name: Verify Qt installation
+      run: |
+        qmake --version
+        which qmake
+
+    - name: Create build directory
+      run: |
+        mkdir -p build
+        cd build
+
+    - name: Configure with qmake
+      run: |
+        cd build
+        qmake ../RequestFlowApp/RequestFlowApp.pro -r "CONFIG+=release"
+        ls -la .
+
+    - name: Build with make
+      run: |
+        cd build
+        make -j$(sysctl -n hw.ncpu)
+        echo "Build directory structure:"
+        find . -type d -maxdepth 3
+        echo "Executables and libraries:"
+        find . -name "*.dylib" -o -name "RequestFlow" -type f
+
+    - name: Prepare app bundle
+      run: |
+        cd build
+
+        # Find the actual build output directory
+        if [ -d "RequestFlow/release" ]; then
+          BUILD_DIR="RequestFlow/release"
+        elif [ -d "RequestFlow" ]; then
+          BUILD_DIR="RequestFlow"
+        else
+          echo "Error: Could not find RequestFlow build directory"
+          exit 1
+        fi
+
+        cd "$BUILD_DIR"
+        echo "Working in: $(pwd)"
+        ls -la
+
+        # Create the app bundle structure if it doesn't exist
+        mkdir -p RequestFlow.app/Contents/MacOS
+        mkdir -p RequestFlow.app/Contents/Frameworks
+        mkdir -p RequestFlow.app/Contents/Resources
+
+        # Copy the executable
+        if [ -f "RequestFlow" ]; then
+          cp RequestFlow RequestFlow.app/Contents/MacOS/
+        elif [ -f "RequestFlow.app/Contents/MacOS/RequestFlow" ]; then
+          echo "App bundle already exists"
+        else
+          echo "Error: RequestFlow executable not found"
+          exit 1
+        fi
+
+        # Create and copy the application icon from design folder
+        ICON_DIR="${GITHUB_WORKSPACE}/RequestFlowApp/design/macos/AppIcons/Assets.xcassets/AppIcon.appiconset"
+
+        if [ -d "$ICON_DIR" ]; then
+          # Create iconset directory
+          mkdir -p RequestFlow.iconset
+
+          # Copy pre-generated icons to iconset with correct naming
+          cp "$ICON_DIR/16.png" RequestFlow.iconset/icon_16x16.png
+          cp "$ICON_DIR/32.png" RequestFlow.iconset/icon_16x16@2x.png
+          cp "$ICON_DIR/32.png" RequestFlow.iconset/icon_32x32.png
+          cp "$ICON_DIR/64.png" RequestFlow.iconset/icon_32x32@2x.png
+          cp "$ICON_DIR/128.png" RequestFlow.iconset/icon_128x128.png
+          cp "$ICON_DIR/256.png" RequestFlow.iconset/icon_128x128@2x.png
+          cp "$ICON_DIR/256.png" RequestFlow.iconset/icon_256x256.png
+          cp "$ICON_DIR/512.png" RequestFlow.iconset/icon_256x256@2x.png
+          cp "$ICON_DIR/512.png" RequestFlow.iconset/icon_512x512.png
+          cp "$ICON_DIR/1024.png" RequestFlow.iconset/icon_512x512@2x.png
+
+          # Convert iconset to icns
+          iconutil -c icns RequestFlow.iconset -o RequestFlow.app/Contents/Resources/icon.icns
+
+          # Clean up
+          rm -rf RequestFlow.iconset
+
+          echo "Created and installed application icon from macos AppIcons"
+        else
+          echo "Warning: Could not find icon directory at $ICON_DIR"
+        fi
+
+        # Find and copy project libraries
+        for lib in CoreModel CoreView ExecutionEngine; do
+          # Try different possible locations
+          if [ -f "../../${lib}/release/lib${lib}.1.0.0.dylib" ]; then
+            cp "../../${lib}/release/lib${lib}.1.0.0.dylib" RequestFlow.app/Contents/Frameworks/
+          elif [ -f "../../${lib}/lib${lib}.1.0.0.dylib" ]; then
+            cp "../../${lib}/lib${lib}.1.0.0.dylib" RequestFlow.app/Contents/Frameworks/
+          elif [ -f "../${lib}/lib${lib}.1.0.0.dylib" ]; then
+            cp "../${lib}/lib${lib}.1.0.0.dylib" RequestFlow.app/Contents/Frameworks/
+          fi
+        done
+
+        # Create symbolic links for the libraries
+        cd RequestFlow.app/Contents/Frameworks
+        for lib in CoreModel CoreView ExecutionEngine; do
+          if [ -f "lib${lib}.1.0.0.dylib" ]; then
+            ln -sf lib${lib}.1.0.0.dylib lib${lib}.1.dylib
+            ln -sf lib${lib}.1.0.0.dylib lib${lib}.dylib
+          fi
+        done
+        cd ../../..
+
+    - name: Create Info.plist
+      run: |
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
+        cat > RequestFlow.app/Contents/Info.plist << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>CFBundleExecutable</key>
+            <string>RequestFlow</string>
+            <key>CFBundleIconFile</key>
+            <string>icon.icns</string>
+            <key>CFBundleIdentifier</key>
+            <string>dev.requestflow.RequestFlow</string>
+            <key>CFBundleName</key>
+            <string>RequestFlow</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.0.0</string>
+            <key>CFBundleVersion</key>
+            <string>1.0.0</string>
+            <key>LSMinimumSystemVersion</key>
+            <string>10.14</string>
+            <key>NSHighResolutionCapable</key>
+            <true/>
+            <key>NSPrincipalClass</key>
+            <string>NSApplication</string>
+        </dict>
+        </plist>
+        EOF
+
+    - name: Deploy Qt dependencies
+      run: |
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
+
+        # Find Qt installation directory
+        QT_DIR=$(qmake -query QT_INSTALL_PREFIX)
+        echo "Qt installation directory: $QT_DIR"
+
+        # Copy SVG plugins BEFORE running macdeployqt so it can fix their dependencies
+        mkdir -p RequestFlow.app/Contents/PlugIns/imageformats
+        mkdir -p RequestFlow.app/Contents/PlugIns/iconengines
+
+        if [ -f "$QT_DIR/plugins/imageformats/libqsvg.dylib" ]; then
+          cp "$QT_DIR/plugins/imageformats/libqsvg.dylib" RequestFlow.app/Contents/PlugIns/imageformats/
+          echo "Copied SVG image format plugin"
+        fi
+
+        if [ -f "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" ]; then
+          cp "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" RequestFlow.app/Contents/PlugIns/iconengines/
+          echo "Copied SVG icon engine plugin"
+        fi
+
+        # Copy QtSvg framework if not already present
+        if [ -d "$QT_DIR/lib/QtSvg.framework" ] && [ ! -d "RequestFlow.app/Contents/Frameworks/QtSvg.framework" ]; then
+          cp -R "$QT_DIR/lib/QtSvg.framework" RequestFlow.app/Contents/Frameworks/
+          echo "Copied QtSvg framework"
+        fi
+
+        # Deploy Qt dependencies - this will fix library paths for all plugins and frameworks
+        macdeployqt RequestFlow.app -verbose=2 -always-overwrite
+
+    - name: Fix library paths
+      run: |
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
+
+        # Update library install names
+        install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib RequestFlow.app/Contents/MacOS/RequestFlow || true
+        install_name_tool -change libCoreView.1.dylib @executable_path/../Frameworks/libCoreView.1.dylib RequestFlow.app/Contents/MacOS/RequestFlow || true
+        install_name_tool -change libExecutionEngine.1.dylib @executable_path/../Frameworks/libExecutionEngine.1.dylib RequestFlow.app/Contents/MacOS/RequestFlow || true
+
+        # Fix inter-library dependencies
+        cd RequestFlow.app/Contents/Frameworks
+        install_name_tool -id @executable_path/../Frameworks/libCoreModel.1.dylib libCoreModel.1.0.0.dylib || true
+        install_name_tool -id @executable_path/../Frameworks/libCoreView.1.dylib libCoreView.1.0.0.dylib || true
+        install_name_tool -id @executable_path/../Frameworks/libExecutionEngine.1.dylib libExecutionEngine.1.0.0.dylib || true
+
+        # Fix Qt framework references in custom libraries (QtSvg is used by CoreView)
+        for lib in libCoreModel.1.0.0.dylib libCoreView.1.0.0.dylib libExecutionEngine.1.0.0.dylib; do
+          if [ -f "$lib" ]; then
+            # Get all @rpath Qt framework references and fix them
+            otool -L "$lib" | grep "@rpath/Qt" | awk '{print $1}' | while read dep; do
+              framework_name=$(echo "$dep" | sed 's|@rpath/||')
+              install_name_tool -change "$dep" "@executable_path/../Frameworks/$framework_name" "$lib" 2>/dev/null || true
+            done
+          fi
+        done
+
+        # Fix CoreView dependencies on CoreModel
+        install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib libCoreView.1.0.0.dylib || true
+
+        # Fix ExecutionEngine dependencies
+        install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib libExecutionEngine.1.0.0.dylib || true
+
+    - name: Verify app bundle
+      run: |
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
+        echo "=== MacOS directory ==="
+        ls -la RequestFlow.app/Contents/MacOS/
+        echo "=== Frameworks directory ==="
+        ls -la RequestFlow.app/Contents/Frameworks/
+        echo "=== Check for QtSvg framework ==="
+        ls -la RequestFlow.app/Contents/Frameworks/QtSvg.framework/Versions/A/ 2>/dev/null || echo "QtSvg.framework NOT FOUND"
+        echo "=== PlugIns/imageformats ==="
+        ls -la RequestFlow.app/Contents/PlugIns/imageformats/ 2>/dev/null || echo "imageformats directory NOT FOUND"
+        echo "=== PlugIns/iconengines ==="
+        ls -la RequestFlow.app/Contents/PlugIns/iconengines/ 2>/dev/null || echo "iconengines directory NOT FOUND"
+        echo "=== Main executable dependencies ==="
+        otool -L RequestFlow.app/Contents/MacOS/RequestFlow
+        echo "=== libCoreView dependencies ==="
+        otool -L RequestFlow.app/Contents/Frameworks/libCoreView.1.0.0.dylib 2>/dev/null || echo "libCoreView not found"
+        echo "=== SVG plugin dependencies ==="
+        otool -L RequestFlow.app/Contents/PlugIns/imageformats/libqsvg.dylib 2>/dev/null || echo "libqsvg not found"
+
+    - name: Remove quarantine attributes
+      run: |
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
+
+        # Remove quarantine attributes that cause "damaged" errors on macOS
+        # This is necessary for unsigned apps distributed outside the App Store
+        xattr -cr RequestFlow.app
+        echo "Removed quarantine attributes from app bundle"
+
+    - name: Create DMG
+      run: |
+        cd build
+        if [ -d "RequestFlow/release" ]; then
+          cd RequestFlow/release
+        elif [ -d "RequestFlow" ]; then
+          cd RequestFlow
+        fi
+
+        # Create a temporary directory for DMG contents
+        mkdir -p dmg-staging
+        cp -R RequestFlow.app dmg-staging/
+
+        # Create Applications symlink for easy drag-and-drop installation
+        ln -s /Applications dmg-staging/Applications
+
+        # Create DMG using hdiutil
+        hdiutil create -volname "RequestFlow" \
+          -srcfolder dmg-staging \
+          -ov -format UDZO \
+          "${GITHUB_WORKSPACE}/RequestFlow-macOS.dmg"
+
+        echo "DMG created successfully"
+
+    - name: Verify DMG
+      run: |
+        ls -lh RequestFlow-macOS.dmg
+        file RequestFlow-macOS.dmg
+        hdiutil imageinfo RequestFlow-macOS.dmg
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: RequestFlow-macOS
+        path: RequestFlow-macOS.dmg
+        retention-days: 30
+        compression-level: 0
+
+    - name: Upload release asset (on tags)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: RequestFlow-macOS.dmg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
