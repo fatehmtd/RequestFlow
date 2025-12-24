@@ -30,17 +30,6 @@
 *.exe
 *.out
 *.app
-BleachUI/.vs
-BleachUI/BleachUI/x64
-BleachUI/BleachUIModel/x64
-BleachUI/x64
-BleachUI/build-*
-BleachUI/BleachUI.pro
-BleachUI/CoreView/x64
-BleachUI/CoreModel/x64
-BleachUI/RequestFlow/x64
-build-*
-BleachUI/RequestFlow.pro.user*
 *.pro.user.*
 RequestFlowApp/RequestFlow.pro.user
 *.zip
@@ -63,10 +52,7 @@ RequestFlowApp/x64
 RequestFlowApp/RequestFlow/ui_ViewerNodeUi.h
 RequestFlowApp/RequestFlow/ui_*.h
 RequestFlowApp/CoreView/ui_*.h
-.DS_Store
 *.DS_Store
-*.DS_Store
-RequestFlowApp/deploy/RequestFlow-mac/RequestFlow.dmg
 *.dmg
 
 RequestFlowApp/build

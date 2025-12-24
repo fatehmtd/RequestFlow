@@ -1,0 +1,185 @@
+name: Build RequestFlow (macOS)
+
+on:
+  push:
+    branches: [ main, feature/*, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.7.3'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        cache: true
+
+    - name: Verify Qt installation
+      run: |
+        qmake --version
+        which qmake
+
+    - name: Create build directory
+      run: |
+        mkdir -p build
+        cd build
+
+    - name: Configure with qmake
+      run: |
+        cd build
+        qmake ../RequestFlowApp/RequestFlowApp.pro -r "CONFIG+=release"
+
+    - name: Build with make
+      run: |
+        cd build
+        make -j$(sysctl -n hw.ncpu)
+
+    - name: Prepare app bundle
+      run: |
+        cd build/RequestFlow/release
+
+        # Create the app bundle structure if it doesn't exist
+        mkdir -p RequestFlow.app/Contents/MacOS
+        mkdir -p RequestFlow.app/Contents/Frameworks
+        mkdir -p RequestFlow.app/Contents/Resources
+
+        # Copy the executable
+        cp RequestFlow RequestFlow.app/Contents/MacOS/
+
+        # Copy project libraries
+        cp ../../CoreModel/release/libCoreModel.1.0.0.dylib RequestFlow.app/Contents/Frameworks/ || true
+        cp ../../CoreView/release/libCoreView.1.0.0.dylib RequestFlow.app/Contents/Frameworks/ || true
+        cp ../../ExecutionEngine/release/libExecutionEngine.1.0.0.dylib RequestFlow.app/Contents/Frameworks/ || true
+
+        # Create symbolic links for the libraries
+        cd RequestFlow.app/Contents/Frameworks
+        ln -sf libCoreModel.1.0.0.dylib libCoreModel.1.dylib || true
+        ln -sf libCoreModel.1.0.0.dylib libCoreModel.dylib || true
+        ln -sf libCoreView.1.0.0.dylib libCoreView.1.dylib || true
+        ln -sf libCoreView.1.0.0.dylib libCoreView.dylib || true
+        ln -sf libExecutionEngine.1.0.0.dylib libExecutionEngine.1.dylib || true
+        ln -sf libExecutionEngine.1.0.0.dylib libExecutionEngine.dylib || true
+        cd ../../..
+
+    - name: Create Info.plist
+      run: |
+        cd build/RequestFlow/release
+        cat > RequestFlow.app/Contents/Info.plist << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>CFBundleExecutable</key>
+            <string>RequestFlow</string>
+            <key>CFBundleIdentifier</key>
+            <string>dev.requestflow.RequestFlow</string>
+            <key>CFBundleName</key>
+            <string>RequestFlow</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.0.0</string>
+            <key>CFBundleVersion</key>
+            <string>1.0.0</string>
+            <key>LSMinimumSystemVersion</key>
+            <string>10.14</string>
+            <key>NSHighResolutionCapable</key>
+            <true/>
+            <key>NSPrincipalClass</key>
+            <string>NSApplication</string>
+        </dict>
+        </plist>
+        EOF
+
+    - name: Deploy Qt dependencies
+      run: |
+        cd build/RequestFlow/release
+
+        # Deploy Qt dependencies including plugins
+        macdeployqt RequestFlow.app -verbose=2
+
+        # Ensure SVG plugin is copied (macdeployqt sometimes misses it)
+        mkdir -p RequestFlow.app/Contents/PlugIns/imageformats
+
+        # Find Qt installation directory
+        QT_DIR=$(qmake -query QT_INSTALL_PREFIX)
+        echo "Qt installation directory: $QT_DIR"
+
+        # Copy SVG plugin if it exists
+        if [ -f "$QT_DIR/plugins/imageformats/libqsvg.dylib" ]; then
+          cp "$QT_DIR/plugins/imageformats/libqsvg.dylib" RequestFlow.app/Contents/PlugIns/imageformats/
+          echo "Copied SVG image format plugin"
+        fi
+
+        # Copy SVG icon engine plugin
+        mkdir -p RequestFlow.app/Contents/PlugIns/iconengines
+        if [ -f "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" ]; then
+          cp "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" RequestFlow.app/Contents/PlugIns/iconengines/
+          echo "Copied SVG icon engine plugin"
+        fi
+
+    - name: Fix library paths
+      run: |
+        cd build/RequestFlow/release
+
+        # Update library install names
+        install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib RequestFlow.app/Contents/MacOS/RequestFlow || true
+        install_name_tool -change libCoreView.1.dylib @executable_path/../Frameworks/libCoreView.1.dylib RequestFlow.app/Contents/MacOS/RequestFlow || true
+        install_name_tool -change libExecutionEngine.1.dylib @executable_path/../Frameworks/libExecutionEngine.1.dylib RequestFlow.app/Contents/MacOS/RequestFlow || true
+
+        # Fix inter-library dependencies
+        cd RequestFlow.app/Contents/Frameworks
+        install_name_tool -id @executable_path/../Frameworks/libCoreModel.1.dylib libCoreModel.1.0.0.dylib || true
+        install_name_tool -id @executable_path/../Frameworks/libCoreView.1.dylib libCoreView.1.0.0.dylib || true
+        install_name_tool -id @executable_path/../Frameworks/libExecutionEngine.1.dylib libExecutionEngine.1.0.0.dylib || true
+
+        # Fix CoreView dependencies on CoreModel
+        install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib libCoreView.1.0.0.dylib || true
+
+        # Fix ExecutionEngine dependencies
+        install_name_tool -change libCoreModel.1.dylib @executable_path/../Frameworks/libCoreModel.1.dylib libExecutionEngine.1.0.0.dylib || true
+
+    - name: Verify app bundle
+      run: |
+        cd build/RequestFlow/release
+        ls -la RequestFlow.app/Contents/MacOS/
+        ls -la RequestFlow.app/Contents/Frameworks/
+        otool -L RequestFlow.app/Contents/MacOS/RequestFlow
+
+    - name: Create ZIP archive
+      run: |
+        cd build/RequestFlow/release
+
+        # Create ZIP archive with the app bundle
+        zip -r ../../../RequestFlow-macOS.zip RequestFlow.app
+
+    - name: Verify ZIP
+      run: |
+        ls -lh RequestFlow-macOS.zip
+        file RequestFlow-macOS.zip
+        unzip -l RequestFlow-macOS.zip | head -20
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: RequestFlow-macOS
+        path: RequestFlow-macOS.zip
+        retention-days: 30
+
+    - name: Upload release asset (on tags)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: RequestFlow-macOS.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
