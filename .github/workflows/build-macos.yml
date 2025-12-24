@@ -211,6 +211,9 @@ jobs:
 
     - name: Create ZIP archive
       run: |
+        # Save the workspace root
+        WORKSPACE_ROOT="${GITHUB_WORKSPACE}"
+
         cd build
         if [ -d "RequestFlow/release" ]; then
           cd RequestFlow/release
@@ -218,15 +221,8 @@ jobs:
           cd RequestFlow
         fi
 
-        # Create ZIP archive with the app bundle
-        # Determine how many levels up to go to reach the root
-        if [ -d "../../.." ]; then
-          ZIP_PATH="../../../RequestFlow-macOS.zip"
-        else
-          ZIP_PATH="../../RequestFlow-macOS.zip"
-        fi
-
-        zip -r "$ZIP_PATH" RequestFlow.app
+        # Create ZIP archive with absolute path to workspace root
+        zip -r "${WORKSPACE_ROOT}/RequestFlow-macOS.zip" RequestFlow.app
 
     - name: Verify ZIP
       run: |
