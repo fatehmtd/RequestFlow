@@ -299,14 +299,18 @@
                 <div class="install-platform">
                     <h4><i class="fab fa-apple"></i> macOS</h4>
                     <ol>
-                        <li>Download <code>RequestFlow-macOS.zip</code> from the releases page</li>
-                        <li>Extract the ZIP file (double-click or use Terminal)</li>
-                        <li>Drag <code>RequestFlow.app</code> to your Applications folder (optional)</li>
-                        <li><strong>Important:</strong> On first launch, <strong>right-click</strong> the app and select "Open"</li>
+                        <li>Download <code>RequestFlow-macOS.dmg</code> from the releases page</li>
+                        <li>Open the DMG file (double-click)</li>
+                        <li>Drag <code>RequestFlow.app</code> to the Applications folder shortcut</li>
+                        <li>Eject the DMG</li>
+                        <li><strong>Important:</strong> Before first launch, remove quarantine attributes by running this in Terminal:
+                            <pre><code>xattr -cr /Applications/RequestFlow.app</code></pre>
+                        </li>
+                        <li><strong>On first launch:</strong> Right-click the app in Applications and select "Open"</li>
                         <li>Click "Open" in the security dialog that appears</li>
-                        <li>The app will now run normally - you only need to do this once</li>
+                        <li>The app will now run normally</li>
                     </ol>
-                    <p class="install-note"><strong>Note:</strong> Since the app is currently unsigned, macOS Gatekeeper will prevent it from opening if you double-click it directly. Using right-click → Open bypasses this restriction.</p>
+                    <p class="install-note"><strong>Note:</strong> Since the app is currently unsigned, macOS Gatekeeper requires these extra steps. The <code>xattr -cr</code> command removes quarantine attributes that cause the "damaged" error, and right-click → Open bypasses the signature requirement.</p>
                 </div>
 
                 <div class="install-platform">

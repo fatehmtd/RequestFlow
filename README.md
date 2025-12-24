@@ -157,14 +157,19 @@ Pre-built binaries are available for Windows, macOS, and Linux:
 ### Installation Instructions
 
 #### macOS
-1. Download `RequestFlow-macOS.zip` from the releases page
-2. Extract the ZIP file (double-click or use `unzip RequestFlow-macOS.zip`)
-3. Drag `RequestFlow.app` to your Applications folder (optional)
-4. **Important:** On first launch, right-click the app and select "Open" (this is required for unsigned apps)
-5. Click "Open" in the security dialog that appears
-6. The app will now run normally - you only need to do this once
+1. Download `RequestFlow-macOS.dmg` from the releases page
+2. Open the DMG file (double-click)
+3. Drag `RequestFlow.app` to the Applications folder shortcut
+4. Eject the DMG
+5. **Important:** Before first launch, remove quarantine attributes by running this in Terminal:
+   ```bash
+   xattr -cr /Applications/RequestFlow.app
+   ```
+6. **On first launch:** Right-click the app in Applications and select "Open" (required for unsigned apps)
+7. Click "Open" in the security dialog that appears
+8. The app will now run normally
 
-**Note:** Since the app is currently unsigned, macOS Gatekeeper will prevent it from opening if you double-click it directly. Using right-click → Open bypasses this restriction.
+**Note:** Since the app is currently unsigned, macOS Gatekeeper requires these extra steps. The `xattr -cr` command removes quarantine attributes that cause the "damaged" error, and right-click → Open bypasses the signature requirement.
 
 #### Linux
 1. Download `RequestFlow-Linux-x86_64.AppImage` from the releases page

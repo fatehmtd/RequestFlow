@@ -82,6 +82,37 @@ jobs:
           exit 1
         fi
 
+        # Create and copy the application icon from design folder
+        ICON_SOURCE="${GITHUB_WORKSPACE}/RequestFlowApp/design/circle/RequestFlowLogo-256.png"
+
+        if [ -f "$ICON_SOURCE" ]; then
+          # Create iconset directory
+          mkdir -p RequestFlow.iconset
+
+          # Copy and resize the icon to different sizes required by macOS
+          # Using sips (built-in macOS tool) to resize
+          sips -z 16 16     "$ICON_SOURCE" --out RequestFlow.iconset/icon_16x16.png
+          sips -z 32 32     "$ICON_SOURCE" --out RequestFlow.iconset/icon_16x16@2x.png
+          sips -z 32 32     "$ICON_SOURCE" --out RequestFlow.iconset/icon_32x32.png
+          sips -z 64 64     "$ICON_SOURCE" --out RequestFlow.iconset/icon_32x32@2x.png
+          sips -z 128 128   "$ICON_SOURCE" --out RequestFlow.iconset/icon_128x128.png
+          sips -z 256 256   "$ICON_SOURCE" --out RequestFlow.iconset/icon_128x128@2x.png
+          sips -z 256 256   "$ICON_SOURCE" --out RequestFlow.iconset/icon_256x256.png
+          sips -z 512 512   "$ICON_SOURCE" --out RequestFlow.iconset/icon_256x256@2x.png
+          sips -z 512 512   "$ICON_SOURCE" --out RequestFlow.iconset/icon_512x512.png
+          cp "$ICON_SOURCE" RequestFlow.iconset/icon_512x512@2x.png
+
+          # Convert iconset to icns
+          iconutil -c icns RequestFlow.iconset -o RequestFlow.app/Contents/Resources/icon.icns
+
+          # Clean up
+          rm -rf RequestFlow.iconset
+
+          echo "Created and installed application icon from RequestFlowLogo-256.png"
+        else
+          echo "Warning: Could not find icon source at $ICON_SOURCE"
+        fi
+
         # Find and copy project libraries
         for lib in CoreModel CoreView ExecutionEngine; do
           # Try different possible locations
@@ -119,6 +150,8 @@ jobs:
         <dict>
             <key>CFBundleExecutable</key>
             <string>RequestFlow</string>
+            <key>CFBundleIconFile</key>
+            <string>icon.icns</string>
             <key>CFBundleIdentifier</key>
             <string>dev.requestflow.RequestFlow</string>
             <key>CFBundleName</key>
@@ -223,11 +256,8 @@ jobs:
         xattr -cr RequestFlow.app
         echo "Removed quarantine attributes from app bundle"
 
-    - name: Create ZIP archive
+    - name: Create DMG
       run: |
-        # Save the workspace root
-        WORKSPACE_ROOT="${GITHUB_WORKSPACE}"
-
         cd build
         if [ -d "RequestFlow/release" ]; then
           cd RequestFlow/release
@@ -235,26 +265,38 @@ jobs:
           cd RequestFlow
         fi
 
-        # Create ZIP archive with absolute path to workspace root
-        zip -r "${WORKSPACE_ROOT}/RequestFlow-macOS.zip" RequestFlow.app
+        # Create a temporary directory for DMG contents
+        mkdir -p dmg-staging
+        cp -R RequestFlow.app dmg-staging/
 
-    - name: Verify ZIP
+        # Create Applications symlink for easy drag-and-drop installation
+        ln -s /Applications dmg-staging/Applications
+
+        # Create DMG using hdiutil
+        hdiutil create -volname "RequestFlow" \
+          -srcfolder dmg-staging \
+          -ov -format UDZO \
+          "${GITHUB_WORKSPACE}/RequestFlow-macOS.dmg"
+
+        echo "DMG created successfully"
+
+    - name: Verify DMG
       run: |
-        ls -lh RequestFlow-macOS.zip
-        file RequestFlow-macOS.zip
-        unzip -l RequestFlow-macOS.zip | head -20
+        ls -lh RequestFlow-macOS.dmg
+        file RequestFlow-macOS.dmg
+        hdiutil imageinfo RequestFlow-macOS.dmg
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: RequestFlow-macOS
-        path: RequestFlow-macOS.zip
+        path: RequestFlow-macOS.dmg
         retention-days: 30
 
     - name: Upload release asset (on tags)
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: RequestFlow-macOS.zip
+        files: RequestFlow-macOS.dmg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
