@@ -49,8 +49,8 @@
                 <h1 class="hero-title">RequestFlow</h1>
                 <p class="hero-subtitle">REST API Testing for Human Beings</p>
                 <p class="hero-description">
-                    A visual, node-based REST API testing and workflow automation tool built with Qt. 
-                    Design, test, and automate HTTP request workflows with an intuitive graphical interface.
+                    A visual, node-based REST API testing tool built with Qt.
+                    Design and test HTTP request workflows with a graphical interface.
                 </p>
                 <div class="hero-buttons">
                     <a href="#download" class="btn btn-primary">Download Now</a>
@@ -93,52 +93,67 @@
     <section id="features" class="features">
         <div class="container">
             <h2 class="section-title">Features</h2>
-            <p class="section-subtitle">Everything you need for powerful API testing and automation</p>
+            <p class="section-subtitle">Core features for API testing</p>
             
             <div class="features-grid">
                 <div class="feature-card">
                     <h3><img src="icons/endpoint.svg" alt="" class="feature-icon">Visual Node-Based Editor</h3>
-                    <p>Design API test workflows using an intuitive drag-and-drop interface. Connect nodes to create complex request sequences visually.</p>
+                    <p>Design API test workflows using drag-and-drop. Connect nodes to create request sequences visually.</p>
                 </div>
 
                 <div class="feature-card">
                     <h3><img src="icons/external.svg" alt="" class="feature-icon">Multiple Node Types</h3>
-                    <p>Endpoint, Script, Assertion, Payload, Viewer, Delay, Conditional, Group, and External nodes for complete workflow control.</p>
+                    <p>Endpoint, Script, Assertion, Payload, Viewer, Delay, Conditional, Group, and External nodes.</p>
                 </div>
 
                 <div class="feature-card">
                     <h3><img src="icons/delay.svg" alt="" class="feature-icon">Environment Management</h3>
-                    <p>Define and switch between multiple environments (dev, staging, production) with ease. Manage API endpoints and credentials per environment.</p>
+                    <p>Define and switch between environments (dev, staging, production). Manage variables per environment.</p>
                 </div>
 
                 <div class="feature-card">
                     <h3><img src="icons/payload.svg" alt="" class="feature-icon">Variable Substitution</h3>
-                    <p>Use environment variables and dynamic values in URLs, headers, and payloads with simple <code>{variable}</code> syntax.</p>
+                    <p>Use environment variables and path/query parameters with <code>{variable}</code> syntax in URLs and payloads.</p>
                 </div>
 
                 <div class="feature-card">
                     <h3><img src="icons/viewer.svg" alt="" class="feature-icon">Message Flow Tracking</h3>
-                    <p>Visualize and debug data flow between nodes. See exactly how data transforms through your workflow.</p>
+                    <p>Inspect data at each step. See request bodies, responses, and query parameters.</p>
                 </div>
 
                 <div class="feature-card">
-                    <h3><img src="icons/script.svg" alt="" class="feature-icon">Custom JavaScript Engine</h3>
-                    <p>Built-in JavaScript execution for advanced scripting capabilities. Transform data, create custom validations, and more.</p>
+                    <h3><img src="icons/script.svg" alt="" class="feature-icon">JavaScript Engine</h3>
+                    <p>Built-in JavaScript (QJSEngine) with access to Request.body, Request.path, Request.query, Request.context.</p>
                 </div>
 
                 <div class="feature-card">
                     <h3><img src="icons/assertion.svg" alt="" class="feature-icon">Assertion Nodes</h3>
-                    <p>Validate API responses with custom assertions. Ensure your APIs behave exactly as expected.</p>
+                    <p>Validate API responses with built-in assertions: equals, contains, true/false checks.</p>
                 </div>
 
                 <div class="feature-card">
                     <h3><i class="fas fa-folder-open feature-icon"></i>Project Management</h3>
-                    <p>Save and organize multiple test scenarios in project files (.rqfl). Keep your workflows organized and version-controlled.</p>
+                    <p>Save workflows as .rqfl project files. Organize test scenarios.</p>
                 </div>
 
                 <div class="feature-card">
                     <h3><i class="fas fa-palette feature-icon"></i>Dark/Light Theme</h3>
-                    <p>Customizable UI themes for comfortable viewing. Choose the theme that works best for you.</p>
+                    <p>Choose between dark and light themes.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><i class="fas fa-server feature-icon"></i>Proxy Support</h3>
+                    <p>Configure HTTP or SOCKS5 proxy with optional authentication.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><i class="fas fa-keyboard feature-icon"></i>Keyboard Shortcuts</h3>
+                    <p>Ctrl+D duplicate, Delete, F2 rename, Ctrl+F find, Ctrl+Scroll zoom.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><i class="fas fa-file-import feature-icon"></i>Swagger Import</h3>
+                    <p>Import Swagger/OpenAPI JSON files. Drag and drop endpoints from Inventory as pre-configured nodes.</p>
                 </div>
             </div>
         </div>
@@ -415,15 +430,11 @@ make</code></pre>
             <h2 class="section-title">About RequestFlow</h2>
             <div class="about-content">
                 <p>
-                    RequestFlow is a professional REST API testing and workflow automation tool that brings 
-                    visual programming concepts to API testing. Built with Qt for cross-platform compatibility, 
-                    it provides a powerful yet intuitive interface for designing, testing, and automating 
-                    complex HTTP request workflows.
+                    RequestFlow is a visual REST API testing tool built with Qt for cross-platform support.
+                    It provides a graphical interface for designing and testing HTTP request workflows.
                 </p>
                 <p>
-                    Created and maintained by <strong>Fateh Benmerzoug, Ph.D</strong>, RequestFlow is now 
-                    open source under the MIT License, allowing developers worldwide to contribute and improve 
-                    the tool.
+                    Created by <strong>Fateh Benmerzoug, Ph.D</strong>. Open source under the MIT License.
                 </p>
                 <p>
                     <strong>Current Version:</strong> 1.0.0<br>

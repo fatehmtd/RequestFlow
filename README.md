@@ -11,7 +11,7 @@
 [![Build (macOS)](https://github.com/fatehmtd/RequestFlow/actions/workflows/build-macos.yml/badge.svg?branch=main)](https://github.com/fatehmtd/RequestFlow/actions/workflows/build-macos.yml)
 [![Build (Windows)](https://github.com/fatehmtd/RequestFlow/actions/workflows/build-windows.yml/badge.svg?branch=main)](https://github.com/fatehmtd/RequestFlow/actions/workflows/build-windows.yml)
 
-RequestFlow is a visual, node-based REST API testing and workflow automation tool. Instead of writing scripts or managing complex configuration files, you design API test workflows by connecting nodes on a canvas. Think of it as a flowchart editor for your HTTP requests.
+RequestFlow is a visual, node-based REST API testing tool. Design API test workflows by connecting nodes on a canvas instead of writing scripts or managing configuration files.
 
 <p align="center">
   <img src="web/images/main-ui.png" alt="RequestFlow Main Interface" width="800">
@@ -23,20 +23,19 @@ RequestFlow is a visual, node-based REST API testing and workflow automation too
 
 ## Why RequestFlow?
 
-Traditional API testing tools force you to think in terms of collections, folders, and request lists. RequestFlow lets you think visually. Build complex workflows by dragging nodes onto a canvas and connecting them together. See your data flow in real-time, add conditional logic, run custom scripts, and validate responses—all without leaving the visual editor.
+RequestFlow takes a visual approach to API testing. Build workflows by dragging nodes onto a canvas and connecting them. See your data flow, add conditional logic, run scripts, and validate responses in a graphical interface.
 
-Perfect for:
-- Testing complex API workflows with multiple interdependent requests
-- Automating integration tests with visual feedback
+Useful for:
+- Testing API workflows with multiple requests
 - Debugging API flows by inspecting data at each step
-- Building reusable test scenarios that are easy to understand and maintain
+- Building reusable test scenarios
 
 ---
 
 ## Features
 
 ### Visual Workflow Design
-Build API test flows using a drag-and-drop node editor. Connect HTTP requests, data transformations, conditionals, and assertions visually. No more wrestling with nested JSON configurations or scattered test scripts.
+Build API test flows using a drag-and-drop node editor. Connect HTTP requests, data transformations, conditionals, and assertions visually.
 
 <p align="center">
   <img src="web/images/example-flow.png" alt="Example Workflow" width="700">
@@ -46,51 +45,45 @@ Build API test flows using a drag-and-drop node editor. Connect HTTP requests, d
 
 ### Node Types
 
-- **Endpoint Nodes** - Full-featured HTTP client supporting all REST methods (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS)
-  - Multiple authentication methods: Basic Auth, Bearer tokens, OAuth
+- **Endpoint Nodes** - HTTP client supporting REST methods (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS)
+  - Authentication: Basic Auth, Bearer tokens
+  - Path and query variable substitution from upstream nodes
   - Custom headers, timeouts, user agents, and content types
   - Response validation with configurable accepted/rejected status codes
-  - Built-in request/response logging
 
-- **Payload Nodes** - Flexible data source management
+- **Payload Nodes** - Data source management
   - Load messages from files or define inline JSON
-  - Inject structured data into your workflow at any point
-  - Perfect for test data sets and mock responses
+  - Define path variables and query parameters (e.g., `http://api/{userId}?{status}`)
+  - Inject data into your workflow
 
-- **Script Nodes** - JavaScript execution engine for data transformation
-  - Full JavaScript support with access to message context
-  - Transform API responses, extract values, manipulate data structures
-  - No external dependencies required
+- **Script Nodes** - JavaScript execution for data transformation
+  - Access message context: Request.body, Request.query, Request.path, Request.context
+  - Transform responses, extract values, manipulate data
 
-- **Assertion Nodes** - JavaScript-based testing framework
-  - Write custom assertions to validate API behavior
-  - Access response data, headers, and status codes
-  - Build comprehensive test suites visually
+- **Assertion Nodes** - Validate API responses
+  - Built-in assertions: equals, contains, true/false checks
+  - Access response data and write custom validation logic
 
-- **Conditional Nodes** - Smart workflow branching
-  - JavaScript-powered conditions for dynamic execution paths
+- **Conditional Nodes** - Workflow branching
+  - JavaScript conditions for dynamic execution paths
   - Enable/disable branches based on runtime data
-  - Handle different scenarios in a single workflow
 
-- **Delay Nodes** - Precise timing control
+- **Delay Nodes** - Timing control
   - Add configurable delays between operations
-  - Essential for rate-limited APIs and sequential testing
-  - Millisecond-level precision
+  - Millisecond precision
 
-- **Viewer Nodes** - Advanced data inspection and export
-  - Real-time message viewing at any workflow step
-  - JSONPath filtering for complex data structures
-  - Export capabilities to save responses and debug data
+- **Viewer Nodes** - Data inspection
+  - View messages at any workflow step
+  - JSONPath filtering for data structures
+  - Export responses to JSON files
 
-- **External Nodes** - Workflow composition and reusability
-  - Reference nodes from other graphs to eliminate duplication
-  - Configurable execution conditions (always run, cache-based, or custom logic)
-  - Build libraries of reusable test components
+- **External Nodes** - Workflow composition
+  - Reference nodes from other graphs
+  - Configurable execution conditions
 
 - **Group Nodes** - Visual organization
   - Color-coded grouping for related nodes
-  - Keep complex workflows clean and maintainable
-  - Collapse/expand groups for better overview
+  - Keep workflows organized
 
 <p align="center">
   <img src="web/images/config-endpoint.png" alt="Endpoint Configuration" width="600">
@@ -99,7 +92,7 @@ Build API test flows using a drag-and-drop node editor. Connect HTTP requests, d
 </p>
 
 ### Environment Management
-Switch between development, staging, and production environments with a single click. Define environment-specific variables and use them anywhere with `{variable}` syntax. No more hardcoded URLs or credentials.
+Switch between environments (dev, staging, production) and define variables. Use `{variable}` syntax anywhere in your requests.
 
 <p align="center">
   <img src="web/images/prod-env.png" alt="Environment Management" width="600">
@@ -108,7 +101,7 @@ Switch between development, staging, and production environments with a single c
 </p>
 
 ### Message Flow Tracking
-Every piece of data flowing through your workflow is tracked. See request bodies, response headers, query parameters, path variables, and custom context data at each step.
+Inspect data at each step of your workflow: request bodies, response headers, query parameters, and path variables.
 
 <p align="center">
   <img src="web/images/data-viz.png" alt="Data Visualization" width="600">
@@ -117,7 +110,7 @@ Every piece of data flowing through your workflow is tracked. See request bodies
 </p>
 
 ### JavaScript Integration
-Built-in JavaScript engine with custom libraries for path manipulation and assertions. Transform data, validate responses, and implement custom logic without external dependencies.
+Built-in JavaScript engine (QJSEngine) with JSONPath library for data manipulation and assertions.
 
 <p align="center">
   <img src="web/images/scripting.png" alt="JavaScript Scripting" width="600">
@@ -125,8 +118,8 @@ Built-in JavaScript engine with custom libraries for path manipulation and asser
   <em>Write custom JavaScript for data transformation and logic</em>
 </p>
 
-### Advanced Data Filtering
-Filter and query complex JSON responses using JSONPath expressions. Export filtered data for further analysis or testing.
+### Data Filtering
+Filter JSON responses using JSONPath expressions. Export filtered data for analysis.
 
 <p align="center">
   <img src="web/images/view-filtering.png" alt="JSONPath Filtering" width="600">
@@ -138,7 +131,23 @@ Filter and query complex JSON responses using JSONPath expressions. Export filte
 Save your workflows as `.rqfl` project files. Organize multiple test scenarios, version control your tests, and share them with your team.
 
 ### Dark/Light Themes
-Work comfortably in your preferred theme. The interface adapts to your choice with full syntax highlighting support.
+Choose between dark and light themes.
+
+### Proxy Support
+Configure HTTP or SOCKS5 proxy with optional authentication in Settings.
+
+### Keyboard Shortcuts
+- **Ctrl+D** - Duplicate selected nodes
+- **Delete** - Delete selected nodes
+- **F2** - Rename selected node
+- **Ctrl+F** - Find node
+- **Ctrl+Scroll** - Zoom in/out
+
+### Recent Projects
+Quick access to recently opened projects from the File menu.
+
+### Swagger/OpenAPI Import
+Import API definitions from Swagger JSON files (Tools > Swagger Import). Imported endpoints appear in the Inventory panel where you can drag and drop them directly onto the canvas as pre-configured Endpoint nodes with URL, HTTP method, and parameters already set.
 
 ---
 
@@ -201,14 +210,41 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed build instructions and devel
 
 ## Quick Example
 
-1. Create a new project
-2. Drag an **Endpoint Node** onto the canvas
-3. Configure it with your API URL (use `{baseUrl}/users` with environment variables)
-4. Add a **Viewer Node** to inspect the response
-5. Connect the nodes
-6. Hit **Run** and watch the data flow
+**Scenario**: Fetch a user, then fetch their posts using the user ID.
 
-Want to test an authenticated endpoint? Add another Endpoint Node, connect it to the first, and configure Bearer token authentication. Need to validate the response? Drop in an Assertion Node and write a simple JavaScript check.
+1. **Create environment** - Add a variable `baseUrl` = `https://jsonplaceholder.typicode.com`
+
+2. **Add Payload Node** - Define path variables:
+   - `userId` = `1`
+
+3. **Add first Endpoint Node** - Configure:
+   - URL: `{baseUrl}/users/{userId}`
+   - Method: GET
+   - Connect Payload → Endpoint
+
+4. **Add Script Node** - Extract user data:
+   ```javascript
+   Response.body = Request.body;
+   Response.context.userName = Request.body.name;
+   ```
+   Connect Endpoint → Script
+
+5. **Add second Endpoint Node** - Fetch posts:
+   - URL: `{baseUrl}/posts?userId={userId}`
+   - Method: GET
+   - Connect Script → Endpoint
+
+6. **Add Assertion Node** - Validate response:
+   ```javascript
+   Assert.true(Request.body.length > 0, "User should have posts");
+   ```
+   Connect Endpoint → Assertion
+
+7. **Add Viewer Node** - Inspect final data
+   - Set JSONPath filter: `$[0].title` to see first post title
+   - Connect Assertion → Viewer
+
+8. **Run** - Click Execute and watch data flow through each node
 
 ---
 
@@ -254,13 +290,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on code style, pull reques
 
 ## Technology Stack
 
-Built with modern C++ and the Qt framework for cross-platform compatibility:
-
-- **Qt 6.x** (compatible with Qt 5.15.2+) for UI and networking
-- **C++17** for core logic
-- **QGraphicsView** for the node-based visual editor
-- **QJSEngine** for JavaScript execution
-- **QNetworkAccessManager** for HTTP client functionality
+- **Qt 6.x** - UI and networking
+- **C++17** - Core logic
+- **QGraphicsView** - Node-based editor
+- **QJSEngine** - JavaScript execution
+- **QNetworkAccessManager** - HTTP client
 
 ---
 
