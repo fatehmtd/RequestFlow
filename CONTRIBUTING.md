@@ -37,32 +37,63 @@ Thank you for your interest in contributing to RequestFlow! This document provid
 
 ### Prerequisites
 
-- Qt 5.15.2+ or Qt 6.x
-- C++17 compatible compiler (MSVC 2019+, GCC, or Clang)
-- Git
+- **Qt 6.7.3+** (with SVG and OpenGL modules)
+- **C++17 compatible compiler**:
+  - Windows: MinGW 9.0+
+  - Linux: GCC 11+
+  - macOS: Clang (Xcode Command Line Tools)
+- **Git**
 
 ### Building the Project
 
-#### Windows (Visual Studio)
-```batch
-# Open RequestFlow.sln in Visual Studio
-# Or use command line:
-build.bat
+#### Windows (MinGW)
+```powershell
+cd RequestFlowApp
+mkdir build
+cd build
+qmake ..\RequestFlowApp.pro -r "CONFIG+=release"
+mingw32-make -j $env:NUMBER_OF_PROCESSORS
 ```
 
-#### Linux/macOS
+#### Linux
 ```bash
+# Install dependencies (Ubuntu/Debian)
+sudo apt-get install qt6-base-dev qt6-svg-dev qt6-declarative-dev \
+    libgl1-mesa-dev libxkbcommon-dev
+
 cd RequestFlowApp
-qmake RequestFlow.pro
-make
+mkdir -p build && cd build
+qmake6 ../RequestFlowApp.pro -r "CONFIG+=release"
+make -j$(nproc)
+```
+
+#### macOS
+```bash
+# Install Qt via Homebrew or Qt installer
+brew install qt@6
+
+cd RequestFlowApp
+mkdir -p build && cd build
+qmake ../RequestFlowApp.pro -r "CONFIG+=release"
+make -j$(sysctl -n hw.ncpu)
 ```
 
 ### Project Structure
 
-- `CoreModel/` - Core data models, execution engine, and business logic
-- `CoreView/` - UI components, node widgets, and visual elements
-- `ExecutionEngine/` - HTTP request execution and workflow processing
-- `RequestFlow/` - Main application, windows, and application logic
+```
+RequestFlowApp/
+├── CoreModel/          # Core data models and business logic
+│   ├── model/          # Data structures (Graph, Node, Slot, etc.)
+│   └── ...
+├── CoreView/           # UI components and visual elements
+│   ├── view/           # Node widgets, scene graph, connections
+│   ├── nodes/          # SVG icons for nodes
+│   └── ...
+├── ExecutionEngine/    # HTTP request execution and workflow processing
+└── RequestFlow/        # Main application
+    ├── icons/          # Application icons
+    └── ...
+```
 
 ## How to Contribute
 
@@ -147,13 +178,19 @@ private:
 1. **Update documentation** if you're changing functionality
 2. **Ensure the code builds** on your platform without warnings
 3. **Test your changes** - manually test the affected features
-4. **Write a clear PR description**:
+4. **CI checks must pass** - All pull requests run automated builds on:
+   - Linux (Ubuntu 22.04)
+   - macOS (latest)
+   - Windows (latest)
+
+   PRs cannot be merged until all CI checks pass.
+5. **Write a clear PR description**:
    - What does this PR do?
    - Why is this change needed?
    - How has it been tested?
    - Screenshots (if UI changes)
-5. **Link related issues** using keywords like "Fixes #123"
-6. **Be responsive** to review feedback
+6. **Link related issues** using keywords like "Fixes #123"
+7. **Be responsive** to review feedback
 
 ### PR Title Format
 
