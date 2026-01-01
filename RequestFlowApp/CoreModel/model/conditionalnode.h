@@ -7,6 +7,7 @@
 #include "Slot.h"
 
 namespace model {
+    // TODO: implement condition evaluation
     class COREMODEL_EXPORT ConditionalNode : public model::Node
     {
         Q_OBJECT

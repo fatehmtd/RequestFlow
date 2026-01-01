@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QRegularExpression>
 #include <QTextStream>
+#include <QJSValueIterator>
 
 QString compactString(const QString& _body)
 {
@@ -18,7 +19,7 @@ model::EndpointNode::EndpointNode(model::Graph* graph)
     setTimeout(3000);
     setContentType("application/json");
     setHttpMethod(HttpMethod::GET);
-    setAuthMethod(AuthorizationMethod::BASIC_AUTH);
+    setAuthMethod(AuthorizationMethod::NONE);
     setBasicAuthUser("{{basic_auth_user}}");
     setBasicAuthPassword("{{basic_auth_pwd}}");
     setBearerToken("{{bearer_token}}");
@@ -30,7 +31,7 @@ model::EndpointNode::EndpointNode(model::Graph* graph)
     _timer.setSingleShot(true);
 
     QList<unsigned int> acceptedCodes;
-    acceptedCodes << 200;
+    acceptedCodes << 200 << 201;
     setAcceptedCodes(acceptedCodes);
     QList<unsigned int> rejectedCodes;
     rejectedCodes << 404 << 401 << 500;
@@ -180,7 +181,6 @@ bool model::EndpointNode::validateHttpStatus(int status) const
 QUrl model::EndpointNode::resolveUrl(const QString& rawUrl) const
 {
     auto request = getInputSlot()->getData();
-    //request.printMe();
 
     QString workingUrl = rawUrl;
 
@@ -196,7 +196,9 @@ QUrl model::EndpointNode::resolveUrl(const QString& rawUrl) const
 
     for (const auto& key : queryParams.keys()) {
         QRegularExpression pattern(QString("{%1}").arg(key));
-        workingUrl = workingUrl.replace(pattern, queryParams[key].toString());
+        QString value(QUrl::toPercentEncoding(queryParams[key].toString()));
+        qDebug() << key << value;
+        workingUrl = workingUrl.replace(pattern, value);
     }
 
     QStringList queryStringList;
@@ -295,30 +297,20 @@ void model::EndpointNode::processResponse(QNetworkReply* reply)
         auto msecs = _elapsedTimer.elapsed();
         auto status = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toInt();
 
-        out << HttpMethodStr(getHttpMethod()) << " " << reply->url().toString() << "\n";
+        out << HttpMethodStr(getHttpMethod()) << " " << reply->url().toEncoded() << "\n";
         out << "\n";
         out << "Status : " << status << "\n";
         out << "Elapsed-Time : " << msecs << " ms"
             << "\n";
-        for (auto pair : reply->rawHeaderPairs()) {
+
+        std::for_each(reply->rawHeaderPairs().begin(), reply->rawHeaderPairs().end(), [&out](const QNetworkReply::RawHeaderPair& pair) {
             out << QString(pair.first) << " : " << QString(pair.second) << "\n";
-        }
-        //out << "Content-Length : " << reply->header(QNetworkRequest::KnownHeaders::ContentLengthHeader).toString() << "\n";
-        //out << "Content-Type : " << reply->header(QNetworkRequest::KnownHeaders::ContentTypeHeader).toString() << "\n";
-        //out << "Content-Encoding : " << reply->rawHeaderPairs().first(). << "\n";
-        //out << "Last-Modified : " << reply->header(QNetworkRequest::KnownHeaders::LastModifiedHeader).toString() << "\n";
-        //out << "User-Agent : " << reply->header(QNetworkRequest::KnownHeaders::UserAgentHeader).toString() << "\n";
+        });
+
         out << "Server : " << reply->header(QNetworkRequest::KnownHeaders::ServerHeader).toString() << "\n";
         out << "\n\n";
         out << "Response:\n";
         out << data << "\n";
-        /*
-		if (_networkReply != nullptr)
-		{
-			_networkReply->abort();
-			delete _networkReply;
-		}
-        //*/
 
         if (validateHttpStatus(status)) {
             auto response = getInputSlot()->getData();
@@ -437,9 +429,6 @@ QJSValue model::EndpointNode::saveToJSValue(PersistenceHandler* handler) const
     });
     return v;
 }
-
-#include <QJSValueIterator>
-
 bool model::EndpointNode::loadFromJSValue(const QJSValue& v)
 {
     Node::loadFromJSValue(v);

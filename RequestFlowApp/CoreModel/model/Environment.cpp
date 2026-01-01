@@ -5,14 +5,22 @@
 
 model::Environment::Environment(Project* parent) : IdentifiableEntity(parent)
 {
-    getEntries()["baseUrl"] = "http://localhost";
-    getEntries()["basic_auth_user"] = "admin";
-    getEntries()["basic_auth_pwd"] = "pwd";
-    getEntries()["bearer_token"] = "bearer-token";
+    setEntries({
+                {"baseUrl", "http://localhost"},
+                {"basic_auth_user", "user"},
+                {"basic_auth_pwd", "pwd"},
+                {"bearer_token", "bearer-token"},
+    });
 }
 
 model::Environment::Environment(const Environment& original) : IdentifiableEntity(original.getProject()), _entries(original.getEntries())
 {
+    setEntries({
+                {"baseUrl", "http://localhost"},
+                {"basic_auth_user", "user"},
+                {"basic_auth_pwd", "pwd"},
+                {"bearer_token", "bearer-token"},
+    });
 }
 
 model::Project* model::Environment::getProject() const
