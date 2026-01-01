@@ -61,28 +61,22 @@ void SceneGraphWidget::initUi()
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-    // TODO: test other flags
-    setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::MinimalViewportUpdate);
-    //setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::BoundingRectViewportUpdate);
-    //setOptimizationFlag(QGraphicsView::OptimizationFlag::IndirectPainting);
-    //setOptimizationFlag(QGraphicsView::OptimizationFlag::DontAdjustForAntialiasing);
+    setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
     setRenderHint(QPainter::RenderHint::Antialiasing, true);
-    setRenderHint(QPainter::RenderHint::LosslessImageRendering, false);
+    setRenderHint(QPainter::RenderHint::LosslessImageRendering, true);
     setRenderHint(QPainter::RenderHint::TextAntialiasing, true);
     setRenderHint(QPainter::RenderHint::SmoothPixmapTransform, true);
-    // setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, false);
+    setRenderHint(QPainter::RenderHint::VerticalSubpixelPositioning, true);
 
     setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
     setResizeAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-
-    //setViewport(new QOpenGLWidget());
 
     _zoomInFactor = 1.1f;
     _zoomStep = 1;
 
     _minZoomLevel = 1;
-    _maxZoomLevel = 30;
+    _maxZoomLevel = 23;
     _defaultZoomLevel = 2;
 
     _zoomLevel = _defaultZoomLevel;
@@ -124,10 +118,7 @@ void SceneGraphWidget::mousePressEvent(QMouseEvent* event)
     if (event->button() == Qt::MouseButton::MiddleButton) {
         mouseMiddleButtonPressed(event);
     }
-    // else
-    {
-        QGraphicsView::mousePressEvent(event);
-    }
+    QGraphicsView::mousePressEvent(event);
 }
 
 void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
@@ -137,10 +128,7 @@ void SceneGraphWidget::mouseReleaseEvent(QMouseEvent* event)
     if (event->button() == Qt::MouseButton::MiddleButton) {
         mouseMiddleButtonReleased(event);
     }
-    // else
-    {
-        QGraphicsView::mouseReleaseEvent(event);
-    }
+    QGraphicsView::mouseReleaseEvent(event);
 }
 
 void SceneGraphWidget::mouseMoveEvent(QMouseEvent* event)
@@ -165,43 +153,9 @@ void SceneGraphWidget::wheelEvent(QWheelEvent* event)
 {
     if (_sceneGraph == nullptr)
         return;
-
-    // always zoom in/out when ctrl is pressed
-    bool ctrlPressed = Qt::KeyboardModifier::ControlModifier & event->modifiers();
-
-    auto itemUnderCursor = _sceneGraph->itemAt(
-        mapToScene(event->position().toPoint()), QTransform());
-
-    if (itemUnderCursor != nullptr) {
-        //qDebug() << __FUNCTION__ << itemUnderCursor;
-    }
-    if (ctrlPressed) {
-
-        /*
-        if (itemUnderCursor != nullptr && !ctrlPressed) {
-            auto widget = dynamic_cast<QGraphicsProxyWidget*>(itemUnderCursor);
-
-            if (widget != nullptr) {
-                auto dx = horizontalScrollBar()->value();
-                auto dy = verticalScrollBar()->value();
-
-                QGraphicsView::wheelEvent(event);
-
-                horizontalScrollBar()->setValue(dx);
-                verticalScrollBar()->setValue(dy);
-            }
-        } else {
-            performZoom(event);
-        }//*/
-
-        performZoom(event);
-    }
-
-    else {
-        QGraphicsView::wheelEvent(event);
-    }
-
-    _sceneGraph->customUpdate();
+    performZoom(event);
+    event->accept();
+    _sceneGraph->customUpdate();    
 }
 
 void SceneGraphWidget::mouseMiddleButtonPressed(QMouseEvent* event)
@@ -258,7 +212,7 @@ void SceneGraphWidget::dropEvent(QDropEvent* event)
         auto entry = dynamic_cast<model::EndpointEntry*>(reinterpret_cast<QObject*>(ptr));
         if (entry != nullptr) {
             auto node = _sceneGraph->getInteractionsHandler()->createEndpointNode(entry);
-            node->setPos(mapToScene(event->pos()));
+            node->setPos(mapToScene(event->position().toPoint()));
         }
     }
 
@@ -267,28 +221,28 @@ void SceneGraphWidget::dropEvent(QDropEvent* event)
 
 void SceneGraphWidget::createShortcuts()
 {
-    auto deleteAction = new QAction(QIcon(), "delete", this);
+    auto deleteAction = new QAction(QIcon(), "Delete", this);
     deleteAction->setShortcutContext(
-        Qt::ShortcutContext::WidgetWithChildrenShortcut);
+        Qt::ShortcutContext::WidgetShortcut);
     deleteAction->setShortcut(QKeySequence(QKeySequence::StandardKey::Delete));
     connect(deleteAction, &QAction::triggered, this,
         [=]() { _sceneGraph->deleteSelectedItems(); });
     addAction(deleteAction);
 
-    auto duplicateAction = new QAction(QIcon(), "duplicate", this);
+    auto duplicateAction = new QAction(QIcon(), "Duplicate", this);
     duplicateAction->setShortcutContext(
-        Qt::ShortcutContext::WidgetWithChildrenShortcut);
+        Qt::ShortcutContext::WidgetShortcut);
     duplicateAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_D));
     connect(duplicateAction, &QAction::triggered, this,
-        [=]() { _sceneGraph->duplicateSelectedItems(); });
+        [this]() { _sceneGraph->duplicateSelectedItems(); });
     addAction(duplicateAction);
 
-    auto renameAction = new QAction(QIcon(), "rename", this);
+    auto renameAction = new QAction(QIcon(), "Rename", this);
     renameAction->setShortcutContext(
-        Qt::ShortcutContext::WidgetWithChildrenShortcut);
+        Qt::ShortcutContext::WidgetShortcut);
     renameAction->setShortcut(QKeySequence(Qt::Key::Key_F2));
     connect(renameAction, &QAction::triggered, this,
-        [=]() { _sceneGraph->renameSelectedNode(); });
+        [this]() { _sceneGraph->renameSelectedNode(); });
     addAction(renameAction);
 }
 
@@ -307,15 +261,15 @@ void SceneGraphWidget::setCenterAnimated(const QPointF& p, bool resetZoom)
 {
     auto propAnimation = new QPropertyAnimation();
     propAnimation->setTargetObject(this);
-    propAnimation->setDuration(400);
-    // propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::InOutCubic));
+    propAnimation->setDuration(600);
     propAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Type::OutCubic));
     propAnimation->setStartValue(getCenter());
     propAnimation->setEndValue(p);
     propAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-    if (resetZoom)
-        setZoomLevel(2);
+    if (resetZoom) {
+        setZoomLevel(_defaultZoomLevel);
+    }
 
     connect(propAnimation, &QPropertyAnimation::valueChanged, this,
         [=](const QVariant& v) {

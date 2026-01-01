@@ -46,10 +46,10 @@ Build API test flows using a drag-and-drop node editor. Connect HTTP requests, d
 ### Node Types
 
 - **Endpoint Nodes** - HTTP client supporting REST methods (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS)
-  - Authentication: Basic Auth, Bearer tokens
-  - Path and query variable substitution from upstream nodes
+  - Authentication: None (default), Basic Auth, or Bearer tokens
+  - Path and query variable substitution from upstream nodes with automatic URL encoding
   - Custom headers, timeouts, user agents, and content types
-  - Response validation with configurable accepted/rejected status codes
+  - Response validation with configurable accepted (200, 201 by default) and rejected (404, 401, 500) status codes
 
 - **Payload Nodes** - Data source management
   - Load messages from files or define inline JSON
@@ -64,9 +64,10 @@ Build API test flows using a drag-and-drop node editor. Connect HTTP requests, d
   - Built-in assertions: equals, contains, true/false checks
   - Access response data and write custom validation logic
 
-- **Conditional Nodes** - Workflow branching
+- **Conditional Nodes** - Workflow branching (under development)
   - JavaScript conditions for dynamic execution paths
   - Enable/disable branches based on runtime data
+  - Note: Full condition evaluation implementation in progress
 
 - **Delay Nodes** - Timing control
   - Add configurable delays between operations
@@ -81,9 +82,10 @@ Build API test flows using a drag-and-drop node editor. Connect HTTP requests, d
   - Reference nodes from other graphs
   - Configurable execution conditions
 
-- **Group Nodes** - Visual organization
-  - Color-coded grouping for related nodes
-  - Keep workflows organized
+- **Group Nodes** - Visual organization (under development)
+  - Planned: Color-coded grouping for related nodes
+  - Planned: Keep workflows organized
+  - Note: Basic structure exists but UI and workflow integration not yet implemented
 
 <p align="center">
   <img src="web/images/config-endpoint.png" alt="Endpoint Configuration" width="600">
@@ -137,14 +139,15 @@ Choose between dark and light themes.
 Configure HTTP or SOCKS5 proxy with optional authentication in Settings.
 
 ### Keyboard Shortcuts
-- **Ctrl+D** - Duplicate selected nodes
-- **Delete** - Delete selected nodes
-- **F2** - Rename selected node
-- **Ctrl+F** - Find node
-- **Ctrl+Scroll** - Zoom in/out
+- **Ctrl+D** - Duplicate selected node
+- **Delete** - Delete selected nodes and edges
+- **F2** - Rename selected node with dialog prompt
+- **Ctrl+F** - Find and navigate to nodes
+- **Mouse Wheel** - Zoom in/out (no Ctrl required)
+- **Middle Mouse Button** - Pan canvas
 
-### Recent Projects
-Quick access to recently opened projects from the File menu.
+### Recent Projects & Samples
+Quick access to recently opened projects from the File menu. Sample projects are automatically discovered from the `samples/` directory and accessible via File > Sample projects.
 
 ### Swagger/OpenAPI Import
 Import API definitions from Swagger JSON files (Tools > Swagger Import). Imported endpoints appear in the Inventory panel where you can drag and drop them directly onto the canvas as pre-configured Endpoint nodes with URL, HTTP method, and parameters already set.

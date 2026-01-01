@@ -444,7 +444,7 @@ void view::InteractionsHandler::registerCommonActions()
         QIcon(":/ui/duplicate"), 1);
 
     registerNodeAction(
-        "Rename", [=](const QPointF& p, QAction* action) {
+        "Rename", [this](const QPointF& p, QAction* action) {
             auto item = _sceneGraph->itemAt(p, QTransform());
             auto originalNode = dynamic_cast<view::Node*>(item);
 
@@ -459,9 +459,8 @@ void view::InteractionsHandler::registerCommonActions()
         QIcon(":/ui/pen"), 1);
 
     // Node specific actions
-
     registerNodeTypeAction(
-        "Add input slot", "Script", [=](const QPointF& p, QAction* action) {
+        "Add input slot", "Script", [this](const QPointF& p, QAction* action) {
             auto item = _sceneGraph->itemAt(p, QTransform());
             auto node = dynamic_cast<logic::ScriptNode*>(item);
             auto modelNode = node->getModelNode();

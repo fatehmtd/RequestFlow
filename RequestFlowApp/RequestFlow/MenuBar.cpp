@@ -30,18 +30,33 @@ void MainWindow::setupMenuBar()
             QIcon(":/ui/new_file"), "New...", [=]() { onNewProject(); }, QKeySequence::New);
         _openProjectAction = _fileMenu->addAction(
             QIcon(":/ui/open_file"), "Open...", [=]() { onOpenProject(); }, QKeySequence::Open);
-        _fileMenu->addAction(QIcon(":/ui/open_file"), "**Open Sample Project", [=]() { openProject("./samples/sample-project.rqfl"); });
+
+        //_fileMenu->addAction(QIcon(":/ui/open_file"), "**Open Sample Project", [=]() { openProject("./samples/sample-project.rqfl"); });
+        {
+            QDir samplesDir("./samples");
+            QStringList filters("*.rqfl");
+            auto entries = samplesDir.entryList(filters, QDir::Filter::Files, QDir::SortFlag::Name);
+            if(!entries.isEmpty()) {
+                auto samplesMenu = _fileMenu->addMenu("Sample projects");
+                std::for_each(entries.begin(), entries.end(), [this, samplesMenu](const QString& entry) {
+                    samplesMenu->addAction(QIcon(), entry, [this, entry](){
+                        openProject(entry);
+                    });
+                });
+            }
+        }
+
         //_openProjectAction->setMenu(new QMenu);
 
         _recentProjectsMenu = _fileMenu->addMenu(QIcon(":/ui/history"), "Recent projects...");
         updateRecentProjectsList();
 
         _saveProjectAction = _fileMenu->addAction(
-            QIcon(":/ui/save_file"), "Save", [=]() { onSaveProject(); }, QKeySequence::Save);
+            QIcon(":/ui/save_file"), "Save", [this]() { onSaveProject(); }, QKeySequence::Save);
         _saveProjectAsAction = _fileMenu->addAction(
-            QIcon(), "Save As...", [=]() { onSaveProjectAs(); }, QKeySequence::SaveAs);
+            QIcon(), "Save As...", [this]() { onSaveProjectAs(); }, QKeySequence::SaveAs);
         _fileMenu->addSeparator();
-        _settingsAction = _fileMenu->addAction(QIcon(":/ui/settings"), "Settings...", [=]() {
+        _settingsAction = _fileMenu->addAction(QIcon(":/ui/settings"), "Settings...", [this]() {
             AppSettingDialog dlg(_settingsManager, this);
             dlg.exec();
         });
@@ -141,12 +156,13 @@ void MainWindow::setupMenuBar()
         });
         //_centerOnSceneAction->setEnabled(false);
 
-        _arrangeNodesAction = _viewMenu->addAction(QIcon(":/ui/arrange-nodes"), "Arrange nodes", [=]() {
+        // TODO: implement arrange nodes action
+        /*_arrangeNodesAction = _viewMenu->addAction(QIcon(":/ui/arrange-nodes"), "Arrange nodes", [=]() {
             auto sgw = getActiveSceneGraphWidget();
             if (sgw != nullptr) {
                 sgw->getSceneGraph()->rearrangeNodes();
             }
-        });
+        });*/
 
         _viewMenu->addSeparator();
         _switchThemeAction = _viewMenu->addAction(QIcon(":/ui/paint"), "Switch theme", [=]() {

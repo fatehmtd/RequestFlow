@@ -3,6 +3,7 @@
 #include "../coremodel_global.h"
 
 #include <QMap>
+#include <QHash>
 #include <QVariant>
 
 namespace model {

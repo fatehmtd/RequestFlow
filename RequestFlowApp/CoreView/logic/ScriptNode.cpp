@@ -1,5 +1,4 @@
 #include "ScriptNode.h"
-#include "JSCompleter.h"
 #include <QGraphicsProxyWidget>
 #include <model/Node.h>
 #include <model/Slot.h>
@@ -25,6 +24,11 @@ void logic::ScriptNode::setupUi()
 {
 	auto widget = new QWidget();
 	_ui.setupUi(widget);
+
+    // hide these for now.
+    _ui.comboBox_externalEditors->hide();
+    _ui.pushButton_externalEditor->hide();
+
 	auto node = getModelNode<model::ScriptNode*>();
 	_ui.plainTextEdit->setPlainText(node->getScript());
 	_ui.plainTextEdit->setPlaceholderText("// javascript");
@@ -32,7 +36,7 @@ void logic::ScriptNode::setupUi()
 	// Set monospace font for code editor
 	QFont font("Courier New", 10);
 	font.setStyleHint(QFont::Monospace);
-	_ui.plainTextEdit->setFont(font);
+    _ui.plainTextEdit->setFont(font);
 	
 	// Enable JavaScript syntax highlighting
 	_highlighter = new view::JSHighlighter(_ui.plainTextEdit->document());
