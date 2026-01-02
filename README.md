@@ -14,7 +14,7 @@
 RequestFlow is a visual, node-based REST API testing tool. Design API test workflows by connecting nodes on a canvas instead of writing scripts or managing configuration files.
 
 <p align="center">
-  <img src="web/images/main-ui.png" alt="RequestFlow Main Interface" width="800">
+  <img src="docs/images/main-ui.png" alt="RequestFlow Main Interface" width="800">
   <br>
   <em>RequestFlow's visual node-based workflow editor</em>
 </p>
@@ -38,7 +38,7 @@ Useful for:
 Build API test flows using a drag-and-drop node editor. Connect HTTP requests, data transformations, conditionals, and assertions visually.
 
 <p align="center">
-  <img src="web/images/example-flow.png" alt="Example Workflow" width="700">
+  <img src="docs/images/example-flow.png" alt="Example Workflow" width="700">
   <br>
   <em>Complex API workflows made simple with visual connections</em>
 </p>
@@ -88,7 +88,7 @@ Build API test flows using a drag-and-drop node editor. Connect HTTP requests, d
   - Note: Basic structure exists but UI and workflow integration not yet implemented
 
 <p align="center">
-  <img src="web/images/config-endpoint.png" alt="Endpoint Configuration" width="600">
+  <img src="docs/images/config-endpoint.png" alt="Endpoint Configuration" width="600">
   <br>
   <em>Configuring HTTP requests with authentication and headers</em>
 </p>
@@ -97,7 +97,7 @@ Build API test flows using a drag-and-drop node editor. Connect HTTP requests, d
 Switch between environments (dev, staging, production) and define variables. Use `{variable}` syntax anywhere in your requests.
 
 <p align="center">
-  <img src="web/images/prod-env.png" alt="Environment Management" width="600">
+  <img src="docs/images/prod-env.png" alt="Environment Management" width="600">
   <br>
   <em>Manage multiple environments with ease</em>
 </p>
@@ -106,7 +106,7 @@ Switch between environments (dev, staging, production) and define variables. Use
 Inspect data at each step of your workflow: request bodies, response headers, query parameters, and path variables.
 
 <p align="center">
-  <img src="web/images/data-viz.png" alt="Data Visualization" width="600">
+  <img src="docs/images/data-viz.png" alt="Data Visualization" width="600">
   <br>
   <em>Inspect response data at any workflow step</em>
 </p>
@@ -115,7 +115,7 @@ Inspect data at each step of your workflow: request bodies, response headers, qu
 Built-in JavaScript engine (QJSEngine) with JSONPath library for data manipulation and assertions.
 
 <p align="center">
-  <img src="web/images/scripting.png" alt="JavaScript Scripting" width="600">
+  <img src="docs/images/scripting.png" alt="JavaScript Scripting" width="600">
   <br>
   <em>Write custom JavaScript for data transformation and logic</em>
 </p>
@@ -124,7 +124,7 @@ Built-in JavaScript engine (QJSEngine) with JSONPath library for data manipulati
 Filter JSON responses using JSONPath expressions. Export filtered data for analysis.
 
 <p align="center">
-  <img src="web/images/view-filtering.png" alt="JSONPath Filtering" width="600">
+  <img src="docs/images/view-filtering.png" alt="JSONPath Filtering" width="600">
   <br>
   <em>Filter data with powerful JSONPath expressions</em>
 </p>
