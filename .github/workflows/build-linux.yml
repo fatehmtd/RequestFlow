@@ -68,6 +68,13 @@ jobs:
         # Copy icon
         cp ../RequestFlowApp/design/RequestFlowLogo-256.png RequestFlow/RequestFlow.png
         
+        # Copy samples folder
+        if [ -d "../RequestFlowApp/samples" ]; then
+          mkdir -p RequestFlow/samples
+          cp -R ../RequestFlowApp/samples/* RequestFlow/samples/
+          echo "Copied samples folder to distribution"
+        fi
+        
     - name: Download linuxdeployqt
       run: |
         cd build

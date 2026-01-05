@@ -82,6 +82,13 @@ jobs:
           exit 1
         fi
 
+        # Copy samples folder
+        if [ -d "${GITHUB_WORKSPACE}/RequestFlowApp/samples" ]; then
+          mkdir -p RequestFlow.app/Contents/Resources/samples
+          cp -R "${GITHUB_WORKSPACE}/RequestFlowApp/samples/"* RequestFlow.app/Contents/Resources/samples/
+          echo "Copied samples folder to app bundle"
+        fi
+
         # Create and copy the application icon from design folder
         ICON_DIR="${GITHUB_WORKSPACE}/RequestFlowApp/design/macos/AppIcons/Assets.xcassets/AppIcon.appiconset"
 

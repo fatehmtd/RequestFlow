@@ -51,6 +51,9 @@ jobs:
         Copy-Item CoreModel\release\CoreModel.dll dist\ -ErrorAction Stop
         Copy-Item CoreView\release\CoreView.dll dist\ -ErrorAction Stop
         Copy-Item ExecutionEngine\release\ExecutionEngine.dll dist\ -ErrorAction Stop
+        # Copy samples folder
+        Copy-Item ..\samples dist\samples -Recurse -Force
+        Write-Host "Copied samples folder to distribution"
 
     - name: Deploy Qt and MinGW dependencies
       working-directory: RequestFlowApp/build
