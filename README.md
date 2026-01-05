@@ -211,46 +211,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed build instructions and devel
 
 ---
 
-## Quick Example
-
-**Scenario**: Fetch a user, then fetch their posts using the user ID.
-
-1. **Create environment** - Add a variable `baseUrl` = `https://jsonplaceholder.typicode.com`
-
-2. **Add Payload Node** - Define path variables:
-   - `userId` = `1`
-
-3. **Add first Endpoint Node** - Configure:
-   - URL: `{baseUrl}/users/{userId}`
-   - Method: GET
-   - Connect Payload → Endpoint
-
-4. **Add Script Node** - Extract user data:
-   ```javascript
-   Response.body = Request.body;
-   Response.context.userName = Request.body.name;
-   ```
-   Connect Endpoint → Script
-
-5. **Add second Endpoint Node** - Fetch posts:
-   - URL: `{baseUrl}/posts?userId={userId}`
-   - Method: GET
-   - Connect Script → Endpoint
-
-6. **Add Assertion Node** - Validate response:
-   ```javascript
-   Assert.true(Request.body.length > 0, "User should have posts");
-   ```
-   Connect Endpoint → Assertion
-
-7. **Add Viewer Node** - Inspect final data
-   - Set JSONPath filter: `$[0].title` to see first post title
-   - Connect Assertion → Viewer
-
-8. **Run** - Click Execute and watch data flow through each node
-
----
-
 ## Project Status
 
 ⚠️ **Early Release Notice**
