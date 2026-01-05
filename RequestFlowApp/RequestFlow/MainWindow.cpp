@@ -283,16 +283,16 @@ SceneGraphWidget* MainWindow::openScenario(view::SceneGraph* sceneGraph)
         }
     });
 
-    sysMenu->addAction(QIcon(":/ui/delete"), "Delete Scenario", [=]() {
+    sysMenu->addAction(QIcon(":/ui/delete"), "Delete Scenario", [this, sceneGraphWidget]() {
         deleteScenario(sceneGraphWidget->getSceneGraph());
     });
     window->setSystemMenu(sysMenu);
 
-    connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, [=](const QString& str) {
+    connect(sceneGraph->getModelGraph(), &model::IdentifiableEntity::nameChanged, window, [sceneGraph, window, evaluateScenarioTitle](const QString& str) {
         window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
     });
 
-    connect(sceneGraph->getModelGraph(), &model::Graph::activeEnvironmentChanged, window, [=]() {
+    connect(sceneGraph->getModelGraph(), &model::Graph::activeEnvironmentChanged, window, [sceneGraph, window, evaluateScenarioTitle]() {
         window->setWindowTitle(evaluateScenarioTitle(sceneGraph->getModelGraph()));
     });
 
@@ -317,9 +317,18 @@ void MainWindow::deleteScenario(view::SceneGraph* sceneGraph)
 {
     auto choice = QMessageBox::warning(this, "Delete Scenarion", QString("You are about to delete (%1), proceed ?").arg(sceneGraph->getModelGraph()->getName()), QMessageBox::Yes, QMessageBox::Cancel);
     if (choice == QMessageBox::Yes) {
+        // delete the model graph then the widget
         delete sceneGraph->getModelGraph();
-        auto graphWidget = sceneGraph->views().first();
-        delete graphWidget->parent();
+        const auto views = sceneGraph->views();
+        auto graphWidget = views.first();
+        QMdiSubWindow* mdiSubwindow = dynamic_cast<QMdiSubWindow*>(graphWidget->parentWidget());
+        QMdiArea* mdiArea = dynamic_cast<QMdiArea*>(mdiSubwindow->parent()->parent());
+        mdiArea->removeSubWindow(mdiSubwindow);
+        mdiArea->activateNextSubWindow();
+        auto subWindow = mdiArea->currentSubWindow();
+        mdiArea->setActiveSubWindow(subWindow);
+        subWindow->showMaximized();
+        mdiArea->showMaximized();
     }
 }
 
@@ -479,22 +488,22 @@ void MainWindow::onOpenProject()
 void MainWindow::updateRecentProjectsList()
 {
     auto recentProjects = _settingsManager->enumRecentProjects();
-    //auto menu = _openProject->menu();
+
     auto menu = _recentProjectsMenu;
     auto actions = menu->actions();
 
-    for (auto action : actions) {
+    std::for_each(actions.begin(), actions.end(), [menu](QAction* action) {
         menu->removeAction(action);
         delete action;
-    }
+    });
 
     // add an open project action
-    for (const auto& prj : recentProjects) {
+    std::for_each(recentProjects.begin(), recentProjects.end(), [this, menu](const QString& prj) {
         auto action = menu->addAction(QIcon(":/ui/network"), prj);
         connect(action, &QAction::triggered, this, [=]() {
             openProject(prj);
         });
-    }
+    });
 
     if (recentProjects.size() > 0) {
         menu->addSeparator();
