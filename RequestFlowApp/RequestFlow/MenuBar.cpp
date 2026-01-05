@@ -22,7 +22,6 @@
 
 void MainWindow::setupMenuBar()
 {
-    //menuBar()->set
     // File menu
     {
         _fileMenu = menuBar()->addMenu("File");
@@ -31,22 +30,21 @@ void MainWindow::setupMenuBar()
         _openProjectAction = _fileMenu->addAction(
             QIcon(":/ui/open_file"), "Open...", [=]() { onOpenProject(); }, QKeySequence::Open);
 
-        //_fileMenu->addAction(QIcon(":/ui/open_file"), "**Open Sample Project", [=]() { openProject("./samples/sample-project.rqfl"); });
+        // list samples
         {
-            QDir samplesDir("./samples");
+            const QDir samplesDir("./samples");
             QStringList filters("*.rqfl");
             auto entries = samplesDir.entryList(filters, QDir::Filter::Files, QDir::SortFlag::Name);
             if(!entries.isEmpty()) {
                 auto samplesMenu = _fileMenu->addMenu("Sample projects");
-                std::for_each(entries.begin(), entries.end(), [this, samplesMenu](const QString& entry) {
-                    samplesMenu->addAction(QIcon(), entry, [this, entry](){
-                        openProject(entry);
+                std::for_each(entries.begin(), entries.end(), [this, samplesMenu, samplesDir](const QString& entry) {
+                    QString fullPath = samplesDir.absoluteFilePath(entry);
+                    samplesMenu->addAction(QIcon(), fullPath, [this, fullPath](){
+                        openProject(fullPath);
                     });
                 });
             }
         }
-
-        //_openProjectAction->setMenu(new QMenu);
 
         _recentProjectsMenu = _fileMenu->addMenu(QIcon(":/ui/history"), "Recent projects...");
         updateRecentProjectsList();
