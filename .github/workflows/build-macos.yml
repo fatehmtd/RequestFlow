@@ -18,7 +18,6 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.7.3'
         host: 'mac'
         target: 'desktop'
         arch: 'clang_64'
@@ -141,7 +140,7 @@ jobs:
         done
         cd ../../..
 
-    - name: Create Info.plist
+    - name: Create Info.plist and qt.conf
       run: |
         cd build
         if [ -d "RequestFlow/release" ]; then
@@ -178,6 +177,13 @@ jobs:
         </plist>
         EOF
 
+        # Create qt.conf to help Qt find plugins
+        cat > RequestFlow.app/Contents/Resources/qt.conf << 'EOF'
+        [Paths]
+        Plugins = PlugIns
+        EOF
+        echo "Created qt.conf to specify plugin paths"
+
     - name: Deploy Qt dependencies
       run: |
         cd build
@@ -191,6 +197,13 @@ jobs:
         QT_DIR=$(qmake -query QT_INSTALL_PREFIX)
         echo "Qt installation directory: $QT_DIR"
 
+        # Copy QtSvg framework BEFORE plugins, so macdeployqt can properly link it
+        if [ -d "$QT_DIR/lib/QtSvg.framework" ]; then
+          mkdir -p RequestFlow.app/Contents/Frameworks
+          cp -R "$QT_DIR/lib/QtSvg.framework" RequestFlow.app/Contents/Frameworks/
+          echo "Copied QtSvg framework"
+        fi
+
         # Copy SVG plugins BEFORE running macdeployqt so it can fix their dependencies
         mkdir -p RequestFlow.app/Contents/PlugIns/imageformats
         mkdir -p RequestFlow.app/Contents/PlugIns/iconengines
@@ -198,21 +211,32 @@ jobs:
         if [ -f "$QT_DIR/plugins/imageformats/libqsvg.dylib" ]; then
           cp "$QT_DIR/plugins/imageformats/libqsvg.dylib" RequestFlow.app/Contents/PlugIns/imageformats/
           echo "Copied SVG image format plugin"
+        else
+          echo "ERROR: libqsvg.dylib not found in Qt plugins"
+          exit 1
         fi
 
         if [ -f "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" ]; then
           cp "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" RequestFlow.app/Contents/PlugIns/iconengines/
           echo "Copied SVG icon engine plugin"
-        fi
-
-        # Copy QtSvg framework if not already present
-        if [ -d "$QT_DIR/lib/QtSvg.framework" ] && [ ! -d "RequestFlow.app/Contents/Frameworks/QtSvg.framework" ]; then
-          cp -R "$QT_DIR/lib/QtSvg.framework" RequestFlow.app/Contents/Frameworks/
-          echo "Copied QtSvg framework"
+        else
+          echo "ERROR: libqsvgicon.dylib not found in Qt plugins"
+          exit 1
         fi
 
         # Deploy Qt dependencies - this will fix library paths for all plugins and frameworks
         macdeployqt RequestFlow.app -verbose=2 -always-overwrite
+
+        # Verify SVG plugins are still present after macdeployqt
+        if [ ! -f "RequestFlow.app/Contents/PlugIns/imageformats/libqsvg.dylib" ]; then
+          echo "WARNING: libqsvg.dylib missing after macdeployqt, re-copying"
+          cp "$QT_DIR/plugins/imageformats/libqsvg.dylib" RequestFlow.app/Contents/PlugIns/imageformats/
+        fi
+
+        if [ ! -f "RequestFlow.app/Contents/PlugIns/iconengines/libqsvgicon.dylib" ]; then
+          echo "WARNING: libqsvgicon.dylib missing after macdeployqt, re-copying"
+          cp "$QT_DIR/plugins/iconengines/libqsvgicon.dylib" RequestFlow.app/Contents/PlugIns/iconengines/
+        fi
 
     - name: Fix library paths
       run: |
@@ -264,17 +288,57 @@ jobs:
         echo "=== Frameworks directory ==="
         ls -la RequestFlow.app/Contents/Frameworks/
         echo "=== Check for QtSvg framework ==="
-        ls -la RequestFlow.app/Contents/Frameworks/QtSvg.framework/Versions/A/ 2>/dev/null || echo "QtSvg.framework NOT FOUND"
+        if [ -d "RequestFlow.app/Contents/Frameworks/QtSvg.framework" ]; then
+          ls -la RequestFlow.app/Contents/Frameworks/QtSvg.framework/Versions/A/ 
+          echo "QtSvg.framework FOUND"
+        else
+          echo "ERROR: QtSvg.framework NOT FOUND"
+          exit 1
+        fi
         echo "=== PlugIns/imageformats ==="
-        ls -la RequestFlow.app/Contents/PlugIns/imageformats/ 2>/dev/null || echo "imageformats directory NOT FOUND"
+        if [ -d "RequestFlow.app/Contents/PlugIns/imageformats" ]; then
+          ls -la RequestFlow.app/Contents/PlugIns/imageformats/
+          if [ -f "RequestFlow.app/Contents/PlugIns/imageformats/libqsvg.dylib" ]; then
+            echo "libqsvg.dylib FOUND"
+          else
+            echo "ERROR: libqsvg.dylib NOT FOUND"
+            exit 1
+          fi
+        else
+          echo "ERROR: imageformats directory NOT FOUND"
+          exit 1
+        fi
         echo "=== PlugIns/iconengines ==="
-        ls -la RequestFlow.app/Contents/PlugIns/iconengines/ 2>/dev/null || echo "iconengines directory NOT FOUND"
+        if [ -d "RequestFlow.app/Contents/PlugIns/iconengines" ]; then
+          ls -la RequestFlow.app/Contents/PlugIns/iconengines/
+          if [ -f "RequestFlow.app/Contents/PlugIns/iconengines/libqsvgicon.dylib" ]; then
+            echo "libqsvgicon.dylib FOUND"
+          else
+            echo "ERROR: libqsvgicon.dylib NOT FOUND"
+            exit 1
+          fi
+        else
+          echo "ERROR: iconengines directory NOT FOUND"
+          exit 1
+        fi
+        echo "=== Resources directory (qt.conf) ==="
+        if [ -f "RequestFlow.app/Contents/Resources/qt.conf" ]; then
+          echo "qt.conf FOUND"
+          cat RequestFlow.app/Contents/Resources/qt.conf
+        else
+          echo "ERROR: qt.conf NOT FOUND"
+          exit 1
+        fi
         echo "=== Main executable dependencies ==="
         otool -L RequestFlow.app/Contents/MacOS/RequestFlow
         echo "=== libCoreView dependencies ==="
         otool -L RequestFlow.app/Contents/Frameworks/libCoreView.1.0.0.dylib 2>/dev/null || echo "libCoreView not found"
         echo "=== SVG plugin dependencies ==="
         otool -L RequestFlow.app/Contents/PlugIns/imageformats/libqsvg.dylib 2>/dev/null || echo "libqsvg not found"
+        echo "=== SVG icon engine dependencies ==="
+        otool -L RequestFlow.app/Contents/PlugIns/iconengines/libqsvgicon.dylib 2>/dev/null || echo "libqsvgicon not found"
+        echo ""
+        echo "=== All verification checks passed! ==="
 
     - name: Remove quarantine attributes
       run: |

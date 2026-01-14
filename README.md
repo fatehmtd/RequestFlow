@@ -146,8 +146,21 @@ Configure HTTP or SOCKS5 proxy with optional authentication in Settings.
 - **Mouse Wheel** - Zoom in/out (no Ctrl required)
 - **Middle Mouse Button** - Pan canvas
 
-### Recent Projects & Samples
-Quick access to recently opened projects from the File menu. Sample projects are automatically discovered from the `samples/` directory and accessible via File > Sample projects.
+### Sample Project
+
+Want to see RequestFlow in action? Download our sample project that demonstrates common API testing workflows.
+
+**Download the sample:**
+
+1. **Direct download:** [samples.rqfl](https://github.com/fatehmtd/RequestFlow/raw/main/RequestFlowApp/samples/samples.rqfl)
+2. **Via Git:** Clone the repository and find it at `RequestFlowApp/samples/samples.rqfl`
+   ```bash
+   git clone https://github.com/fatehmtd/RequestFlow.git
+   cd RequestFlow/RequestFlowApp/samples
+   ```
+3. **Via browser:** Navigate to the [samples directory](https://github.com/fatehmtd/RequestFlow/tree/main/RequestFlowApp/samples) on GitHub, click `samples.rqfl`, then click "Download"
+
+Once downloaded, open the file in RequestFlow via **File > Open Project** to explore pre-built workflows and learn by example.
 
 ### Swagger/OpenAPI Import
 Import API definitions from Swagger JSON files (Tools > Swagger Import). Imported endpoints appear in the Inventory panel where you can drag and drop them directly onto the canvas as pre-configured Endpoint nodes with URL, HTTP method, and parameters already set.
@@ -211,46 +224,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed build instructions and devel
 
 ---
 
-## Quick Example
-
-**Scenario**: Fetch a user, then fetch their posts using the user ID.
-
-1. **Create environment** - Add a variable `baseUrl` = `https://jsonplaceholder.typicode.com`
-
-2. **Add Payload Node** - Define path variables:
-   - `userId` = `1`
-
-3. **Add first Endpoint Node** - Configure:
-   - URL: `{baseUrl}/users/{userId}`
-   - Method: GET
-   - Connect Payload → Endpoint
-
-4. **Add Script Node** - Extract user data:
-   ```javascript
-   Response.body = Request.body;
-   Response.context.userName = Request.body.name;
-   ```
-   Connect Endpoint → Script
-
-5. **Add second Endpoint Node** - Fetch posts:
-   - URL: `{baseUrl}/posts?userId={userId}`
-   - Method: GET
-   - Connect Script → Endpoint
-
-6. **Add Assertion Node** - Validate response:
-   ```javascript
-   Assert.true(Request.body.length > 0, "User should have posts");
-   ```
-   Connect Endpoint → Assertion
-
-7. **Add Viewer Node** - Inspect final data
-   - Set JSONPath filter: `$[0].title` to see first post title
-   - Connect Assertion → Viewer
-
-8. **Run** - Click Execute and watch data flow through each node
-
----
-
 ## Project Status
 
 ⚠️ **Early Release Notice**
@@ -309,11 +282,12 @@ RequestFlow is open source software licensed under the [MIT License](LICENSE).
 
 ## Author
 
-Created and maintained by **Fateh Benmerzoug, Ph.D**
+Created and maintained by **Fateh Benmerzoug, Ph.D.**
 
-- Email: fatehmtd+requestflow@gmail.com
-- Website: [fatehmtd.github.io/RequestFlow](https://fatehmtd.github.io/RequestFlow)
+- Email: fateh.bmzg+requestflow@gmail.com
+- Website: [https://fatehbmz.com](https://fatehbmz.com)
 - GitHub: [@fatehmtd](https://github.com/fatehmtd)
+- Linkedin: [https://www.linkedin.com/in/fateh-benmerzoug-phd-50763929/](https://www.linkedin.com/in/fateh-benmerzoug-phd-50763929/)
 
 ---
 

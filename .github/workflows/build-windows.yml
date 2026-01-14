@@ -9,8 +9,7 @@ on:
 
 jobs:
   build-windows:
-    runs-on: windows-latest
-
+    runs-on: windows-latest    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -18,12 +17,12 @@ jobs:
     - name: Install Qt with MinGW
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.7.3'
+        version: 6.8.3
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw'
         cache: true
-        tools: 'tools_mingw90'
+        tools: 'tools_mingw1310'
         
     - name: Add MinGW to PATH and verify tools
       run: |
