@@ -146,8 +146,21 @@ Configure HTTP or SOCKS5 proxy with optional authentication in Settings.
 - **Mouse Wheel** - Zoom in/out (no Ctrl required)
 - **Middle Mouse Button** - Pan canvas
 
-### Recent Projects & Samples
-Quick access to recently opened projects from the File menu. Sample projects are automatically discovered from the `samples/` directory and accessible via File > Sample projects.
+### Sample Project
+
+Want to see RequestFlow in action? Download our sample project that demonstrates common API testing workflows.
+
+**Download the sample:**
+
+1. **Direct download:** [samples.rqfl](https://github.com/fatehmtd/RequestFlow/raw/main/RequestFlowApp/samples/samples.rqfl)
+2. **Via Git:** Clone the repository and find it at `RequestFlowApp/samples/samples.rqfl`
+   ```bash
+   git clone https://github.com/fatehmtd/RequestFlow.git
+   cd RequestFlow/RequestFlowApp/samples
+   ```
+3. **Via browser:** Navigate to the [samples directory](https://github.com/fatehmtd/RequestFlow/tree/main/RequestFlowApp/samples) on GitHub, click `samples.rqfl`, then click "Download"
+
+Once downloaded, open the file in RequestFlow via **File > Open Project** to explore pre-built workflows and learn by example.
 
 ### Swagger/OpenAPI Import
 Import API definitions from Swagger JSON files (Tools > Swagger Import). Imported endpoints appear in the Inventory panel where you can drag and drop them directly onto the canvas as pre-configured Endpoint nodes with URL, HTTP method, and parameters already set.
@@ -269,11 +282,12 @@ RequestFlow is open source software licensed under the [MIT License](LICENSE).
 
 ## Author
 
-Created and maintained by **Fateh Benmerzoug, Ph.D**
+Created and maintained by **Fateh Benmerzoug, Ph.D.**
 
-- Email: fatehmtd+requestflow@gmail.com
-- Website: [fatehmtd.github.io/RequestFlow](https://fatehmtd.github.io/RequestFlow)
+- Email: fateh.bmzg+requestflow@gmail.com
+- Website: [https://fatehbmz.com](https://fatehbmz.com)
 - GitHub: [@fatehmtd](https://github.com/fatehmtd)
+- Linkedin: [https://www.linkedin.com/in/fateh-benmerzoug-phd-50763929/](https://www.linkedin.com/in/fateh-benmerzoug-phd-50763929/)
 
 ---
 
